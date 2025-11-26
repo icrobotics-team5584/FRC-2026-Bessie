@@ -5,8 +5,11 @@
 #include "RobotContainer.h"
 
 #include <frc2/command/Commands.h>
+#include "subsystems/SubDrivebase.h"
+#include "commands/DriveCommands.h"
 
 RobotContainer::RobotContainer() {
+  SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
   ConfigureBindings();
 }
 
