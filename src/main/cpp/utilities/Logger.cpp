@@ -134,6 +134,10 @@ void Log(std::string keyName, frc::Rotation2d value) {
   Log(keyName, value.Degrees());
 }
 
+void Log(std::string keyName, units::radian_t value) {
+  Log(keyName + " (rad)", value.value());
+}
+
 
 double Tune(std::string keyName, double defaultValue) {
   if (frc::SmartDashboard::ContainsKey(keyName)) {

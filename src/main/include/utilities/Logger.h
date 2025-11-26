@@ -51,6 +51,8 @@ void Log(std::string keyName, units::kilogram_t value);
 void Log(std::string keyName, units::celsius_t value);
 void Log(std::string keyName, ctre::phoenix6::StatusSignal<units::celsius_t>& signal);
 void Log(std::string keyName, frc::Rotation2d value);
+void Log(std::string keyName, units::radian_t value);
+
 
 double Tune(std::string keyName, double defaultValue);
 bool Tune(std::string keyName, bool defaultValue);

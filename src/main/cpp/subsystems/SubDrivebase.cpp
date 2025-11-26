@@ -336,61 +336,68 @@ frc2::CommandPtr SubDrivebase::JoystickDrive(frc2::CommandXboxController& contro
 
 // Special
 
-frc2::CommandPtr SubDrivebase::WheelCharecterisationCmd() {
+frc2::CommandPtr SubDrivebase::CharacteriseWheels() {
   static units::radian_t prevGyroAngle = 0_rad;
   static units::radian_t gyroAccumulator = 0_rad;
   static units::radian_t FRinitialWheelDistance = 0_rad;
   static units::radian_t FLinitialWheelDistance = 0_rad;
   static units::radian_t BRinitialWheelDistance = 0_rad;
   static units::radian_t BLinitialWheelDistance = 0_rad;
+  static auto limiter = frc::SlewRateLimiter<units::degrees_per_second>{240_deg_per_s / 10_s};
+  static units::meter_t drivebaseRadius = DrivebaseConfig::FL_POSITION.Norm();
 
   return RunOnce([this] {
-           prevGyroAngle = 0_rad;
-           gyroAccumulator = 0_rad;
-           FRinitialWheelDistance = _frontRight.GetDrivenRotations();
-           FLinitialWheelDistance = _frontLeft.GetDrivenRotations();
-           BRinitialWheelDistance = _backRight.GetDrivenRotations();
-           BLinitialWheelDistance = _backLeft.GetDrivenRotations();
-         })
-      .AndThen(Drive([] { return frc::ChassisSpeeds{0_mps, 0_mps, -15_deg_per_s}; }, false))
-      .AlongWith(Run([this] {
-        // units::radian_t curGyroAngle = GetHeading().Radians(); using GetGyroAngle() instead
-        units::radian_t curGyroAngle = GetGyroAngle().Radians();
-        gyroAccumulator = gyroAccumulator + frc::AngleModulus((prevGyroAngle - curGyroAngle));
-        prevGyroAngle = curGyroAngle;
-        Logger::Log("Drivebase/WheelCharacterisation/GyroAccum",
-                                       gyroAccumulator.value());
-        Logger::Log("Drivebase/WheelCharacterisation/GyroCur",
-                                       curGyroAngle.value());
-        Logger::Log("Drivebase/WheelCharacterisation/GyroPrev",
-                                       prevGyroAngle.value());
-      }))
-      .FinallyDo([this] {
-        units::meter_t drivebaseRadius = DrivebaseConfig::FL_POSITION.Norm();
+    prevGyroAngle = GetGyroAngle().Radians();
+    gyroAccumulator = 0_rad;
+    FRinitialWheelDistance = _frontRight.GetDrivenRotations();
+    FLinitialWheelDistance = _frontLeft.GetDrivenRotations();
+    BRinitialWheelDistance = _backRight.GetDrivenRotations();
+    BLinitialWheelDistance = _backLeft.GetDrivenRotations();
+    limiter.Reset(0_deg_per_s);
+    Logger::Log("Drivebase/WheelCharacterisation/DrivebaseRadius", drivebaseRadius);
+  })
+  .AndThen(Drive([] {
+    auto speed = limiter.Calculate(100_deg_per_s);
+    return frc::ChassisSpeeds{0_mps, 0_mps, speed};
+  }, false))
+  .AlongWith(frc2::cmd::Wait(1_s).AndThen(frc2::cmd::Run([this] {
+    // units::radian_t curGyroAngle = GetHeading().Radians(); using GetGyroAngle() instead
+    units::radian_t curGyroAngle = GetGyroAngle().Radians();
+    gyroAccumulator = gyroAccumulator + frc::AngleModulus((prevGyroAngle - curGyroAngle));
+    prevGyroAngle = curGyroAngle;
+    Logger::Log("Drivebase/WheelCharacterisation/GyroAccum", gyroAccumulator);
+    Logger::Log("Drivebase/WheelCharacterisation/GyroCur", curGyroAngle);
+    Logger::Log("Drivebase/WheelCharacterisation/GyroPrev", prevGyroAngle);
 
-        units::radian_t FRfinalWheelDistance = _frontRight.GetDrivenRotations();
-        units::radian_t FLfinalWheelDistance = _frontLeft.GetDrivenRotations();
-        units::radian_t BRfinalWheelDistance = _backRight.GetDrivenRotations();
-        units::radian_t BLfinalWheelDistance = _backLeft.GetDrivenRotations();
+    units::radian_t FRfinalWheelDistance = _frontRight.GetDrivenRotations();
+    units::radian_t FLfinalWheelDistance = _frontLeft.GetDrivenRotations();
+    units::radian_t BRfinalWheelDistance = _backRight.GetDrivenRotations();
+    units::radian_t BLfinalWheelDistance = _backLeft.GetDrivenRotations();
 
-        units::radian_t FRdelta = units::math::abs(FRfinalWheelDistance - FRinitialWheelDistance);
-        units::radian_t FLdelta = units::math::abs(FLfinalWheelDistance - FLinitialWheelDistance);
-        units::radian_t BRdelta = units::math::abs(BRfinalWheelDistance - BRinitialWheelDistance);
-        units::radian_t BLdelta = units::math::abs(BLfinalWheelDistance - BLinitialWheelDistance);
+    units::radian_t FRdelta = units::math::abs(FRfinalWheelDistance - FRinitialWheelDistance);
+    units::radian_t FLdelta = units::math::abs(FLfinalWheelDistance - FLinitialWheelDistance);
+    units::radian_t BRdelta = units::math::abs(BRfinalWheelDistance - BRinitialWheelDistance);
+    units::radian_t BLdelta = units::math::abs(BLfinalWheelDistance - BLinitialWheelDistance);
 
-        units::radian_t avgWheelDelta = (FRdelta + FLdelta + BRdelta + BLdelta) / 4.0;
+    units::radian_t avgWheelDelta = (FRdelta + FLdelta + BRdelta + BLdelta) / 4.0;
+    units::meter_t calcedWheelRadius = ((gyroAccumulator * drivebaseRadius) / avgWheelDelta);
 
-        Logger::Log(
-            "Drivebase/WheelCharacterisation/CalcedWheelRadius",
-            ((gyroAccumulator * drivebaseRadius) / avgWheelDelta).value());
-        Logger::Log("Drivebase/WheelCharacterisation/DrivebaseRadius",
-                                       drivebaseRadius.value());
-        Logger::Log("Drivebase/WheelCharacterisation/WheelDistance",
-                                       avgWheelDelta.value());
+    Logger::Log("Drivebase/WheelCharacterisation/CalcedWheelRadius", calcedWheelRadius);
+    Logger::Log("Drivebase/WheelCharacterisation/WheelDistance", avgWheelDelta);
 
-        Logger::Log("Drivebase/WheelCharacterisation/FLdelta", FLdelta.value());
-        Logger::Log("Drivebase/WheelCharacterisation/FRdelta", FRdelta.value());
-        Logger::Log("Drivebase/WheelCharacterisation/BLdelta", BLdelta.value());
-        Logger::Log("Drivebase/WheelCharacterisation/BRdelta", BRdelta.value());
-      });
+    // Logger::Log("Drivebase/WheelCharacterisation/FLinitialWheelDistance", FLinitialWheelDistance);
+    // Logger::Log("Drivebase/WheelCharacterisation/FRinitialWheelDistance", FRinitialWheelDistance);
+    // Logger::Log("Drivebase/WheelCharacterisation/BLinitialWheelDistance", BLinitialWheelDistance);
+    // Logger::Log("Drivebase/WheelCharacterisation/BRinitialWheelDistance", BRinitialWheelDistance);
+
+    // Logger::Log("Drivebase/WheelCharacterisation/FLfinalWheelDistance", FLfinalWheelDistance);
+    // Logger::Log("Drivebase/WheelCharacterisation/FRfinalWheelDistance", FRfinalWheelDistance);
+    // Logger::Log("Drivebase/WheelCharacterisation/BLfinalWheelDistance", BLfinalWheelDistance);
+    // Logger::Log("Drivebase/WheelCharacterisation/BRfinalWheelDistance", BRfinalWheelDistance);
+
+    Logger::Log("Drivebase/WheelCharacterisation/FLdelta", FLdelta);
+    Logger::Log("Drivebase/WheelCharacterisation/FRdelta", FRdelta);
+    Logger::Log("Drivebase/WheelCharacterisation/BLdelta", BLdelta);
+    Logger::Log("Drivebase/WheelCharacterisation/BRdelta", BRdelta);
+  })));
 }

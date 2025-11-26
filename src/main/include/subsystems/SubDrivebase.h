@@ -14,6 +14,8 @@
 #include "DrivebaseConfig.h"
 #include <frc2/command/button/CommandXboxController.h>
 #include <numbers>
+#include <frc2/command/CommandPtr.h>
+#include <frc2/command/Commands.h>
 
 class SubDrivebase : public frc2::SubsystemBase {
  public:
@@ -66,7 +68,7 @@ class SubDrivebase : public frc2::SubsystemBase {
   frc2::CommandPtr ResetGyroCmd();
 
   // Testing
-  frc2::CommandPtr WheelCharecterisationCmd();
+  frc2::CommandPtr CharacteriseWheels();
   
   frc2::CommandPtr SysIdQuasistatic(frc2::sysid::Direction direction) {
     return _sysIdRoutine.Quasistatic(direction);
@@ -90,6 +92,7 @@ class SubDrivebase : public frc2::SubsystemBase {
   frc::DigitalInput _toggleBrakeCoast{dio::BRAKE_COAST_BUTTON};
 
   // Swerve
+
   SwerveModule _frontLeft{canid::DRIVEBASE_FRONT_LEFT_DRIVE, canid::DRIVEBASE_FRONT_LEFT_TURN,
                           canid::DRIVEBASE_FRONT_LEFT_ENCODER, (DrivebaseConfig::FRONT_LEFT_MAG_OFFSET)};
   SwerveModule _frontRight{canid::DRIVEBASE_FRONT_RIGHT_DRIVE, canid::DRIVEBASE_FRONT_RIGHT_TURN,
