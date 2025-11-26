@@ -5,7 +5,7 @@
 #include <ctre/phoenix6/controls/PositionTorqueCurrentFOC.hpp>
 #include <ctre/phoenix6/signals/SpnEnums.hpp>
 #include <frc/smartdashboard/SmartDashboard.h>
-#include <utilities/RobotLogs.h>
+#include <utilities/Logger.h>
 
 const bool FOCstate = true;
 

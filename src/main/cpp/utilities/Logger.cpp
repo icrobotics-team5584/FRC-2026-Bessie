@@ -1,4 +1,4 @@
-#include "utilities/RobotLogs.h"
+#include "utilities/Logger.h"
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <networktables/StructArrayTopic.h>
 #include <frc/kinematics/struct/SwerveModuleStateStruct.h>
@@ -212,6 +212,23 @@ units::celsius_t Tune(std::string keyName, units::celsius_t defaultValue) {
 
 frc::Rotation2d Tune(std::string keyName, frc::Rotation2d defaultValue) {
   return frc::Rotation2d(Tune(keyName, defaultValue.Degrees()));
+}
+
+FieldDisplay::FieldDisplay() {
+  frc::SmartDashboard::PutData("field", &_fieldDisplay);
+}
+
+void FieldDisplay::SetRobotPose(frc::Pose2d pose) {
+  _fieldDisplay.SetRobotPose(pose);
+}
+
+void FieldDisplay::DisplayPose(std::string label, frc::Pose2d pose) {
+  _fieldDisplay.GetObject(label)->SetPose(pose);
+}
+
+
+void FieldDisplay::DisplayTrajectory(std::string name, frc::Trajectory trajectory) {
+  _fieldDisplay.GetObject(name)->SetTrajectory(trajectory);
 }
 
 }  // namespace Logger

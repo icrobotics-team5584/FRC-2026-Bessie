@@ -16,9 +16,13 @@ namespace canid {
     constexpr int DRIVEBASE_BACK_LEFT_DRIVE = 10; 
     constexpr int DRIVEBASE_BACK_LEFT_TURN = 11;
     constexpr int DRIVEBASE_BACK_LEFT_ENCODER = 12; 
+
+    constexpr int PIGEON_2 = 19; 
+
 }
 
 namespace dio {
+    constexpr int BRAKE_COAST_BUTTON = 0;
 }
 
 namespace pwm {

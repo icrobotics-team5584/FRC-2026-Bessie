@@ -16,7 +16,8 @@
 #include <units/mass.h>
 #include <units/temperature.h>
 #include <array>
-
+#include <frc/smartdashboard/Field2d.h>
+#include <frc/trajectory/Trajectory.h>
 #include <frc2/command/CommandScheduler.h>
 
 namespace Logger {
@@ -67,5 +68,22 @@ units::second_t Tune(std::string keyName, units::second_t defaultValue);
 units::kilogram_t Tune(std::string keyName, units::kilogram_t defaultValue);
 units::celsius_t Tune(std::string keyName, units::celsius_t defaultValue);
 frc::Rotation2d Tune(std::string keyName, frc::Rotation2d defaultValue);
+
+class FieldDisplay {
+    public:
+    FieldDisplay();
+
+    static FieldDisplay& GetInstance() {
+        static FieldDisplay inst;
+        return inst;
+    }
+
+    void SetRobotPose(frc::Pose2d pose);
+    void DisplayPose(std::string label, frc::Pose2d pose);
+    void DisplayTrajectory(std::string name, frc::Trajectory trajectory);
+
+    private:
+    frc::Field2d _fieldDisplay;
+};
 
 };  // namespace Logger
