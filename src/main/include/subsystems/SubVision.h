@@ -16,6 +16,18 @@
 #include <frc/Filesystem.h>
 #include <wpi/interpolating_map.h>
 
+struct Camera {
+  photon::PhotonCamera* camera;
+  photon::PhotonPoseEstimator* poseEstimater;
+  std::optional<photon::EstimatedRobotPose>* estPose;
+};
+
+struct PoseEstimate {
+  frc::Pose2d pose;
+  double dev;
+  units::time::second_t timestamp;
+};
+
 class SubVision : public frc2::SubsystemBase {
 public:
   SubVision();
@@ -28,21 +40,16 @@ public:
 
   void SimulationPeriodic() override;
 
-  enum Side {
-    Left = 1,
-    Right = 2
-  };
-
   /**
    * Update pose estimater with vision, should be called every frame
    */
   void UpdateVision();
 
-  Side GetLastCameraUsed();
+  int GetLastCameraUsed();
 
   std::optional<frc::Pose2d> GetAprilTagPose(int id);
 
-  std::map<Side, std::optional<photon::EstimatedRobotPose>> GetPose();
+  std::vector<PoseEstimate> GetEstPose();
 
   frc::Pose2d CalculateRelativePose(frc::Pose2d pose, units::meter_t xTransform, units::meter_t yTransform);
 
@@ -55,13 +62,13 @@ public:
   double GetDev(photon::EstimatedRobotPose pose);
 
  private:
-
   struct TagObservation {
     photon::PhotonTrackedTarget tag;
-    Side cameraSide;
+    int cameraId;
     units::time::second_t timestamp;
   };
-  struct TagObservation _lastTagObservation;
+
+  struct TagObservation _lastTag;
 
   //Create field layout
   std::string _tagMapFilePath = frc::filesystem::GetDeployDirectory() + "/-reefscape.json";
@@ -110,6 +117,8 @@ public:
   };
 
   std::optional<photon::EstimatedRobotPose> _rightEstPose;
+
+  std::vector<Camera> _camList;
 
   //Deviation table for further distances from tag
   wpi::interpolating_map<units::meter_t, double> _devTable;
