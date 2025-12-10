@@ -1,7 +1,7 @@
 #include "commands/VisionCommand.h"
 #include "subsystems/SubDrivebase.h"
 #include "subsystems/SubVision.h"
-#include "subsystems/PoseEstimator.h"
+#include "utilities/PoseHandler.h"
 #include "utilities/Logger.h"
 
 namespace cmd {
@@ -11,9 +11,7 @@ frc2::CommandPtr AddVisionMeasurement() {
     return RunOnce([] {
         auto poses = SubVision::GetInstance().GetEstPose();
         for (auto pose : poses) {
-            Logger::Log("Vision/Updated pose", 1);
-            Logger::Log("Vision/Dev", pose.dev);
-            PoseEstimator::GetInstance().AddVisionMeasurement(
+            PoseHandler::GetInstance().AddVisionMeasurement(
                     pose.pose, pose.timestamp, {pose.dev, pose.dev, 0.9});
         }
     },{&SubVision::GetInstance()}).IgnoringDisable(true);
