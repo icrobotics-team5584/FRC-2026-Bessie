@@ -8,11 +8,11 @@
 #include <frc/smartdashboard/Field2d.h>
 #include "DrivebaseConfig.h"
 
-class PoseEstimater {
+class PoseEstimator {
 public:
-  PoseEstimater();
-  static PoseEstimater& GetInstance() {
-    static PoseEstimater inst;
+  PoseEstimator();
+  static PoseEstimator& GetInstance() {
+    static PoseEstimator inst;
     return inst;
   }
 
