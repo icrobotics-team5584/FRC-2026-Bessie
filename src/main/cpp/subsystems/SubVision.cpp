@@ -60,7 +60,8 @@ void SubVision::Periodic() {
 }
 
 void SubVision::LogStatus() {
-  Logger::Log("Vision/Last saw tag", _lastTag.tag.fiducialId);
+  Logger::Log("Vision/Last saw tag/id", _lastTag.tag.fiducialId);
+  Logger::Log("Vision/Last saw tag/timestamp", _lastTag.timestamp);
 }
 
 void SubVision::SimulationPeriodic() {
@@ -98,12 +99,15 @@ void SubVision::UpdateVision() {
 
 std::vector<PoseEstimate> SubVision::GetEstPose() {
   std::vector<PoseEstimate> l;
+  int i = 0;
   for (auto cam : _camList) {
     if (cam.estPose->has_value()) {
       double d = GetDev(cam.estPose->value());
       l.push_back({cam.estPose->value().estimatedPose.ToPose2d(),d, cam.estPose->value().timestamp});
+      i++;
     }
   }
+  Logger::Log("Vision/Est pose number", i);
   return l;
 }
 
