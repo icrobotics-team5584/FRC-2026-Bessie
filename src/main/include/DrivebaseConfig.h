@@ -3,14 +3,14 @@
 #include <frc/geometry/Translation2d.h>
 #include <frc/controller/ProfiledPIDController.h>
 #include <units/velocity.h>
+#include <units/angular_acceleration.h>
 
 namespace DrivebaseConfig {
   // Drive controls
   constexpr units::meters_per_second_t MAX_VELOCITY = 5_mps;
   constexpr units::meters_per_second_t MAX_DRIVE_TO_POSE_VELOCITY = 1_mps;
   constexpr units::turns_per_second_t MAX_ANGULAR_VELOCITY = 290_deg_per_s;  // CHANGE TO 720\[]
-
-  static constexpr units::turns_per_second_squared_t MAX_ANG_ACCEL{std::numbers::pi};
+  constexpr units::turns_per_second_squared_t MAX_ANG_ACCEL = std::numbers::pi * 1_tr_per_s_sq;
 
   static constexpr double MAX_JOYSTICK_ACCEL = 5;
   static constexpr double MAX_ANGULAR_JOYSTICK_ACCEL = 3;
