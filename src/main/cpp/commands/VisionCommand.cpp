@@ -13,7 +13,7 @@ frc2::CommandPtr AddVisionMeasurement() {
             PoseEstimator::GetInstance().AddVisionMeasurement(
                     pose.pose, pose.timestamp, {pose.dev, pose.dev, 0.9});
         }
-    });
+    },{&SubVision::GetInstance()}).IgnoringDisable(true);
 }
 
 }

@@ -6,15 +6,20 @@
 
 #include <frc2/command/Commands.h>
 #include "subsystems/SubDrivebase.h"
+#include "subsystems/SubVision.h"
 #include "commands/DriveCommands.h"
+#include "commands/VisionCommand.h"
 
 RobotContainer::RobotContainer() {
+  SubVision::GetInstance();
   SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
+  SubVision::GetInstance().SetDefaultCommand(cmd::AddVisionMeasurement());
   ConfigureBindings();
 }
 
 void RobotContainer::ConfigureBindings() {
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
+  _driverController.Y().OnTrue(frc2::cmd::RunOnce([]{SubDrivebase::GetInstance().ResetGyroHeading();}));
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {

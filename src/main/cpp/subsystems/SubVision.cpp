@@ -56,6 +56,11 @@ SubVision::SubVision() {
 
 void SubVision::Periodic() {
   UpdateVision();
+  LogStatus();
+}
+
+void SubVision::LogStatus() {
+  Logger::Log("Vision/Last saw tag", _lastTag.tag.fiducialId);
 }
 
 void SubVision::SimulationPeriodic() {

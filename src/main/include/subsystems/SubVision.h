@@ -45,6 +45,8 @@ public:
    */
   void UpdateVision();
 
+  void LogStatus();
+
   int GetLastCameraUsed();
 
   std::optional<frc::Pose2d> GetAprilTagPose(int id);
@@ -71,17 +73,8 @@ public:
   struct TagObservation _lastTag;
 
   //Create field layout
-  std::string _tagMapFilePath = frc::filesystem::GetDeployDirectory() + "/-reefscape.json";
+  std::string _tagMapFilePath = frc::filesystem::GetDeployDirectory() + "/2025-reefscape.json";
   frc::AprilTagFieldLayout _tagMap{_tagMapFilePath};
-
-  //side configs
-  std::array<int, 6> blueSide = {
-    18, 19, 17, 21, 20, 22
-  };
-
-  std::array<int, 6> redSide = {
-    7, 8, 6, 10, 9, 11
-  };
 
   //Left camera config
   std::string _leftCamName = "ICR_OV2981_L (1)";
