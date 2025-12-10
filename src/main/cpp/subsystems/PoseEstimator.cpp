@@ -21,6 +21,7 @@ void PoseEstimator::DrivebaseUpdate(frc::Rotation2d gyroAngle, wpi::array<frc::S
 
 void PoseEstimator::AddVisionMeasurement(frc::Pose2d pose, units::second_t timeStamp, wpi::array<double,3> dev) {
     _poseEstimator.AddVisionMeasurement(pose, timeStamp, dev);
+    _fieldDisplay.SetRobotPose(_poseEstimator.GetEstimatedPosition());
 }
 
 frc::Pose2d PoseEstimator::GetEstPose() {

@@ -70,7 +70,6 @@ void SubVision::SimulationPeriodic() {
 
 void SubVision::UpdateVision() {
   double largestArea = 0;
-  std::vector<std::string> targets[_camList.size()];
   int id = 0;
 
   for (auto cam : _camList) {
