@@ -172,6 +172,16 @@ frc2::CommandPtr SubDrivebase::Drive(std::function<frc::ChassisSpeeds()> speeds,
     }).FinallyDo([this] { Drive(0_mps,0_mps,0_deg_per_s, false); });
 }
 
+frc2::CommandPtr AlignToAngle(frc2::CommandXboxController& controller, units::angle::turn_t angle)
+{
+  return SubDrivebase::GetInstance().Drive([&controller]{
+    units::angle::degree_t gyro_angle = frc::InputModulus(SubDrivebase::GetInstance().GetGyroAngle().Degrees(), -180_deg, 180_deg);
+    frc::ChassisSpeeds joystick_speeds = SubDrivebase::GetInstance().CalcJoystickSpeeds(controller);
+    units::turns_per_second_t rotation_speeds = SubDrivebase::GetInstance().CalcRotateSpeed(144_deg + gyro_angle);
+    return frc::ChassisSpeeds(joystick_speeds.vx, joystick_speeds.vy, rotation_speeds);
+  }, true);
+}
+
 // Getters & calculations
 
 frc::Rotation2d SubDrivebase::GetGyroAngle(bool allianceRelated) { 

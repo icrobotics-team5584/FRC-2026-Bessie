@@ -15,6 +15,7 @@ RobotContainer::RobotContainer() {
 
 void RobotContainer::ConfigureBindings() {
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
+  _driverController.Y().WhileFalse(SubDrivebase::GetInstance().AlignToAngle(_driverController, 0_deg));
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
