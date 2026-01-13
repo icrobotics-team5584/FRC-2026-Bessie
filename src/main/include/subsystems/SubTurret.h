@@ -31,16 +31,14 @@ class SubTurret : public frc2::SubsystemBase {
   void Periodic() override;
 
  private:
-  ICSparkMax _turretMotor{canid::TURRET_MOTOR, 30_A};
+  ICSparkMax _turretMotor{canid::TURRET_MOTOR};
   rev::spark::SparkBaseConfig _turretMotorConfig;
 
   double P = 0;
   double I = 0;
   double D = 0;
   
-  static constexpr double ENCODER1_RATIO = 20.0/115; //20/115
-  static constexpr double ENCODER2_RATIO = 22.0/115; //22/115
-  static constexpr double GEAR_RATIO = 1.0/46; //1/46
-  // Components (e.g. motor controllers and sensors) should generally be
-  // declared private and exposed only through public methods.
+  static constexpr double ENCODER1_RATIO = 20.0/94.0;
+  static constexpr double ENCODER2_RATIO = 21.0/94.0;
+  static constexpr double GEAR_RATIO = (12.0/48.0) * (10.0/94.0);
 };

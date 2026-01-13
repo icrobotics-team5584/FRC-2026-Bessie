@@ -29,7 +29,7 @@ class SubHood : public frc2::SubsystemBase {
   units::ampere_t GetHoodMotorCurrent();
   frc2::CommandPtr ManualHoodDown(); 
   frc2::CommandPtr StowHood(); 
-  frc2::CommandPtr PivotFromVision(std::function<units::degree_t()> tagAngle);
+  frc2::CommandPtr PivotFromVision(std::function<units::meter_t()> distance);
   
   /**
    * Will be called periodically whenever the CommandScheduler runs.
@@ -44,16 +44,17 @@ class SubHood : public frc2::SubsystemBase {
 
   units::ampere_t zeroingCurrentLimit = 10_A;
 
+  static constexpr units::degree_t UPPER_LIMIT = 35.0_deg;
+  static constexpr units::degree_t LOWER_LIMIT = 12.5_deg;
+
   bool _resetting;
   bool _hasreset;
 
   units::turn_t STOW_TURNS = 0_tr;
 
-  wpi::interpolating_map<units::degree_t, units::degree_t> _pitchTable;
+  wpi::interpolating_map<units::meter_t, units::degree_t> _pitchTable;
 
-  double GEAR_RATIO = 1/113.75;
-  ICSparkMax _hoodMotor{canid::HOOD_MOTOR, 30_A};
+  double GEAR_RATIO = (8.0/42.0) * (24.0/400.0);
+  ICSparkMax _hoodMotor{canid::HOOD_MOTOR};
   rev::spark::SparkBaseConfig _hoodMotorConfig;
-  // Components (e.g. motor controllers and sensors) should generally be
-  // declared private and exposed only through public methods.
 };

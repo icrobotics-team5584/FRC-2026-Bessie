@@ -13,12 +13,11 @@ SubShooter::SubShooter() {
     _shooterMotor1Config.encoder.VelocityConversionFactor(1/GEAR_RATIO/60);
     _shooterMotor1Config.closedLoop.Pid(P,I,D);
     _shooterMotor1Config.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kCoast);
-    auto err1 = _shooterMotor1.AdjustConfig(_shooterMotor1Config);
-    frc::SmartDashboard::PutNumber("Shooter/config set err1", (int)err1);
+    _shooterMotor1Config.SmartCurrentLimit(30);
+    _shooterMotor1.OverwriteConfig(_shooterMotor1Config);
 
     _shooterMotor2Config.Follow(canid::SHOOTER_MOTOR_1, true);
-    auto err2 = _shooterMotor1.AdjustConfig(_shooterMotor1Config);
-    frc::SmartDashboard::PutNumber("Shooter/config set err2", (int)err2);
+    _shooterMotor2.OverwriteConfig(_shooterMotor2Config);
 }
 
 // This method will be called once per scheduler run
