@@ -10,8 +10,6 @@
 Robot::Robot() {}
 
 void Robot::RobotPeriodic() {
-  ICSparkFlex flex{1};
-  flex.Set(0.5);
   frc2::CommandScheduler::GetInstance().Run();
 }
 
