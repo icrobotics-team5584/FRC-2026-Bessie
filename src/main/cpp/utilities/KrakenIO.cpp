@@ -95,7 +95,7 @@ void KrakenIO::ConfigDriveMotor() {
     _configDriveMotor.CurrentLimits.SupplyCurrentLowerLimit = 40.0_A;
     _configDriveMotor.CurrentLimits.SupplyCurrentLimit = 60.0_A;
     _configDriveMotor.CurrentLimits.SupplyCurrentLowerTime = 0.1_s;
-    _configDriveMotor.CurrentLimits.StatorCurrentLimit = 80.0_A; //Untested
+    _configDriveMotor.CurrentLimits.StatorCurrentLimit = 80.0_A; 
     _configDriveMotor.Slot0.kS = DRIVE_S;
     _configDriveMotor.Slot0.kV = DRIVE_V;
     _configDriveMotor.Slot0.kA = DRIVE_A;
