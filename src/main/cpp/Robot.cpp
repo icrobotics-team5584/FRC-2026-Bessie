@@ -23,6 +23,10 @@ void Robot::AutonomousInit() {
   m_autonomousCommand = m_container.GetAutonomousCommand();
 
   if (m_autonomousCommand) {
+    /* m_autonomousCommand is a shared_ptr<frc2::CommandPtr>. Compiler gets mad
+     * at a single .get() but .Schedule has a override for a raw pointer to the
+     * Command. Ergo, the second ->get() gets the raw pointer.
+     */
     frc2::CommandScheduler::GetInstance().Schedule(m_autonomousCommand.get()->get());
   }
 }
