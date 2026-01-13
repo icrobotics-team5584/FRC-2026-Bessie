@@ -16,6 +16,7 @@
 #include <numbers>
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/Commands.h>
+#include <pathplanner/lib/controllers/PPHolonomicDriveController.h>
 
 class SubDrivebase : public frc2::SubsystemBase {
  public:
@@ -32,6 +33,7 @@ class SubDrivebase : public frc2::SubsystemBase {
   void SimulationPeriodic() override;
 
   void LogDrivebaseStates();
+  void SetPose(frc::Pose2d pose);
   void UpdateOdometry();
 
   void SyncSensors();
@@ -45,6 +47,8 @@ class SubDrivebase : public frc2::SubsystemBase {
   frc::Rotation2d GetGyroAngle(bool allianceRelated = false);
   units::degree_t GetPitch();
   units::degree_t GetRoll();
+
+  frc::ChassisSpeeds GetRobotRelativeSpeeds();
 
   units::meters_per_second_t GetVelocity();
   frc2::Trigger CheckCoastButton();
@@ -110,6 +114,12 @@ class SubDrivebase : public frc2::SubsystemBase {
 
   frc::PIDController _teleopTranslationController = DrivebaseConfig::TELE_TRANSLATION_PID;
   frc::ProfiledPIDController<units::radian> _teleopRotationController = DrivebaseConfig::TELE_ROTATION_PID;
+
+  std::shared_ptr<pathplanner::PPHolonomicDriveController> _pathplannerController =
+    std::make_shared<pathplanner::PPHolonomicDriveController>(
+      DrivebaseConfig::AUTO_TRANSLATION_PID,
+      DrivebaseConfig::AUTO_ROTATION_PID
+    );
 
   // Joystick controller rate limiters
   double _tunedMaxJoystickAccel = DrivebaseConfig::MAX_JOYSTICK_ACCEL;

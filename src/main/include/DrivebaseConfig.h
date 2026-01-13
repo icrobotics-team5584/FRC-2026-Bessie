@@ -3,6 +3,7 @@
 #include <frc/geometry/Translation2d.h>
 #include <frc/controller/ProfiledPIDController.h>
 #include <units/velocity.h>
+#include <pathplanner/lib/config/PIDConstants.h>
 
 namespace DrivebaseConfig {
   // Drive controls
@@ -32,4 +33,7 @@ namespace DrivebaseConfig {
   const frc::PIDController TELE_TRANSLATION_PID{7.0, 0.0, 0.0};
   const frc::ProfiledPIDController<units::radian> TELE_ROTATION_PID{
               3.0, 0, 0, {MAX_ANGULAR_VELOCITY, MAX_ANG_ACCEL}};
+
+  const pathplanner::PIDConstants AUTO_TRANSLATION_PID{3.2, 0.0, 0.3};
+  const pathplanner::PIDConstants AUTO_ROTATION_PID{1.5, 0.0, 0.0};
 }

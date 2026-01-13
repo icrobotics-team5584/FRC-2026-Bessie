@@ -2,6 +2,8 @@
 #include "subsystems/SubDrivebase.h"
 #include "utilities/PoseHandler.h"
 #include "utilities/Logger.h"
+#include <pathplanner/lib/auto/AutoBuilder.h>
+#include <pathplanner/lib/config/RobotConfig.h>
 
 SubDrivebase::SubDrivebase() {
   ctre::phoenix6::configs::Pigeon2Configuration gyroConfig;
@@ -9,6 +11,67 @@ SubDrivebase::SubDrivebase() {
   gyroConfig.MountPose.MountPoseRoll = 0_deg;
   gyroConfig.MountPose.MountPoseYaw = 0_deg;
   _gyro.GetConfigurator().Apply(gyroConfig);
+
+  using namespace pathplanner;
+  AutoBuilder::configure(
+      // Robot pose supplier
+      [this]() { 
+        return PoseHandler::GetInstance().GetPose();
+      },
+
+      // Method to reset odometry (will be called if your auto has a starting pose)
+      [this](frc::Pose2d pose) { 
+        Logger::Tune("Drivebase/ResetAutoStartingPose", true); 
+            SetPose(pose);
+      }, 
+
+      // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+      [this]() { return GetRobotRelativeSpeeds(); },
+
+      // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally
+      // outputs individual module feedforwards
+      [this](auto speeds, auto feedforwards) {
+        double _voltageFFscaler = 2.0;  // Logger::Tune("drivebase/volatageFFscaler", 1.0); // this
+                                        // a scaler for the voltageFF
+        if (feedforwards.robotRelativeForcesX.size() == 4 &&
+            feedforwards.robotRelativeForcesY.size() == 4) {
+          std::array<units::newton_t, 4> xForces = {
+              (feedforwards.robotRelativeForcesX[0] / _voltageFFscaler),
+              (feedforwards.robotRelativeForcesX[1] / _voltageFFscaler),
+              (feedforwards.robotRelativeForcesX[2] / _voltageFFscaler),
+              (feedforwards.robotRelativeForcesX[3] / _voltageFFscaler)};
+          std::array<units::newton_t, 4> yForces = {
+              (feedforwards.robotRelativeForcesY[0] / _voltageFFscaler),
+              (feedforwards.robotRelativeForcesY[1] / _voltageFFscaler),
+              (feedforwards.robotRelativeForcesY[2] / _voltageFFscaler),
+              (feedforwards.robotRelativeForcesY[3] / _voltageFFscaler)};
+          Drive(speeds.vx, speeds.vy, speeds.omega, false, xForces, yForces);
+        } else {
+            Drive(speeds.vx, speeds.vy, speeds.omega, false);
+        }
+      },
+      // PID Feedback controller for translation and rotation
+      _pathplannerController,
+
+      // robot mass, MOT, wheel locations, etc
+      RobotConfig::fromGUISettings(),
+
+      // Boolean supplier that controls when the path will be mirrored for the red alliance
+      // This will flip the path being followed to the red side of the field.
+      // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+      []() {
+        auto alliance = frc::DriverStation::GetAlliance();
+        if (alliance) {
+          Logger::Log("Drivebase/Pathplanner flipped to alliance", alliance.value());
+          return alliance.value() == frc::DriverStation::Alliance::kRed;
+        }
+        Logger::Log("Drivebase/Pathplanner flipped to alliance",
+                    "Failed to detect alliance, assuming blue");
+        return false;
+      },
+
+      // Reference to this subsystem to set requirements
+      this);
 }
 
 void SubDrivebase::Periodic() {
@@ -79,7 +142,35 @@ void SubDrivebase::LogDrivebaseStates() {
   _frontRight.SendSensorsToDash();
   _backLeft.SendSensorsToDash();
   _backRight.SendSensorsToDash();
-} 
+}
+
+frc::ChassisSpeeds SubDrivebase::GetRobotRelativeSpeeds() {
+  auto fl = _frontLeft.GetState();
+  auto fr = _frontRight.GetState();
+  auto bl = _backLeft.GetState();
+  auto br = _backRight.GetState();
+  return _kinematics.ToChassisSpeeds(fl, fr, bl, br);
+}
+
+void SubDrivebase::SetPose(frc::Pose2d pose) {
+  wpi::array<frc::SwerveModulePosition, 4U> states = {
+    _frontLeft.GetPosition(),
+    _frontRight.GetPosition(),
+    _backLeft.GetPosition(),
+    _backRight.GetPosition()
+  };
+
+  auto alliance = frc::DriverStation::GetAlliance();
+  if (alliance.value_or(frc::DriverStation::Alliance::kBlue) ==
+      frc::DriverStation::Alliance::kBlue) {
+    ResetGyroHeading(pose.Rotation().Degrees());
+  } else {
+    ResetGyroHeading(pose.Rotation().Degrees() - 180_deg);
+  }
+
+  PoseHandler::GetInstance().Update(pose.Rotation(), states);
+  PoseHandler::GetInstance().UpdateSim(pose.Rotation(), states);
+}
 
 void SubDrivebase::UpdateOdometry() {
   wpi::array<frc::SwerveModulePosition, 4U> states = {
