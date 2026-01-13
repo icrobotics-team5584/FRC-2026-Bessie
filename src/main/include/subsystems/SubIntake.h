@@ -4,8 +4,10 @@
 
 #pragma once
 
-#include <frc2/command/SubsystemBase.h>
 #include "utilities/ICSparkFlex.h"
+
+#include <frc2/command/SubsystemBase.h>
+
 #include "Constants.h"
 #include "frc2/command/Commands.h"
 #include "frc2/command/SubsystemBase.h"
@@ -14,22 +16,21 @@
 
 class SubIntake : public frc2::SubsystemBase {
  public:
- static SubIntake& GetInstance()
-  {
+  static SubIntake& GetInstance() {
     static SubIntake instance;
     return instance;
   }
   SubIntake();
-  
-  frc2::CommandPtr IntakeOn ();
-  frc2::CommandPtr IntakeOff ();
- 
+
+  frc2::CommandPtr IntakeOn();
+  frc2::CommandPtr IntakeOff();
+
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */
   void Periodic() override;
 
  private:
-  ICSparkFlex _intakeMotor {canid::INTAKE};
+  ICSparkFlex _intakeMotor{canid::INTAKE};
   rev::spark::SparkFlexConfig _intakeMotorConfig;
 };
