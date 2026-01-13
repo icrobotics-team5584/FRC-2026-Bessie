@@ -9,8 +9,5 @@
 #include <frc2/command/button/CommandXboxController.h>
 
 namespace cmd {
-/**
- * Toggles brake and coast for the drivebase, climber motor and elevator motors.
- */
 frc2::CommandPtr TeleopDrive(frc2::CommandXboxController& controller);
 }  // namespace cmd
