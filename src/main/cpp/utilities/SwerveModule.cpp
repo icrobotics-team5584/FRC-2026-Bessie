@@ -3,7 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "utilities/SwerveModule.h"
-// #include "utilities/Conversion.h"
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/MathUtil.h>
 #include <frc/RobotBase.h>
@@ -21,7 +20,6 @@ SwerveModule::SwerveModule(int canDriveMotorID, int canTurnMotorID, int canTurnE
 
   // Select IO interface
   if (BotVars::GetRobot() == BotVars::PRACTICE){
-    //CHANGE TO NEOIO
     _io = std::make_unique<NeoIO>(canTurnMotorID, canDriveMotorID, canTurnEncoderID, cancoderMagOffset);
   }
   else {

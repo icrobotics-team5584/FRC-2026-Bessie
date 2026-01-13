@@ -28,13 +28,13 @@ class NeoIO : public SwerveIO{
     const units::meter_t WHEEL_RADIUS = 0.0481098886_m;
     const units::meter_t WHEEL_CIRCUMFERENCE = 2 * std::numbers::pi * WHEEL_RADIUS;
 
-    const double TURN_P = 20.0;
+    const double TURN_P = 0.0;
     const double TURN_I = 0.0;
     const double TURN_D = 0;
-    const double DRIVE_P = 0.02;
+    const double DRIVE_P = 0;
     const double DRIVE_I = 0.0;
     const double DRIVE_D = 0.0;
-    const double DRIVE_FF = 0.12; 
+    const double DRIVE_FF = 0; 
   private:
 
     ICSparkMax _canTurnMotor;
