@@ -17,6 +17,12 @@ namespace canid {
     constexpr int DRIVEBASE_BACK_LEFT_TURN = 11;
     constexpr int DRIVEBASE_BACK_LEFT_ENCODER = 12; 
 
+    constexpr int HOOD_MOTOR = 13; 
+    constexpr int SHOOTER_MOTOR_1 = 14; 
+    constexpr int SHOOTER_MOTOR_2 = 15; 
+    constexpr int HOOD_MOTOR = 16; 
+    constexpr int TURRET_MOTOR = 17; 
+
     constexpr int PIGEON_2 = 19; 
 
 }
