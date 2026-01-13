@@ -7,10 +7,18 @@
 #include <frc2/command/Commands.h>
 #include "subsystems/SubDrivebase.h"
 #include "commands/DriveCommands.h"
+#include "commands/AutonCommands.h"
 
 RobotContainer::RobotContainer() {
   SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
   ConfigureBindings();
+
+  _autoManager.AddDefaultAuton(
+    "default",
+    AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton())
+  );
+
+  frc::SmartDashboard::PutData("CHOSEN AUTON:", &_autoManager.GetAutonChooser());
 }
 
 void RobotContainer::ConfigureBindings() {
@@ -18,6 +26,7 @@ void RobotContainer::ConfigureBindings() {
   _driverController.Y().WhileFalse(SubDrivebase::GetInstance().AlignToAngle(_driverController, 0_deg));
 }
 
-frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
-  return frc2::cmd::Print("No autonomous command configured");
+std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {
+  AutonHelper::AutonPtr chosen = _autoManager.GetChosenAuton();
+  return chosen; 
 }
