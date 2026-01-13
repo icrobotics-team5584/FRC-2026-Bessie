@@ -108,10 +108,10 @@ frc::Rotation2d NeoIO::GetAngle() {
 }
 
 units::meters_per_second_t NeoIO::GetSpeed() {
-  frc::SmartDashboard::PutNumber("swerve/module" + std::to_string(_canDriveMotor.GetDeviceId()) + " tps", _canDriveMotor.GetVelocity().value()); 
-  frc::SmartDashboard::PutNumber("swerve/module" + std::to_string(_canDriveMotor.GetDeviceId()) + " mps", (_canDriveMotor.GetVelocity().value() * WHEEL_CIRCUMFERENCE.value())
-  ); 
-  return (_canDriveMotor.GetVelocity().value() * WHEEL_CIRCUMFERENCE.value()) * 1_mps;
+  return (
+    _canDriveMotor.GetVelocity().convert<units::turns_per_second>().value() 
+    * WHEEL_CIRCUMFERENCE.value()
+  ) * 1_mps;
 }
 
 units::volt_t NeoIO::GetDriveVoltage() {
