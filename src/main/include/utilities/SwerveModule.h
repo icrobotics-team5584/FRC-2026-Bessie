@@ -2,7 +2,6 @@
 
 #include <ctre/phoenix6/TalonFX.hpp>
 #include <ctre/phoenix6/CANcoder.hpp>
-#include <ctre/phoenix6/configs/Configs.hpp>
 #include <utilities/ICSparkMax.h>
 #include <frc/controller/PIDController.h>
 #include <frc/controller/ProfiledPIDController.h>
