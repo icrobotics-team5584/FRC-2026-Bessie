@@ -7,6 +7,9 @@
 #include <frc2/command/Commands.h>
 #include "subsystems/SubDrivebase.h"
 #include "subsystems/SubVision.h"
+#include "subsystems/SubHood.h"
+#include "subsystems/SubShooter.h"
+#include "subsystems/SubTurret.h"
 #include "commands/DriveCommands.h"
 #include "commands/VisionCommand.h"
 
@@ -18,8 +21,10 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureBindings() {
-  _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
-  _driverController.Y().OnTrue(frc2::cmd::RunOnce([]{SubDrivebase::GetInstance().ResetGyroHeading();}));
+  _driverController.X().OnTrue(SubHood::GetInstance().SetHoodPosition(0_deg));
+  _driverController.Y().OnTrue(SubHood::GetInstance().SetHoodPosition(20_deg));
+  _driverController.A().OnTrue(SubShooter::GetInstance().SpinUpShooter());
+  _driverController.B().OnTrue(SubShooter::GetInstance().StopShooter());
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
