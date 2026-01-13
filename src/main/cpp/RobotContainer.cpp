@@ -5,12 +5,17 @@
 #include "RobotContainer.h"
 
 #include <frc2/command/Commands.h>
+#include "subsystems/SubDrivebase.h"
+#include "commands/DriveCommands.h"
 
 RobotContainer::RobotContainer() {
+  SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
   ConfigureBindings();
 }
 
-void RobotContainer::ConfigureBindings() {}
+void RobotContainer::ConfigureBindings() {
+  _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
+}
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
   return frc2::cmd::Print("No autonomous command configured");

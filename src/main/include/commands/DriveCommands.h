@@ -4,18 +4,10 @@
 
 #pragma once
 
-#include <frc2/command/CommandPtr.h>
+#include <frc2/command/Command.h>
+#include <units/length.h>
 #include <frc2/command/button/CommandXboxController.h>
 
-
-class RobotContainer {
- public:
-  RobotContainer();
-
-  frc2::CommandPtr GetAutonomousCommand();
-
- private:
-  void ConfigureBindings();
-  frc2::CommandXboxController _driverController{0};
-
-};
+namespace cmd {
+frc2::CommandPtr TeleopDrive(frc2::CommandXboxController& controller);
+}  // namespace cmd
