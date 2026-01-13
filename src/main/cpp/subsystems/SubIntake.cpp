@@ -4,6 +4,7 @@
 
 #include "subsystems/SubIntake.h"
 #include <units/current.h>
+#include <utilities/Logger.h>
 
 SubIntake::SubIntake() {
    _intakeMotorConfig.SmartCurrentLimit(60); 
@@ -19,4 +20,8 @@ SubIntake::SubIntake() {
  };
 
 // This method will be called once per scheduler run
-void SubIntake::Periodic() {}
+void SubIntake::Periodic() {
+Logger::Log("Intake/Intake Speed", _intakeMotor.Get());
+Logger::Log("Intake/Intake Current", _intakeMotor.GetOutputCurrent());
+
+}
