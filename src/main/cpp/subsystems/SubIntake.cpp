@@ -6,22 +6,27 @@
 #include <units/current.h>
 #include <utilities/Logger.h>
 
-SubIntake::SubIntake() {
-   _intakeMotorConfig.SmartCurrentLimit(60); 
-   _intakeMotor.AdjustConfig(_intakeMotorConfig);
+SubIntake::SubIntake()
+{
+    _intakeMotorConfig.SmartCurrentLimit(60);
+    _intakeMotor.OverwriteConfig(_intakeMotorConfig);
+    Logger::Log("Intake/Intake Motor", &_intakeMotor);
 }
 
- frc2::CommandPtr SubIntake::IntakeOn () {
-    return StartEnd ([this]{_intakeMotor.Set(1);}, [this]{_intakeMotor.Set(0);});
- };
+frc2::CommandPtr SubIntake::IntakeOn()
+{
+    return StartEnd([this]
+                    { _intakeMotor.Set(1); }, [this]
+                    { _intakeMotor.Set(0); });
+};
 
- frc2::CommandPtr SubIntake::IntakeOff () {
-    return RunOnce ([this]{_intakeMotor.Set(0);});   
- };
+frc2::CommandPtr SubIntake::IntakeOff()
+{
+    return RunOnce([this]
+                   { _intakeMotor.Set(0); });
+};
 
 // This method will be called once per scheduler run
-void SubIntake::Periodic() {
-Logger::Log("Intake/Intake Speed", _intakeMotor.Get());
-Logger::Log("Intake/Intake Current", _intakeMotor.GetOutputCurrent());
-
+void SubIntake::Periodic()
+{
 }

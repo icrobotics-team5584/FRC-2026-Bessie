@@ -14,6 +14,11 @@
 
 class SubIntake : public frc2::SubsystemBase {
  public:
+ static SubIntake& GetInstance()
+  {
+    static SubIntake instance;
+    return instance;
+  }
   SubIntake();
   
   frc2::CommandPtr IntakeOn ();
