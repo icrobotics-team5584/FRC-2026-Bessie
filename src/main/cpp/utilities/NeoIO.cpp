@@ -6,8 +6,8 @@
 NeoIO::NeoIO(int turnCanID, int driveCanID, int encoderCanID,
              units::turn_t cancoderMagOffset)
     : _canTurnMotor(turnCanID), _canDriveMotor(driveCanID), _canEncoder(encoderCanID) {
-  frc::SmartDashboard::PutData("Swerve/DriveMotor" + std::to_string(driveCanID), (wpi::Sendable*) &_canDriveMotor);
-  frc::SmartDashboard::PutData("Swerve/TurnMotor" + std::to_string(turnCanID), (wpi::Sendable*) &_canTurnMotor);
+  frc::SmartDashboard::PutData("swerve/DriveMotor" + std::to_string(driveCanID), (wpi::Sendable*) &_canDriveMotor);
+  frc::SmartDashboard::PutData("swerve/TurnMotor" + std::to_string(turnCanID), (wpi::Sendable*) &_canTurnMotor);
 }
 
 void NeoIO::ConfigTurnMotor() {
@@ -48,7 +48,7 @@ void NeoIO::SetAngle(units::turn_t angle) {
 }
 
 void NeoIO::SendSensorsToDash() {
-  // use Brayden logging tool once imported
+  // no-op, spark logging handled by ICSpark
 }
 
 void NeoIO::SetDesiredVelocity(units::meters_per_second_t velocity, units::newton_t forceFF) {
@@ -108,8 +108,8 @@ frc::Rotation2d NeoIO::GetAngle() {
 }
 
 units::meters_per_second_t NeoIO::GetSpeed() {
-  frc::SmartDashboard::PutNumber("Swerve/module" + std::to_string(_canDriveMotor.GetDeviceId()) + " tps", _canDriveMotor.GetVelocity().value()); 
-  frc::SmartDashboard::PutNumber("Swerve/module" + std::to_string(_canDriveMotor.GetDeviceId()) + " mps", (_canDriveMotor.GetVelocity().value() * WHEEL_CIRCUMFERENCE.value())
+  frc::SmartDashboard::PutNumber("swerve/module" + std::to_string(_canDriveMotor.GetDeviceId()) + " tps", _canDriveMotor.GetVelocity().value()); 
+  frc::SmartDashboard::PutNumber("swerve/module" + std::to_string(_canDriveMotor.GetDeviceId()) + " mps", (_canDriveMotor.GetVelocity().value() * WHEEL_CIRCUMFERENCE.value())
   ); 
   return (_canDriveMotor.GetVelocity().value() * WHEEL_CIRCUMFERENCE.value()) * 1_mps;
 }
