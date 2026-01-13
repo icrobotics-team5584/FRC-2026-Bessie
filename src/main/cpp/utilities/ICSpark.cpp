@@ -60,7 +60,7 @@ rev::REVLibError ICSpark::Configure(rev::spark::SparkBaseConfig &config,
       _configErrorAlert.Set(true);
     }
   }
-  RefreshConfigCache();
+  // RefreshConfigCache(); // TODO: ConfigAccessor seems to be causing segfault, fix.
   return error;
 }
 
