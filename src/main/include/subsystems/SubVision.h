@@ -73,11 +73,11 @@ public:
   struct TagObservation _lastTag;
 
   //Create field layout
-  std::string _tagMapFilePath = frc::filesystem::GetDeployDirectory() + "/-rebuilt.json";
+  std::string _tagMapFilePath = frc::filesystem::GetDeployDirectory() + "/2026-rebuilt.json";
   frc::AprilTagFieldLayout _tagMap{_tagMapFilePath};
 
   //Left camera config
-  std::string _leftCamName = "ICR_OV2981_L (1)";
+  std::string _leftCamName = "ICR_OV2981_L";
 
   photon::PhotonCamera _leftCamera{_leftCamName};
 
@@ -88,14 +88,13 @@ public:
 
   photon::PhotonPoseEstimator _leftPoseEstimater{
     _tagMap,
-    photon::PoseStrategy::MULTI_TAG_PNP_ON_COPROCESSOR,
     _leftBotToCam
   };
 
   std::optional<photon::EstimatedRobotPose> _leftEstPose;
 
   //Right camera config
-  std::string _rightCamName = "ICR_OV9281_R (1)";
+  std::string _rightCamName = "ICR_OV9281_R";
 
   photon::PhotonCamera _rightCamera{_rightCamName};
 
@@ -105,7 +104,6 @@ public:
 
   photon::PhotonPoseEstimator _rightPoseEstimater{
     _tagMap,
-    photon::PoseStrategy::MULTI_TAG_PNP_ON_COPROCESSOR,
     _rightBotToCam
   };
 

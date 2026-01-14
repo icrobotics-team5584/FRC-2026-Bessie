@@ -3,6 +3,7 @@
 #include <utilities/IOSwerve.h>
 #include <ctre/phoenix6/TalonFX.hpp>
 #include <ctre/phoenix6/CANcoder.hpp>
+#include <ctre/phoenix6/core/CoreTalonFX.hpp>
 #include <units/time.h>
 #include <units/velocity.h>
 #include <units/voltage.h>

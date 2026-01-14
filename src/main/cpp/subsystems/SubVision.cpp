@@ -36,8 +36,6 @@ SubVision::SubVision() {
   _devTable.insert(2_m, 0.068);
   _devTable.insert(3_m, 0.230);
 
-  _leftPoseEstimater.SetMultiTagFallbackStrategy(photon::PoseStrategy::LOWEST_AMBIGUITY);
-
   // Sim set up
   _visionSim.AddAprilTags(_tagMap);
   _visionSim.AddCamera(&_leftCamSim, _leftBotToCam);

@@ -2,6 +2,7 @@
 
 #include <ctre/phoenix6/TalonFX.hpp>
 #include <ctre/phoenix6/CANcoder.hpp>
+#include <ctre/phoenix6/core/CoreCANcoder.hpp>
 #include <utilities/ICSparkMax.h>
 #include <frc/controller/PIDController.h>
 #include <frc/controller/ProfiledPIDController.h>
@@ -51,6 +52,4 @@ class SwerveModule {
 
   ctre::phoenix6::hardware::CANcoder _cancoder;
   ctre::phoenix6::configs::CANcoderConfiguration _cancoderConfig;
-
-
 };

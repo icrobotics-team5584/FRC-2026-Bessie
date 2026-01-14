@@ -30,6 +30,8 @@ void RobotContainer::ConfigureBindings() {
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
   _driverController.Y().OnTrue(SubDrivebase::GetInstance().ResetGyroCmd());
   _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
+  _driverController.A().OnTrue(SubDrivebase::GetInstance().DriveToPose([] {return frc::Pose2d{1_m, 1_m, -90_deg};}, 1.0));
+  _driverController.RightBumper().OnTrue(frc2::cmd::RunOnce([]{SubDrivebase::GetInstance().SetPose(frc::Pose2d{0_m,0_m,0_deg});}));
 }
 
 std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {
