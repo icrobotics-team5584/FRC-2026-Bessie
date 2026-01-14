@@ -5,15 +5,15 @@
 #include "subsystems/SubClimber.h"
 
 SubClimber::SubClimber() {
-  _leftClimbMotorConfig.encoder.PositionConversionFactor(GEAR_RATIO);
-  _leftClimbMotorConfig.encoder.VelocityConversionFactor(GEAR_RATIO / 60); /* RPM / 60 */
+  _leftClimbMotorConfig.encoder.PositionConversionFactor(1 / GEAR_RATIO);
+  _leftClimbMotorConfig.encoder.VelocityConversionFactor(1 / GEAR_RATIO);
   _leftClimbMotorConfig.SmartCurrentLimit(60);                             /* Amps */
   _leftClimbMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
   _leftClimbMotorConfig.closedLoop.Pid(P, I, D, rev::spark::ClosedLoopSlot::kSlot0);
   _leftClimbMotor.OverwriteConfig(_leftClimbMotorConfig);
 
-  _rightClimbMotorConfig.encoder.PositionConversionFactor(GEAR_RATIO);
-  _rightClimbMotorConfig.encoder.VelocityConversionFactor(GEAR_RATIO / 60); /* RPM / 60 */
+  _rightClimbMotorConfig.encoder.PositionConversionFactor(1 / GEAR_RATIO);
+  _rightClimbMotorConfig.encoder.VelocityConversionFactor(1 / GEAR_RATIO); /* RPM / 60 */
   _rightClimbMotorConfig.SmartCurrentLimit(60);                             /* Amps */
   _leftClimbMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
   _rightClimbMotorConfig.closedLoop.Pid(P, I, D, rev::spark::ClosedLoopSlot::kSlot0);

@@ -66,7 +66,7 @@ class SubClimber : public frc2::SubsystemBase {
   const double P = 0;
   const double I = 0;
   const double D = 0;
-  const double GEAR_RATIO = 1 / 1; /* mechanism rotations per motor rotations*/
+  const double GEAR_RATIO = 1;
 
   ICSparkFlex _leftClimbMotor{canid::CLIMBER_LEFT};
   ICSparkFlex _rightClimbMotor{canid::CLIMBER_RIGHT};
