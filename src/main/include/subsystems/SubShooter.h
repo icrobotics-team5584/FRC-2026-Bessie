@@ -47,7 +47,6 @@ class SubShooter : public frc2::SubsystemBase {
   double I = 0;
   double D = 0;
   double V = 0;
-  units::turns_per_second_t SHOOTER_SPEED = 1_tps;
 
   ctre::phoenix6::configs::TalonFXConfiguration _shooterMotor1Config;
   ctre::phoenix6::controls::VelocityVoltage _flywheelTargetVelocity{0_tps};
