@@ -52,19 +52,29 @@ void SubShooter::Periodic() {
     _shooterMechTopRoller.SetAngle(motor1Position);
 
     units::angle::degree_t motor2Position = _shooterMotor2.GetPosition().GetValue();
-    _shooterMechBottomRoller.SetAngle(-motor2Position);
+    _shooterMechBottomRoller.SetAngle(motor2Position);
 }
 
 void SubShooter::SimulationPeriodic() {
     auto& leftState = _shooterMotor1.GetSimState();
     leftState.SetSupplyVoltage(12.0_V);
 
-    _flywheelSim.SetInputVoltage(leftState.GetMotorVoltage());
-    _flywheelSim.Update(20_ms);
+    _leftFlywheelSim.SetInputVoltage(leftState.GetMotorVoltage());
+    _leftFlywheelSim.Update(20_ms);
 
-    leftState.SetRotorVelocity(_flywheelSim.GetAngularVelocity());
-    leftState.SetRotorAcceleration(_flywheelSim.GetAngularAcceleration());
-    leftState.AddRotorPosition(_flywheelSim.GetAngularVelocity().value()/(3.14*2)*360*0.02*1_tr);
+    leftState.SetRotorVelocity(_leftFlywheelSim.GetAngularVelocity());
+    leftState.SetRotorAcceleration(_leftFlywheelSim.GetAngularAcceleration());
+    leftState.AddRotorPosition(_leftFlywheelSim.GetAngularVelocity().value()/(3.14*2)*360*0.02*1_tr);
+
+    auto& rightState = _shooterMotor2.GetSimState();
+    rightState.SetSupplyVoltage(12.0_V);
+
+    _rightFlywheelSim.SetInputVoltage(rightState.GetMotorVoltage());
+    _rightFlywheelSim.Update(20_ms);
+
+    rightState.SetRotorVelocity(_rightFlywheelSim.GetAngularVelocity());
+    rightState.SetRotorAcceleration(_rightFlywheelSim.GetAngularAcceleration());
+    rightState.AddRotorPosition(_rightFlywheelSim.GetAngularVelocity().value()/(3.14*2)*360*0.02*1_tr);
 }
 
 frc2::CommandPtr SubShooter::SetShooterTarget(units::turns_per_second_t speed) {

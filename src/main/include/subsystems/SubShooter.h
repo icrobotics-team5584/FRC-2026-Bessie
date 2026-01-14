@@ -56,8 +56,11 @@ class SubShooter : public frc2::SubsystemBase {
   ctre::phoenix6::controls::VelocityVoltage _flywheelTargetVelocity{0_tps};
 
   //Sim
-  frc::LinearSystem<1,1,1> _flywheelSystem = frc::LinearSystemId::FlywheelSystem(MOTOR_MODEL, MOI, GEAR_RATIO);
-  frc::sim::FlywheelSim _flywheelSim{_flywheelSystem, MOTOR_MODEL};
+  frc::LinearSystem<1,1,1> _leftFlywheelSystem = frc::LinearSystemId::FlywheelSystem(MOTOR_MODEL, MOI, GEAR_RATIO);
+  frc::sim::FlywheelSim _leftFlywheelSim{_leftFlywheelSystem, MOTOR_MODEL};
+
+  frc::LinearSystem<1,1,1> _rightFlywheelSystem = frc::LinearSystemId::FlywheelSystem(MOTOR_MODEL, MOI, GEAR_RATIO);
+  frc::sim::FlywheelSim _rightFlywheelSim{_rightFlywheelSystem, MOTOR_MODEL};
 
   //mechanism2d
   frc::Mechanism2d _shooterMech{0.25, 0.25};
