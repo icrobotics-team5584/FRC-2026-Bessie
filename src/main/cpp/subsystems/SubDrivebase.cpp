@@ -75,8 +75,10 @@ SubDrivebase::SubDrivebase() {
 }
 
 void SubDrivebase::Periodic() {
+  auto loopstart = frc::GetTime();
   LogDrivebaseStates();
   UpdateOdometry();
+  Logger::Log("Drivebase/loop time (sec)", (frc::GetTime() - loopstart));
 }
 
 void SubDrivebase::SimulationPeriodic() {
