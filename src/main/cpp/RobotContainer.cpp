@@ -16,10 +16,8 @@ RobotContainer::RobotContainer() {
   ConfigureBindings();
   SubVision::GetInstance();
 
-  _autoManager.AddDefaultAuton(
-    "default",
-    AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton())
-  );
+  _autoManager.AddDefaultAuton("default", AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton()));
+  _autoManager.AddAuton("driveInASquare", AutonHelper::MakeCommandPtrAuto(cmd::DriveInASquare()));
 
   frc::SmartDashboard::PutData("CHOSEN AUTON:", &_autoManager.GetAutonChooser());
 }

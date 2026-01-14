@@ -290,6 +290,7 @@ frc::ChassisSpeeds SubDrivebase::CalcDriveToPoseSpeeds(frc::Pose2d targetPose) {
   double targetXMeters = targetPose.X().value();
   double targetYMeters = targetPose.Y().value();
   units::turn_t targetRotation = targetPose.Rotation().Radians();
+  
   frc::Pose2d currentPosition = PoseHandler::GetInstance().GetPose();
   double currentXMeters = currentPosition.X().value();
   double currentYMeters = currentPosition.Y().value();
@@ -298,7 +299,7 @@ frc::ChassisSpeeds SubDrivebase::CalcDriveToPoseSpeeds(frc::Pose2d targetPose) {
   // Use PID controllers to calculate speeds
   auto xSpeed = _teleopTranslationController.Calculate(currentXMeters, targetXMeters) * 1_mps;
   auto ySpeed = _teleopTranslationController.Calculate(currentYMeters, targetYMeters) * 1_mps;
-  auto rSpeed = CalcRotateSpeed(currentRotation - targetRotation);
+  auto rSpeed = CalcRotateSpeed(frc::AngleModulus(currentRotation - targetRotation));
 
   // Clamp to max velocity
   xSpeed = units::math::min(xSpeed, DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);

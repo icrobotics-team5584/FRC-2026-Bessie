@@ -2,4 +2,5 @@
 
 namespace cmd {
     frc2::CommandPtr DefaultAuton();
+    frc2::CommandPtr DriveInASquare();
 }
