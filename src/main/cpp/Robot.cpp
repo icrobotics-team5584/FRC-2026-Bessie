@@ -11,6 +11,12 @@ Robot::Robot() {}
 
 void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();
+  Logger::Log("Robot/RioBrownOut", frc::RobotController::IsBrownedOut());
+  Logger::Log("Robot/RioInputVoltage", frc::RobotController::GetInputVoltage());
+  Logger::Log("Robot/RioInputCurrent", frc::RobotController::GetInputCurrent());
+  Logger::Log("Robot/BatteryVoltage", frc::RobotController::GetBatteryVoltage());
+  Logger::Log("Robot/PDHInputVoltage", frc::RobotController::GetInputVoltage());
+  Logger::Log("Robot/PDHTotalCurrent", frc::RobotController::GetInputCurrent());
 }
 
 void Robot::DisabledInit() {}
