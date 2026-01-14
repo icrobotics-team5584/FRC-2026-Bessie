@@ -10,6 +10,7 @@
 SubShooter::SubShooter() {
     frc::SmartDashboard::PutData("Shooter/Motor1", &_shooterMotor1);
     frc::SmartDashboard::PutData("Shooter/Motor2", &_shooterMotor2);
+    frc::SmartDashboard::PutData("Shooter/mech2dDisplay", &_shooterMech);
 
     // Coast Mode
     _shooterMotor1Config.MotorOutput.NeutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
@@ -45,6 +46,11 @@ SubShooter::SubShooter() {
 
 // This method will be called once per scheduler run
 void SubShooter::Periodic() {
+    units::angle::degree_t motor1Position = _shooterMotor1.GetPosition().GetValue();
+    _shooterMechTopRoller.SetAngle(motor1Position);
+
+    units::angle::degree_t motor2Position = _shooterMotor2.GetPosition().GetValue();
+    _shooterMechBottomRoller.SetAngle(-motor2Position);
 }
 
 void SubShooter::SimulationPeriodic() {

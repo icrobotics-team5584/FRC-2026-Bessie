@@ -13,6 +13,9 @@
 #include <frc/simulation/FlywheelSim.h>
 #include <frc/system/plant/DCMotor.h>
 #include <frc/system/plant/LinearSystemId.h>
+#include <frc/smartdashboard/Mechanism2d.h>
+#include <frc/smartdashboard/MechanismLigament2d.h>
+#include "utilities/MechanismCircle2d.h"
 
 class SubShooter : public frc2::SubsystemBase {
  public:
@@ -46,7 +49,7 @@ class SubShooter : public frc2::SubsystemBase {
   double P = 1.0;
   double I = 0;
   double D = 0;
-  double V = 0;
+  double V = 1.0;
   units::turns_per_second_t SHOOTER_SPEED = 1_tps;
 
   ctre::phoenix6::configs::TalonFXConfiguration _shooterMotor1Config;
@@ -55,4 +58,14 @@ class SubShooter : public frc2::SubsystemBase {
   //Sim
   frc::LinearSystem<1,1,1> _flywheelSystem = frc::LinearSystemId::FlywheelSystem(MOTOR_MODEL, MOI, GEAR_RATIO);
   frc::sim::FlywheelSim _flywheelSim{_flywheelSystem, MOTOR_MODEL};
+
+  //mechanism2d
+  frc::Mechanism2d _shooterMech{0.25, 0.25};
+  frc::MechanismRoot2d* _shooterMechRoot = _shooterMech.GetRoot("shooterRoot", 0.125, 0.125);
+  frc::MechanismLigament2d *_shooterMechUpperConnector =
+    _shooterMechRoot->Append<frc::MechanismLigament2d>("shooterUpperConnector", 0.05, 90_deg, 0);
+  MechanismCircle2d _shooterMechTopRoller{_shooterMechUpperConnector, "shooterTopRoller", 0.025, 0_deg};
+  frc::MechanismLigament2d *_shooterMechLowerConnector =
+    _shooterMechRoot->Append<frc::MechanismLigament2d>("shooterLowerConnector", 0.05, -90_deg, 0);
+  MechanismCircle2d _shooterMechBottomRoller{_shooterMechLowerConnector, "shooterBottomRoller", 0.025, 0_deg};
 };
