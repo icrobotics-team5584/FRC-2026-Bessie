@@ -79,7 +79,6 @@ public:
 
   photon::PhotonPoseEstimator _leftPoseEstimater{
     _tagMap,
-    photon::PoseStrategy::MULTI_TAG_PNP_ON_COPROCESSOR,
     _leftBotToCam
   };
 
@@ -96,7 +95,6 @@ public:
 
   photon::PhotonPoseEstimator _rightPoseEstimater{
     _tagMap,
-    photon::PoseStrategy::MULTI_TAG_PNP_ON_COPROCESSOR,
     _rightBotToCam
   };
 
