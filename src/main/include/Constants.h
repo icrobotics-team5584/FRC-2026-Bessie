@@ -20,6 +20,8 @@ namespace canid {
     constexpr int PIGEON_2 = 13; 
     constexpr int INTAKE = 14;
 
+    constexpr int CLIMBER_TOP = 1;
+    constexpr int CLIMBER_BOT = 2;
 }
 
 namespace dio {
