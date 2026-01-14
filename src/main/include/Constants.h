@@ -19,13 +19,20 @@ namespace canid {
 
     constexpr int PIGEON_2 = 13; 
     constexpr int INTAKE = 14;
+    constexpr int STORAGE = 15;
 
 }
 
 namespace dio {
+    constexpr int STORAGE_SENSOR_HIGHER = 1;  
+    constexpr int STORAGE_SENSOR_LOWER = 2;
     constexpr int BRAKE_COAST_BUTTON = 0;
 }
 
 namespace pwm {
     constexpr int LED = 0;
+}
+
+namespace robvars {
+    constexpr int limit = 5;
 }

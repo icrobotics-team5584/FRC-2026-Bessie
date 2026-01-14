@@ -9,6 +9,8 @@
 #include "commands/DriveCommands.h"
 #include "subsystems/SubIntake.h"
 #include "commands/AutonCommands.h"
+#include "subsystems/SubStorage.h"
+#include <commands/FuelCommands.h>
 
 RobotContainer::RobotContainer() {
   SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
@@ -23,8 +25,10 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureBindings() {
+  
+
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
-  _driverController.Y().WhileTrue(SubIntake::GetInstance().IntakeOn());
+  _driverController.Y().WhileTrue(cmd::IntakeSequence());
 }
 
 std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {
