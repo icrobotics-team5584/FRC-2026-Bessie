@@ -23,7 +23,7 @@ RobotContainer::RobotContainer() {
 
 void RobotContainer::ConfigureBindings() {
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
-  _driverController.Y().WhileFalse(SubDrivebase::GetInstance().AlignToAngle(_driverController, 0_deg));
+  _driverController.Y().WhileTrue(SubDrivebase::GetInstance().AlignToAngle(_driverController, 135_deg));
 }
 
 std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {
