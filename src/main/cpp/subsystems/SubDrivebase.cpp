@@ -154,26 +154,6 @@ frc::ChassisSpeeds SubDrivebase::GetRobotRelativeSpeeds() {
   return _kinematics.ToChassisSpeeds(fl, fr, bl, br);
 }
 
-void SubDrivebase::SetPose(frc::Pose2d pose) {
-  wpi::array<frc::SwerveModulePosition, 4U> states = {
-    _frontLeft.GetPosition(),
-    _frontRight.GetPosition(),
-    _backLeft.GetPosition(),
-    _backRight.GetPosition()
-  };
-
-  auto alliance = frc::DriverStation::GetAlliance();
-  if (alliance.value_or(frc::DriverStation::Alliance::kBlue) ==
-      frc::DriverStation::Alliance::kBlue) {
-    ResetGyroHeading(pose.Rotation().Degrees());
-  } else {
-    ResetGyroHeading(pose.Rotation().Degrees() - 180_deg);
-  }
-
-  PoseHandler::GetInstance().Update(pose.Rotation(), states);
-  PoseHandler::GetInstance().UpdateSim(pose.Rotation(), states);
-}
-
 void SubDrivebase::UpdateOdometry() {
   wpi::array<frc::SwerveModulePosition, 4U> states = {
     _frontLeft.GetPosition(),
@@ -342,6 +322,47 @@ frc::ChassisSpeeds SubDrivebase::CalcDriveToPoseSpeeds(frc::Pose2d targetPose) {
   return frc::ChassisSpeeds{xSpeed, ySpeed, rSpeed};
 }
 
+void SubDrivebase::SetPose(frc::Pose2d pose) {
+  wpi::array<frc::SwerveModulePosition, 4U> states = {_frontLeft.GetPosition(),
+    _frontRight.GetPosition(), _backLeft.GetPosition(), _backRight.GetPosition()};
+
+  auto alliance = frc::DriverStation::GetAlliance();
+  if (alliance.value_or(frc::DriverStation::Alliance::kBlue) ==
+      frc::DriverStation::Alliance::kBlue) {
+    ResetGyroHeading(pose.Rotation().Degrees());
+  } else {
+    ResetGyroHeading(pose.Rotation().Degrees() - 180_deg);
+  }
+
+  PoseHandler::GetInstance().Update(pose.Rotation(), states);
+  PoseHandler::GetInstance().UpdateSim(pose.Rotation(), states);
+}
+
+bool SubDrivebase::IsAtPose(frc::Pose2d pose) {
+  auto currentPose = PoseHandler::GetInstance().GetPose();
+  auto rotError = GetAllianceRelativeGyroAngle() - pose.Rotation();
+  auto posError = currentPose.Translation().Distance(pose.Translation());
+  Logger::FieldDisplay::GetInstance().DisplayPose("current pose", currentPose);
+  Logger::FieldDisplay::GetInstance().DisplayPose("target pose", pose);
+
+  frc::SmartDashboard::PutNumber("Drivebase/rotError", rotError.Degrees().value());
+  frc::SmartDashboard::PutNumber("Drivebase/posError", posError.value());
+
+  frc::SmartDashboard::PutBoolean(
+    "Drivebase/IsAtPose", units::math::abs(rotError.Degrees()) < 2_deg && posError < 2_cm);
+
+  if (units::math::abs(rotError.Degrees()) < 2_deg && posError < 2_cm) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+frc2::CommandPtr SubDrivebase::DriveToPose(std::function<frc::Pose2d()> pose, double speedScaling = 1) {
+  return Drive(([this,pose,speedScaling]{ return CalcDriveToPoseSpeeds(pose()) * speedScaling;}), true)
+  .Until([this,pose] {return IsAtPose(pose());});
+} 
+
 frc::ChassisSpeeds SubDrivebase::CalcJoystickSpeeds(frc2::CommandXboxController& controller) {
   std::string configPath = "Drivebase/Config/";
   auto deadband = Logger::Tune(configPath + "Joystick Deadband", DrivebaseConfig::JOYSTICK_DEADBAND);
@@ -486,4 +507,14 @@ frc2::CommandPtr SubDrivebase::CharacteriseWheels() {
     Logger::Log("Drivebase/WheelCharacterisation/BLdelta", BLdelta);
     Logger::Log("Drivebase/WheelCharacterisation/BRdelta", BRdelta);
   })));
+}
+
+frc::Rotation2d SubDrivebase::GetAllianceRelativeGyroAngle() {
+  auto alliance = frc::DriverStation::GetAlliance();
+  if (alliance.value_or(frc::DriverStation::Alliance::kBlue) ==
+      frc::DriverStation::Alliance::kBlue) {
+    return _gyro.GetRotation2d();
+  } else {
+    return _gyro.GetRotation2d() - 180_deg;
+  }
 }

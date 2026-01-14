@@ -33,7 +33,6 @@ class SubDrivebase : public frc2::SubsystemBase {
   void SimulationPeriodic() override;
 
   void LogDrivebaseStates();
-  void SetPose(frc::Pose2d pose);
   void UpdateOdometry();
 
   void SyncSensors();
@@ -47,6 +46,7 @@ class SubDrivebase : public frc2::SubsystemBase {
   frc::Rotation2d GetGyroAngle(bool allianceRelated = false);
   units::degree_t GetPitch();
   units::degree_t GetRoll();
+  frc::Rotation2d GetAllianceRelativeGyroAngle();
 
   frc::ChassisSpeeds GetRobotRelativeSpeeds();
 
@@ -57,6 +57,10 @@ class SubDrivebase : public frc2::SubsystemBase {
   frc::ChassisSpeeds CalcDriveToPoseSpeeds(frc::Pose2d targetPose);
   frc::ChassisSpeeds CalcJoystickSpeeds(frc2::CommandXboxController& controller);
 
+  frc2::CommandPtr DriveToPose(std::function<frc::Pose2d()> pose, double speedScaling);
+  void SetPose(frc::Pose2d pose);
+  bool IsAtPose(frc::Pose2d pose);
+  
   /* ------------------------------------------------------------------------------------------------------------- */
   /* Commands */
 
@@ -114,6 +118,17 @@ class SubDrivebase : public frc2::SubsystemBase {
 
   frc::PIDController _teleopTranslationController = DrivebaseConfig::TELE_TRANSLATION_PID;
   frc::ProfiledPIDController<units::radian> _teleopRotationController = DrivebaseConfig::TELE_ROTATION_PID;
+
+  // P2P
+  static constexpr double MAX_P2P_ACCEL = 3;
+  static constexpr double MAX_P2P_ANGULAR_ACCEL = 9;
+  static constexpr units::meters_per_second_t MAX_DRIVE_TO_POSE_VELOCITY = 5_mps;
+
+  double _tunedMaxP2pAccel = MAX_P2P_ACCEL;
+  double _tunedMaxP2pAngAccel = MAX_P2P_ANGULAR_ACCEL;
+  frc::SlewRateLimiter<units::scalar> _p2pXLimiter{_tunedMaxP2pAccel / 1_s};
+  frc::SlewRateLimiter<units::scalar> _p2pYLimiter{_tunedMaxP2pAccel / 1_s};
+  frc::SlewRateLimiter<units::scalar> _p2pRLimiter{_tunedMaxP2pAngAccel / 1_s};
 
   std::shared_ptr<pathplanner::PPHolonomicDriveController> _pathplannerController =
     std::make_shared<pathplanner::PPHolonomicDriveController>(
