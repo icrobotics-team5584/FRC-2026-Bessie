@@ -73,7 +73,7 @@ public:
   struct TagObservation _lastTag;
 
   //Create field layout
-  std::string _tagMapFilePath = frc::filesystem::GetDeployDirectory() + "/-rebuilt.json";
+  std::string _tagMapFilePath = frc::filesystem::GetDeployDirectory() + "/2025-reefscape.json";// "/-rebuilt.json"
   frc::AprilTagFieldLayout _tagMap{_tagMapFilePath};
 
   //Left camera config
@@ -88,7 +88,7 @@ public:
 
   photon::PhotonPoseEstimator _leftPoseEstimater{
     _tagMap,
-    photon::PoseStrategy::MULTI_TAG_PNP_ON_COPROCESSOR,
+    // photon::PoseStrategy::MULTI_TAG_PNP_ON_COPROCESSOR, deprecated
     _leftBotToCam
   };
 
