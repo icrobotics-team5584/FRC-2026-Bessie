@@ -64,7 +64,7 @@ public:
   struct TagObservation _lastTagObservation;
 
   //Create field layout
-  std::string _tagMapFilePath = frc::filesystem::GetDeployDirectory() + "/-rebuilt.json";
+  std::string _tagMapFilePath = frc::filesystem::GetDeployDirectory() + "/2026-rebuilt.json";
   frc::AprilTagFieldLayout _tagMap{_tagMapFilePath};
 
   //Left camera config
