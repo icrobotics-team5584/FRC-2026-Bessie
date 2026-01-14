@@ -15,6 +15,8 @@ RobotContainer::RobotContainer() {
 
 void RobotContainer::ConfigureBindings() {
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
+  _driverController.Y().OnTrue(SubDrivebase::GetInstance().ResetGyroCmd());
+  _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
