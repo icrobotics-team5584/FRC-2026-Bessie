@@ -6,12 +6,9 @@
 #include "frc/smartdashboard/SmartDashboard.h"
 #include <ctre/phoenix6/configs/Configuration.hpp>
 #include <ctre/phoenix6/controls/Follower.hpp>
+#include "utilities/Logger.h"
 
 SubShooter::SubShooter() {
-    frc::SmartDashboard::PutData("Shooter/Motor1", &_shooterMotor1);
-    frc::SmartDashboard::PutData("Shooter/Motor2", &_shooterMotor2);
-    frc::SmartDashboard::PutData("Shooter/mech2dDisplay", &_shooterMech);
-
     // Coast Mode
     _shooterMotor1Config.MotorOutput.NeutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
 
@@ -39,13 +36,18 @@ SubShooter::SubShooter() {
     _shooterMotor2.GetConfigurator().Apply(_shooterMotor1Config);
 
     // Set motor 2 to follow motor 1
-    _shooterMotor2.SetControl(ctre::phoenix6::controls::Follower(_shooterMotor1.GetDeviceID(), false));
+    _shooterMotor2.SetControl(ctre::phoenix6::controls::Follower(_shooterMotor1.GetDeviceID(), ctre::phoenix6::signals::MotorAlignmentValue::Opposed));
 
     _shooterMotor1.GetClosedLoopReference().SetUpdateFrequency(100_Hz);
 }
 
 // This method will be called once per scheduler run
 void SubShooter::Periodic() {
+    Logger::LogFalcon("Shooter/Motor1", _shooterMotor1);
+    Logger::LogFalcon("Shooter/Motor2", _shooterMotor2);
+    frc::SmartDashboard::PutData("Shooter/mech2dDisplay", &_shooterMech);
+
+
     units::angle::degree_t motor1Position = _shooterMotor1.GetPosition().GetValue();
     _shooterMechTopRoller.SetAngle(motor1Position);
 
@@ -54,17 +56,15 @@ void SubShooter::Periodic() {
 }
 
 void SubShooter::SimulationPeriodic() {
-    // units::volt_t volts = _shooterMotor1.CalcSimVoltage();
     auto& leftState = _shooterMotor1.GetSimState();
+    leftState.SetSupplyVoltage(12.0_V);
+
     _flywheelSim.SetInputVoltage(leftState.GetMotorVoltage());
     _flywheelSim.Update(20_ms);
-    units::volt_t volts = _shooterMotor1.GetMotorVoltage().GetValue();
-    leftState.SetSupplyVoltage(volts);
+
     leftState.SetRotorVelocity(_flywheelSim.GetAngularVelocity());
     leftState.SetRotorAcceleration(_flywheelSim.GetAngularAcceleration());
-
-    // auto velocity = _flywheelSim.GetAngularVelocity();
-    // _shooterMotor1.IterateSim(velocity);
+    leftState.AddRotorPosition(_flywheelSim.GetAngularVelocity().value()/(3.14*2)*360*0.02*1_tr);
 }
 
 frc2::CommandPtr SubShooter::SetShooterTarget(units::turns_per_second_t speed) {
