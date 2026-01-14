@@ -9,13 +9,19 @@
 #include "commands/DriveCommands.h"
 #include "subsystems/SubIntake.h"
 #include "commands/AutonCommands.h"
+#include "Subsystems/SubVision.h"
 
 RobotContainer::RobotContainer() {
   SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
   ConfigureBindings();
-  
-  _autoManager.AddDefaultAuton("default", AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton()));
-  frc::SmartDashboard::PutData("Chosen Autonomous Routine", &_autoManager.GetAutonChooser());
+  SubVision::GetInstance();
+
+  _autoManager.AddDefaultAuton(
+    "default",
+    AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton())
+  );
+
+  frc::SmartDashboard::PutData("CHOSEN AUTON:", &_autoManager.GetAutonChooser());
 }
 
 void RobotContainer::ConfigureBindings() {
