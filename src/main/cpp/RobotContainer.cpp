@@ -7,6 +7,7 @@
 #include <frc2/command/Commands.h>
 #include "subsystems/SubDrivebase.h"
 #include "commands/DriveCommands.h"
+#include "subsystems/SubIntake.h"
 #include "commands/AutonCommands.h"
 
 RobotContainer::RobotContainer() {
@@ -23,6 +24,7 @@ RobotContainer::RobotContainer() {
 
 void RobotContainer::ConfigureBindings() {
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
+  _driverController.Y().WhileTrue(SubIntake::GetInstance().IntakeOn());
 }
 
 std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {
