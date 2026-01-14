@@ -207,6 +207,11 @@ class ICSpark : public wpi::Sendable {
    */
   void IterateSim(units::revolutions_per_minute_t velocity,
                   std::optional<units::turn_t> position = std::nullopt);
+  
+    /**
+   * Gets the output current.
+   */
+  units::ampere_t GetMotorOutputCurrent();
 
   /**
    * Gets the current closed loop control type.

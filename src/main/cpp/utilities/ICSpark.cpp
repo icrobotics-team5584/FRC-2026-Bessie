@@ -41,6 +41,8 @@ void ICSpark::InitSendable(wpi::SendableBuilder& builder) {
   builder.AddDoubleProperty("Gains/FF A (V_per_rpm_per_s)",   [&] { return _configCache.feedforwardAcceleration.value(); },                                   [&](double A) { TuneFeedforwardAcceleration(VoltsPerRpmPerS{A}); });
   builder.AddDoubleProperty("Motion/Max vel (rpm)",           [&] { return _configCache.motionMaxVelocity.value(); },                                         [&](double vel) { TuneMotionMaxVel(vel*1_rpm); });
   builder.AddDoubleProperty("Motion/Max accel (rpm_per_s)",   [&] { return _configCache.motionMaxAcceleration.value(); },                                     [&](double accel) { TuneMotionMaxAccel(accel*1_rev_per_m_per_s); });
+  builder.AddDoubleProperty("OutputCurrent",                  [&] { return GetMotorOutputCurrent().value(); },        nullptr);
+  builder.AddDoubleProperty("Temperature",                    [&] { return GetMotorTemperature().value(); },               nullptr);
   // clang-format on
 }
 
@@ -310,6 +312,10 @@ double ICSpark::GetDutyCycle() const {
   } else {
     return _spark->GetAppliedOutput();
   }
+}
+
+units::ampere_t ICSpark::GetMotorOutputCurrent() {
+  return _spark->GetOutputCurrent()*1_A;
 }
 
 units::volt_t ICSpark::GetMotorVoltage() {
