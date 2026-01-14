@@ -17,7 +17,8 @@ namespace canid {
     constexpr int DRIVEBASE_BACK_LEFT_TURN = 11;
     constexpr int DRIVEBASE_BACK_LEFT_ENCODER = 12; 
 
-    constexpr int PIGEON_2 = 19; 
+    constexpr int PIGEON_2 = 13; 
+    constexpr int INTAKE = 14;
 
 }
 

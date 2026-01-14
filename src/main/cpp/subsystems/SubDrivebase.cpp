@@ -4,7 +4,6 @@
 #include "utilities/Logger.h"
 
 SubDrivebase::SubDrivebase() {
-
   ctre::phoenix6::configs::Pigeon2Configuration gyroConfig;
   gyroConfig.MountPose.MountPosePitch = 0_deg;
   gyroConfig.MountPose.MountPoseRoll = 0_deg;
@@ -13,8 +12,10 @@ SubDrivebase::SubDrivebase() {
 }
 
 void SubDrivebase::Periodic() {
-  LogMotorState();
+  auto loopstart = frc::GetTime();
+  LogDrivebaseStates();
   UpdateOdometry();
+  Logger::Log("Drivebase/loop time (sec)", (frc::GetTime() - loopstart));
 }
 
 void SubDrivebase::SimulationPeriodic() {
@@ -42,7 +43,7 @@ void SubDrivebase::SimulationPeriodic() {
 
 // Commands
 
-void SubDrivebase::LogMotorState() {
+void SubDrivebase::LogDrivebaseStates() {
   Logger::Log("Drivebase/GyroAngle/Roll", SubDrivebase::GetInstance().GetRoll().value());
   Logger::Log("Drivebase/GyroAngle/Pitch", SubDrivebase::GetInstance().GetPitch().value());
   Logger::Log("Drivebase/Coast Button", CheckCoastButton().Get());
@@ -171,12 +172,6 @@ frc2::CommandPtr SubDrivebase::Drive(std::function<frc::ChassisSpeeds()> speeds,
         auto speedVal = speeds();
         Drive(speedVal.vx, speedVal.vy, speedVal.omega, fieldOriented);
     }).FinallyDo([this] { Drive(0_mps,0_mps,0_deg_per_s, false); });
-}
-
-frc2::CommandPtr SubDrivebase::DriveToPose(std::function<frc::Pose2d()> pose, double speedScaling) {
-  return Run([this, pose] {
-    
-  });
 }
 
 // Getters & calculations

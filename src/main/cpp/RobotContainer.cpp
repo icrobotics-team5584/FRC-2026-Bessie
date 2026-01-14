@@ -9,19 +9,30 @@
 #include "subsystems/SubVision.h"
 #include "commands/DriveCommands.h"
 #include "commands/VisionCommand.h"
+#include "subsystems/SubIntake.h"
+#include "commands/AutonCommands.h"
 
 RobotContainer::RobotContainer() {
   SubVision::GetInstance();
   SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
   SubVision::GetInstance().SetDefaultCommand(cmd::AddVisionMeasurement());
   ConfigureBindings();
+
+  _autoManager.AddDefaultAuton(
+    "default",
+    AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton())
+  );
+
+  frc::SmartDashboard::PutData("CHOSEN AUTON:", &_autoManager.GetAutonChooser());
 }
 
 void RobotContainer::ConfigureBindings() {
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
-  _driverController.Y().OnTrue(frc2::cmd::RunOnce([]{SubDrivebase::GetInstance().ResetGyroHeading();}));
+  _driverController.Y().OnTrue(SubDrivebase::GetInstance().ResetGyroCmd());
+  _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
 }
 
-frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
-  return frc2::cmd::Print("No autonomous command configured");
+std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {
+  AutonHelper::AutonPtr chosen = _autoManager.GetChosenAuton();
+  return chosen; 
 }

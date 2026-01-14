@@ -31,7 +31,7 @@ class SubDrivebase : public frc2::SubsystemBase {
   void Periodic() override;
   void SimulationPeriodic() override;
 
-  void LogMotorState();
+  void LogDrivebaseStates();
   void UpdateOdometry();
 
   void SyncSensors();
@@ -61,7 +61,6 @@ class SubDrivebase : public frc2::SubsystemBase {
 
   // Pose drive
   frc2::CommandPtr Drive(std::function<frc::ChassisSpeeds()> speeds, bool fieldOriented);
-  frc2::CommandPtr DriveToPose(std::function<frc::Pose2d()> pose, double speedScaling);
 
   // Gyro and sensor
   frc2::CommandPtr SyncSensor();
