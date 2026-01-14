@@ -12,13 +12,11 @@
 RobotContainer::RobotContainer() {
   SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
   ConfigureBindings();
+  
+  _autoManager.AddDefaultAuton("default", AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton()));
+  _autoManager.AddAuton("forward", AutonHelper::MakePathPlannerAuto(pathplanner::PathPlannerAuto("Forward")));
 
-  _autoManager.AddDefaultAuton(
-    "default",
-    AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton())
-  );
-
-  frc::SmartDashboard::PutData("CHOSEN AUTON:", &_autoManager.GetAutonChooser());
+  frc::SmartDashboard::PutData("Chosen Autonomous Routine", &_autoManager.GetAutonChooser());
 }
 
 void RobotContainer::ConfigureBindings() {
