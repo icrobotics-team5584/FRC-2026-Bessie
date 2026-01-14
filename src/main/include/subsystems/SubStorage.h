@@ -10,6 +10,7 @@
 #include "frc2/command/Commands.h"
 #include "rev/config/SparkFlexConfig.h"
 #include <frc/DigitalInput.h>
+#include <frc2/command/button/Trigger.h>
 
 
 class SubStorage : public frc2::SubsystemBase {
@@ -23,8 +24,9 @@ class SubStorage : public frc2::SubsystemBase {
   frc2::CommandPtr StorageOn();
   frc2::CommandPtr StorageOff();
 
- 
 
+  frc2::Trigger StorageEnterTrigger();
+  
   bool IsFull();
   bool IsEmpty();
   bool CheckSensorHigher();
@@ -37,9 +39,11 @@ class SubStorage : public frc2::SubsystemBase {
   void Periodic() override;
 
  private:
+  int fuelCount = 0;
   ICSparkFlex _storageMotor{canid::STORAGE};
   rev::spark::SparkFlexConfig _storageMotorConfig;
 
-  frc::DigitalInput _storageSensorHigher {dio::STORAGE_SENSOR_HIGHER};
-  frc::DigitalInput _storageSensorLower {dio::STORAGE_SENSOR_LOWER};
+  frc::DigitalInput _storagFullSensor {dio::STORAGE_SENSOR_FULL};
+  frc::DigitalInput _storageEmptySensor {dio::STORAGE_SENSOR_EMPTY};
+  frc::DigitalInput _storageEnterSensor {dio::STORAGE_SENSOR_ENTER};
 };

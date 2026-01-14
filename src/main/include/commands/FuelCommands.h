@@ -4,4 +4,4 @@
 
 namespace cmd {
 frc2::CommandPtr IntakeSequence();
-}  
+}

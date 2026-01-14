@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "subsystems/SubIntake.h"
+
 #include "subsystems/SubStorage.h"
 
 #include <units/current.h>
@@ -17,9 +18,7 @@ SubIntake::SubIntake() {
 frc2::CommandPtr SubIntake::IntakeOn() {
   return StartEnd(
     [this] {
-     
-        _intakeMotor.Set(1);
-      
+      _intakeMotor.Set(1);
     },
     [this] { _intakeMotor.Set(0); });
 };
@@ -29,6 +28,4 @@ frc2::CommandPtr SubIntake::IntakeOff() {
 };
 
 // This method will be called once per scheduler run
-void SubIntake::Periodic() {
-   
-}
+void SubIntake::Periodic() {}

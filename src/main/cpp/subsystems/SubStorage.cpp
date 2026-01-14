@@ -15,8 +15,10 @@ SubStorage::SubStorage() {
   _storageMotorConfig.SmartCurrentLimit(60);
   _storageMotor.OverwriteConfig(_storageMotorConfig);
   Logger::Log("Storage/Storage Motor", &_storageMotor);
-  // Logger::Log("Storage/Storage Sensor Higher", &_storageSensorHigher);
-  // Logger::Log("Storage/Storage Sensor Lower", &_storageSensorLower);
+
+  StorageEnterTrigger().OnTrue(frc2::cmd::RunOnce([this]{
+    fuelCount++;
+  }));
 }
 
 frc2::CommandPtr SubStorage::StorageOn() {
@@ -31,28 +33,25 @@ frc2::CommandPtr SubStorage::StorageOff() {
   return RunOnce([this] { _storageMotor.Set(0); });
 };
 
-bool SubStorage::CheckSensorHigher() {
-  // return true;
-  return !_storageSensorHigher.Get();
-}
 
-bool SubStorage::CheckSensorLower() {
-  // return true;
-  return !_storageSensorLower.Get();
-}
 
 bool SubStorage::IsFull() {
-  return _storageSensorHigher.Get();
+  return _storagFullSensor.Get();
 }
 
 bool SubStorage::IsEmpty() {
-  return !_storageSensorLower.Get();
+  return !_storageEmptySensor.Get();
+}
+
+frc2::Trigger SubStorage::StorageEnterTrigger() {
+    return frc2::Trigger([this] { return _storageEnterSensor.Get(); });
 }
 
 // This method will be called once per scheduler run
 void SubStorage::Periodic() {
   frc::SmartDashboard::PutBoolean("Storage/IsFull", IsFull());
   frc::SmartDashboard::PutBoolean("Storage/IsEmpty", IsEmpty());
+  frc::SmartDashboard::PutNumber("Storage/Fuel Count", fuelCount);
 
   // if (()) {
   //  StoreCurrentAmount();
