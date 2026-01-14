@@ -18,7 +18,12 @@ SubClimber::SubClimber() {
     _topClimbMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
     _botClimbMotorConfig.closedLoop.Pid(P, I, D, rev::spark::ClosedLoopSlot::kSlot0);
     _botClimbMotor.OverwriteConfig(_botClimbMotorConfig);
+    
+    frc::SmartDashboard::PutData("Climber/topClimbMotor", &_topClimbMotor);
+    frc::SmartDashboard::PutData("Climber/bottomClimbMotor", &_botClimbMotor);
 }
 
 // This method will be called once per scheduler run
 void SubClimber::Periodic() {}
+
+void SimulationPeriodic() {}

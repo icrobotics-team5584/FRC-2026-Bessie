@@ -6,13 +6,14 @@
 
 #include "utilities/ICSparkFlex.h"
 
+#include <frc/smartdashboard/SmartDashboard.h>
+#include <frc2/command/Commands.h>
 #include <frc2/command/SubsystemBase.h>
 
 #include <rev/config/SparkFlexConfig.h>
 #include <rev/config/SparkFlexConfigAccessor.h>
 
 #include "Constants.h"
-#include "frc2/command/Commands.h"
 
 class SubClimber : public frc2::SubsystemBase {
  public:
@@ -26,9 +27,9 @@ class SubClimber : public frc2::SubsystemBase {
    * Will be called periodically whenever the CommandScheduler runs.
    */
   void Periodic() override;
+  void SimulationPeriodic() override;
 
  private:
-  
   /* place holder values */
   const double P = 0;
   const double I = 0;
