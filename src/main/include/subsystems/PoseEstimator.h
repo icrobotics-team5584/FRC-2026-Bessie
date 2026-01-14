@@ -6,7 +6,15 @@
 
 #include <frc/estimator/SwerveDrivePoseEstimator.h>
 #include <frc/smartdashboard/Field2d.h>
+#include <frc/geometry/Pose3d.h>
 #include "DrivebaseConfig.h"
+
+
+struct ShootConfig {
+  frc::Rotation2d PivotAngle; // For Hood
+  frc::Rotation2d Yaw; // For Turret
+  units::meters_per_second_t Velocity; // For the ball, not the shooter flywheel
+};
 
 class PoseEstimator {
 public:
@@ -22,6 +30,9 @@ public:
 
   // GetPose
   frc::Pose2d GetEstPose();
+
+  ShootConfig CalShootOnMove(frc::Pose3d orig, frc::Pose3d target, frc::Rotation2d piv,
+                               units::meters_per_second_t bot_x, units::meters_per_second_t bot_y);
 
 private:
   frc::SwerveDriveKinematics<4> _kinematics {
