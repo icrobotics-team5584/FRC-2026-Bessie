@@ -9,6 +9,16 @@
 #include "Constants.h"
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/Commands.h>
+#include <rev/SparkAbsoluteEncoder.h>
+
+#include <frc/simulation/FlywheelSim.h>
+#include <frc/simulation/DCMotorSim.h>
+#include <frc/system/plant/DCMotor.h>
+#include <frc/system/plant/LinearSystemId.h>
+#include <frc/smartdashboard/Mechanism2d.h>
+#include <frc/smartdashboard/MechanismLigament2d.h>
+#include "utilities/MechanismCircle2d.h"
+#include <frc/simulation/EncoderSim.h>
 
 class SubTurret : public frc2::SubsystemBase {
  public:
@@ -34,11 +44,28 @@ class SubTurret : public frc2::SubsystemBase {
   ICSparkMax _turretMotor{canid::TURRET_MOTOR};
   rev::spark::SparkBaseConfig _turretMotorConfig;
 
-  double P = 0;
+  // rev::spark::SparkAbsoluteEncoder _turretEncoder1{dio::ENCODER_1A};
+  // rev::spark::SparkAbsoluteEncoder _turretEncoder2{dio::ENCODER_2A, dio::ENCODER_2B};
+
+  static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::NEO();
+  static constexpr units::kilogram_square_meter_t MOI = 0.02_kg_sq_m;
+
+  double P = 1.0;
   double I = 0;
   double D = 0;
   
   static constexpr double ENCODER1_RATIO = 20.0/94.0;
   static constexpr double ENCODER2_RATIO = 21.0/94.0;
   static constexpr double GEAR_RATIO = (12.0/48.0) * (10.0/94.0);
+
+  //Sim
+  frc::LinearSystem<1,1,1> _turretSystem = frc::LinearSystemId::FlywheelSystem(MOTOR_MODEL, MOI, GEAR_RATIO);
+  frc::sim::FlywheelSim _turretSim{_turretSystem, MOTOR_MODEL};
+
+  //mechanism2d
+  frc::Mechanism2d _turretMech{0.25, 0.25};
+  frc::MechanismRoot2d* _turretMechRoot = _turretMech.GetRoot("turretRoot", 0.25, 0.25);
+  frc::MechanismLigament2d *_turretMechUpperConnector =
+    _turretMechRoot->Append<frc::MechanismLigament2d>("turretUpperConnector", 0.05, 90_deg, 0);
+  MechanismCircle2d _turretMechCircle{_turretMechUpperConnector, "turretTopRoller", 0.025, 0_deg};
 };
