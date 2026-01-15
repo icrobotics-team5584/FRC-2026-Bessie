@@ -33,7 +33,7 @@ namespace DrivebaseConfig {
   const units::turn_t BACK_RIGHT_MAG_OFFSET = -0.675048828125_tr;
   const units::turn_t BACK_LEFT_MAG_OFFSET = -0.824951171875_tr;
 
-  const frc::PIDController TELE_TRANSLATION_PID{7.0, 0.0, 0.0};
+  const frc::PIDController TELE_TRANSLATION_PID{2.0, 0.0, 0.5};
   const frc::ProfiledPIDController<units::radian> TELE_ROTATION_PID{
               3.0, 0, 0, {MAX_ANGULAR_VELOCITY, MAX_ANGULAR_ACCEL}};
 

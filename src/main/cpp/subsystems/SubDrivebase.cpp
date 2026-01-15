@@ -6,6 +6,11 @@
 #include <pathplanner/lib/config/RobotConfig.h>
 
 SubDrivebase::SubDrivebase() {
+  Logger::Log("Drivebase/PID/Rotation Controller", &_teleopRotationController);
+  Logger::Log("Drivebase/PID/Translation Controller", &_teleopTranslationController);
+
+  _teleopRotationController.EnableContinuousInput(0_deg, 360_deg);
+
   ctre::phoenix6::configs::Pigeon2Configuration gyroConfig;
   gyroConfig.MountPose.MountPosePitch = 0_deg;
   gyroConfig.MountPose.MountPoseRoll = 0_deg;
