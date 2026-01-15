@@ -76,7 +76,7 @@ frc2::CommandPtr AimAndShoot(frc::Translation3d target_pose) {
         Logger::Log("ShootOnMove/Target Velocity", conf.Velocity());
         
         SubHood::GetInstance().SetHoodPos(90_deg - conf.PivotAngle.Degrees());
-        SubTurret::GetInstance().SetAngle(conf.Yaw.Degrees());
+        SubTurret::GetInstance().SetTarget(conf.Yaw.Degrees());
         SubShooter::GetInstance().SetTargetFromProjectileVel(conf.Velocity);
     })
     .FinallyDo([]{SubShooter::GetInstance().Stop();});

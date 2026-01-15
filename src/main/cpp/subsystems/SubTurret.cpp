@@ -13,6 +13,8 @@ SubTurret::SubTurret() {
     _turretMotorConfig.closedLoop.feedForward.kV(F);
     _turretMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kCoast);
     _turretMotorConfig.SmartCurrentLimit(30);
+    _turretMotorConfig.closedLoop.PositionWrappingEnabled(true);
+    _turretMotorConfig.closedLoop.PositionWrappingInputRange(-0.5,0.5);
     _turretMotor.OverwriteConfig(_turretMotorConfig);
 }
 

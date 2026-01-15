@@ -59,14 +59,14 @@ class SubTurret : public frc2::SubsystemBase {
   double POS_LIMIT = 90;
   double NEG_LIMIT = -90;
 
-  double P = 0.3;
+  double P = 7;
   double I = 0;
   double D = 0;
-  double F = 1.0;
+  double F = 0.0;
   
   static constexpr double ENCODER1_RATIO = 21.0/94.0;
   static constexpr double ENCODER2_RATIO = 20.0/94.0;
-  static constexpr double GEAR_RATIO = (12.0/48.0) * (10.0/94.0);
+  static constexpr double GEAR_RATIO = (48.0/12.0) * (94.0/10.0);//(12.0/48.0) * (10.0/94.0);
 
   static constexpr double E1_TEETH = 21;
   static constexpr double E2_TEETH = 20;
