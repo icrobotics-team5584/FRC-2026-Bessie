@@ -8,7 +8,7 @@
 namespace DrivebaseConfig {
   // Drive controls
   constexpr units::meters_per_second_t MAX_VELOCITY = 4_mps;
-  constexpr units::meters_per_second_t MAX_DRIVE_TO_POSE_VELOCITY = 2_mps;
+  constexpr units::meters_per_second_t MAX_DRIVE_TO_POSE_VELOCITY = 1_mps;
   constexpr units::turns_per_second_t MAX_ANGULAR_VELOCITY = 290_deg_per_s;  // CHANGE TO 720\[]
 
   static constexpr units::turns_per_second_squared_t MAX_ANG_ACCEL{std::numbers::pi};

@@ -247,9 +247,9 @@ frc2::CommandPtr SubDrivebase::Drive(std::function<frc::ChassisSpeeds()> speeds,
 
 // Getters & calculations
 
-frc::Rotation2d SubDrivebase::GetGyroAngle(bool allianceRelated) { 
+frc::Rotation2d SubDrivebase::GetGyroAngle(bool allianceRelative) { 
   auto alliance = frc::DriverStation::GetAlliance();
-  if (!allianceRelated ||
+  if (!allianceRelative ||
     alliance.value_or(frc::DriverStation::Alliance::kBlue) == frc::DriverStation::Alliance::kBlue) {
     return _gyro.GetRotation2d();
   } else {
@@ -287,6 +287,7 @@ units::turns_per_second_t SubDrivebase::CalcRotateSpeed(units::turn_t rotationEr
 }
 
 frc::ChassisSpeeds SubDrivebase::CalcDriveToPoseSpeeds(frc::Pose2d targetPose) {
+  // Find current and target values
   double targetXMeters = targetPose.X().value();
   double targetYMeters = targetPose.Y().value();
   units::turn_t targetRotation = targetPose.Rotation().Radians();
@@ -342,7 +343,7 @@ void SubDrivebase::SetPose(frc::Pose2d pose) {
 bool SubDrivebase::IsAtPose(
   frc::Pose2d pose, units::meter_t positionErrorTolerance, units::degree_t rotationErrorTolerance) {
   auto currentPose = PoseHandler::GetInstance().GetPose();
-  auto rotError = GetAllianceRelativeGyroAngle() - pose.Rotation();
+  auto rotError = GetGyroAngle(true) - pose.Rotation();
   auto posError = currentPose.Translation().Distance(pose.Translation());
   Logger::FieldDisplay::GetInstance().DisplayPose("current pose", currentPose);
   Logger::FieldDisplay::GetInstance().DisplayPose("target pose", pose);
@@ -351,9 +352,11 @@ bool SubDrivebase::IsAtPose(
   frc::SmartDashboard::PutNumber("Drivebase/posError", posError.value());
 
   frc::SmartDashboard::PutBoolean(
-    "Drivebase/IsAtPose", units::math::abs(rotError.Degrees()) < 2_deg && posError < 2_cm);
+    "Drivebase/IsAtPose", units::math::abs(rotError.Degrees()) < rotationErrorTolerance &&
+                            posError < positionErrorTolerance);
 
-  if (units::math::abs(rotError.Degrees()) < 2_deg && posError < 2_cm) {
+  if (units::math::abs(rotError.Degrees()) < rotationErrorTolerance &&
+      posError < positionErrorTolerance) {
     return true;
   } else {
     return false;
@@ -509,14 +512,4 @@ frc2::CommandPtr SubDrivebase::CharacteriseWheels() {
     Logger::Log("Drivebase/WheelCharacterisation/BLdelta", BLdelta);
     Logger::Log("Drivebase/WheelCharacterisation/BRdelta", BRdelta);
   })));
-}
-
-frc::Rotation2d SubDrivebase::GetAllianceRelativeGyroAngle() {
-  auto alliance = frc::DriverStation::GetAlliance();
-  if (alliance.value_or(frc::DriverStation::Alliance::kBlue) ==
-      frc::DriverStation::Alliance::kBlue) {
-    return _gyro.GetRotation2d();
-  } else {
-    return _gyro.GetRotation2d() - 180_deg;
-  }
 }

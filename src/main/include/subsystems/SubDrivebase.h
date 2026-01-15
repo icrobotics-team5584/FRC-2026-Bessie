@@ -43,10 +43,9 @@ class SubDrivebase : public frc2::SubsystemBase {
   /* ------------------------------------------------------------------------------------------------------------- */
   /* Getters & calculations*/
 
-  frc::Rotation2d GetGyroAngle(bool allianceRelated = false);
+  frc::Rotation2d GetGyroAngle(bool allianceRelative = false);
   units::degree_t GetPitch();
   units::degree_t GetRoll();
-  frc::Rotation2d GetAllianceRelativeGyroAngle();
 
   frc::ChassisSpeeds GetRobotRelativeSpeeds();
 
@@ -125,7 +124,6 @@ class SubDrivebase : public frc2::SubsystemBase {
   // P2P
   static constexpr double MAX_P2P_ACCEL = 3;
   static constexpr double MAX_P2P_ANGULAR_ACCEL = 9;
-  static constexpr units::meters_per_second_t MAX_DRIVE_TO_POSE_VELOCITY = 5_mps;
 
   double _tunedMaxP2pAccel = MAX_P2P_ACCEL;
   double _tunedMaxP2pAngAccel = MAX_P2P_ANGULAR_ACCEL;
