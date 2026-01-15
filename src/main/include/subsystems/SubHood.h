@@ -13,7 +13,6 @@
 #include <units/angle.h>
 #include <wpi/interpolating_map.h>
 
-#include <frc/simulation/FlywheelSim.h>
 #include <frc/simulation/DCMotorSim.h>
 #include <frc/system/plant/DCMotor.h>
 #include <frc/system/plant/LinearSystemId.h>
@@ -46,7 +45,7 @@ class SubHood : public frc2::SubsystemBase {
 
  private:
 
-  double P = 0.0;
+  double P = 3.0;
   double I = 0.0;
   double D = 0.0;
 
@@ -67,11 +66,11 @@ class SubHood : public frc2::SubsystemBase {
   rev::spark::SparkBaseConfig _hoodMotorConfig;
 
   static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::NEO550();
-  static constexpr units::kilogram_square_meter_t MOI = 0.02_kg_sq_m;
+  static constexpr units::kilogram_square_meter_t MOI = 0.000001_kg_sq_m;
 
   //Sim
-  frc::LinearSystem<1,1,1> _hoodSystem = frc::LinearSystemId::FlywheelSystem(MOTOR_MODEL, MOI, GEAR_RATIO);
-  frc::sim::FlywheelSim _hoodSim{_hoodSystem, MOTOR_MODEL};
+  frc::LinearSystem<2,1,2> _hoodSystem = frc::LinearSystemId::DCMotorSystem(MOTOR_MODEL, MOI, GEAR_RATIO);
+  frc::sim::DCMotorSim _hoodSim{_hoodSystem, MOTOR_MODEL};
 
   //mechanism2d
   frc::Mechanism2d _hoodMech{0.25, 0.25};

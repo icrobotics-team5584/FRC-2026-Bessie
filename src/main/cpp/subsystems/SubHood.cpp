@@ -7,11 +7,9 @@
 #include "frc/RobotBase.h"
 
 SubHood::SubHood() {
-    frc::SmartDashboard::PutData("Hood/Motor", &_hoodMotor);
-    frc::SmartDashboard::PutData("Hood/mech2dDisplay", &_hoodMech);
 
-    _hoodMotorConfig.encoder.PositionConversionFactor(1/GEAR_RATIO);
-    _hoodMotorConfig.encoder.VelocityConversionFactor(1/GEAR_RATIO/60);
+    _hoodMotorConfig.encoder.PositionConversionFactor(GEAR_RATIO);
+    _hoodMotorConfig.encoder.VelocityConversionFactor(GEAR_RATIO/60);
     _hoodMotorConfig.closedLoop.Pid(P, I, D);
     _hoodMotorConfig.SmartCurrentLimit(30);
     _hoodMotor.OverwriteConfig(_hoodMotorConfig);
@@ -22,13 +20,17 @@ SubHood::SubHood() {
 
 // This method will be called once per scheduler run
 void SubHood::Periodic() {
-
+    frc::SmartDashboard::PutData("Hood/Motor", &_hoodMotor);
 }
 
 void SubHood::SimulationPeriodic() {
+    frc::SmartDashboard::PutData("Hood/mech2dDisplay", &_hoodMech);
+
     _hoodSim.SetInputVoltage(_hoodMotor.CalcSimVoltage());
-    _hoodMotor.IterateSim(_hoodMotor.GetVelocity(), _hoodMotor.GetPosition());
+    _hoodMotor.IterateSim(_hoodSim.GetAngularVelocity(), _hoodSim.GetAngularPosition());
     _hoodSim.Update(20_ms);
+
+    _hoodMechCircle.SetAngle(_hoodMotor.GetPosition());
 }
 
 frc2::CommandPtr SubHood::SetHoodPosition(units::degree_t angle) {

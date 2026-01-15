@@ -7,12 +7,10 @@
 #include "utilities/Logger.h"
 
 SubTurret::SubTurret() {
-    frc::SmartDashboard::PutData("Turret/Motor", &_turretMotor);
-    frc::SmartDashboard::PutData("Turret/mech2dDisplay", &_turretMech);
     // Logger::Log("Turret/CRT Positiion", GetTurretAngle());
 
-    _turretMotorConfig.encoder.PositionConversionFactor(1/GEAR_RATIO);
-    _turretMotorConfig.encoder.VelocityConversionFactor(1/GEAR_RATIO/60);
+    _turretMotorConfig.encoder.PositionConversionFactor(GEAR_RATIO);
+    _turretMotorConfig.encoder.VelocityConversionFactor(GEAR_RATIO/60);
     _turretMotorConfig.closedLoop.Pid(P,I,D);
     _turretMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
     _turretMotorConfig.SmartCurrentLimit(30);
@@ -21,13 +19,17 @@ SubTurret::SubTurret() {
 
 // This method will be called once per scheduler run
 void SubTurret::Periodic() {
-
+    frc::SmartDashboard::PutData("Turret/Motor", &_turretMotor);
 }
 
 void SubTurret::SimulationPeriodic() {
+    frc::SmartDashboard::PutData("Turret/mech2dDisplay", &_turretMech);
+
     _turretSim.SetInputVoltage(_turretMotor.CalcSimVoltage());
-    _turretMotor.IterateSim(_turretMotor.GetVelocity(), _turretMotor.GetPosition());
+    _turretMotor.IterateSim(_turretSim.GetAngularVelocity(), _turretSim.GetAngularPosition());
     _turretSim.Update(20_ms);
+
+    _turretMechCircle.SetAngle(_turretMotor.GetPosition());
 }
 
 // double SubTurret::GetTurretAngle() {

@@ -45,10 +45,11 @@ SubShooter::SubShooter() {
 void SubShooter::Periodic() {
     Logger::LogFalcon("Shooter/Motor1", _shooterMotor1);
     Logger::LogFalcon("Shooter/Motor2", _shooterMotor2);
-    frc::SmartDashboard::PutData("Shooter/mech2dDisplay", &_shooterMech);
 }
 
 void SubShooter::SimulationPeriodic() {
+    frc::SmartDashboard::PutData("Shooter/mech2dDisplay", &_shooterMech);
+    
     units::angle::degree_t motor1Position = _shooterMotor1.GetPosition().GetValue();
     _shooterMechTopRoller.SetAngle(motor1Position);
 

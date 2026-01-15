@@ -24,7 +24,9 @@ void RobotContainer::ConfigureBindings() {
   _driverController.X().OnTrue(SubHood::GetInstance().SetHoodPosition(0_deg));
   _driverController.Y().OnTrue(SubHood::GetInstance().SetHoodPosition(20_deg));
   _driverController.A().OnTrue(SubTurret::GetInstance().SetTurretAngle(0_deg));
-  _driverController.A().OnTrue(SubTurret::GetInstance().SetTurretAngle(20_deg));
+  _driverController.B().OnTrue(SubTurret::GetInstance().SetTurretAngle(20_deg));
+  _driverController.RightBumper().OnTrue(SubShooter::GetInstance().SetShooterTarget(5_tps));
+  _driverController.LeftBumper().OnTrue(SubShooter::GetInstance().StopShooter());
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
