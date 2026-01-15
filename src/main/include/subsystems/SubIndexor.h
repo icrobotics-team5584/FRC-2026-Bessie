@@ -4,20 +4,23 @@
 
 #pragma once
 
+#include "utilities/ICSparkFlex.h"
+
 #include <frc/Alert.h>
 #include <frc/Timer.h>
 #include <frc/simulation/FlywheelSim.h>
 #include <frc/system/plant/DCMotor.h>
 #include <frc/system/plant/LinearSystemId.h>
-#include "utilities/ICSparkFlex.h"
 #include <frc2/command/SubsystemBase.h>
-#include "frc2/command/Commands.h"
+
 #include <Constants.h>
+
+#include "frc2/command/Commands.h"
 #include "rev/config/SparkFlexConfig.h"
 
 class SubIndexor : public frc2::SubsystemBase {
  public:
- static SubIndexor& GetInstance() {
+  static SubIndexor& GetInstance() {
     static SubIndexor instance;
     return instance;
   }
@@ -26,10 +29,10 @@ class SubIndexor : public frc2::SubsystemBase {
   frc2::CommandPtr IndexorOn();
   frc2::CommandPtr IndexorOff();
 
-   void CurrentHighTimer();
+  void CurrentHighTimer();
 
-   frc::Alert indexorCurrentAlert{"Indexor Motor Overcurrent!", frc::Alert::AlertType::kWarning};
-   frc::Alert highTempuratureAlert{
+  frc::Alert indexorCurrentAlert{"Indexor Motor Overcurrent!", frc::Alert::AlertType::kWarning};
+  frc::Alert highTempuratureAlert{
     "Indexor Motor High Temperature!", frc::Alert::AlertType::kWarning};
   /**
    * Will be called periodically whenever the CommandScheduler runs.
@@ -38,7 +41,7 @@ class SubIndexor : public frc2::SubsystemBase {
   void SimulationPeriodic() override;
 
  private:
-    ICSparkFlex _indexorMotor{canid::INDEXOR};
+  ICSparkFlex _indexorMotor{canid::INDEXOR};
   rev::spark::SparkFlexConfig _indexorMotorConfig;
 
   frc::Timer _indexorHighCurrentTimer;

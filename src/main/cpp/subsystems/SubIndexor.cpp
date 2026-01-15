@@ -3,16 +3,17 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "subsystems/SubIndexor.h"
-#include <units/current.h>
-#include <utilities/Logger.h>
 
 #include <frc/Alert.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
+#include <units/current.h>
+#include <utilities/Logger.h>
+
 SubIndexor::SubIndexor() {
-    _indexorMotorConfig.SmartCurrentLimit(60);
-    _indexorMotor.OverwriteConfig(_indexorMotorConfig);
-     Logger::Log("Indexor/Indexor Motor", &_indexorMotor);
+  _indexorMotorConfig.SmartCurrentLimit(60);
+  _indexorMotor.OverwriteConfig(_indexorMotorConfig);
+  Logger::Log("Indexor/Indexor Motor", &_indexorMotor);
 }
 
 frc2::CommandPtr SubIndexor::IndexorOn() {
@@ -33,7 +34,7 @@ void SubIndexor::CurrentHighTimer() {
 
 // This method will be called once per scheduler run
 void SubIndexor::Periodic() {
-   units::ampere_t current = _indexorMotor.GetOutputCurrent() * 1_A;
+  units::ampere_t current = _indexorMotor.GetOutputCurrent() * 1_A;
   frc::SmartDashboard::PutNumber("Indexor/Current", current.value());
   if (current > 20_A) {
     SubIndexor::CurrentHighTimer();
