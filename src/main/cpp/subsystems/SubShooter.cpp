@@ -39,6 +39,11 @@ SubShooter::SubShooter() {
     _shooterMotor2.SetControl(ctre::phoenix6::controls::Follower(_shooterMotor1.GetDeviceID(), ctre::phoenix6::signals::MotorAlignmentValue::Opposed));
 
     _shooterMotor1.GetClosedLoopReference().SetUpdateFrequency(100_Hz);
+
+    _ball_to_shooter_turn.insert(10_mps, 10_tps);
+    _ball_to_shooter_turn.insert(20_mps, 20_tps);
+    _ball_to_shooter_turn.insert(0_mps, 0_tps);
+    _ball_to_shooter_turn.insert(30_mps, 30_tps);
 }
 
 // This method will be called once per scheduler run
