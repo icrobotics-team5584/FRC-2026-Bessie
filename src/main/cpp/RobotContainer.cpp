@@ -10,10 +10,12 @@
 #include "subsystems/SubIntake.h"
 #include "subsystems/SubIndexor.h"
 #include "commands/AutonCommands.h"
+#include "Subsystems/SubVision.h"
 
 RobotContainer::RobotContainer() {
   SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
   ConfigureBindings();
+  SubVision::GetInstance();
 
   _autoManager.AddDefaultAuton(
     "default",
