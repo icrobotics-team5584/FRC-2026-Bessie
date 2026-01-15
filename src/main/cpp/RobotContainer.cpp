@@ -18,6 +18,11 @@ RobotContainer::RobotContainer() {
 
   _autoManager.AddDefaultAuton("default", AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton()));
   _autoManager.AddAuton("driveInASquare", AutonHelper::MakeCommandPtrAuto(cmd::DriveInASquare()));
+  _autoManager.AddAuton("NeutralScoreAndClimb_LeftBump", AutonHelper::MakeCommandPtrAuto(cmd::NeutralScoreAndClimb_LeftBump()));
+  //_autoManager.AddAuton("NeutralScoreAndClimb_RightBump", AutonHelper::MakeCommandPtrAuto(cmd::NeutralScoreAndClimb_RightBump()));
+  //_autoManager.AddAuton("Hoard_LeftBump", AutonHelper::MakeCommandPtrAuto(cmd::Hoard_LeftBump()));
+  //_autoManager.AddAuton("Hoard_RightBump", AutonHelper::MakeCommandPtrAuto(cmd::Hoard_RightBump()));
+  //_autoManager.AddAuton("OutpostDepotClimb", AutonHelper::MakeCommandPtrAuto(cmd::OutpostDepotClimb()));
 
   frc::SmartDashboard::PutData("CHOSEN AUTON:", &_autoManager.GetAutonChooser());
 }
