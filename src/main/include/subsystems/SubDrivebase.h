@@ -40,8 +40,6 @@ class SubDrivebase : public frc2::SubsystemBase {
 
   void SetBrakeMode(bool mode);
 
-  void SetPose(frc::Pose2d pose);
-
   /* ------------------------------------------------------------------------------------------------------------- */
   /* Getters & calculations*/
 

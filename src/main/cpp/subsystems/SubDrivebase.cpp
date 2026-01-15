@@ -354,22 +354,6 @@ frc::ChassisSpeeds SubDrivebase::CalcDriveToPoseSpeeds(frc::Pose2d targetPose) {
   return frc::ChassisSpeeds{xSpeed, ySpeed, rotationCalcSpeed};
 }
 
-void SubDrivebase::SetPose(frc::Pose2d pose) {
-  wpi::array<frc::SwerveModulePosition, 4U> states = {_frontLeft.GetPosition(),
-    _frontRight.GetPosition(), _backLeft.GetPosition(), _backRight.GetPosition()};
-
-  auto alliance = frc::DriverStation::GetAlliance();
-  if (alliance.value_or(frc::DriverStation::Alliance::kBlue) ==
-      frc::DriverStation::Alliance::kBlue) {
-    ResetGyroHeading(pose.Rotation().Degrees());
-  } else {
-    ResetGyroHeading(pose.Rotation().Degrees() - 180_deg);
-  }
-
-  PoseHandler::GetInstance().Update(pose.Rotation(), states);
-  PoseHandler::GetInstance().UpdateSim(pose.Rotation(), states);
-}
-
 bool SubDrivebase::IsAtPose(
   frc::Pose2d pose, units::meter_t positionErrorTolerance, units::degree_t rotationErrorTolerance) {
   auto currentPose = PoseHandler::GetInstance().GetPose();

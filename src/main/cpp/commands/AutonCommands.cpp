@@ -8,11 +8,11 @@ namespace cmd {
 
     frc2::CommandPtr DriveInASquare() {
         return frc2::cmd::Sequence(
-            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{0_m, 0_m, -90_deg}; }, 1.0, 5_cm, 5_deg),
-            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{0.5_m, 0_m, 180_deg}; }, 1.0, 5_cm, 5_deg),
-            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{0.5_m, 0.5_m, 90_deg}; }, 1.0, 5_cm, 5_deg),
-            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{0_m, 0.5_m, 0_deg}; }, 1.0, 5_cm, 5_deg),
-            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{0_m, 0_m, -90_deg}; }, 1.0, 5_cm, 5_deg)
+            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{0_m, 0_m, -90_deg}; }, 1.0, 5_cm, 2_deg),
+            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{0.5_m, 0_m, 180_deg}; }, 1.0, 5_cm, 2_deg),
+            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{0.5_m, 0.5_m, 90_deg}; }, 1.0, 5_cm, 2_deg),
+            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{0_m, 0.5_m, 0_deg}; }, 1.0, 5_cm, 2_deg),
+            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{0_m, 0_m, -90_deg}; }, 1.0, 5_cm, 2_deg)
         );
     }
     
