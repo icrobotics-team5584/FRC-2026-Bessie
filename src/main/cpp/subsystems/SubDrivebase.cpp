@@ -316,24 +316,21 @@ frc::ChassisSpeeds SubDrivebase::CalcDriveToPoseSpeeds(frc::Pose2d targetPose) {
   frc::Translation2d translationVector = frc::Translation2d(targetXMeters - currentXMeters, targetYMeters - currentYMeters);
 
   // Use PID controllers to calculate speeds
-  auto translationSpeed = _teleopTranslationController.Calculate(0, translationVector.Norm().value()) * 1_mps;
-  auto rotationSpeed = CalcRotateSpeed(currentRotation - targetRotation);
+  auto rawTranslationSpeed = _teleopTranslationController.Calculate(0, translationVector.Norm().value()) * 1_mps;
+  auto rawRotationSpeed = CalcRotateSpeed(currentRotation - targetRotation);
 
   // Apply acceleration limits
-  auto translationCalcSpeed = _p2pTranslationLimiter.Calculate(translationSpeed);
-  auto rotationCalcSpeed = _p2pRotationLimiter.Calculate(rotationSpeed);
+  auto translationCalcSpeed = _p2pTranslationLimiter.Calculate(rawTranslationSpeed);
+  auto rotationCalcSpeed = _p2pRotationLimiter.Calculate(rawRotationSpeed);
+
+  // Clamp translation speed to max velocity
+  translationCalcSpeed = units::math::min(translationCalcSpeed, DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
+  translationCalcSpeed = units::math::max(translationCalcSpeed, -DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
 
   //Convert Polar back into Cartesian X and Y
   frc::Translation2d translationSpeedVector = frc::Translation2d((translationCalcSpeed.value()*1_m), translationVector.Angle());
   units::meters_per_second_t xSpeed = translationSpeedVector.X().value() * 1_mps;
   units::meters_per_second_t ySpeed = translationSpeedVector.Y().value() * 1_mps;
-  rotationSpeed = rotationCalcSpeed;
-
-  // Clamp translation speeds to max velocity
-  xSpeed = units::math::min(xSpeed, DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
-  xSpeed = units::math::max(xSpeed, -DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
-  ySpeed = units::math::min(ySpeed, DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
-  ySpeed = units::math::max(ySpeed, -DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
 
   if (frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kRed) {
     xSpeed *= -1;
@@ -343,14 +340,14 @@ frc::ChassisSpeeds SubDrivebase::CalcDriveToPoseSpeeds(frc::Pose2d targetPose) {
   //Logging
   Logger::Log("CalcDriveLogs/xSpeed", xSpeed);
   Logger::Log("CalcDriveLogs/ySpeed", ySpeed);
-  Logger::Log("CalcDriveLogs/rotationSpeed", rotationSpeed);
+  Logger::Log("CalcDriveLogs/rotationSpeed", rotationCalcSpeed);
   Logger::Log("CalcDriveLogs/targetYMeters", targetYMeters);
   Logger::Log("CalcDriveLogs/targetXMeters", targetXMeters);
   Logger::Log("CalcDriveLogs/currentXMeters", currentXMeters);
   Logger::Log("CalcDriveLogs/currentYMeters", currentYMeters);
   Logger::Log("CalcDriveLogs/currentRotation", currentRotation);
 
-  return frc::ChassisSpeeds{xSpeed, ySpeed, rotationSpeed};
+  return frc::ChassisSpeeds{xSpeed, ySpeed, rotationCalcSpeed};
 }
 
 void SubDrivebase::SetPose(frc::Pose2d pose) {
