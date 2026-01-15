@@ -45,6 +45,7 @@ SubShooter::SubShooter() {
 void SubShooter::Periodic() {
     Logger::LogFalcon("Shooter/Motor1", _shooterMotor1);
     Logger::LogFalcon("Shooter/Motor2", _shooterMotor2);
+    Logger::Log("Shooter/IsAtSpeed", IsAtSpeed());
 }
 
 void SubShooter::SimulationPeriodic() {

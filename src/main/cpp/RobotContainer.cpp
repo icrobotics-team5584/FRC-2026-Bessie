@@ -10,6 +10,9 @@
 #include "subsystems/SubIntake.h"
 #include "commands/AutonCommands.h"
 #include "Subsystems/SubVision.h"
+#include "subsystems/SubTurret.h"
+#include "subsystems/SubHood.h"
+#include "subsystems/SubShooter.h"
 
 RobotContainer::RobotContainer() {
   SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
