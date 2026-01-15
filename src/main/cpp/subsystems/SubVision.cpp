@@ -3,118 +3,171 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "subsystems/SubVision.h"
-#include "subsystems/SubDriveBase.h"
-
+#include "subsystems/SubDrivebase.h"
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/DriverStation.h>
-#include <algorithm>
-#include <iostream>
-#include <map>
-#include <photon/simulation/SimVisionTarget.h>
-#include <fmt/format.h>
+#include <frc/RobotBase.h>
+#include <photon/estimation/CameraTargetRelation.h>
+#include <frc/MathUtil.h>
+#include "utilities/PoseHandler.h"
+#include "utilities/Logger.h"
+
 
 SubVision::SubVision() {
-  for (int i = 0; i <= 18; i++) {
-    auto pose = _tagLayout.GetTagPose(i);
-    if (pose.has_value()) {
-      photon::SimVisionTarget simTag{pose.value(), 8_in, 8_in, i};
-      _visionSim.AddSimVisionTarget(simTag);
-      SubDrivebase::GetInstance().DisplayPose(fmt::format("tag{}", i), pose.value().ToPose2d());
-    }
+
+   // Set dev table for distance based deviance
+  _devTable.insert(0_m, 0);
+  _devTable.insert(0.71_m, 0.002);
+  _devTable.insert(1_m, 0.006);
+  _devTable.insert(1.5_m, 0.02);
+  _devTable.insert(2_m, 0.068);
+  _devTable.insert(3_m, 0.230);
+
+  // Sim set up
+  _visionSim.AddAprilTags(_tagMap);
+  _visionSim.AddCamera(&_leftCamSim, _leftBotToCam);
+  _visionSim.AddCamera(&_rightCamSim, _rightBotToCam);
+
+  // Display tags on field
+  for (auto target : _visionSim.GetVisionTargets()) {
+     Logger::FieldDisplay::GetInstance().DisplayPose(fmt::format("tag{}", target.fiducialId),
+                                            target.GetPose().ToPose2d());
   }
 }
 
-using namespace std;
-
-// This method will be called once per scheduler run
 void SubVision::Periodic() {
-  frc::SmartDashboard::PutBoolean("Vision/has vision targets ", VisionHasTargets());
-
-  auto _lastSeenTag = _camera.GetLatestResult().GetBestTarget();
-
-  if (auto ally = frc::DriverStation::GetAlliance()) {
-    frc::SmartDashboard::PutNumber("Vision/Alliance ", ally.value());
-    if (ally.value() == frc::DriverStation::Alliance::kBlue) {
-      if (std::find(std::begin(blueTrap), std::end(blueTrap), _lastSeenTag.GetFiducialId()) !=
-          std::end(blueTrap)) {
-        _lastSeenTrapTag = _lastSeenTag;
-      }
-    }
-    if (ally.value() == frc::DriverStation::Alliance::kRed) {
-      if (std::find(std::begin(redTrap), std::end(redTrap), _lastSeenTag.GetFiducialId()) !=
-          std::end(redTrap)) {
-        _lastSeenTrapTag = _lastSeenTag;
-      }
-    }
+  frc::SmartDashboard::PutNumber("Vision/LastSeenTag", _lastTagObservation.tag.GetFiducialId());
+  if (_lastTagObservation.cameraSide == Side::Left) {
+    frc::SmartDashboard::PutString("Vision/Last Used Camera", "Left");
+  } else {
+    frc::SmartDashboard::PutString("Vision/Last Used Camera", "Right");
   }
-
-  frc::SmartDashboard::PutNumber("Vision/last seen tag ID ", _lastSeenTag.GetFiducialId());
-  frc::SmartDashboard::PutNumber("Vision/last seen trap tag ID ", _lastSeenTrapTag.GetFiducialId());
+  UpdateVision();
 }
 
 void SubVision::SimulationPeriodic() {
-  _visionSim.ProcessFrame(SubDrivebase::GetInstance().GetPose());
+  _visionSim.Update(PoseHandler::GetInstance().GetSimPose());
 }
 
-bool SubVision::VisionHasTargets() {
-  auto result = _camera.GetLatestResult();
-  bool targets = result.HasTargets();
-  return targets;
-}
+void SubVision::UpdateVision() {
+  double largestArea = 0;
+  std::string leftTargets = "";
+  std::string rightTargets = "";
 
-std::optional<units::degree_t> SubVision::GetSpecificTagYaw(FieldElement chosenFieldElement) {
-  auto result = _camera.GetLatestResult();
-  auto targets = result.GetTargets();
+  // Left camera
+  std::vector<photon::PhotonPipelineResult> results = _leftCamera.GetAllUnreadResults();
+  auto resultCount = results.size();
+  if (resultCount > 0) {
+    for (auto result : results) {
+      _leftEstPose = _leftPoseEstimater.EstimateCoprocMultiTagPose(result);
+      for (const auto& target : result.targets) {
+        leftTargets += std::to_string(target.GetFiducialId()) + ", ";
+        double targetArea = target.GetArea();
+        if (targetArea > largestArea ) {
 
-  int AprilTagID = FindID(chosenFieldElement);
+          if(_leftEstPose.has_value()) {
+            _lastTagObservation.timestamp = _leftEstPose.value().timestamp;
+            _lastTagObservation.tag = target;
+            _lastTagObservation.cameraSide = Side::Left;
+          }
 
-  auto checkRightApriltag = [AprilTagID](photon::PhotonTrackedTarget apriltag) {
-    return apriltag.GetFiducialId() == AprilTagID;
-  };
-  auto tagResult = std::ranges::find_if(targets, checkRightApriltag);
+          largestArea = targetArea;
+        }
+      }
+    }
+  }
+  // Right camera
+  results = _rightCamera.GetAllUnreadResults();
+  resultCount = results.size();
+  if (resultCount > 0) {
+    for (auto result : results) {
+      _rightEstPose = _rightPoseEstimater.EstimateCoprocMultiTagPose(result);
 
-  // returns yaw as degree value
-  if (tagResult != targets.end()) {
-    return tagResult->GetYaw() * -(1_deg);
+      for (const auto& target : result.targets) {
+        rightTargets += std::to_string(target.GetFiducialId()) + ", ";
+        double targetArea = target.GetArea();
+        if (targetArea > largestArea) {
+          if(_rightEstPose.has_value()) {
+            _lastTagObservation.tag = target;
+            _lastTagObservation.cameraSide = Side::Right;
+            _lastTagObservation.timestamp = _rightEstPose.value().timestamp;          
+          }
+          largestArea = targetArea;
+        }
+      }
+    }
   }
 
-  // return 0 when looses target
-  else {
-    return {};
-  }
+  frc::SmartDashboard::PutString("Vision/Left/targets", leftTargets);
+  frc::SmartDashboard::PutString("Vision/Right/targets", rightTargets);
 }
 
-// exists out when the range of yaw is between [-0.4, 0.4]
-bool SubVision::IsOnTarget(FieldElement chosenFieldElement) {
-  auto yaw = GetSpecificTagYaw(chosenFieldElement);
+std::map<SubVision::Side, std::optional<photon::EstimatedRobotPose>> SubVision::GetPose() {
+  return {{Left, _leftEstPose}, {Right, _rightEstPose}};
+}
 
-  if (yaw.has_value()) {
-    return yaw.value() > -0.4_deg && yaw.value() < 0.4_deg;
+int SubVision::GetLastSeenTagID() {
+  return _lastTagObservation.tag.GetFiducialId();
+}
+
+SubVision::Side SubVision::GetLastCameraUsed() {
+  return _lastTagObservation.cameraSide;
+}
+
+double SubVision::GetDev(photon::EstimatedRobotPose pose) {
+  units::meter_t distance = 0_m;
+  if (pose.targetsUsed.size() == 0) {
+    return 0;
+  }
+  for (auto target : pose.targetsUsed) {
+    distance += target.GetBestCameraToTarget().Translation().Norm();
+  }
+  distance /= pose.targetsUsed.size();
+  return _devTable[distance];
+}
+
+bool SubVision::IsEstimateUsable(photon::EstimatedRobotPose pose) {
+  units::meter_t distance = 0_m;
+  auto tagCount = pose.targetsUsed.size();
+  if (pose.targetsUsed.size() == 0) {
+    return 0;
+  }
+  for (auto target : pose.targetsUsed) {
+    distance += target.GetBestCameraToTarget().Translation().Norm();
+  }
+  distance /= pose.targetsUsed.size();
+
+
+  return ((distance < 0.7_m) || (tagCount > 1));
+}
+
+frc::Pose2d SubVision::CalculateRelativePose(frc::Pose2d pose, units::meter_t x, units::meter_t y) {
+  frc::Translation2d trans {x,y};
+  return frc::Pose2d{pose.Translation() + trans.RotateBy(pose.Rotation()), pose.Rotation()};
+}
+
+std::optional<frc::Pose2d> SubVision::GetAprilTagPose(int id) {
+  auto pose = _tagMap.GetTagPose(id);
+  if (pose.has_value()) {
+    return pose.value().ToPose2d();
   } else {
-    return false;
+    return std::nullopt;
   }
 }
 
-int SubVision::FindID(FieldElement chosenFieldElement) {
-  if (auto ally = frc::DriverStation::GetAlliance()) {
-    if (ally.value() == frc::DriverStation::Alliance::kBlue) {
-      return blueFieldElement[chosenFieldElement];
-    }
+int SubVision::GetClosestTag(frc::Pose2d currentPose){
+  int closestTagID = 0;
+  units::length::meter_t closestDistance;
+  std::vector<frc::AprilTag> tagList = _tagMap.GetTags();
 
-    if (ally.value() == frc::DriverStation::Alliance::kRed) {
-      return redFieldElement[chosenFieldElement];
+   for (const frc::AprilTag tag : tagList) {
+    int id = tag.ID;
+    auto distance = currentPose.Translation().Distance(GetAprilTagPose(id).value().Translation());
+    if (closestTagID == 0 || distance < closestDistance) {
+      closestDistance = distance;
+      closestTagID = id;
     }
   }
 
-  return redFieldElement[chosenFieldElement];
-}
-
-std::optional<units::degree_t> SubVision::getCamToTrapYaw() {
-  return _lastSeenTrapTag.GetYaw() * -(1_deg);
-}
-
-units::degree_t SubVision::getTrapAngle() {
-  auto trapID = _lastSeenTrapTag.GetFiducialId();
-
-  return trapAngle[trapID];
+  return closestTagID;
 }
