@@ -11,10 +11,12 @@
 #include "commands/AutonCommands.h"
 #include "subsystems/SubStorage.h"
 #include <commands/FuelCommands.h>
+#include "Subsystems/SubVision.h"
 
 RobotContainer::RobotContainer() {
   SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
   ConfigureBindings();
+  SubVision::GetInstance();
 
   _autoManager.AddDefaultAuton(
     "default",
@@ -28,7 +30,12 @@ void RobotContainer::ConfigureBindings() {
   
 
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
+<<<<<<< HEAD
   _driverController.Y().WhileTrue(cmd::IntakeSequence());
+=======
+  _driverController.Y().OnTrue(SubDrivebase::GetInstance().ResetGyroCmd());
+  _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
+>>>>>>> main
 }
 
 std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {
