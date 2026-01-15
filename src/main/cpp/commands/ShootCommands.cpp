@@ -61,7 +61,6 @@ frc2::CommandPtr AimAndShoot(frc::Translation3d target_pose) {
     return Run([target_pose] {
         auto curr_pos = PoseHandler::GetInstance().GetPose();
         auto vel = SubDrivebase::GetInstance().GetVelocityXY();
-        auto yaw = SubDrivebase::GetInstance().GetRoll().value() / 180 * 3.14;
         units::meter_t distance = hypot(target_pose.X().value() - curr_pos.X().value(), target_pose.Y().value() - curr_pos.Y().value()) * 1_m;
         ShootConfig conf = CalShootOnMove(0.5, target_pose, SubHood::GetInstance().GetAngleFromDistance(distance),
                                           -vel.first, -vel.second);
@@ -73,6 +72,8 @@ frc2::CommandPtr AimAndShoot(frc::Translation3d target_pose) {
         Logger::Log("ShootOnMove/End x",end.X().value());
         Logger::Log("ShootOnMove/End y",end.Y().value());
         Logger::Log("ShootOnMove/Yaw", conf.Yaw.Degrees());
+        Logger::Log("ShootOnMove/Pivot Angle", 90 - conf.PivotAngle.Degrees().value());
+        Logger::Log("ShootOnMove/Target Velocity", conf.Velocity());
         
         SubHood::GetInstance().SetHoodPos(90_deg - conf.PivotAngle.Degrees());
         SubTurret::GetInstance().SetAngle(conf.Yaw.Degrees());
