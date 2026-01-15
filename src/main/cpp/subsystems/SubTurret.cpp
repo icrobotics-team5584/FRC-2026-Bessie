@@ -7,11 +7,12 @@
 #include "utilities/Logger.h"
 
 SubTurret::SubTurret() {
-    // Logger::Log("Turret/CRT Positiion", GetTurretAngle());
+    Logger::Log("Turret/CRT Positiion", GetTurretAngle());
 
     _turretMotorConfig.encoder.PositionConversionFactor(1/GEAR_RATIO);
     _turretMotorConfig.encoder.VelocityConversionFactor(1/GEAR_RATIO/60);
-    _turretMotorConfig.closedLoop.Pidf(P, I, D, F);
+    _turretMotorConfig.closedLoop.Pid(P, I, D);
+    _turretMotorConfig.closedLoop.feedForward.kV(F);
     _turretMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
     _turretMotorConfig.SmartCurrentLimit(30);
     _turretMotor.OverwriteConfig(_turretMotorConfig);
@@ -32,14 +33,14 @@ void SubTurret::SimulationPeriodic() {
     _turretMechCircle.SetAngle(_turretMotor.GetPosition());
 }
 
-// double SubTurret::GetTurretAngle() {
-//     double encoder1 = _turretEncoder1.GetDistance();
-//     double encoder2 = _turretEncoder2.GetDistance();
+double SubTurret::GetTurretAngle() {
+    double encoder1 = _turretEncoder1.Get();
+    double encoder2 = _turretEncoder2.Get();
 
-//     double difference = encoder1 - encoder2;
-//     double angle = difference * (ENCODER1_RATIO - ENCODER2_RATIO);
-//     return angle;
-// }
+    double difference = encoder1 - encoder2;
+    double angle = difference * (ENCODER1_RATIO - ENCODER2_RATIO);
+    return angle;
+}
 
 frc2::CommandPtr SubTurret::SetTurretAngle(units::degree_t angle) {
     return Run([this, angle] {

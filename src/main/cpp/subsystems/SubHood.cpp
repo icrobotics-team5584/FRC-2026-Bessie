@@ -10,7 +10,8 @@ SubHood::SubHood() {
 
     _hoodMotorConfig.encoder.PositionConversionFactor(1/GEAR_RATIO);
     _hoodMotorConfig.encoder.VelocityConversionFactor(1/GEAR_RATIO/60);
-    _hoodMotorConfig.closedLoop.Pidf(P, I, D, F);
+    _hoodMotorConfig.closedLoop.Pid(P, I, D);
+    _hoodMotorConfig.closedLoop.feedForward.kV(F);
     _hoodMotorConfig.SmartCurrentLimit(30);
     _hoodMotor.OverwriteConfig(_hoodMotorConfig);
 

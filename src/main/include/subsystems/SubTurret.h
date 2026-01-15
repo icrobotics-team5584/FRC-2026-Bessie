@@ -9,7 +9,7 @@
 #include "Constants.h"
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/Commands.h>
-#include <rev/SparkAbsoluteEncoder.h>
+#include <frc/DutyCycleEncoder.h>
 
 #include <frc/simulation/DCMotorSim.h>
 #include <frc/system/plant/DCMotor.h>
@@ -29,7 +29,7 @@ class SubTurret : public frc2::SubsystemBase {
 
   void SimulationPeriodic();
 
-  double GetTurretAngle(double encoder1, double encoder2);
+  double GetTurretAngle();
   frc2::CommandPtr SetTurretAngle(units::degree_t angle);
 
 
@@ -43,11 +43,14 @@ class SubTurret : public frc2::SubsystemBase {
   ICSparkMax _turretMotor{canid::TURRET_MOTOR};
   rev::spark::SparkBaseConfig _turretMotorConfig;
 
-  // rev::spark::SparkAbsoluteEncoder _turretEncoder1{dio::ENCODER_1A};
-  // rev::spark::SparkAbsoluteEncoder _turretEncoder2{dio::ENCODER_2A, dio::ENCODER_2B};
+  frc::DutyCycleEncoder _turretEncoder1{dio::TURRET_ENCODER_1};
+  frc::DutyCycleEncoder _turretEncoder2{dio::TURRET_ENCODER_2};
 
   static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::NEO();
   static constexpr units::kilogram_square_meter_t MOI = 0.0001_kg_sq_m;
+
+  double POS_LIMIT = 90;
+  double NEG_LIMIT = -90;
 
   double P = 0.3;
   double I = 0;
