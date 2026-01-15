@@ -6,20 +6,13 @@
 
 #include <frc2/command/Commands.h>
 #include "subsystems/SubDrivebase.h"
-#include "subsystems/SubVision.h"
-#include "subsystems/SubHood.h"
-#include "subsystems/SubShooter.h"
-#include "subsystems/SubTurret.h"
 #include "commands/DriveCommands.h"
-#include "commands/VisionCommand.h"
 #include "subsystems/SubIntake.h"
 #include "commands/AutonCommands.h"
 #include "Subsystems/SubVision.h"
 
 RobotContainer::RobotContainer() {
-  SubVision::GetInstance();
   SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
-  SubVision::GetInstance().SetDefaultCommand(cmd::AddVisionMeasurement());
   ConfigureBindings();
   SubVision::GetInstance();
 
