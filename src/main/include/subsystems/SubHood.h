@@ -31,8 +31,8 @@ class SubHood : public frc2::SubsystemBase {
   void SimulationPeriodic();
 
   frc2::CommandPtr SetHoodPosition(units::degree_t angle);
+  bool HoodCurrentCheck(); 
   frc2::CommandPtr ZeroHood();
-  frc2::CommandPtr HoodResetCheck(); 
   units::ampere_t GetHoodMotorCurrent();
   frc2::CommandPtr ManualHoodDown(); 
   frc2::CommandPtr StowHood(); 

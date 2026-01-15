@@ -46,29 +46,33 @@ frc2::CommandPtr SubHood::PivotFromVision(std::function<units::meter_t()> distan
 
 frc2::CommandPtr SubHood::ZeroHood() {
     return RunOnce([this] {_resetting = true;}).AndThen(ManualHoodDown())
-    .AndThen(HoodResetCheck()).AndThen([this] {_hoodMotor.SetPosition(0_deg);})
+    .Until([this] {return HoodCurrentCheck();})
+    .AndThen([this] {_hoodMotor.SetPosition(12.5_deg);})
     .FinallyDo([this] {
         _hoodMotor.StopMotor();
+        _hoodMotor.SetPositionTarget(15_deg);
         _resetting = false;
     });
 }
 
-frc2::CommandPtr SubHood::HoodResetCheck() {
-    return RunOnce([this] {_hasreset = false;}).AndThen(Run([this] {
-        if(GetHoodMotorCurrent() > zeroingCurrentLimit) {
-            _hasreset = true;
-        }
+bool SubHood::HoodCurrentCheck() {
+    _hasreset = false;
+    if(GetHoodMotorCurrent() > zeroingCurrentLimit) {
+        _hasreset = true;
+        return true;
+    }
 
-        if(frc::RobotBase::IsSimulation() == true) {
-            _hasreset = true;
-        }
-    }).Until([this] {return _hasreset;}));
+    if(frc::RobotBase::IsSimulation() == true) {
+        _hasreset = true;
+        return true;
+    }
+
+    return false;
 }
 
 units::ampere_t SubHood::GetHoodMotorCurrent() {
     return _hoodMotor.GetOutputCurrent()*1_A;
 }
-
 
 frc2::CommandPtr SubHood::StowHood() {
     return RunOnce([this] {_hoodMotor.SetPositionTarget(STOW_TURNS);});
@@ -77,5 +81,5 @@ frc2::CommandPtr SubHood::StowHood() {
 frc2::CommandPtr SubHood::ManualHoodDown() {
     return StartEnd([this] {_hoodMotor.SetVoltage(-1_V);}, 
     [this] {auto targRot = _hoodMotor.GetPosition();
-    _hoodMotor.SetMaxMotionTarget(targRot);});
+    _hoodMotor.SetPositionTarget(targRot);});
 }

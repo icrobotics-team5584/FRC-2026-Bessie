@@ -10,6 +10,7 @@
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/Commands.h>
 #include <frc/DutyCycleEncoder.h>
+#include <units/angle.h>
 
 #include <frc/simulation/DCMotorSim.h>
 #include <frc/system/plant/DCMotor.h>
@@ -18,6 +19,7 @@
 #include <frc/smartdashboard/MechanismLigament2d.h>
 #include "utilities/MechanismCircle2d.h"
 #include <frc/simulation/EncoderSim.h>
+
 
 class SubTurret : public frc2::SubsystemBase {
  public:
@@ -29,9 +31,11 @@ class SubTurret : public frc2::SubsystemBase {
 
   void SimulationPeriodic();
 
-  double GetTurretAngle();
+  units::turn_t GetTurretAngle();
+  frc2::CommandPtr SetTurretTargetAngle(units::degree_t angle);
   frc2::CommandPtr SetTurretAngle(units::degree_t angle);
-
+  frc2::CommandPtr ZeroTurret();
+  void SetTurretTarget(units::degree_t angle);
 
 
   /**
