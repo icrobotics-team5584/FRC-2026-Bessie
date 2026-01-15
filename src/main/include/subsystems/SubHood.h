@@ -48,10 +48,10 @@ class SubHood : public frc2::SubsystemBase {
 
  private:
 
-  double P = 1.0;
+  double P = 7;//5;
   double I = 0.0;
   double D = 0.0;
-  double F = 1.0;
+  double F = 0.1;
 
   units::ampere_t zeroingCurrentLimit = 10_A;
 
@@ -65,12 +65,12 @@ class SubHood : public frc2::SubsystemBase {
 
   wpi::interpolating_map<units::meter_t, units::degree_t> _pitchTable;
 
-  double GEAR_RATIO = (8.0/42.0) * (24.0/400.0);
+  double GEAR_RATIO = (42.0/8.0) * (400.0/24.0);//(8.0/42.0) * (24.0/400.0);
   ICSparkMax _hoodMotor{canid::HOOD_MOTOR};
   rev::spark::SparkBaseConfig _hoodMotorConfig;
 
   static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::NEO550();
-  static constexpr units::kilogram_square_meter_t MOI = 0.0001_kg_sq_m;
+  static constexpr units::kilogram_square_meter_t MOI = 0.00001_kg_sq_m;
 
   //Sim
   frc::LinearSystem<2,1,2> _hoodSystem = frc::LinearSystemId::DCMotorSystem(MOTOR_MODEL, MOI, GEAR_RATIO);
