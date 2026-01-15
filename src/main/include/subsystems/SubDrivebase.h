@@ -40,6 +40,8 @@ class SubDrivebase : public frc2::SubsystemBase {
 
   void SetBrakeMode(bool mode);
 
+  void SetPose(frc::Pose2d pose);
+
   /* ------------------------------------------------------------------------------------------------------------- */
   /* Getters & calculations*/
 
@@ -61,6 +63,7 @@ class SubDrivebase : public frc2::SubsystemBase {
   void SetPose(frc::Pose2d pose);
   bool IsAtPose(frc::Pose2d pose, units::meter_t positionErrorTolerance = 2_cm,
     units::degree_t rotationErrorTolerance = 2_deg);
+  wpi::array<frc::SwerveModulePosition, 4U> GetSwerveStates();
 
   /* ------------------------------------------------------------------------------------------------------------- */
   /* Commands */
