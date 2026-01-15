@@ -81,8 +81,12 @@ frc2::CommandPtr SubShooter::SetShooterTarget(units::turns_per_second_t speed) {
     return RunOnce([this, speed] {_shooterMotor1.SetControl(_flywheelTargetVelocity.WithVelocity(speed));});
 }
 
+void SubShooter::Stop() {
+    _shooterMotor1.SetControl(_flywheelTargetVelocity.WithVelocity(0_tps));
+}
+
 frc2::CommandPtr SubShooter::StopShooter() {
-    return RunOnce([this] {_shooterMotor1.SetControl(_flywheelTargetVelocity.WithVelocity(0_tps));});
+    return RunOnce([this] {Stop();});
 }
 
 bool SubShooter::IsAtSpeed() {

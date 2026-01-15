@@ -30,6 +30,8 @@ class SubShooter : public frc2::SubsystemBase {
 
   frc2::CommandPtr SetShooterTarget(units::turns_per_second_t speed);
   frc2::CommandPtr SpinUpShooter();
+
+  void Stop();
   frc2::CommandPtr StopShooter();
   bool IsAtSpeed();
 
