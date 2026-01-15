@@ -34,7 +34,7 @@ void SubIntake::Periodic() {
   units::ampere_t current = _intakeMotor.GetOutputCurrent() * 1_A;
   Logger::Log("Intake/Intake Motor Current", current);
   if (current > 20_A) {
-    SubIntake::CurrentHighTimer();
+    CurrentHighTimer();
   } else {
     intakeCurrentAlert.Set(false);
     _intakeHighCurrentTimer.Reset();
