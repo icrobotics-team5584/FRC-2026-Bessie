@@ -4,6 +4,7 @@
 
 #include "subsystems/SubTurret.h"
 #include <frc/smartdashboard/SmartDashboard.h>
+#include "utilities/Logger.h"
 
 SubTurret::SubTurret() {
     frc::SmartDashboard::PutData("Turret/Motor", &_turretMotor);
