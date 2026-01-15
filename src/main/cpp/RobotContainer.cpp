@@ -8,6 +8,7 @@
 #include "subsystems/SubDrivebase.h"
 #include "commands/DriveCommands.h"
 #include "subsystems/SubIntake.h"
+#include "subsystems/SubFeeder.h"
 #include "commands/AutonCommands.h"
 #include "Subsystems/SubVision.h"
 
@@ -27,6 +28,7 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureBindings() {
+ //_driverController.X().WhileTrue(SubFeeder::GetInstance().FeederOn());
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
   _driverController.Y().OnTrue(SubDrivebase::GetInstance().ResetGyroCmd());
   _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());

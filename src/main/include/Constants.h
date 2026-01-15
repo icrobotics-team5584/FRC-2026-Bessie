@@ -19,11 +19,14 @@ namespace canid {
 
     constexpr int PIGEON_2 = 13; 
     constexpr int INTAKE = 14;
+    constexpr int FEEDER = 17;
 
 }
 
 namespace dio {
     constexpr int BRAKE_COAST_BUTTON = 0;
+    constexpr int FEED_INPUT_SENSOR = 4;
+    constexpr int FEED_OUTPUT_SENSOR = 5;
 }
 
 namespace pwm {
