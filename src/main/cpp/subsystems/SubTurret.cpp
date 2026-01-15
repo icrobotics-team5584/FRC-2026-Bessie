@@ -10,7 +10,7 @@ SubTurret::SubTurret() {
     Logger::Log("Turret/CRT Positiion", GetTurretAngle());
 
     _turretMotorConfig.encoder.PositionConversionFactor(1/GEAR_RATIO);
-    _turretMotorConfig.encoder.VelocityConversionFactor(1/GEAR_RATIO/60);
+    _turretMotorConfig.encoder.VelocityConversionFactor(1/GEAR_RATIO);
     _turretMotorConfig.closedLoop.Pid(P, I, D);
     _turretMotorConfig.closedLoop.feedForward.kV(F);
     _turretMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
