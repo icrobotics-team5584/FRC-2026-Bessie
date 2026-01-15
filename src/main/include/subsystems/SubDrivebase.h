@@ -124,9 +124,8 @@ class SubDrivebase : public frc2::SubsystemBase {
   // P2P
   units::meters_per_second_squared_t _tunedMaxP2pAccel = DrivebaseConfig::MAX_P2P_ACCEL;
   units::turns_per_second_squared_t _tunedMaxP2pAngAccel = DrivebaseConfig::MAX_P2P_ANGULAR_ACCEL;
-  frc::SlewRateLimiter<units::meters_per_second> _p2pXLimiter{_tunedMaxP2pAccel};
-  frc::SlewRateLimiter<units::meters_per_second> _p2pYLimiter{_tunedMaxP2pAccel};
-  frc::SlewRateLimiter<units::turns_per_second> _p2pRotLimiter{_tunedMaxP2pAngAccel};
+  frc::SlewRateLimiter<units::meters_per_second> _p2pTranslationLimiter{_tunedMaxP2pAccel};
+  frc::SlewRateLimiter<units::turns_per_second> _p2pRotationLimiter{_tunedMaxP2pAngAccel};
 
   std::shared_ptr<pathplanner::PPHolonomicDriveController> _pathplannerController =
     std::make_shared<pathplanner::PPHolonomicDriveController>(
