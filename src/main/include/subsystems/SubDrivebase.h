@@ -119,7 +119,7 @@ class SubDrivebase : public frc2::SubsystemBase {
       DrivebaseConfig::BR_POSITION
   };
 
-  frc::PIDController _teleopTranslationController = DrivebaseConfig::TELE_TRANSLATION_PID;
+  frc::ProfiledPIDController<units::meters> _teleopTranslationController = DrivebaseConfig::TELE_TRANSLATION_PID;
   frc::ProfiledPIDController<units::radian> _teleopRotationController = DrivebaseConfig::TELE_ROTATION_PID;
 
   // P2P
