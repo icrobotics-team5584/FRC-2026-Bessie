@@ -21,6 +21,7 @@ class PoseHandler {
 
   // Setters
   void Update(frc::Rotation2d angle, wpi::array<frc::SwerveModulePosition, 4U> states);
+  void SetPose(frc::Pose2d pose, wpi::array<frc::SwerveModulePosition, 4U> states);
   void UpdateSim(frc::Rotation2d angle, wpi::array<frc::SwerveModulePosition, 4U> states, bool resetHeading = false, frc::Rotation2d heading = 0_deg);
 
  private:

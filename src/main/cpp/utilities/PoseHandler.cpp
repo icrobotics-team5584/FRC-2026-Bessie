@@ -12,6 +12,11 @@ frc::Pose2d PoseHandler::GetSimPose() {
     return _simPoseEstimator.GetEstimatedPosition();
 }
 
+void PoseHandler::SetPose(frc::Pose2d pose, wpi::array<frc::SwerveModulePosition, 4U> states) {
+    _poseEstimator.ResetPosition(pose.Rotation().Degrees(), states, pose);
+    _simPoseEstimator.ResetPosition(pose.Rotation().Degrees(), states, pose);
+}
+
 void PoseHandler::Update(frc::Rotation2d angle, wpi::array<frc::SwerveModulePosition, 4U> states) {
     _poseEstimator.Update(angle, states);
     Logger::FieldDisplay::GetInstance().SetRobotPose(_poseEstimator.GetEstimatedPosition());
