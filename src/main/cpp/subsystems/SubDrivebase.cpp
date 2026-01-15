@@ -287,41 +287,73 @@ units::turns_per_second_t SubDrivebase::CalcRotateSpeed(units::turn_t rotationEr
 }
 
 frc::ChassisSpeeds SubDrivebase::CalcDriveToPoseSpeeds(frc::Pose2d targetPose) {
-  // Find current and target values
-  double targetXMeters = targetPose.X().value();
-  double targetYMeters = targetPose.Y().value();
+  //Slew rate limiters for acceleration and angular acceleration
+  auto maxP2pAccel = Logger::Tune("Drivebase/P2P/Accel Limit (metres per second squared)", _tunedMaxP2pAccel);
+  if (maxP2pAccel != _tunedMaxP2pAccel) {
+    _p2pXLimiter = frc::SlewRateLimiter<units::meters_per_second>{maxP2pAccel};
+    _p2pYLimiter = frc::SlewRateLimiter<units::meters_per_second>{maxP2pAccel};
+
+    _tunedMaxP2pAccel = maxP2pAccel;
+  }
+
+  auto maxP2pAngAccel = Logger::Tune("Drivebase/P2P/Angular Accel Limit (turns per second squared)", _tunedMaxP2pAngAccel);
+  if (maxP2pAngAccel != _tunedMaxP2pAngAccel) {
+    _p2pRotLimiter = frc::SlewRateLimiter<units::turns_per_second>{maxP2pAngAccel};
+
+    _tunedMaxP2pAngAccel = maxP2pAngAccel;
+  }
+
+  // Find target and current values
+  units::meter_t targetXMeters = targetPose.X();
+  units::meter_t targetYMeters = targetPose.Y();
   units::turn_t targetRotation = targetPose.Rotation().Radians();
-  
+
   frc::Pose2d currentPosition = PoseHandler::GetInstance().GetPose();
-  double currentXMeters = currentPosition.X().value();
-  double currentYMeters = currentPosition.Y().value();
+  units::meter_t currentXMeters = currentPosition.X();
+  units::meter_t currentYMeters = currentPosition.Y();
   units::turn_t currentRotation = GetGyroAngle(true).Degrees();
 
+  //Create a vector between current position and target position
+  frc::Translation2d translationVector = frc::Translation2d(targetXMeters - currentXMeters, targetYMeters - currentYMeters);
+
   // Use PID controllers to calculate speeds
-  auto xSpeed = _teleopTranslationController.Calculate(currentXMeters, targetXMeters) * 1_mps;
-  auto ySpeed = _teleopTranslationController.Calculate(currentYMeters, targetYMeters) * 1_mps;
-  auto rSpeed = CalcRotateSpeed(frc::AngleModulus(currentRotation - targetRotation));
+  auto translationSpeed = _teleopTranslationController.Calculate(0, translationVector.Norm().value());
+  auto rotSpeed = CalcRotateSpeed(currentRotation - targetRotation);
+
+  //Convert Polar back into Cartesian X and Y
+  frc::Translation2d translationSpeedVector = frc::Translation2d(translationSpeed*1_m, translationVector.Angle());
+  units::meters_per_second_t xSpeed = translationSpeedVector.X().value() * 1_mps;
+  units::meters_per_second_t ySpeed = translationSpeedVector.Y().value() * 1_mps;
+
+  // Apply Accel Limit
+  auto xCalcSpeed = _p2pXLimiter.Calculate(xSpeed) * 1_mps;
+  auto yCalcSpeed = _p2pYLimiter.Calculate(ySpeed) * 1_mps;
+  auto rotCalcSpeed = _p2pRotLimiter.Calculate(rotSpeed) * 1_tps;
+
+  rotSpeed = rotCalcSpeed;
 
   // Clamp to max velocity
-  xSpeed = units::math::min(xSpeed, DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
-  xSpeed = units::math::max(xSpeed, -DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
-  ySpeed = units::math::min(ySpeed, DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
-  ySpeed = units::math::max(ySpeed, -DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
+  xSpeed = units::math::min(xCalcSpeed, DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
+  xSpeed = units::math::max(xCalcSpeed, -DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
+  ySpeed = units::math::min(yCalcSpeed, DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
+  ySpeed = units::math::max(yCalcSpeed, -DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
 
   if (frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kRed) {
     xSpeed *= -1;
     ySpeed *= -1;
   }
 
-  Logger::Log("CalcDriveLogs/xSpeed", -xSpeed.value());
-  Logger::Log("CalcDriveLogs/ySpeed", ySpeed.value());
-  Logger::Log("CalcDriveLogs/rSpeed", rSpeed.value());
-  Logger::Log("CalcDriveLogs/targetXMeters", targetXMeters);
+  //Logging
+  Logger::Log("CalcDriveLogs/xSpeed", -xSpeed);
+  Logger::Log("CalcDriveLogs/ySpeed", ySpeed);
+  Logger::Log("CalcDriveLogs/rotSpeed", rotSpeed);
   Logger::Log("CalcDriveLogs/targetYMeters", targetYMeters);
+  Logger::Log("CalcDriveLogs/targetXMeters", targetXMeters);
   Logger::Log("CalcDriveLogs/currentXMeters", currentXMeters);
   Logger::Log("CalcDriveLogs/currentYMeters", currentYMeters);
-  Logger::Log("CalcDriveLogs/currentRotation", currentRotation.value());
-  return frc::ChassisSpeeds{xSpeed, ySpeed, rSpeed};
+  Logger::Log("CalcDriveLogs/currentRotation", currentRotation);
+
+  return frc::ChassisSpeeds{xSpeed, ySpeed, rotSpeed};
 }
 
 void SubDrivebase::SetPose(frc::Pose2d pose) {

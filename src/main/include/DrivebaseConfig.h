@@ -9,9 +9,12 @@ namespace DrivebaseConfig {
   // Drive controls
   constexpr units::meters_per_second_t MAX_VELOCITY = 4_mps;
   constexpr units::meters_per_second_t MAX_DRIVE_TO_POSE_VELOCITY = 1_mps;
-  constexpr units::turns_per_second_t MAX_ANGULAR_VELOCITY = 290_deg_per_s;  // CHANGE TO 720\[]
+  constexpr units::turns_per_second_t MAX_ANGULAR_VELOCITY = 290_deg_per_s;
 
-  static constexpr units::turns_per_second_squared_t MAX_ANG_ACCEL{std::numbers::pi};
+  static constexpr units::meters_per_second_squared_t MAX_P2P_ACCEL = 3_mps_sq;
+  static constexpr units::turns_per_second_squared_t MAX_P2P_ANGULAR_ACCEL = 3_tr_per_s_sq;
+
+  static constexpr units::turns_per_second_squared_t MAX_ANGULAR_ACCEL{std::numbers::pi};
 
   static constexpr double MAX_JOYSTICK_ACCEL = 5;
   static constexpr double MAX_ANGULAR_JOYSTICK_ACCEL = 3;
@@ -32,7 +35,7 @@ namespace DrivebaseConfig {
 
   const frc::PIDController TELE_TRANSLATION_PID{7.0, 0.0, 0.0};
   const frc::ProfiledPIDController<units::radian> TELE_ROTATION_PID{
-              3.0, 0, 0, {MAX_ANGULAR_VELOCITY, MAX_ANG_ACCEL}};
+              3.0, 0, 0, {MAX_ANGULAR_VELOCITY, MAX_ANGULAR_ACCEL}};
 
   const pathplanner::PIDConstants AUTO_TRANSLATION_PID{3.2, 0.0, 0.3};
   const pathplanner::PIDConstants AUTO_ROTATION_PID{1.5, 0.0, 0.0};

@@ -122,14 +122,11 @@ class SubDrivebase : public frc2::SubsystemBase {
   frc::ProfiledPIDController<units::radian> _teleopRotationController = DrivebaseConfig::TELE_ROTATION_PID;
 
   // P2P
-  static constexpr double MAX_P2P_ACCEL = 3;
-  static constexpr double MAX_P2P_ANGULAR_ACCEL = 9;
-
-  double _tunedMaxP2pAccel = MAX_P2P_ACCEL;
-  double _tunedMaxP2pAngAccel = MAX_P2P_ANGULAR_ACCEL;
-  frc::SlewRateLimiter<units::scalar> _p2pXLimiter{_tunedMaxP2pAccel / 1_s};
-  frc::SlewRateLimiter<units::scalar> _p2pYLimiter{_tunedMaxP2pAccel / 1_s};
-  frc::SlewRateLimiter<units::scalar> _p2pRLimiter{_tunedMaxP2pAngAccel / 1_s};
+  units::meters_per_second_squared_t _tunedMaxP2pAccel = DrivebaseConfig::MAX_P2P_ACCEL;
+  units::turns_per_second_squared_t _tunedMaxP2pAngAccel = DrivebaseConfig::MAX_P2P_ANGULAR_ACCEL;
+  frc::SlewRateLimiter<units::meters_per_second> _p2pXLimiter{_tunedMaxP2pAccel};
+  frc::SlewRateLimiter<units::meters_per_second> _p2pYLimiter{_tunedMaxP2pAccel};
+  frc::SlewRateLimiter<units::turns_per_second> _p2pRotLimiter{_tunedMaxP2pAngAccel};
 
   std::shared_ptr<pathplanner::PPHolonomicDriveController> _pathplannerController =
     std::make_shared<pathplanner::PPHolonomicDriveController>(
