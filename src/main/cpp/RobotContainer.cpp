@@ -12,6 +12,7 @@
 #include "subsystems/SubTurret.h"
 #include "commands/DriveCommands.h"
 #include "commands/VisionCommand.h"
+#include "commands/ShootCommands.h"
 
 RobotContainer::RobotContainer() {
   SubVision::GetInstance();
@@ -25,6 +26,7 @@ void RobotContainer::ConfigureBindings() {
   _driverController.Y().OnTrue(SubHood::GetInstance().SetHoodPosition(20_deg));
   _driverController.A().OnTrue(SubShooter::GetInstance().SetShooterTarget(100_tps));
   _driverController.B().OnTrue(SubShooter::GetInstance().StopShooter());
+  _driverController.RightBumper().WhileTrue(cmd::AimAndShoot({0_m, 0_m, 0_m})); // Change to hub pose later
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
