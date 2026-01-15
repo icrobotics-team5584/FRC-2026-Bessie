@@ -47,11 +47,12 @@ class SubTurret : public frc2::SubsystemBase {
   // rev::spark::SparkAbsoluteEncoder _turretEncoder2{dio::ENCODER_2A, dio::ENCODER_2B};
 
   static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::NEO();
-  static constexpr units::kilogram_square_meter_t MOI = 0.00001_kg_sq_m;
+  static constexpr units::kilogram_square_meter_t MOI = 0.0001_kg_sq_m;
 
-  double P = 3.0;
+  double P = 0.3;
   double I = 0;
   double D = 0;
+  double F = 1.0;
   
   static constexpr double ENCODER1_RATIO = 20.0/94.0;
   static constexpr double ENCODER2_RATIO = 21.0/94.0;

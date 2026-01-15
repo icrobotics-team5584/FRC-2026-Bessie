@@ -45,9 +45,10 @@ class SubHood : public frc2::SubsystemBase {
 
  private:
 
-  double P = 3.0;
+  double P = 1.0;
   double I = 0.0;
   double D = 0.0;
+  double F = 1.0;
 
   units::ampere_t zeroingCurrentLimit = 10_A;
 
@@ -66,7 +67,7 @@ class SubHood : public frc2::SubsystemBase {
   rev::spark::SparkBaseConfig _hoodMotorConfig;
 
   static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::NEO550();
-  static constexpr units::kilogram_square_meter_t MOI = 0.000001_kg_sq_m;
+  static constexpr units::kilogram_square_meter_t MOI = 0.0001_kg_sq_m;
 
   //Sim
   frc::LinearSystem<2,1,2> _hoodSystem = frc::LinearSystemId::DCMotorSystem(MOTOR_MODEL, MOI, GEAR_RATIO);
