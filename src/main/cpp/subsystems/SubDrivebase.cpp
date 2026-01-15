@@ -326,13 +326,13 @@ frc::ChassisSpeeds SubDrivebase::CalcDriveToPoseSpeeds(frc::Pose2d targetPose) {
   units::meters_per_second_t ySpeed = translationSpeedVector.Y().value() * 1_mps;
 
   // Apply Accel Limit
-  auto xCalcSpeed = _p2pXLimiter.Calculate(xSpeed) * 1_mps;
-  auto yCalcSpeed = _p2pYLimiter.Calculate(ySpeed) * 1_mps;
-  auto rotCalcSpeed = _p2pRotLimiter.Calculate(rotSpeed) * 1_tps;
+  units::meters_per_second_t xCalcSpeed = _p2pXLimiter.Calculate(xSpeed);
+  units::meters_per_second_t yCalcSpeed = _p2pYLimiter.Calculate(ySpeed);
+  units::turns_per_second_t rotCalcSpeed = _p2pRotLimiter.Calculate(rotSpeed);
 
   rotSpeed = rotCalcSpeed;
 
-  // Clamp to max velocity
+  // Clamp translation speeds to max velocity
   xSpeed = units::math::min(xCalcSpeed, DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
   xSpeed = units::math::max(xCalcSpeed, -DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
   ySpeed = units::math::min(yCalcSpeed, DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
