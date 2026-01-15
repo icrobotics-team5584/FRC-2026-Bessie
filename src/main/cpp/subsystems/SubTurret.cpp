@@ -77,25 +77,25 @@ units::degree_t SubTurret::GetTurretAngle() {
 }
 
 void SubTurret::SetAngle(units::degree_t angle) {
-    _turretMotor.SetPositionTarget(angle);
+    _turretMotor.SetPosition(angle);
 }
 
-frc2::CommandPtr SubTurret::SetTurretAngle(units::degree_t angle) {
+frc2::CommandPtr SubTurret::SetTurretTarget(units::degree_t angle) {
     return Run([this, angle] {
-        SetAngle(angle);
+        SetTarget(angle);
     });
 }
 
-void SubTurret::SetTurretTarget(units::degree_t angle) {
+void SubTurret::SetTarget(units::degree_t angle) {
     _turretMotor.SetPositionTarget(angle);
 }
 
 frc2::CommandPtr SubTurret::SetTurretAngle(units::degree_t angle) {
     return RunOnce([this, angle] {
-        _turretMotor.SetPosition(angle);
+        SetAngle(angle);
     });
 }
 
 frc2::CommandPtr SubTurret::ZeroTurret() {
-    return RunOnce([this] {SetTurretTarget(GetTurretAngle());});
+    return RunOnce([this] {SetTarget(GetTurretAngle());});
 }
