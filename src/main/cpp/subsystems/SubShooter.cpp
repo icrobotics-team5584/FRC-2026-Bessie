@@ -90,6 +90,6 @@ bool SubShooter::IsAtSpeed() {
     abs(_shooterMotor2.GetVelocity().GetValueAsDouble() - _flywheelTargetVelocity.Velocity()) < 1.0;
 }
 
-frc2::CommandPtr SubShooter::SetTargetFromProjectileVel(units::meters_per_second_t speed) {
-    return SetShooterTarget(_ball_to_shooter_turn[speed]);
+void SubShooter::SetTargetFromProjectileVel(units::meters_per_second_t speed) {
+    _shooterMotor1.SetControl(_flywheelTargetVelocity.WithVelocity(_ball_to_shooter_turn[speed]));
 }

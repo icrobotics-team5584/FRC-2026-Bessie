@@ -33,7 +33,7 @@ class SubShooter : public frc2::SubsystemBase {
   frc2::CommandPtr StopShooter();
   bool IsAtSpeed();
 
-  frc2::CommandPtr SetTargetFromProjectileVel(units::meters_per_second_t speed);
+  void SetTargetFromProjectileVel(units::meters_per_second_t speed);
 
   /**
    * Will be called periodically whenever the CommandScheduler runs.

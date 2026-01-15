@@ -21,11 +21,11 @@ frc2::CommandPtr AimAndShoot(frc::Translation3d target_pose) {
         units::meter_t distance = hypot(target_pose.X().value() - curr_pos.X().value(), target_pose.Y().value() - curr_pos.Y().value()) * 1_m;
         ShootConfig conf = PoseEstimator::GetInstance().CalShootOnMove(0.5, target_pose, SubHood::GetInstance().GetAngleFromDistance(distance),
                                                                        vel * cos(yaw), vel * sin(yaw));
-        
-        SubHood::GetInstance().SetHoodPosition(90_deg - conf.PivotAngle.Degrees());
-        SubTurret::GetInstance().SetTurretAngle(conf.Yaw.Degrees());
+        SubHood::GetInstance().SetHoodPos(90_deg - conf.PivotAngle.Degrees());
+        SubTurret::GetInstance().SetAngle(conf.Yaw.Degrees());
         SubShooter::GetInstance().SetTargetFromProjectileVel(conf.Velocity);
-    }).FinallyDo([] {
+    })
+    .FinallyDo([] {
         SubShooter::GetInstance().StopShooter();
     });
 }

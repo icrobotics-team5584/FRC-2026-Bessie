@@ -21,6 +21,8 @@ class SubTurret : public frc2::SubsystemBase {
   void SimulationPeriodic();
 
   double GetTurretAngle(double encoder1, double encoder2);
+
+  void SetAngle(units::degree_t angle);
   frc2::CommandPtr SetTurretAngle(units::degree_t angle);
 
 

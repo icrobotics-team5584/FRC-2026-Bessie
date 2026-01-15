@@ -32,8 +32,12 @@ units::degree_t SubHood::GetAngleFromDistance(units::meter_t distance) {
     return _pitchTable[distance];
 }
 
+void SubHood::SetHoodPos(units::degree_t angle) {
+    _hoodMotor.SetPositionTarget(angle);
+}
+
 frc2::CommandPtr SubHood::SetHoodPosition(units::degree_t angle) {
-    return RunOnce([this, angle] {_hoodMotor.SetPositionTarget(angle);});
+    return RunOnce([this, angle] {SetHoodPos(angle);});
 }
 
 frc2::CommandPtr SubHood::PivotFromVision(std::function<units::meter_t()> distance) {

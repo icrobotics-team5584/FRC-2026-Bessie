@@ -31,8 +31,12 @@ double SubTurret::GetTurretAngle(double encoder1, double encoder2) {
     return angle;
 }
 
+void SubTurret::SetAngle(units::degree_t angle) {
+    _turretMotor.SetPositionTarget(angle);
+}
+
 frc2::CommandPtr SubTurret::SetTurretAngle(units::degree_t angle) {
     return Run([this, angle] {
-        _turretMotor.SetPositionTarget(angle);
+        SetAngle(angle);
     });
 }
