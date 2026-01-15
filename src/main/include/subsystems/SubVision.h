@@ -16,18 +16,6 @@
 #include <frc/Filesystem.h>
 #include <wpi/interpolating_map.h>
 
-struct Camera {
-  photon::PhotonCamera* camera;
-  photon::PhotonPoseEstimator* poseEstimater;
-  std::optional<photon::EstimatedRobotPose>* estPose;
-};
-
-struct PoseEstimate {
-  frc::Pose2d pose;
-  double dev;
-  units::time::second_t timestamp;
-};
-
 class SubVision : public frc2::SubsystemBase {
 public:
   SubVision();
@@ -40,18 +28,21 @@ public:
 
   void SimulationPeriodic() override;
 
+  enum Side {
+    Left = 1,
+    Right = 2
+  };
+
   /**
    * Update pose estimater with vision, should be called every frame
    */
   void UpdateVision();
 
-  void LogStatus();
-
-  int GetLastCameraUsed();
+  Side GetLastCameraUsed();
 
   std::optional<frc::Pose2d> GetAprilTagPose(int id);
 
-  std::vector<PoseEstimate> GetEstPose();
+  std::map<Side, std::optional<photon::EstimatedRobotPose>> GetPose();
 
   frc::Pose2d CalculateRelativePose(frc::Pose2d pose, units::meter_t xTransform, units::meter_t yTransform);
 
@@ -64,16 +55,16 @@ public:
   double GetDev(photon::EstimatedRobotPose pose);
 
  private:
+
   struct TagObservation {
     photon::PhotonTrackedTarget tag;
-    int cameraId;
+    Side cameraSide;
     units::time::second_t timestamp;
   };
-
-  struct TagObservation _lastTag;
+  struct TagObservation _lastTagObservation;
 
   //Create field layout
-  std::string _tagMapFilePath = frc::filesystem::GetDeployDirectory() + "/2025-reefscape.json";// "/-rebuilt.json"
+  std::string _tagMapFilePath = frc::filesystem::GetDeployDirectory() + "/2026-rebuilt.json";
   frc::AprilTagFieldLayout _tagMap{_tagMapFilePath};
 
   //Left camera config
@@ -88,7 +79,6 @@ public:
 
   photon::PhotonPoseEstimator _leftPoseEstimater{
     _tagMap,
-    // photon::PoseStrategy::MULTI_TAG_PNP_ON_COPROCESSOR, deprecated
     _leftBotToCam
   };
 
@@ -109,8 +99,6 @@ public:
   };
 
   std::optional<photon::EstimatedRobotPose> _rightEstPose;
-
-  std::vector<Camera> _camList;
 
   //Deviation table for further distances from tag
   wpi::interpolating_map<units::meter_t, double> _devTable;

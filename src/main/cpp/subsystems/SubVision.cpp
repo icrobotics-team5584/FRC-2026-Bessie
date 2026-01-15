@@ -14,19 +14,6 @@
 
 
 SubVision::SubVision() {
-  // Append camera to camera list
-
-  _camList.emplace_back(
-    &_leftCamera,
-    &_leftPoseEstimater,
-    &_leftEstPose
-  );
-
-  _camList.emplace_back(
-    &_rightCamera,
-    &_rightPoseEstimater,
-    &_rightEstPose
-  );
 
    // Set dev table for distance based deviance
   _devTable.insert(0_m, 0);
@@ -49,13 +36,13 @@ SubVision::SubVision() {
 }
 
 void SubVision::Periodic() {
+  frc::SmartDashboard::PutNumber("Vision/LastSeenTag", _lastTagObservation.tag.GetFiducialId());
+  if (_lastTagObservation.cameraSide == Side::Left) {
+    frc::SmartDashboard::PutString("Vision/Last Used Camera", "Left");
+  } else {
+    frc::SmartDashboard::PutString("Vision/Last Used Camera", "Right");
+  }
   UpdateVision();
-  LogStatus();
-}
-
-void SubVision::LogStatus() {
-  Logger::Log("Vision/Last saw tag/id", _lastTag.tag.fiducialId);
-  Logger::Log("Vision/Last saw tag/timestamp", _lastTag.timestamp);
 }
 
 void SubVision::SimulationPeriodic() {
@@ -64,52 +51,67 @@ void SubVision::SimulationPeriodic() {
 
 void SubVision::UpdateVision() {
   double largestArea = 0;
-  int id = 0;
+  std::string leftTargets = "";
+  std::string rightTargets = "";
 
-  for (auto cam : _camList) {
-    std::vector<photon::PhotonPipelineResult> results = cam.camera->GetAllUnreadResults();
-    auto resultCount = results.size();
-    if (resultCount > 0) {
-      for (auto result : results) {
-        *cam.estPose = cam.poseEstimater->EstimateCoprocMultiTagPose(result);
-        for (const auto& target : result.targets) {
-          double targetArea = target.GetArea();
-          if (targetArea > largestArea ) {
-            if(cam.estPose->has_value()) {
-              _lastTag.timestamp = cam.estPose->value().timestamp;
-              _lastTag.tag = target;
-              _lastTag.cameraId = id;
-            }
+  // Left camera
+  std::vector<photon::PhotonPipelineResult> results = _leftCamera.GetAllUnreadResults();
+  auto resultCount = results.size();
+  if (resultCount > 0) {
+    for (auto result : results) {
+      _leftEstPose = _leftPoseEstimater.EstimateCoprocMultiTagPose(result);
+      for (const auto& target : result.targets) {
+        leftTargets += std::to_string(target.GetFiducialId()) + ", ";
+        double targetArea = target.GetArea();
+        if (targetArea > largestArea ) {
 
-            largestArea = targetArea;
+          if(_leftEstPose.has_value()) {
+            _lastTagObservation.timestamp = _leftEstPose.value().timestamp;
+            _lastTagObservation.tag = target;
+            _lastTagObservation.cameraSide = Side::Left;
           }
+
+          largestArea = targetArea;
         }
       }
     }
-    id++;
   }
-}
+  // Right camera
+  results = _rightCamera.GetAllUnreadResults();
+  resultCount = results.size();
+  if (resultCount > 0) {
+    for (auto result : results) {
+      _rightEstPose = _rightPoseEstimater.EstimateCoprocMultiTagPose(result);
 
-std::vector<PoseEstimate> SubVision::GetEstPose() {
-  std::vector<PoseEstimate> l;
-  int i = 0;
-  for (auto cam : _camList) {
-    if (cam.estPose->has_value()) {
-      double d = GetDev(cam.estPose->value());
-      l.push_back({cam.estPose->value().estimatedPose.ToPose2d(),d, cam.estPose->value().timestamp});
-      i++;
+      for (const auto& target : result.targets) {
+        rightTargets += std::to_string(target.GetFiducialId()) + ", ";
+        double targetArea = target.GetArea();
+        if (targetArea > largestArea) {
+          if(_rightEstPose.has_value()) {
+            _lastTagObservation.tag = target;
+            _lastTagObservation.cameraSide = Side::Right;
+            _lastTagObservation.timestamp = _rightEstPose.value().timestamp;          
+          }
+          largestArea = targetArea;
+        }
+      }
     }
   }
-  Logger::Log("Vision/Est pose number", i);
-  return l;
+
+  frc::SmartDashboard::PutString("Vision/Left/targets", leftTargets);
+  frc::SmartDashboard::PutString("Vision/Right/targets", rightTargets);
+}
+
+std::map<SubVision::Side, std::optional<photon::EstimatedRobotPose>> SubVision::GetPose() {
+  return {{Left, _leftEstPose}, {Right, _rightEstPose}};
 }
 
 int SubVision::GetLastSeenTagID() {
-  return _lastTag.tag.GetFiducialId();
+  return _lastTagObservation.tag.GetFiducialId();
 }
 
-int SubVision::GetLastCameraUsed() {
-  return _lastTag.cameraId;
+SubVision::Side SubVision::GetLastCameraUsed() {
+  return _lastTagObservation.cameraSide;
 }
 
 double SubVision::GetDev(photon::EstimatedRobotPose pose) {
