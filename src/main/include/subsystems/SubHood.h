@@ -23,6 +23,8 @@ class SubHood : public frc2::SubsystemBase {
 
   void SimulationPeriodic();
 
+  units::degree_t GetAngleFromDistance(units::meter_t distance);
+
   frc2::CommandPtr SetHoodPosition(units::degree_t angle);
   frc2::CommandPtr ZeroHood();
   frc2::CommandPtr HoodResetCheck(); 

@@ -31,7 +31,7 @@ public:
   // GetPose
   frc::Pose2d GetEstPose();
 
-  ShootConfig CalShootOnMove(frc::Pose3d orig, frc::Pose3d target, frc::Rotation2d piv,
+  ShootConfig CalShootOnMove(double shooter_h, frc::Translation3d target, frc::Rotation2d piv,
                                units::meters_per_second_t bot_x, units::meters_per_second_t bot_y);
 
 private:

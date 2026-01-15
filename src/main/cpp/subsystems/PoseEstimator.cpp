@@ -34,11 +34,12 @@ frc::Pose2d PoseEstimator::GetEstPose() {
     return _poseEstimator.GetEstimatedPosition();
 }
 
-ShootConfig PoseEstimator::CalShootOnMove(frc::Pose3d orig, frc::Pose3d target, frc::Rotation2d piv,
+ShootConfig PoseEstimator::CalShootOnMove(double shooter_h, frc::Translation3d target, frc::Rotation2d piv,
                                units::meters_per_second_t bot_x, units::meters_per_second_t bot_y)
 {
+    frc::Pose2d orig = GetEstPose();
     double distance = hypot(target.X().value() - orig.X().value(), target.Y().value() - orig.Y().value());
-    double height = target.Z().value() - orig.Z().value();
+    double height = target.Z().value() - shooter_h;
     double piv_rad = piv.Radians().value();
 
     double time = 0.101937 * (
@@ -54,15 +55,15 @@ ShootConfig PoseEstimator::CalShootOnMove(frc::Pose3d orig, frc::Pose3d target, 
         )
     );
 
-    frc::Translation3d new_pos {orig.X() + bot_x * time * 1_s, orig.Y() + bot_y * time * 1_s, orig.Z()};
+    frc::Translation3d new_pos {orig.X() + bot_x * time * 1_s, orig.Y() + bot_y * time * 1_s, shooter_h * 1_m};
 
     double new_distance = hypot(target.X().value() - new_pos.X().value(), target.Y().value() - new_pos.Y().value());
 
     frc::Rotation2d new_yaw = atan2(target.Y().value() - new_pos.Y().value(), target.X().value() - new_pos.X().value()) * 1_rad;
 
-    frc::Rotation2d new_piv_ang = atan((height + 4.905 * time * time) / distance) * 1_rad;
+    frc::Rotation2d new_piv_ang = atan((height + 4.905 * time * time) / new_distance) * 1_rad;
 
-    units::meters_per_second_t new_vel = distance / cos(new_piv_ang.Radians().value()) / time * 1_mps;
+    units::meters_per_second_t new_vel = new_distance / cos(new_piv_ang.Radians().value()) / time * 1_mps;
 
     return ShootConfig{
         new_piv_ang,

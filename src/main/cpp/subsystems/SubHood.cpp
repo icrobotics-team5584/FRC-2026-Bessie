@@ -28,6 +28,10 @@ void SubHood::SimulationPeriodic() {
     
 }
 
+units::degree_t SubHood::GetAngleFromDistance(units::meter_t distance) {
+    return _pitchTable[distance];
+}
+
 frc2::CommandPtr SubHood::SetHoodPosition(units::degree_t angle) {
     return RunOnce([this, angle] {_hoodMotor.SetPositionTarget(angle);});
 }
