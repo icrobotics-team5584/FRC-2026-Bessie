@@ -3,169 +3,118 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "subsystems/SubVision.h"
-#include "subsystems/SubDrivebase.h"
+#include "subsystems/SubDriveBase.h"
+
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/DriverStation.h>
-#include <frc/RobotBase.h>
-#include <photon/estimation/CameraTargetRelation.h>
-#include <frc/MathUtil.h>
-#include "utilities/PoseHandler.h"
-#include "utilities/Logger.h"
-
+#include <algorithm>
+#include <iostream>
+#include <map>
+#include <photon/simulation/SimVisionTarget.h>
+#include <fmt/format.h>
 
 SubVision::SubVision() {
-  // Append camera to camera list
-
-  _camList.emplace_back(
-    &_leftCamera,
-    &_leftPoseEstimater,
-    &_leftEstPose
-  );
-
-  _camList.emplace_back(
-    &_rightCamera,
-    &_rightPoseEstimater,
-    &_rightEstPose
-  );
-
-   // Set dev table for distance based deviance
-  _devTable.insert(0_m, 0);
-  _devTable.insert(0.71_m, 0.002);
-  _devTable.insert(1_m, 0.006);
-  _devTable.insert(1.5_m, 0.02);
-  _devTable.insert(2_m, 0.068);
-  _devTable.insert(3_m, 0.230);
-
-  // Sim set up
-  _visionSim.AddAprilTags(_tagMap);
-  _visionSim.AddCamera(&_leftCamSim, _leftBotToCam);
-  _visionSim.AddCamera(&_rightCamSim, _rightBotToCam);
-
-  // Display tags on field
-  for (auto target : _visionSim.GetVisionTargets()) {
-     Logger::FieldDisplay::GetInstance().DisplayPose(fmt::format("tag{}", target.fiducialId),
-                                            target.GetPose().ToPose2d());
+  for (int i = 0; i <= 18; i++) {
+    auto pose = _tagLayout.GetTagPose(i);
+    if (pose.has_value()) {
+      photon::SimVisionTarget simTag{pose.value(), 8_in, 8_in, i};
+      _visionSim.AddSimVisionTarget(simTag);
+      SubDrivebase::GetInstance().DisplayPose(fmt::format("tag{}", i), pose.value().ToPose2d());
+    }
   }
 }
 
-void SubVision::Periodic() {
-  UpdateVision();
-  LogStatus();
-}
+using namespace std;
 
-void SubVision::LogStatus() {
-  Logger::Log("Vision/Last saw tag/id", _lastTag.tag.fiducialId);
-  Logger::Log("Vision/Last saw tag/timestamp", _lastTag.timestamp);
+// This method will be called once per scheduler run
+void SubVision::Periodic() {
+  frc::SmartDashboard::PutBoolean("Vision/has vision targets ", VisionHasTargets());
+
+  auto _lastSeenTag = _camera.GetLatestResult().GetBestTarget();
+
+  if (auto ally = frc::DriverStation::GetAlliance()) {
+    frc::SmartDashboard::PutNumber("Vision/Alliance ", ally.value());
+    if (ally.value() == frc::DriverStation::Alliance::kBlue) {
+      if (std::find(std::begin(blueTrap), std::end(blueTrap), _lastSeenTag.GetFiducialId()) !=
+          std::end(blueTrap)) {
+        _lastSeenTrapTag = _lastSeenTag;
+      }
+    }
+    if (ally.value() == frc::DriverStation::Alliance::kRed) {
+      if (std::find(std::begin(redTrap), std::end(redTrap), _lastSeenTag.GetFiducialId()) !=
+          std::end(redTrap)) {
+        _lastSeenTrapTag = _lastSeenTag;
+      }
+    }
+  }
+
+  frc::SmartDashboard::PutNumber("Vision/last seen tag ID ", _lastSeenTag.GetFiducialId());
+  frc::SmartDashboard::PutNumber("Vision/last seen trap tag ID ", _lastSeenTrapTag.GetFiducialId());
 }
 
 void SubVision::SimulationPeriodic() {
-  _visionSim.Update(PoseHandler::GetInstance().GetSimPose());
+  _visionSim.ProcessFrame(SubDrivebase::GetInstance().GetPose());
 }
 
-void SubVision::UpdateVision() {
-  double largestArea = 0;
-  int id = 0;
+bool SubVision::VisionHasTargets() {
+  auto result = _camera.GetLatestResult();
+  bool targets = result.HasTargets();
+  return targets;
+}
 
-  for (auto cam : _camList) {
-    std::vector<photon::PhotonPipelineResult> results = cam.camera->GetAllUnreadResults();
-    auto resultCount = results.size();
-    if (resultCount > 0) {
-      for (auto result : results) {
-        *cam.estPose = cam.poseEstimater->EstimateCoprocMultiTagPose(result);
-        for (const auto& target : result.targets) {
-          double targetArea = target.GetArea();
-          if (targetArea > largestArea ) {
-            if(cam.estPose->has_value()) {
-              _lastTag.timestamp = cam.estPose->value().timestamp;
-              _lastTag.tag = target;
-              _lastTag.cameraId = id;
-            }
+std::optional<units::degree_t> SubVision::GetSpecificTagYaw(FieldElement chosenFieldElement) {
+  auto result = _camera.GetLatestResult();
+  auto targets = result.GetTargets();
 
-            largestArea = targetArea;
-          }
-        }
-      }
-    }
-    id++;
+  int AprilTagID = FindID(chosenFieldElement);
+
+  auto checkRightApriltag = [AprilTagID](photon::PhotonTrackedTarget apriltag) {
+    return apriltag.GetFiducialId() == AprilTagID;
+  };
+  auto tagResult = std::ranges::find_if(targets, checkRightApriltag);
+
+  // returns yaw as degree value
+  if (tagResult != targets.end()) {
+    return tagResult->GetYaw() * -(1_deg);
+  }
+
+  // return 0 when looses target
+  else {
+    return {};
   }
 }
 
-std::vector<PoseEstimate> SubVision::GetEstPose() {
-  std::vector<PoseEstimate> l;
-  int i = 0;
-  for (auto cam : _camList) {
-    if (cam.estPose->has_value()) {
-      double d = GetDev(cam.estPose->value());
-      l.push_back({cam.estPose->value().estimatedPose.ToPose2d(),d, cam.estPose->value().timestamp});
-      i++;
-    }
-  }
-  Logger::Log("Vision/Est pose number", i);
-  return l;
-}
+// exists out when the range of yaw is between [-0.4, 0.4]
+bool SubVision::IsOnTarget(FieldElement chosenFieldElement) {
+  auto yaw = GetSpecificTagYaw(chosenFieldElement);
 
-int SubVision::GetLastSeenTagID() {
-  return _lastTag.tag.GetFiducialId();
-}
-
-int SubVision::GetLastCameraUsed() {
-  return _lastTag.cameraId;
-}
-
-double SubVision::GetDev(photon::EstimatedRobotPose pose) {
-  units::meter_t distance = 0_m;
-  if (pose.targetsUsed.size() == 0) {
-    return 0;
-  }
-  for (auto target : pose.targetsUsed) {
-    distance += target.GetBestCameraToTarget().Translation().Norm();
-  }
-  distance /= pose.targetsUsed.size();
-  return _devTable[distance];
-}
-
-bool SubVision::IsEstimateUsable(photon::EstimatedRobotPose pose) {
-  units::meter_t distance = 0_m;
-  auto tagCount = pose.targetsUsed.size();
-  if (pose.targetsUsed.size() == 0) {
-    return 0;
-  }
-  for (auto target : pose.targetsUsed) {
-    distance += target.GetBestCameraToTarget().Translation().Norm();
-  }
-  distance /= pose.targetsUsed.size();
-
-
-  return ((distance < 0.7_m) || (tagCount > 1));
-}
-
-frc::Pose2d SubVision::CalculateRelativePose(frc::Pose2d pose, units::meter_t x, units::meter_t y) {
-  frc::Translation2d trans {x,y};
-  return frc::Pose2d{pose.Translation() + trans.RotateBy(pose.Rotation()), pose.Rotation()};
-}
-
-std::optional<frc::Pose2d> SubVision::GetAprilTagPose(int id) {
-  auto pose = _tagMap.GetTagPose(id);
-  if (pose.has_value()) {
-    return pose.value().ToPose2d();
+  if (yaw.has_value()) {
+    return yaw.value() > -0.4_deg && yaw.value() < 0.4_deg;
   } else {
-    return std::nullopt;
+    return false;
   }
 }
 
-int SubVision::GetClosestTag(frc::Pose2d currentPose){
-  int closestTagID = 0;
-  units::length::meter_t closestDistance;
-  std::vector<frc::AprilTag> tagList = _tagMap.GetTags();
+int SubVision::FindID(FieldElement chosenFieldElement) {
+  if (auto ally = frc::DriverStation::GetAlliance()) {
+    if (ally.value() == frc::DriverStation::Alliance::kBlue) {
+      return blueFieldElement[chosenFieldElement];
+    }
 
-   for (const frc::AprilTag tag : tagList) {
-    int id = tag.ID;
-    auto distance = currentPose.Translation().Distance(GetAprilTagPose(id).value().Translation());
-    if (closestTagID == 0 || distance < closestDistance) {
-      closestDistance = distance;
-      closestTagID = id;
+    if (ally.value() == frc::DriverStation::Alliance::kRed) {
+      return redFieldElement[chosenFieldElement];
     }
   }
 
-  return closestTagID;
+  return redFieldElement[chosenFieldElement];
+}
+
+std::optional<units::degree_t> SubVision::getCamToTrapYaw() {
+  return _lastSeenTrapTag.GetYaw() * -(1_deg);
+}
+
+units::degree_t SubVision::getTrapAngle() {
+  auto trapID = _lastSeenTrapTag.GetFiducialId();
+
+  return trapAngle[trapID];
 }
