@@ -64,8 +64,6 @@ class SubTurret : public frc2::SubsystemBase {
 
   //mechanism2d
   frc::Mechanism2d _turretMech{0.25, 0.25};
-  frc::MechanismRoot2d* _turretMechRoot = _turretMech.GetRoot("turretRoot", 0.25, 0.25);
-  frc::MechanismLigament2d *_turretMechUpperConnector =
-    _turretMechRoot->Append<frc::MechanismLigament2d>("turretUpperConnector", 0.05, 90_deg, 0);
-  MechanismCircle2d _turretMechCircle{_turretMechUpperConnector, "turretTopRoller", 0.025, 0_deg};
+  frc::MechanismRoot2d* _turretMechRoot = _turretMech.GetRoot("turretRoot", 0.125, 0.125);
+  MechanismCircle2d _turretMechCircle{_turretMechRoot, "turretTopRoller", 0.05, 0_deg};
 };

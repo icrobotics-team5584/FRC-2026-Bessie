@@ -8,6 +8,7 @@
 
 SubHood::SubHood() {
     frc::SmartDashboard::PutData("Hood/Motor", &_hoodMotor);
+    frc::SmartDashboard::PutData("Hood/mech2dDisplay", &_hoodMech);
 
     _hoodMotorConfig.encoder.PositionConversionFactor(1/GEAR_RATIO);
     _hoodMotorConfig.encoder.VelocityConversionFactor(1/GEAR_RATIO/60);
@@ -25,7 +26,9 @@ void SubHood::Periodic() {
 }
 
 void SubHood::SimulationPeriodic() {
-    
+    _hoodSim.SetInputVoltage(_hoodMotor.CalcSimVoltage());
+    _hoodMotor.IterateSim(_hoodMotor.GetVelocity(), _hoodMotor.GetPosition());
+    _hoodSim.Update(20_ms);
 }
 
 frc2::CommandPtr SubHood::SetHoodPosition(units::degree_t angle) {

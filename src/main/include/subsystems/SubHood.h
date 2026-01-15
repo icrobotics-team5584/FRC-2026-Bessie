@@ -13,6 +13,14 @@
 #include <units/angle.h>
 #include <wpi/interpolating_map.h>
 
+#include <frc/simulation/FlywheelSim.h>
+#include <frc/simulation/DCMotorSim.h>
+#include <frc/system/plant/DCMotor.h>
+#include <frc/system/plant/LinearSystemId.h>
+#include <frc/smartdashboard/Mechanism2d.h>
+#include <frc/smartdashboard/MechanismLigament2d.h>
+#include "utilities/MechanismCircle2d.h"
+
 class SubHood : public frc2::SubsystemBase {
  public:
   SubHood();
@@ -57,4 +65,16 @@ class SubHood : public frc2::SubsystemBase {
   double GEAR_RATIO = (8.0/42.0) * (24.0/400.0);
   ICSparkMax _hoodMotor{canid::HOOD_MOTOR};
   rev::spark::SparkBaseConfig _hoodMotorConfig;
+
+  static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::NEO550();
+  static constexpr units::kilogram_square_meter_t MOI = 0.02_kg_sq_m;
+
+  //Sim
+  frc::LinearSystem<1,1,1> _hoodSystem = frc::LinearSystemId::FlywheelSystem(MOTOR_MODEL, MOI, GEAR_RATIO);
+  frc::sim::FlywheelSim _hoodSim{_hoodSystem, MOTOR_MODEL};
+
+  //mechanism2d
+  frc::Mechanism2d _hoodMech{0.25, 0.25};
+  frc::MechanismRoot2d* _hoodMechRoot = _hoodMech.GetRoot("hoodRoot", 0.125, 0.125);
+  MechanismCircle2d _hoodMechCircle{_hoodMechRoot, "hoodCircle", 0.05, 0_deg};
 };
