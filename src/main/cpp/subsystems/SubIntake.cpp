@@ -1,10 +1,8 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-#include "subsystems/SubIntake.h"
 
-#include <frc/Alert.h>
-#include <frc/smartdashboard/SmartDashboard.h>
+#include "subsystems/SubIntake.h"
 
 #include <units/current.h>
 #include <utilities/Logger.h>
@@ -34,7 +32,7 @@ void SubIntake::CurrentHighTimer() {
 // This method will be called once per scheduler run
 void SubIntake::Periodic() {
   units::ampere_t current = _intakeMotor.GetOutputCurrent() * 1_A;
-  frc::SmartDashboard::PutNumber("Intake/Current", current.value());
+  Logger::Log("Intake/Intake Motor Current", current);
   if (current > 20_A) {
     SubIntake::CurrentHighTimer();
   } else {
@@ -43,9 +41,8 @@ void SubIntake::Periodic() {
   }
 
   units::celsius_t temperature = _intakeMotor.GetTemperature();
+  Logger::Log("Intake/Intake Motor Temperature", temperature);
 
-  frc::SmartDashboard::PutNumber("Intake/Temperature", temperature.value());
-  frc::SmartDashboard::PutNumber("Intake/Timer", _intakeHighCurrentTimer.Get().value());
   if (temperature > 60_degC) {
     highTempuratureAlert.Set(true);
   } else {
