@@ -11,7 +11,7 @@ SubTurret::SubTurret() {
     _turretMotorConfig.encoder.VelocityConversionFactor(1/GEAR_RATIO);
     _turretMotorConfig.closedLoop.Pid(P, I, D);
     _turretMotorConfig.closedLoop.feedForward.kV(F);
-    _turretMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
+    _turretMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kCoast);
     _turretMotorConfig.SmartCurrentLimit(30);
     _turretMotor.OverwriteConfig(_turretMotorConfig);
 }
@@ -20,6 +20,8 @@ SubTurret::SubTurret() {
 void SubTurret::Periodic() {
     frc::SmartDashboard::PutData("Turret/Motor", &_turretMotor);
     Logger::Log("Turret/CRT Positiion", GetTurretAngle());
+    Logger::Log("Turret/Encoder1", _turretEncoder1.Get());
+    Logger::Log("Turret/Encoder2", _turretEncoder2.Get());
 }
 
 void SubTurret::SimulationPeriodic() {

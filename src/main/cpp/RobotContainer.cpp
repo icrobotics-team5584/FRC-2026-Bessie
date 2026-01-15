@@ -15,6 +15,7 @@
 #include "subsystems/SubShooter.h"
 
 RobotContainer::RobotContainer() {
+  SubTurret::GetInstance();
   SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
   ConfigureBindings();
   SubVision::GetInstance();

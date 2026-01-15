@@ -29,8 +29,8 @@ namespace canid {
 
 namespace dio {
     constexpr int BRAKE_COAST_BUTTON = 0;
-    constexpr int TURRET_ENCODER_1 = 1;
-    constexpr int TURRET_ENCODER_2 = 2;
+    constexpr int TURRET_ENCODER_1 = 2;
+    constexpr int TURRET_ENCODER_2 = 1;
 }
 
 namespace pwm {
