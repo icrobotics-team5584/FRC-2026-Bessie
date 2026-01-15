@@ -7,8 +7,6 @@
 #include "utilities/Logger.h"
 
 SubTurret::SubTurret() {
-    Logger::Log("Turret/CRT Positiion", GetTurretAngle());
-
     _turretMotorConfig.encoder.PositionConversionFactor(1/GEAR_RATIO);
     _turretMotorConfig.encoder.VelocityConversionFactor(1/GEAR_RATIO);
     _turretMotorConfig.closedLoop.Pid(P, I, D);
@@ -21,6 +19,7 @@ SubTurret::SubTurret() {
 // This method will be called once per scheduler run
 void SubTurret::Periodic() {
     frc::SmartDashboard::PutData("Turret/Motor", &_turretMotor);
+    Logger::Log("Turret/CRT Positiion", GetTurretAngle());
 }
 
 void SubTurret::SimulationPeriodic() {
