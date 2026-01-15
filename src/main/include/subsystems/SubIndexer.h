@@ -18,22 +18,22 @@
 #include "frc2/command/Commands.h"
 #include "rev/config/SparkFlexConfig.h"
 
-class SubIndexor : public frc2::SubsystemBase {
+class SubIndexer : public frc2::SubsystemBase {
  public:
-  static SubIndexor& GetInstance() {
-    static SubIndexor instance;
+  static SubIndexer& GetInstance() {
+    static SubIndexer instance;
     return instance;
   }
-  SubIndexor();
+  SubIndexer();
 
-  frc2::CommandPtr IndexorOn();
-  frc2::CommandPtr IndexorOff();
+  frc2::CommandPtr IndexerOn();
+  frc2::CommandPtr IndexerOff();
 
   void CurrentHighTimer();
 
-  frc::Alert indexorCurrentAlert{"Indexor Motor Overcurrent!", frc::Alert::AlertType::kWarning};
+  frc::Alert IndexerCurrentAlert{"Indexer Motor Overcurrent!", frc::Alert::AlertType::kWarning};
   frc::Alert highTempuratureAlert{
-    "Indexor Motor High Temperature!", frc::Alert::AlertType::kWarning};
+    "Indexer Motor High Temperature!", frc::Alert::AlertType::kWarning};
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */
@@ -41,10 +41,10 @@ class SubIndexor : public frc2::SubsystemBase {
   void SimulationPeriodic() override;
 
  private:
-  ICSparkFlex _indexorMotor{canid::INDEXOR};
-  rev::spark::SparkFlexConfig _indexorMotorConfig;
+  ICSparkFlex _IndexerMotor{canid::Indexer};
+  rev::spark::SparkFlexConfig _IndexerMotorConfig;
 
-  frc::Timer _indexorHighCurrentTimer;
+  frc::Timer _IndexerHighCurrentTimer;
 
   // Simulation components
   static constexpr double GEARING = 1.0;
