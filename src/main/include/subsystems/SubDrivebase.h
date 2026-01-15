@@ -20,7 +20,7 @@
 
 class SubDrivebase : public frc2::SubsystemBase {
  public:
-  // Constructer and instance
+  // Constructor and instance
   SubDrivebase();
 
   static SubDrivebase& GetInstance() {
@@ -57,15 +57,18 @@ class SubDrivebase : public frc2::SubsystemBase {
   frc::ChassisSpeeds CalcDriveToPoseSpeeds(frc::Pose2d targetPose);
   frc::ChassisSpeeds CalcJoystickSpeeds(frc2::CommandXboxController& controller);
 
-  frc2::CommandPtr DriveToPose(std::function<frc::Pose2d()> pose, double speedScaling);
+  frc2::CommandPtr DriveToPose(std::function<frc::Pose2d()> pose, double speedScaling,
+    units::meter_t positionErrorTolerance = 2_cm, units::degree_t rotationErrorTolerance = 2_deg);
   void SetPose(frc::Pose2d pose);
-  bool IsAtPose(frc::Pose2d pose);
-  
+  bool IsAtPose(frc::Pose2d pose, units::meter_t positionErrorTolerance = 2_cm,
+    units::degree_t rotationErrorTolerance = 2_deg);
+
   /* ------------------------------------------------------------------------------------------------------------- */
   /* Commands */
 
   // Joystick Drive
-  frc2::CommandPtr JoystickDrive(frc2::CommandXboxController& controller, bool fieldOriented = true, double speedScale = 1);\
+  frc2::CommandPtr JoystickDrive(
+    frc2::CommandXboxController& controller, bool fieldOriented = true, double speedScale = 1);
 
   // Pose drive
   frc2::CommandPtr Drive(std::function<frc::ChassisSpeeds()> speeds, bool fieldOriented);
@@ -86,9 +89,9 @@ class SubDrivebase : public frc2::SubsystemBase {
 
  private:
   void Drive(units::meters_per_second_t xSpeed, units::meters_per_second_t ySpeed,
-                         units::turns_per_second_t rot, bool fieldRelative,
-                         std::optional<std::array<units::newton_t, 4>> xForceFeedforwards = std::nullopt,
-                         std::optional<std::array<units::newton_t, 4>> yForceFeedforwards = std::nullopt);
+    units::turns_per_second_t rot, bool fieldRelative,
+    std::optional<std::array<units::newton_t, 4>> xForceFeedforwards = std::nullopt,
+    std::optional<std::array<units::newton_t, 4>> yForceFeedforwards = std::nullopt);
   /* ------------------------------------------------------------------------------------------------------------- */ 
   /* Definition=*/
 

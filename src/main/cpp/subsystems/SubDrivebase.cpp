@@ -339,7 +339,8 @@ void SubDrivebase::SetPose(frc::Pose2d pose) {
   PoseHandler::GetInstance().UpdateSim(pose.Rotation(), states);
 }
 
-bool SubDrivebase::IsAtPose(frc::Pose2d pose) {
+bool SubDrivebase::IsAtPose(
+  frc::Pose2d pose, units::meter_t positionErrorTolerance, units::degree_t rotationErrorTolerance) {
   auto currentPose = PoseHandler::GetInstance().GetPose();
   auto rotError = GetAllianceRelativeGyroAngle() - pose.Rotation();
   auto posError = currentPose.Translation().Distance(pose.Translation());
@@ -359,10 +360,14 @@ bool SubDrivebase::IsAtPose(frc::Pose2d pose) {
   }
 }
 
-frc2::CommandPtr SubDrivebase::DriveToPose(std::function<frc::Pose2d()> pose, double speedScaling = 1) {
-  return Drive(([this,pose,speedScaling]{ return CalcDriveToPoseSpeeds(pose()) * speedScaling;}), true)
-  .Until([this,pose] {return IsAtPose(pose());});
-} 
+frc2::CommandPtr SubDrivebase::DriveToPose(std::function<frc::Pose2d()> pose,
+  double speedScaling = 1, units::meter_t positionErrorTolerance,
+  units::degree_t rotationErrorTolerance) {
+  return Drive([this, pose, speedScaling] { return CalcDriveToPoseSpeeds(pose()) * speedScaling; }, true)
+    .Until([this, pose, positionErrorTolerance, rotationErrorTolerance] {
+      return IsAtPose(pose(), positionErrorTolerance, rotationErrorTolerance);
+    });
+}
 
 frc::ChassisSpeeds SubDrivebase::CalcJoystickSpeeds(frc2::CommandXboxController& controller) {
   std::string configPath = "Drivebase/Config/";
@@ -414,21 +419,17 @@ frc::ChassisSpeeds SubDrivebase::CalcJoystickSpeeds(frc2::CommandXboxController&
   auto rotationSpeed = _rotStickLimiter.Calculate(scaledRotation) * maxAngularVelocity;
 
   // Logger things
-  Logger::Log("Drivebase/Joystick Scaling/rawTranslationY", rawTranslationY);
-  Logger::Log("Drivebase/Joystick Scaling/rawTranslationX", rawTranslationX);
-  Logger::Log("Drivebase/Joystick Scaling/rawTranslationR", rawTranslationR);
-  Logger::Log(
-      "Drivebase/Joystick Scaling/translationTheta (degrees)",
-      translationTheta *
-          (180 / std::numbers::pi));  // Multiply by 180/pi to convert radians to degrees
-  Logger::Log("Drivebase/Joystick Scaling/scaledTranslationR",
-                                 scaledTranslationR);
-  Logger::Log("Drivebase/Joystick Scaling/scaledTranslationY",
-                                 scaledTranslationY);
-  Logger::Log("Drivebase/Joystick Scaling/scaledTranslationX",
-                                 scaledTranslationX);
-  Logger::Log("Drivebase/Joystick Scaling/rawRotation", rawRotation);
-  Logger::Log("Drivebase/Joystick Scaling/scaledRotation", scaledRotation);
+  std::string joystickScalingPath = "Drivebase/JoystickScaling/";
+  Logger::Log(joystickScalingPath + "rawTranslationY", rawTranslationY);
+  Logger::Log(joystickScalingPath + "rawTranslationX", rawTranslationX);
+  Logger::Log(joystickScalingPath + "rawTranslationR", rawTranslationR);
+  Logger::Log(joystickScalingPath + "translationTheta (degrees)",
+    translationTheta * (180 / std::numbers::pi));  // Multiply by 180/pi to convert radians to degrees
+  Logger::Log(joystickScalingPath + "scaledTranslationR", scaledTranslationR);
+  Logger::Log(joystickScalingPath + "scaledTranslationY", scaledTranslationY);
+  Logger::Log(joystickScalingPath + "scaledTranslationX", scaledTranslationX);
+  Logger::Log(joystickScalingPath + "rawRotation", rawRotation);
+  Logger::Log(joystickScalingPath + "scaledRotation", scaledRotation);
 
   return frc::ChassisSpeeds{forwardSpeed, sidewaysSpeed, rotationSpeed};
 }
