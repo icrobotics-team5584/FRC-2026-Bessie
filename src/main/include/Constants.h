@@ -23,6 +23,7 @@ namespace canid {
     constexpr int TURRET_MOTOR = 17; 
 
     constexpr int PIGEON_2 = 13; 
+    constexpr int INTAKE = 14;
 
 }
 

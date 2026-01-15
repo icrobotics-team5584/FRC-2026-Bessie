@@ -12,23 +12,32 @@
 #include "subsystems/SubTurret.h"
 #include "commands/DriveCommands.h"
 #include "commands/VisionCommand.h"
+#include "subsystems/SubIntake.h"
+#include "commands/AutonCommands.h"
+#include "Subsystems/SubVision.h"
 
 RobotContainer::RobotContainer() {
   SubVision::GetInstance();
   SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
   SubVision::GetInstance().SetDefaultCommand(cmd::AddVisionMeasurement());
   ConfigureBindings();
+  SubVision::GetInstance();
+
+  _autoManager.AddDefaultAuton(
+    "default",
+    AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton())
+  );
+
+  frc::SmartDashboard::PutData("CHOSEN AUTON:", &_autoManager.GetAutonChooser());
 }
 
 void RobotContainer::ConfigureBindings() {
-  _driverController.X().OnTrue(SubHood::GetInstance().SetHoodPosition(0_deg));
-  _driverController.Y().OnTrue(SubHood::GetInstance().SetHoodPosition(20_deg));
-  _driverController.A().OnTrue(SubTurret::GetInstance().SetTurretAngle(0_deg));
-  _driverController.B().OnTrue(SubTurret::GetInstance().SetTurretAngle(20_deg));
-  _driverController.RightBumper().OnTrue(SubShooter::GetInstance().SetShooterTarget(5_tps));
-  _driverController.LeftBumper().OnTrue(SubShooter::GetInstance().StopShooter());
+  _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
+  _driverController.Y().OnTrue(SubDrivebase::GetInstance().ResetGyroCmd());
+  _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
 }
 
-frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
-  return frc2::cmd::Print("No autonomous command configured");
+std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {
+  AutonHelper::AutonPtr chosen = _autoManager.GetChosenAuton();
+  return chosen; 
 }
