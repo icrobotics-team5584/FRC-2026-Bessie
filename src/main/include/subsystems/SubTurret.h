@@ -31,7 +31,7 @@ class SubTurret : public frc2::SubsystemBase {
 
   void SimulationPeriodic();
 
-  units::turn_t GetTurretAngle();
+  units::degree_t GetTurretAngle();
   frc2::CommandPtr SetTurretTargetAngle(units::degree_t angle);
   frc2::CommandPtr SetTurretAngle(units::degree_t angle);
   frc2::CommandPtr ZeroTurret();
@@ -61,9 +61,13 @@ class SubTurret : public frc2::SubsystemBase {
   double D = 0;
   double F = 1.0;
   
-  static constexpr double ENCODER1_RATIO = 20.0/94.0;
-  static constexpr double ENCODER2_RATIO = 21.0/94.0;
+  static constexpr double ENCODER1_RATIO = 21.0/94.0;
+  static constexpr double ENCODER2_RATIO = 20.0/94.0;
   static constexpr double GEAR_RATIO = (12.0/48.0) * (10.0/94.0);
+
+  static constexpr double E1_TEETH = 21;
+  static constexpr double E2_TEETH = 20;
+  static constexpr double BIG_TOOTH = 94;
 
   //Sim
   frc::LinearSystem<2,1,2> _turretSystem = frc::LinearSystemId::DCMotorSystem(MOTOR_MODEL, MOI, GEAR_RATIO);

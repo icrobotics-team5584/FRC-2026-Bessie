@@ -32,13 +32,46 @@ void SubTurret::SimulationPeriodic() {
     _turretMechCircle.SetAngle(_turretMotor.GetPosition());
 }
 
-units::turn_t SubTurret::GetTurretAngle() {
-    double encoder1 = _turretEncoder1.Get();
-    double encoder2 = _turretEncoder2.Get();
+// units::turn_t SubTurret::GetTurretAngle() {
+//     double encoder1 = _turretEncoder1.Get();
+//     double encoder2 = _turretEncoder2.Get();
 
-    double difference = encoder1 - encoder2;
-    double angle = difference * (ENCODER1_RATIO - ENCODER2_RATIO);
-    return angle*1_tr;
+//     double difference = encoder1 - encoder2;
+//     double angle = difference * (ENCODER1_RATIO - ENCODER2_RATIO);
+//     return angle*1_tr;
+// }
+
+units::degree_t SubTurret::GetTurretAngle() {
+    double e1deg = _turretEncoder1.Get() * 360.0;
+    double e2deg = _turretEncoder2.Get() * 360.0;
+    double difference = e2deg - e1deg;
+
+    if(difference > 180) {
+        difference -= 360;
+    } else if(difference < -180) {
+        difference += 360;
+    } 
+
+    double SLOPE = (E2_TEETH * E1_TEETH) / (BIG_TOOTH);
+    difference *= SLOPE;
+
+    double e1rotations = (difference * BIG_TOOTH / E1_TEETH) / 360.0;
+    double e1rotations_floored = floor(e1rotations);
+
+    double turretAngle = (
+        (e1rotations_floored * 360.0 + e1deg) *
+        (E1_TEETH / BIG_TOOTH)
+    );
+
+    double period = (E1_TEETH / BIG_TOOTH) * 360.0;
+
+    if(turretAngle - difference < -period / 2) {
+        turretAngle += period;
+    } else if(turretAngle - difference > period / 2) {
+        turretAngle -= period;
+    }
+
+    return turretAngle * 1_deg;
 }
 
 frc2::CommandPtr SubTurret::SetTurretTargetAngle(units::degree_t angle) {
