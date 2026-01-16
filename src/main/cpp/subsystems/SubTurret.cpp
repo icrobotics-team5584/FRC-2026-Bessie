@@ -79,24 +79,25 @@ units::degree_t SubTurret::GetTurretAngleCRT() {
         difference += 360;
     } 
 
-    // find slope and multiply to difference
+    // find slope and multiply to difference 
+    // (converting from encoder difference to turret degrees)
     static double SLOPE = (E2_TEETH * E1_TEETH) / (BIG_TOOTH);
     difference *= SLOPE;
 
-    // solve for encoder 1 total rotations
+    // estimate encoder 1 rotation count
+    // (solve for encoder 1 rotations)
     double e1rotations = (difference * BIG_TOOTH / E1_TEETH) / 360.0;
     double e1rotations_floored = floor(e1rotations);
 
-    // solve for turret angle
+    // solve for turret angle with encoder 1
     double turretAngle = (
         (e1rotations_floored * 360.0 + e1deg) *
         (E1_TEETH / BIG_TOOTH)
     );
 
-    // find period
+    // resolve ambiguity (when encoders are the same again)
     double period = (E1_TEETH / BIG_TOOTH) * 360.0;
 
-    // does turret angle make sense? if not + or - period
     if(turretAngle - difference < -period / 2) {
         turretAngle += period;
     } else if(turretAngle - difference > period / 2) {
