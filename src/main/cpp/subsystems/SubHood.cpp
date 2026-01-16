@@ -66,7 +66,7 @@ units::ampere_t SubHood::GetHoodMotorCurrent() {
 }
 
 frc2::CommandPtr SubHood::StowHood() {
-    return RunOnce([this] {_hoodMotor.SetPositionTarget(STOW_TURNS);});
+    return RunOnce([this] {_hoodMotor.SetPositionTarget(STOW_ANGLE);});
 }
 
 frc2::CommandPtr SubHood::ManualHoodDown() {
