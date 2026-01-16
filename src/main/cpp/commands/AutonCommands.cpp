@@ -29,4 +29,8 @@ namespace cmd {
     frc2::CommandPtr Forward250cm() {
         return SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{2.5_m, 0.0_m, 0_deg}; }, 1.0);
     }
+
+    frc2::CommandPtr Forward250cmWhileTurning() {
+        return SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{2.5_m, 0.0_m, 180_deg}; }, 1.0);
+    }
 }
