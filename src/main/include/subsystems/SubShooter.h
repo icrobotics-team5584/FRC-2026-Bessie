@@ -39,12 +39,12 @@ class SubShooter : public frc2::SubsystemBase {
   void Periodic() override;
 
  private:
-  double GEAR_RATIO = 1.0;
   ctre::phoenix6::hardware::TalonFX _shooterMotor1{canid::SHOOTER_MOTOR_1};
   ctre::phoenix6::hardware::TalonFX _shooterMotor2{canid::SHOOTER_MOTOR_2};
   static constexpr units::kilogram_square_meter_t MOI = 0.05_kg_sq_m;
   static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::KrakenX60FOC();
-
+  static constexpr double GEAR_RATIO = 1.0;
+  
   double P = 1.0;
   double I = 0;
   double D = 0;
