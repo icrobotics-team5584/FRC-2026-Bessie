@@ -40,13 +40,13 @@ SubShooter::SubShooter() {
 
     _shooterMotor1.GetClosedLoopReference().SetUpdateFrequency(100_Hz);
 
-    Logger::LogFalcon("Shooter/Motor1", _shooterMotor1);
-    Logger::LogFalcon("Shooter/Motor2", _shooterMotor2);
     frc::SmartDashboard::PutData("Shooter/mech2dDisplay", &_shooterMech);
 }
 
 // This method will be called once per scheduler run
 void SubShooter::Periodic() {
+    Logger::LogFalcon("Shooter/Motor1", _shooterMotor1);
+    Logger::LogFalcon("Shooter/Motor2", _shooterMotor2);
     Logger::Log("Shooter/IsAtSpeed", IsAtSpeed());
 
     units::angle::degree_t motor1Position = _shooterMotor1.GetPosition().GetValue();
