@@ -11,16 +11,17 @@
 #include "subsystems/SubIndexer.h"
 #include "commands/AutonCommands.h"
 #include "Subsystems/SubVision.h"
+#include "commands/VisionCommands.h"
 
 #include "utilities/PoseHandler.h"
 
 RobotContainer::RobotContainer() {
   SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
   ConfigureBindings();
-  SubVision::GetInstance();
+  SubVision::GetInstance().SetDefaultCommand(cmd::AddVisionMeasurement());
 
   _autoManager.AddDefaultAuton(
-    "default",
+    "default",  
     AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton())
   );
 

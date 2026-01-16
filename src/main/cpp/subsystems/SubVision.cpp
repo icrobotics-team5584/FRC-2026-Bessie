@@ -59,7 +59,7 @@ void SubVision::UpdateVision() {
   auto resultCount = results.size();
   if (resultCount > 0) {
     for (auto result : results) {
-      _leftEstPose = _leftPoseEstimater.EstimateCoprocMultiTagPose(result);
+      _leftEstPose = _leftPoseEstimater.EstimateLowestAmbiguityPose(result);
       for (const auto& target : result.targets) {
         leftTargets += std::to_string(target.GetFiducialId()) + ", ";
         double targetArea = target.GetArea();
@@ -81,7 +81,7 @@ void SubVision::UpdateVision() {
   resultCount = results.size();
   if (resultCount > 0) {
     for (auto result : results) {
-      _rightEstPose = _rightPoseEstimater.EstimateCoprocMultiTagPose(result);
+      _rightEstPose = _rightPoseEstimater.EstimateLowestAmbiguityPose(result);
 
       for (const auto& target : result.targets) {
         rightTargets += std::to_string(target.GetFiducialId()) + ", ";
@@ -137,8 +137,8 @@ bool SubVision::IsEstimateUsable(photon::EstimatedRobotPose pose) {
   }
   distance /= pose.targetsUsed.size();
 
-
-  return ((distance < 0.7_m) || (tagCount > 1));
+  Logger::Log("distance is estim use", distance);
+  return ((distance < 5_m) || (tagCount > 1));
 }
 
 frc::Pose2d SubVision::CalculateRelativePose(frc::Pose2d pose, units::meter_t x, units::meter_t y) {
