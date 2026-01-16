@@ -55,8 +55,8 @@ class SubHood : public frc2::SubsystemBase {
   static constexpr units::degree_t UPPER_LIMIT = 35.0_deg;
   static constexpr units::degree_t LOWER_LIMIT = 12.5_deg;
 
-  bool _resetting;
-  bool _hasreset;
+  bool _resetting = false;
+  bool _hasreset = false;
 
   units::turn_t STOW_TURNS = 0_tr;
 
