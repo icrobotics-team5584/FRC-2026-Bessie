@@ -35,6 +35,7 @@ class SubTurret : public frc2::SubsystemBase {
   units::degree_t GetTurretAngle();
   units::degree_t CalcOptimisedTurretAngle(units::degree_t angle);
 
+  void SetTurretTargetAngleVoid(units::degree_t angle);
   void ZeroTurret();
   void SetTurretTarget(units::degree_t angle);
 

@@ -106,14 +106,18 @@ units::degree_t SubTurret::GetTurretAngle() {
 
 frc2::CommandPtr SubTurret::SetMotorTargetAngle(units::degree_t angle) {
     return RunOnce([this, angle] {
-        if(angle > POS_LIMIT) {_turretMotor.SetPositionTarget(POS_LIMIT);}
-        if(angle < NEG_LIMIT) {_turretMotor.SetPositionTarget(NEG_LIMIT);}
+        if(angle >= POS_LIMIT) {_turretMotor.SetPositionTarget(POS_LIMIT);}
+        if(angle <= NEG_LIMIT) {_turretMotor.SetPositionTarget(NEG_LIMIT);}
         if(angle < POS_LIMIT && angle > NEG_LIMIT) {_turretMotor.SetPositionTarget(angle);}
     });
 }
 
 frc2::CommandPtr SubTurret::SetTurretTargetAngle(units::degree_t angle) {
     return SetMotorTargetAngle(CalcOptimisedTurretAngle(angle));
+}
+
+void SubTurret::SetTurretTargetAngleVoid(units::degree_t angle) {
+    SetTurretTarget(CalcOptimisedTurretAngle(angle));
 }
 
 units::degree_t SubTurret::CalcOptimisedTurretAngle(units::degree_t angle) {
@@ -153,7 +157,9 @@ units::degree_t SubTurret::CalcOptimisedTurretAngle(units::degree_t angle) {
 }
 
 void SubTurret::SetTurretTarget(units::degree_t angle) {
-    _turretMotor.SetPositionTarget(angle);
+    if(angle >= POS_LIMIT) {_turretMotor.SetPositionTarget(POS_LIMIT);}
+    if(angle <= NEG_LIMIT) {_turretMotor.SetPositionTarget(NEG_LIMIT);}
+    if(angle < POS_LIMIT && angle > NEG_LIMIT) {_turretMotor.SetPositionTarget(angle);}
 }
 
 void SubTurret::ZeroTurret() {
