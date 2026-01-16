@@ -44,12 +44,11 @@ class SubShooter : public frc2::SubsystemBase {
   static constexpr units::kilogram_square_meter_t MOI = 0.05_kg_sq_m;
   static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::KrakenX60FOC();
   static constexpr double GEAR_RATIO = 1.0;
-  
+
   double P = 1.0;
   double I = 0;
   double D = 0;
   double V = 1.0;
-  units::turns_per_second_t SHOOTER_SPEED = 1_tps;
 
   ctre::phoenix6::configs::TalonFXConfiguration _shooterMotorConfig;
   ctre::phoenix6::controls::VelocityVoltage _flywheelTargetVelocity{0_tps};
