@@ -27,7 +27,7 @@ RobotContainer::RobotContainer() {
     AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton())
   );
 
-  frc::SmartDashboard::PutData("CHOSEN AUTON:", &_autoManager.GetAutonChooser());
+  frc::SmartDashboard::PutData("CHOSEN AUTON", &_autoManager.GetAutonChooser());
 
   SubTurret::GetInstance();
   SubHood::GetInstance();
@@ -35,12 +35,16 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureBindings() {
-  _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
-  _driverController.Y().OnTrue(SubDrivebase::GetInstance().ResetGyroCmd());
-  _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
-  _driverController.A().OnTrue(frc2::cmd::RunOnce([]{
-    SubDrivebase::GetInstance().SetPose(frc::Pose2d{0_m,0_m,0_deg});
-  }));
+  // _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
+  // _driverController.Y().OnTrue(SubDrivebase::GetInstance().ResetGyroCmd());
+  // _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
+  // _driverController.A().OnTrue(frc2::cmd::RunOnce([]{
+  //   SubDrivebase::GetInstance().SetPose(frc::Pose2d{0_m,0_m,0_deg});
+  // }));
+  _driverController.A().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle(180_deg));
+  _driverController.B().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle(90_deg));
+  _driverController.X().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle(-90_deg));
+  _driverController.Y().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle(0_deg));
 }
 
 std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {
