@@ -90,27 +90,3 @@ bool SubShooter::IsAtSpeed() {
     return abs(_shooterMotor1.GetVelocity().GetValueAsDouble() - _flywheelTargetVelocity.Velocity()) < 1.0 &&
     abs(_shooterMotor2.GetVelocity().GetValueAsDouble() - _flywheelTargetVelocity.Velocity()) < 1.0;
 }
-
-frc2::CommandPtr SubShooter::LowSpinUpShooterVision(units::meter_t distance) {
-
-}
-
-frc2::CommandPtr SubShooter::HighSpinUpShooterVision(units::meter_t distance) {
-
-}
-
-frc2::CommandPtr SubShooter::PassSpinUpShooterVision(units::meter_t distance) {
-
-}
-
-units::turns_per_second_t SubShooter::CalcLowRPM(units::meter_t distance) {
-
-}
-
-units::turns_per_second_t SubShooter::CalcHighRPM(units::meter_t distance) {
-
-}
-
-units::turns_per_second_t SubShooter::CalcPassRPM(units::meter_t distance) {
-
-}

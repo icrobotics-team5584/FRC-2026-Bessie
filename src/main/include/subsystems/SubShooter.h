@@ -30,13 +30,6 @@ class SubShooter : public frc2::SubsystemBase {
   frc2::CommandPtr SetShooterTarget(units::turns_per_second_t speed);
   frc2::CommandPtr SpinUpShooter();
   frc2::CommandPtr StopShooter();
-  frc2::CommandPtr LowSpinUpShooterVision(units::meter_t distance);
-  frc2::CommandPtr HighSpinUpShooterVision(units::meter_t distance);
-  frc2::CommandPtr PassSpinUpShooterVision(units::meter_t distance);
-
-  units::turns_per_second_t CalcLowRPM(units::meter_t distance);
-  units::turns_per_second_t CalcHighRPM(units::meter_t distance);
-  units::turns_per_second_t CalcPassRPM(units::meter_t distance);
   
   bool IsAtSpeed();
 
@@ -60,10 +53,6 @@ class SubShooter : public frc2::SubsystemBase {
 
   ctre::phoenix6::configs::TalonFXConfiguration _shooterMotor1Config;
   ctre::phoenix6::controls::VelocityVoltage _flywheelTargetVelocity{0_tps};
-
-  wpi::interpolating_map<units::meter_t, units::turns_per_second_t> _highRPMTable;
-  wpi::interpolating_map<units::meter_t, units::turns_per_second_t> _lowRPMTable;
-  wpi::interpolating_map<units::meter_t, units::turns_per_second_t> _passRPMTable;
 
   //Sim
   frc::LinearSystem<1,1,1> _leftFlywheelSystem = frc::LinearSystemId::FlywheelSystem(MOTOR_MODEL, MOI, GEAR_RATIO);

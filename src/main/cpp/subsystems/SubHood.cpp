@@ -14,15 +14,6 @@ SubHood::SubHood() {
     _hoodMotorConfig.SmartCurrentLimit(30);
     _hoodMotor.OverwriteConfig(_hoodMotorConfig);
 
-    _lowPitchTable.insert(1_m, 12.5_deg); // dummy values
-    _lowPitchTable.insert(2_m, 13.5_deg); // dummy values
-
-    _highPitchTable.insert(1_m, 24.5_deg); // dummy values
-    _highPitchTable.insert(2_m, 25.5_deg); // dummy values
-
-    _passPitchTable.insert(1_m, 34.0_deg); // dummy values
-    _passPitchTable.insert(2_m, 35.0_deg); // dummy values
-
     frc::SmartDashboard::PutData("Hood/Motor", &_hoodMotor);
     frc::SmartDashboard::PutData("Hood/mech2dDisplay", &_hoodMech);
 }
@@ -38,38 +29,8 @@ void SubHood::SimulationPeriodic() {
     _hoodMotor.IterateSim(_hoodSim.GetVelocity(), _hoodSim.GetAngle());
 }
 
-units::degree_t SubHood::CalcLowHoodAngle(units::meter_t distance) {
-    return _lowPitchTable[distance];
-}
-
-units::degree_t SubHood::CalcHighHoodAngle(units::meter_t distance) {
-    return _highPitchTable[distance];
-}
-
-units::degree_t SubHood::CalcPassHoodAngle(units::meter_t distance) {
-    return _passPitchTable[distance];
-}
-
 frc2::CommandPtr SubHood::SetHoodPositionTarget(units::degree_t angle) {
     return RunOnce([this, angle] {_hoodMotor.SetPositionTarget(angle);});
-}
-
-frc2::CommandPtr SubHood::LowPivotFromVision(std::function<units::meter_t()> distance) {
-    return Run([this, distance]{
-        _hoodMotor.SetPositionTarget(_lowPitchTable[distance()]);
-    });
-}
-
-frc2::CommandPtr SubHood::HighPivotFromVision(std::function<units::meter_t()> distance) {
-    return Run([this, distance]{
-        _hoodMotor.SetPositionTarget(_highPitchTable[distance()]);
-    });
-}
-
-frc2::CommandPtr SubHood::PassPivotFromVision(std::function<units::meter_t()> distance) {
-    return Run([this, distance]{
-        _hoodMotor.SetPositionTarget(_passPitchTable[distance()]);
-    });
 }
 
 frc2::CommandPtr SubHood::ZeroHood() {
