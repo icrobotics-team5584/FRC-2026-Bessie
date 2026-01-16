@@ -290,8 +290,6 @@ frc2::Trigger SubDrivebase::CheckCoastButton() {
 
 units::turns_per_second_t SubDrivebase::CalcRotateSpeed(units::turn_t rotationError) {
   auto omega = _teleopRotationController.Calculate(rotationError, 0_deg) * 1_rad_per_s;
-  omega = units::math::min(omega, DrivebaseConfig::MAX_ANGULAR_VELOCITY);
-  omega = units::math::max(omega, -DrivebaseConfig::MAX_ANGULAR_VELOCITY);
   return omega;
 }
 
@@ -325,8 +323,8 @@ frc::ChassisSpeeds SubDrivebase::CalcDriveToPoseSpeeds(frc::Pose2d targetPose) {
   frc::Translation2d translationVector = frc::Translation2d(targetXMeters - currentXMeters, targetYMeters - currentYMeters);
 
   // Use PID controllers to calculate speeds
-  auto rawTranslationSpeed = _teleopTranslationController.Calculate(0, translationVector.Norm().value()) * 1_mps;
-  auto rawRotationSpeed = CalcRotateSpeed(currentRotation - targetRotation);
+  auto rawTranslationSpeed = _teleopTranslationController.Calculate(0_m, translationVector.Norm()) * 1_mps;
+  auto rawRotationSpeed = _teleopRotationController.Calculate(currentRotation, targetRotation) * 1_rad_per_s;
 
   // Apply acceleration limits
   auto translationCalcSpeed = _p2pTranslationLimiter.Calculate(rawTranslationSpeed);
