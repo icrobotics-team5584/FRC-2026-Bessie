@@ -18,7 +18,6 @@
 #include "commands/ShootCommands.h"
 
 RobotContainer::RobotContainer() {
-  SubTurret::GetInstance();
   SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
   ConfigureBindings();
   SubVision::GetInstance();
@@ -32,11 +31,15 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureBindings() {
-  _driverController.X().OnTrue(SubHood::GetInstance().SetHoodPosition(0_deg));
-  _driverController.Y().OnTrue(SubHood::GetInstance().SetHoodPosition(20_deg));
-  _driverController.A().OnTrue(SubShooter::GetInstance().SetShooterTarget(100_tps));
-  _driverController.B().OnTrue(SubShooter::GetInstance().StopShooter());
-  _driverController.RightBumper().WhileTrue(cmd::AimAndShoot({0_m, 0_m, 0_m})); // Change to hub pose later
+  _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
+  _driverController.Y().OnTrue(SubDrivebase::GetInstance().ResetGyroCmd());
+  _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
+
+  _driverController.A().OnTrue(SubTurret::GetInstance().ZeroTurretCmd());
+  _driverController.RightBumper().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle(45_deg));
+  _driverController.LeftBumper().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle(-45_deg));
+
+  _driverController.RightTrigger().WhileTrue(cmd::AimAndShoot({0_m, 0_m, 0_m}));
 }
 
 std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {
