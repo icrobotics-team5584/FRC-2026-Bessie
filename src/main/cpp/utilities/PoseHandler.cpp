@@ -27,3 +27,13 @@ void PoseHandler::UpdateSim(frc::Rotation2d angle, wpi::array<frc::SwerveModuleP
     if (resetHeading) { _simPoseEstimator.ResetRotation(heading); }
     Logger::FieldDisplay::GetInstance().DisplayPose("Sim pose", _simPoseEstimator.GetEstimatedPosition());
 }
+
+void PoseHandler::AddVisionMeasurement(frc::Pose2d pose, units::second_t timeStamp, wpi::array<double,3> dev) {
+    Logger::Log("Vision/Updated pose", 1);
+    Logger::Log("Vision/Est pose/x",pose.X());
+    Logger::Log("Vision/Est pose/y",pose.Y());
+    _poseEstimator.AddVisionMeasurement(pose, timeStamp, dev);
+    Logger::Log("Vision/Curr pose/x",_poseEstimator.GetEstimatedPosition().X());
+    Logger::Log("Vision/Curr pose/y",_poseEstimator.GetEstimatedPosition().Y());
+    Logger::FieldDisplay::GetInstance().SetRobotPose(_poseEstimator.GetEstimatedPosition());
+}
