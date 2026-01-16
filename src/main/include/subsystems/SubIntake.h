@@ -39,7 +39,7 @@ class SubIntake : public frc2::SubsystemBase {
 
   frc::Alert intakeCurrentAlert{"Intake Motor Overcurrent!", frc::Alert::AlertType::kWarning};
   frc::Alert deployCurrentAlert{"Deploy Motor Overcurrent!", frc::Alert::AlertType::kWarning};
-  frc::Alert intakeHighTempuratureAlert{
+  frc::Alert intakeHighTemperatureAlert{
     "Intake Motor High Temperature!", frc::Alert::AlertType::kWarning};
   frc::Alert deployHighTemperatureAlert{
     "Deploy Motor High Temperature!", frc::Alert::AlertType::kWarning};
