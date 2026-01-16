@@ -32,9 +32,13 @@ void RobotContainer::ConfigureBindings() {
   _driverController.Y().OnTrue(SubDrivebase::GetInstance().ResetGyroCmd());
   _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
 
-  _driverController.A().OnTrue(SubTurret::GetInstance().ZeroTurretCmd());
-  _driverController.RightBumper().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle(45_deg));
-  _driverController.LeftBumper().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle(-45_deg));
+  // _driverController.A().OnTrue(SubTurret::GetInstance().ZeroTurretCmd());
+  // _driverController.RightBumper().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle(45_deg));
+  // _driverController.LeftBumper().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle(-45_deg));
+
+  _driverController.A().OnTrue(SubHood::GetInstance().ZeroHood());
+  _driverController.RightBumper().OnTrue(SubHood::GetInstance().SetHoodPositionTarget(12.5_deg));
+  _driverController.LeftBumper().OnTrue(SubHood::GetInstance().SetHoodPositionTarget(35_deg));
 }
 
 std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {

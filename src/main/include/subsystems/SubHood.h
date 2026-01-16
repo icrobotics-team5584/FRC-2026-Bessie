@@ -39,7 +39,7 @@ class SubHood : public frc2::SubsystemBase {
   frc2::CommandPtr StowHood(); 
   frc2::CommandPtr PivotFromVision(std::function<units::meter_t()> distance);
   frc2::CommandPtr ZeroHood();
-  frc2::CommandPtr SetHoodPosition(units::degree_t angle);
+  frc2::CommandPtr SetHoodPositionTarget(units::degree_t angle);
   
   /**
    * Will be called periodically whenever the CommandScheduler runs.
@@ -51,7 +51,7 @@ class SubHood : public frc2::SubsystemBase {
   double P = 1.0;
   double I = 0.0;
   double D = 0.0;
-  double F = 1.0;
+  double F = 0.0;
 
   units::ampere_t zeroingCurrentLimit = 10_A;
 
