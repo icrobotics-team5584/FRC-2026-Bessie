@@ -26,7 +26,7 @@ return Run(
             Logger::FieldDisplay::GetInstance().DisplayPose("DiscardedLeftEstimatedPose", {leftPose.value().estimatedPose.ToPose2d()});
           }
         } else {
-          Logger::FieldDisplay::GetInstance().DisplayPose("LeftEstimatedPose", {});
+          Logger::FieldDisplay::GetInstance().DisplayPose("LastLeftEstimatedPose", {});
           Logger::FieldDisplay::GetInstance().DisplayPose("DiscardedLeftEstimatedPose", {});
         }
 
@@ -38,7 +38,7 @@ return Run(
             wpi::array<double,3> dev = {d, d, 0.9};
             PoseHandler::GetInstance().AddVisionMeasurement(
                 estimatedPose.estimatedPose.ToPose2d(), estimatedPose.timestamp, dev);
-            Logger::FieldDisplay::GetInstance().DisplayPose("RightEstimatedPose",
+            Logger::FieldDisplay::GetInstance().DisplayPose("LastRightEstimatedPose",
                                                     estimatedPose.estimatedPose.ToPose2d());
             } else {
               Logger::FieldDisplay::GetInstance().DisplayPose("DiscardedRightEstimatedPose", {rightPose.value().estimatedPose.ToPose2d()});
