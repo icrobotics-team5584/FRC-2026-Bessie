@@ -44,7 +44,7 @@ void SubTurret::Periodic() {
         }
     }
 
-    _turretMechCircle.SetAngle(_turretMotor.GetPosition());
+   _turretMechCircle.SetAngle(_turretMotor.GetPosition());
 
     Logger::Log("Turret/CRT Positiion", GetTurretAngleCRT());
     Logger::Log("Turret/Encoder/Encoder1", _turretEncoder1.Get());
@@ -163,14 +163,12 @@ void SubTurret::SetTurretTarget(units::degree_t angle) {
 }
 
 void SubTurret::ZeroTurret() {
-    SetTurretTarget(GetTurretAngleCRT());
-    _turretMotor.SetPositionTarget(GetTurretAngleCRT());
+    _turretMotor.SetPosition(GetTurretAngleCRT());
 }
 
 frc2::CommandPtr SubTurret::ZeroTurretCmd() {
     return RunOnce( [this] {
-    SetTurretTarget(GetTurretAngleCRT());
-    _turretMotor.SetPositionTarget(GetTurretAngleCRT());
+    _turretMotor.SetPosition(GetTurretAngleCRT());
     });
 }
 
