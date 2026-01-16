@@ -34,11 +34,15 @@ class SubIntake : public frc2::SubsystemBase {
   frc2::CommandPtr DeployIntake();
   frc2::CommandPtr RetractIntake();
 
-  void CurrentHighTimer();
+  void IntakeCurrentHighTimer();
+  void DeployCurrentHighTimer();
 
   frc::Alert intakeCurrentAlert{"Intake Motor Overcurrent!", frc::Alert::AlertType::kWarning};
-  frc::Alert highTempuratureAlert{
+  frc::Alert deployCurrentAlert{"Deploy Motor Overcurrent!", frc::Alert::AlertType::kWarning};
+  frc::Alert intakeHighTempuratureAlert{
     "Intake Motor High Temperature!", frc::Alert::AlertType::kWarning};
+  frc::Alert deployHighTemperatureAlert{
+    "Deploy Motor High Temperature!", frc::Alert::AlertType::kWarning};
 
   /**
    * Will be called periodically whenever the CommandScheduler runs.
@@ -54,6 +58,7 @@ class SubIntake : public frc2::SubsystemBase {
   rev::spark::SparkFlexConfig _deployMotorConfig;
 
   frc::Timer _intakeHighCurrentTimer;
+  frc::Timer _deployHighCurrentTimer;
 
   // Simulation components
   static constexpr double GEARING = 1.0;
@@ -63,7 +68,7 @@ class SubIntake : public frc2::SubsystemBase {
     frc::LinearSystemId::FlywheelSystem(MOTOR_MODEL, MOI, GEARING);
   frc::sim::FlywheelSim _sim{_flywheelSystem, MOTOR_MODEL};
 
-  static constexpr double DEPLOY_GEARING = 1.0;
+  static constexpr double DEPLOY_GEARING = 2.0;
   static constexpr units::kilogram_square_meter_t DEPLOY_MOI = 0.0000005_kg_sq_m;
   static constexpr frc::DCMotor DEPLOY_MOTOR_MODEL = frc::DCMotor::NeoVortex();
   frc::LinearSystem<2, 1, 2> _deployFlywheelSystem =

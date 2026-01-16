@@ -29,39 +29,63 @@ frc2::CommandPtr SubIntake::IntakeOff() {
 };
 
 frc2::CommandPtr SubIntake::DeployIntake() {
-  return StartEnd([this] { _deployMotor.SetPositionTarget(5_tr); }, [this] { _deployMotor.SetPositionTarget(0_tr); });
+  return StartEnd([this] { _deployMotor.SetPositionTarget(5_tr); },
+    [this] { _deployMotor.SetPositionTarget(0_tr); });
 };
 
-frc2::CommandPtr SubIntake::RetractIntake(){
-  return RunOnce([this]{_deployMotor.SetPositionTarget(0_tr); });
+frc2::CommandPtr SubIntake::RetractIntake() {
+  return RunOnce([this] { _deployMotor.SetPositionTarget(0_tr); });
 }
 
-void SubIntake::CurrentHighTimer() {
+void SubIntake::IntakeCurrentHighTimer() {
   _intakeHighCurrentTimer.Start();
 
   if (_intakeHighCurrentTimer.Get() > 3_s) {
     intakeCurrentAlert.Set(true);
   }
+}
+
+void SubIntake::DeployCurrentHighTimer() {
+  _deployHighCurrentTimer.Start();
+
+  if (_deployHighCurrentTimer.Get() > 3_s) {
+    deployCurrentAlert.Set(true);
+  }
 };
 
 // This method will be called once per scheduler run
 void SubIntake::Periodic() {
-  units::ampere_t current = _intakeMotor.GetOutputCurrent() * 1_A;
-  Logger::Log("Intake/Intake Motor Current", current);
-  if (current > 20_A) {
-    CurrentHighTimer();
+  units::ampere_t intakeCurrent = _intakeMotor.GetOutputCurrent() * 1_A;
+  units::ampere_t deployCurrent = _deployMotor.GetOutputCurrent() * 1_A;
+  Logger::Log("Intake/Intake Motor Current", intakeCurrent);
+  Logger::Log("Intake/Deploy Motor Current", deployCurrent);
+  if (intakeCurrent > 20_A) {
+    IntakeCurrentHighTimer();
   } else {
     intakeCurrentAlert.Set(false);
     _intakeHighCurrentTimer.Reset();
   }
-
-  units::celsius_t temperature = _intakeMotor.GetTemperature();
-  Logger::Log("Intake/Intake Motor Temperature", temperature);
-
-  if (temperature > 60_degC) {
-    highTempuratureAlert.Set(true);
+  if (deployCurrent > 20_A) {
+    DeployCurrentHighTimer();
   } else {
-    highTempuratureAlert.Set(false);
+    deployCurrentAlert.Set(false);
+    _deployHighCurrentTimer.Reset();
+  }
+
+  units::celsius_t intakeTemperature = _intakeMotor.GetTemperature();
+  units::celsius_t deployTemperature = _deployMotor.GetTemperature();
+  Logger::Log("Intake/Intake Motor Temperature", intakeTemperature);
+  Logger::Log("Intake/Deploy Motor Temperature", deployTemperature);
+
+  if (intakeTemperature > 60_degC) {
+    intakeHighTempuratureAlert.Set(true);
+  } else {
+    intakeHighTempuratureAlert.Set(false);
+  }
+  if (deployTemperature > 60_degC) {
+    deployHighTemperatureAlert.Set(true);
+  } else {
+    deployHighTemperatureAlert.Set(false);
   }
 }
 
