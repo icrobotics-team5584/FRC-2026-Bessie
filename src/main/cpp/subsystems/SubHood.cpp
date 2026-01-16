@@ -20,8 +20,8 @@ SubHood::SubHood() {
     _hoodMotorConfig.softLimit.ReverseSoftLimit(0.161111);
     _hoodMotor.OverwriteConfig(_hoodMotorConfig);
 
-    _pitchTable.insert(1_m, 22_deg); // dummy values
-    _pitchTable.insert(2_m, 22_deg);
+    _pitchTable.insert(1_m, 24_deg); // dummy values
+    _pitchTable.insert(2_m, 24_deg);
 
     Logger::Log("Hood/Max rotation", 0.216667);
     Logger::Log("Hood/Min rotation", 0.161111);
