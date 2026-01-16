@@ -137,7 +137,6 @@ bool SubVision::IsEstimateUsable(photon::EstimatedRobotPose pose) {
   }
   distance /= pose.targetsUsed.size();
 
-  Logger::Log("distance is estim use", distance);
   return ((distance < 5_m) || (tagCount > 1));
 }
 
