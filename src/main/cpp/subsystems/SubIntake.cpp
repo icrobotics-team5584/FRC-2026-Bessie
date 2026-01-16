@@ -10,7 +10,7 @@
 SubIntake::SubIntake() {
   _intakeMotorConfig.SmartCurrentLimit(60);
   _intakeMotor.OverwriteConfig(_intakeMotorConfig);
-  _deployMotorConfig.SmartCurrentLimit(60);
+  _deployMotorConfig.SmartCurrentLimit(20);  // Motor disabled until they have zeroed
   _deployMotorConfig.softLimit.ForwardSoftLimit(DEPLOY_MAX_ANGLE.value());
   _deployMotorConfig.softLimit.ReverseSoftLimit(DEPLOY_MIN_ANGLE.value());
   _deployMotorConfig.encoder.PositionConversionFactor(1.0 / DEPLOY_GEARING);
@@ -38,8 +38,6 @@ frc2::CommandPtr SubIntake::RetractIntake() {
   return RunOnce([this] { _deployMotor.SetPositionTarget(0_deg); });
 };
 
-// TO DO
-void SubIntake::SetMotorVoltageLimits12V() {}
 
 void SubIntake::EnableSoftLimit(bool enabled) {
   if (!enabled) {
@@ -61,16 +59,20 @@ frc2::CommandPtr SubIntake::DeployAutoReset() {
   return RunOnce([this] {
     EnableSoftLimit(false);
     _deployMotor.SetVoltage(-1_V);
+    _currentlyZeroing = true;
     _hasReset = false;
   })
     .AndThen(frc2::cmd::WaitUntil(
-      [this] { return _deployMotor.GetOutputCurrent() * 1_A > zeroingCurrentLimit; }))
+      [this] { return abs(_deployMotor.GetOutputCurrent()) * 1_A > zeroingCurrentLimit; }))
     .AndThen(ResetDeploy())
     .AndThen([this] {
       _deployMotor.StopMotor();
       _hasReset = true;
     })
-    .FinallyDo([this] { EnableSoftLimit(true); });
+    .FinallyDo([this] {
+      _currentlyZeroing = false;
+      EnableSoftLimit(true);
+    });
 };
 
 void SubIntake::IntakeCurrentHighTimer() {
@@ -95,6 +97,7 @@ void SubIntake::Periodic() {
   units::ampere_t deployCurrent = _deployMotor.GetStatorCurrent();
   Logger::Log("Intake/Intake Motor Current", intakeCurrent);
   Logger::Log("Intake/Deploy Motor Current", deployCurrent);
+
   if (intakeCurrent > 20_A) {
     IntakeCurrentHighTimer();
   } else {
@@ -112,7 +115,7 @@ void SubIntake::Periodic() {
   units::celsius_t deployTemperature = _deployMotor.GetTemperature();
   Logger::Log("Intake/Intake Motor Temperature", intakeTemperature);
   Logger::Log("Intake/Deploy Motor Temperature", deployTemperature);
-
+ 
   if (intakeTemperature > 60_degC) {
     intakeHighTemperatureAlert.Set(true);
   } else {
@@ -123,7 +126,13 @@ void SubIntake::Periodic() {
   } else {
     deployHighTemperatureAlert.Set(false);
   }
+
+  if (!_hasReset && !_currentlyZeroing) {
+    //_deployMotor.StopMotor();
+  }
 }
+
+  
 
 void SubIntake::SimulationPeriodic() {
   _sim.SetInputVoltage(_intakeMotor.CalcSimVoltage());

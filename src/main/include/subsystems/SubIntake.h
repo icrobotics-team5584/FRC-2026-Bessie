@@ -34,7 +34,7 @@ class SubIntake : public frc2::SubsystemBase {
   frc2::CommandPtr DeployIntake();
   frc2::CommandPtr RetractIntake();
 
-  void SetMotorVoltageLimits12V();
+  
   void EnableSoftLimit(bool enabled);
   frc2::CommandPtr ResetDeploy();
   frc2::CommandPtr DeployAutoReset();
@@ -66,7 +66,8 @@ class SubIntake : public frc2::SubsystemBase {
   frc::Timer _deployHighCurrentTimer;
 
   bool _hasReset = false;
-  static constexpr units::ampere_t zeroingCurrentLimit = 20_A;
+  bool _currentlyZeroing = false;
+  static constexpr units::ampere_t zeroingCurrentLimit = 5_A;
   // Simulation components
   static constexpr double GEARING = 1.0;
   static constexpr double DEPLOY_P = 0.2;
