@@ -128,18 +128,18 @@ units::degree_t SubTurret::CalcOptimisedTurretAngle(units::degree_t angle) {
 
     units::degree_t finalOffset = currentAngle + closestOffset;
 
-    if( units::math::fmod(currentAngle + closestOffset, 360_deg) ==
-      units::math::fmod(currentAngle - closestOffset, 360_deg)) {
+    if( units::math::fmod(currentAngle + closestOffset, 360.0_deg) ==
+      units::math::fmod(currentAngle - closestOffset, 360.0_deg)) {
         if(finalOffset > 0_deg) {finalOffset = currentAngle - units::math::abs(closestOffset);}
         else{finalOffset = currentAngle + units::math::abs(closestOffset);}
       }
 
     if(finalOffset > POS_LIMIT) {
-        finalOffset -= 360;
+        finalOffset -= 360_deg;
     }
 
     if(finalOffset < NEG_LIMIT) {
-        finalOffset += 360;
+        finalOffset += 360_deg;
     }
 
     return finalOffset;
