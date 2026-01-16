@@ -73,13 +73,13 @@ class SubTurret : public frc2::SubsystemBase {
   double I = 0;
   double D = 0;
   
-  static constexpr double ENCODER1_RATIO = 21.0/94.0;
-  static constexpr double ENCODER2_RATIO = 20.0/94.0;
-  static constexpr double GEAR_RATIO = (48.0/12.0) * (94.0/10.0);
-
   static constexpr double E1_TEETH = 21;
   static constexpr double E2_TEETH = 20;
-  static constexpr double BIG_TOOTH = 94;
+  static constexpr double BIG_TEETH = 94;
+  static constexpr double ENCODER1_RATIO = E1_TEETH/BIG_TEETH;
+  static constexpr double ENCODER2_RATIO = E2_TEETH/BIG_TEETH;
+  static constexpr double GEAR_RATIO = (48.0/12.0) * (94.0/10.0);
+
 
   static constexpr units::hertz_t ENCODER_FREQUENCY = 975.6_Hz; 
   //force set encoder frequency to avoid 1sec startup time
