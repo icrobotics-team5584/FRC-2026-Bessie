@@ -14,6 +14,7 @@
 #include <wpi/interpolating_map.h>
 
 #include <frc/simulation/DCMotorSim.h>
+#include <frc/simulation/SingleJointedArmSim.h>
 #include <frc/system/plant/DCMotor.h>
 #include <frc/system/plant/LinearSystemId.h>
 #include <frc/smartdashboard/Mechanism2d.h>
@@ -56,6 +57,8 @@ class SubHood : public frc2::SubsystemBase {
 
   static constexpr units::degree_t UPPER_LIMIT = 35.0_deg;
   static constexpr units::degree_t LOWER_LIMIT = 12.5_deg;
+  static constexpr bool SIMULATE_GRAVITY = true;
+  static constexpr units::degree_t STARTING_ANGLE = 12.5_deg;
 
   bool _resetting = false;
   bool _hasreset = false;
@@ -65,6 +68,7 @@ class SubHood : public frc2::SubsystemBase {
   wpi::interpolating_map<units::meter_t, units::degree_t> _pitchTable;
 
   double GEAR_RATIO = (8.0/42.0) * (24.0/400.0);
+  units::centimeter_t ARM_LENGTH = 20_cm;
   ICSparkMax _hoodMotor{canid::HOOD_MOTOR};
   rev::spark::SparkBaseConfig _hoodMotorConfig;
 
@@ -72,8 +76,8 @@ class SubHood : public frc2::SubsystemBase {
   static constexpr units::kilogram_square_meter_t MOI = 0.0001_kg_sq_m;
 
   //Sim
-  frc::LinearSystem<2,1,2> _hoodSystem = frc::LinearSystemId::DCMotorSystem(MOTOR_MODEL, MOI, GEAR_RATIO);
-  frc::sim::DCMotorSim _hoodSim{_hoodSystem, MOTOR_MODEL};
+  frc::LinearSystem<2,1,2> _hoodSystem = frc::LinearSystemId::SingleJointedArmSystem(MOTOR_MODEL, MOI, GEAR_RATIO);
+  frc::sim::SingleJointedArmSim _hoodSim{_hoodSystem, MOTOR_MODEL, GEAR_RATIO, ARM_LENGTH, LOWER_LIMIT, UPPER_LIMIT, SIMULATE_GRAVITY, STARTING_ANGLE};
 
   //mechanism2d
   frc::Mechanism2d _hoodMech{0.25, 0.25};
