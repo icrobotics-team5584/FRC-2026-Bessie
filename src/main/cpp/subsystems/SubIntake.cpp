@@ -15,7 +15,7 @@ SubIntake::SubIntake() {
   _deployMotorConfig.softLimit.ReverseSoftLimit(DEPLOY_MIN_ANGLE.value());
   _deployMotorConfig.encoder.PositionConversionFactor(1.0 / DEPLOY_GEARING);
   _deployMotorConfig.encoder.VelocityConversionFactor(1.0 / DEPLOY_GEARING);
-  _deployMotorConfig.closedLoop.P(0.2);
+  _deployMotorConfig.closedLoop.P(DEPLOY_P);
   _deployMotor.OverwriteConfig(_deployMotorConfig);
   Logger::Log("Intake/Intake Motor", &_intakeMotor);
   Logger::Log("Intake/Deploy Motor", &_deployMotor);
@@ -91,8 +91,8 @@ void SubIntake::DeployCurrentHighTimer() {
 
 // This method will be called once per scheduler run
 void SubIntake::Periodic() {
-  units::ampere_t intakeCurrent = _intakeMotor.GetOutputCurrent() * 1_A;
-  units::ampere_t deployCurrent = _deployMotor.GetOutputCurrent() * 1_A;
+  units::ampere_t intakeCurrent = _intakeMotor.GetStatorCurrent();
+  units::ampere_t deployCurrent = _deployMotor.GetStatorCurrent();
   Logger::Log("Intake/Intake Motor Current", intakeCurrent);
   Logger::Log("Intake/Deploy Motor Current", deployCurrent);
   if (intakeCurrent > 20_A) {
@@ -114,9 +114,9 @@ void SubIntake::Periodic() {
   Logger::Log("Intake/Deploy Motor Temperature", deployTemperature);
 
   if (intakeTemperature > 60_degC) {
-    intakeHighTempuratureAlert.Set(true);
+    intakeHighTemperatureAlert.Set(true);
   } else {
-    intakeHighTempuratureAlert.Set(false);
+    intakeHighTemperatureAlert.Set(false);
   }
   if (deployTemperature > 60_degC) {
     deployHighTemperatureAlert.Set(true);

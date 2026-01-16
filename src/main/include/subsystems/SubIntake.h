@@ -44,7 +44,7 @@ class SubIntake : public frc2::SubsystemBase {
 
   frc::Alert intakeCurrentAlert{"Intake Motor Overcurrent!", frc::Alert::AlertType::kWarning};
   frc::Alert deployCurrentAlert{"Deploy Motor Overcurrent!", frc::Alert::AlertType::kWarning};
-  frc::Alert intakeHighTempuratureAlert{
+  frc::Alert intakeHighTemperatureAlert{
     "Intake Motor High Temperature!", frc::Alert::AlertType::kWarning};
   frc::Alert deployHighTemperatureAlert{
     "Deploy Motor High Temperature!", frc::Alert::AlertType::kWarning};
@@ -69,6 +69,7 @@ class SubIntake : public frc2::SubsystemBase {
   static constexpr units::ampere_t zeroingCurrentLimit = 20_A;
   // Simulation components
   static constexpr double GEARING = 1.0;
+  static constexpr double DEPLOY_P = 0.2;
   static constexpr units::kilogram_square_meter_t MOI = 0.0000001_kg_sq_m;
   static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::NeoVortex();
   frc::LinearSystem<1, 1, 1> _flywheelSystem =
