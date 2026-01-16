@@ -5,6 +5,7 @@
 #include "subsystems/SubHood.h"
 #include "frc/smartdashboard/SmartDashboard.h"
 #include "frc/RobotBase.h"
+#include "utilities/Logger.h"
 
 SubHood::SubHood() {
 
@@ -13,10 +14,17 @@ SubHood::SubHood() {
     _hoodMotorConfig.closedLoop.Pid(P, I, D);
     _hoodMotorConfig.closedLoop.feedForward.kV(F);
     _hoodMotorConfig.SmartCurrentLimit(30);
+    _hoodMotorConfig.softLimit.ForwardSoftLimitEnabled(true);
+    _hoodMotorConfig.softLimit.ForwardSoftLimit(0.216667);
+    _hoodMotorConfig.softLimit.ReverseSoftLimitEnabled(true);
+    _hoodMotorConfig.softLimit.ReverseSoftLimit(0.161111);
     _hoodMotor.OverwriteConfig(_hoodMotorConfig);
 
-    _pitchTable.insert(1_m, 12.5_deg); // dummy values
-    _pitchTable.insert(2_m, 35.0_deg);
+    _pitchTable.insert(1_m, 22_deg); // dummy values
+    _pitchTable.insert(2_m, 22_deg);
+
+    Logger::Log("Hood/Max rotation", 0.216667);
+    Logger::Log("Hood/Min rotation", 0.161111);
 }
 
 // This method will be called once per scheduler run
