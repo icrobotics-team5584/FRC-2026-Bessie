@@ -17,16 +17,16 @@ SubHood::SubHood() {
 
     _pitchTable.insert(1_m, 12.5_deg); // dummy values
     _pitchTable.insert(2_m, 35.0_deg);
+
+    frc::SmartDashboard::PutData("Hood/Motor", &_hoodMotor);
+    frc::SmartDashboard::PutData("Hood/mech2dDisplay", &_hoodMech);
 }
 
 // This method will be called once per scheduler run
 void SubHood::Periodic() {
-    frc::SmartDashboard::PutData("Hood/Motor", &_hoodMotor);
 }
 
 void SubHood::SimulationPeriodic() {
-    frc::SmartDashboard::PutData("Hood/mech2dDisplay", &_hoodMech);
-
     _hoodSim.SetInputVoltage(_hoodMotor.CalcSimVoltage());
     _hoodMotor.IterateSim(_hoodSim.GetAngularVelocity(), _hoodSim.GetAngularPosition());
     _hoodSim.Update(20_ms);

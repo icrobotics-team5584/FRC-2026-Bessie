@@ -17,6 +17,9 @@ SubTurret::SubTurret() {
 
     _turretEncoder1.SetAssumedFrequency(975.6_Hz);
     _turretEncoder2.SetAssumedFrequency(975.6_Hz);
+
+    frc::SmartDashboard::PutData("Turret/Motor", &_turretMotor);
+    frc::SmartDashboard::PutData("Turret/mech2dDisplay", &_turretMech);
 }
 
 // This method will be called once per scheduler run
@@ -40,7 +43,6 @@ void SubTurret::Periodic() {
         }
     }
 
-    frc::SmartDashboard::PutData("Turret/Motor", &_turretMotor);
     Logger::Log("Turret/CRT Positiion", GetTurretAngle());
     Logger::Log("Turret/Encoder/Encoder1", _turretEncoder1.Get());
     Logger::Log("Turret/Encoder/Encoder2", _turretEncoder2.Get());
@@ -57,7 +59,6 @@ void SubTurret::Periodic() {
 }
 
 void SubTurret::SimulationPeriodic() {
-    frc::SmartDashboard::PutData("Turret/mech2dDisplay", &_turretMech);
 
     _turretSim.SetInputVoltage(_turretMotor.CalcSimVoltage());
     _turretMotor.IterateSim(_turretSim.GetAngularVelocity(), _turretSim.GetAngularPosition());
