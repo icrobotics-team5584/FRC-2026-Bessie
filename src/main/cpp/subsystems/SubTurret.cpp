@@ -14,8 +14,8 @@ SubTurret::SubTurret() {
     _turretMotorConfig.SmartCurrentLimit(30);
     _turretMotor.OverwriteConfig(_turretMotorConfig);
 
-    _turretEncoder1.SetAssumedFrequency(975.6_Hz);
-    _turretEncoder2.SetAssumedFrequency(975.6_Hz);
+    _turretEncoder1.SetAssumedFrequency(ENCODER_FREQUENCY);
+    _turretEncoder2.SetAssumedFrequency(ENCODER_FREQUENCY);
 
     frc::SmartDashboard::PutData("Turret/Motor", &_turretMotor);
     frc::SmartDashboard::PutData("Turret/mech2dDisplay", &_turretMech);

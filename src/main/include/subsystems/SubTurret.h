@@ -85,6 +85,9 @@ class SubTurret : public frc2::SubsystemBase {
   static constexpr double E2_TEETH = 20;
   static constexpr double BIG_TOOTH = 94;
 
+  static constexpr units::hertz_t ENCODER_FREQUENCY = 975.6_Hz; 
+  //force set encoder frequency to avoid 1sec startup time
+
   //Sim
   frc::LinearSystem<2,1,2> _turretSystem = frc::LinearSystemId::DCMotorSystem(MOTOR_MODEL, MOI, GEAR_RATIO);
   frc::sim::DCMotorSim _turretSim{_turretSystem, MOTOR_MODEL};
