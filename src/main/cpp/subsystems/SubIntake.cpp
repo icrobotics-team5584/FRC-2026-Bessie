@@ -10,7 +10,7 @@
 SubIntake::SubIntake() {
   _intakeMotorConfig.SmartCurrentLimit(60);
   _intakeMotor.OverwriteConfig(_intakeMotorConfig);
-  _deployMotorConfig.SmartCurrentLimit(60);  // Motor disabled until they have zeroed
+  _deployMotorConfig.SmartCurrentLimit(60); 
   _deployMotorConfig.softLimit.ForwardSoftLimit(DEPLOY_MAX_ANGLE.value());
   _deployMotorConfig.softLimit.ReverseSoftLimit(DEPLOY_MIN_ANGLE.value());
   _deployMotorConfig.encoder.PositionConversionFactor(1.0 / DEPLOY_GEARING);
