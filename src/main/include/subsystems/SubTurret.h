@@ -31,12 +31,15 @@ class SubTurret : public frc2::SubsystemBase {
 
   void SimulationPeriodic();
 
+  units::degree_t GetTurretAngleCRT();
   units::degree_t GetTurretAngle();
+  units::degree_t CalcOptimisedTurretAngle(units::degree_t angle);
   
   void SetTurretAngle(units::degree_t angle);
   void ZeroTurret();
   void SetTurretTarget(units::degree_t angle);
 
+  frc2::CommandPtr SetMotorTargetAngle(units::degree_t angle);
   frc2::CommandPtr SetTurretTargetAngle(units::degree_t angle);
   frc2::CommandPtr ZeroTurretCmd();
   frc2::CommandPtr zeroEncoders();
@@ -56,7 +59,6 @@ class SubTurret : public frc2::SubsystemBase {
   units::degree_t getEncoder1Degrees();
   units::degree_t getEncoder2Degrees();
 
-
   static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::NEO();
   static constexpr units::kilogram_square_meter_t MOI = 0.0001_kg_sq_m;
 
@@ -66,8 +68,8 @@ class SubTurret : public frc2::SubsystemBase {
   double E1initial = 0.998531;
   double E2initial = 0.339566;
 
-  double POS_LIMIT = 90;
-  double NEG_LIMIT = -90;
+  units::degree_t POS_LIMIT = 265_deg;
+  units::degree_t NEG_LIMIT = -265_deg;
 
   bool _hasReset = false;
 

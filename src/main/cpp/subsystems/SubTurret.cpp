@@ -26,7 +26,7 @@ void SubTurret::Periodic() {
 
     if(_hasReset == false && _turretEncoder1.IsConnected() && _turretEncoder2.IsConnected()) {
         units::degree_t _motorPosition = _turretMotor.GetPosition();
-        units::degree_t _crtPosition = GetTurretAngle();
+        units::degree_t _crtPosition = GetTurretAngleCRT();
         Logger::Log("Turret/reset/_motorPosition", _motorPosition);
         Logger::Log("Turret/reset/_crtPosition", _crtPosition);
 
@@ -44,7 +44,7 @@ void SubTurret::Periodic() {
 
     _turretMechCircle.SetAngle(_turretMotor.GetPosition());
 
-    Logger::Log("Turret/CRT Positiion", GetTurretAngle());
+    Logger::Log("Turret/CRT Positiion", GetTurretAngleCRT());
     Logger::Log("Turret/Encoder/Encoder1", _turretEncoder1.Get());
     Logger::Log("Turret/Encoder/Encoder2", _turretEncoder2.Get());
     Logger::Log("Turret/Encoder/ZeroedEncoder1", getEncoder1Degrees());
@@ -65,7 +65,7 @@ void SubTurret::SimulationPeriodic() {
     _turretMotor.IterateSim(_turretSim.GetAngularVelocity(), _turretSim.GetAngularPosition());
 }
 
-units::degree_t SubTurret::GetTurretAngle() {
+units::degree_t SubTurret::GetTurretAngleCRT() {
     double e1deg = getEncoder1Degrees().value();
     double e2deg = getEncoder2Degrees().value();
     double difference = e2deg - e1deg;
@@ -98,11 +98,83 @@ units::degree_t SubTurret::GetTurretAngle() {
     return turretAngle * 1_deg;
 }
 
-frc2::CommandPtr SubTurret::SetTurretTargetAngle(units::degree_t angle) {
+units::degree_t SubTurret::GetTurretAngle() {
+    return _turretMotor.GetPosition();
+}
+
+frc2::CommandPtr SubTurret::SetMotorTargetAngle(units::degree_t angle) {
     return RunOnce([this, angle] {
-        _turretMotor.SetPositionTarget(angle);
+        if(angle > POS_LIMIT) {_turretMotor.SetPositionTarget(POS_LIMIT);}
+        if(angle < NEG_LIMIT) {_turretMotor.SetPositionTarget(NEG_LIMIT);}
+        if(angle < POS_LIMIT && angle > NEG_LIMIT) {_turretMotor.SetPositionTarget(angle);}
     });
 }
+
+frc2::CommandPtr SubTurret::SetTurretTargetAngle(units::degree_t angle) {
+    return SetMotorTargetAngle(CalcOptimisedTurretAngle(angle));
+}
+
+units::degree_t SubTurret::CalcOptimisedTurretAngle(units::degree_t angle) {
+    units::degree_t currentAngle = SubTurret::GetInstance().GetTurretAngle();
+    units::degree_t closestOffset = angle - currentAngle;
+
+    // limit to +- 180 deg
+    if(closestOffset > 180_deg) {
+        closestOffset -= 360_deg;
+    }
+    if(closestOffset < 180_deg) {
+        closestOffset += 360_deg;
+    }
+
+    units::degree_t finalOffset = currentAngle + closestOffset;
+
+    if( units::math::fmod(currentAngle + closestOffset, 360_deg) ==
+      units::math::fmod(currentAngle - closestOffset, 360_deg)) {
+        if(finalOffset > 0_deg) {finalOffset = currentAngle - units::math::abs(closestOffset);}
+        else{finalOffset = currentAngle + units::math::abs(closestOffset);}
+      }
+
+    if(finalOffset > POS_LIMIT) {
+        finalOffset -= 360;
+    }
+
+    if(finalOffset < NEG_LIMIT) {
+        finalOffset += 360;
+    }
+
+    return finalOffset;
+}
+
+    // public static double convertToClosestBoundedTurretAngleDegrees(
+    //     double targetAngleDegrees, Rotation2d current, double forwardLimitDegrees, double reverseLimitDegrees) {
+    //     double currentTotalRadians = (current.getRotations() * 2 * Math.PI);
+    //     double closestOffset = Units.degreesToRadians(targetAngleDegrees) - current.getRadians();
+    //     if (closestOffset > Math.PI) {
+
+    //         closestOffset -= 2 * Math.PI;
+
+    //     } else if (closestOffset < -Math.PI) {
+    //         closestOffset += 2 * Math.PI;
+    //     }
+
+    //     double finalOffset = currentTotalRadians + closestOffset;
+    //     if ((currentTotalRadians + closestOffset) % (2 * Math.PI)
+    //             == (currentTotalRadians - closestOffset)
+    //                     % (2 * Math.PI)) { // If the offset can go either way, go closer to zero
+    //         if (finalOffset > 0) {
+    //             finalOffset = currentTotalRadians - Math.abs(closestOffset);
+    //         } else {
+    //             finalOffset = currentTotalRadians + Math.abs(closestOffset);
+    //         }
+    //     }
+    //     if (finalOffset > Units.degreesToRadians(forwardLimitDegrees)) { // if past upper rotation limit
+    //         finalOffset -= (2 * Math.PI);
+    //     } else if (finalOffset < Units.degreesToRadians(reverseLimitDegrees)) { // if below lower rotation limit
+    //         finalOffset += (2 * Math.PI);
+    //     }
+
+    //     return Units.radiansToDegrees(finalOffset);
+    // }
 
 void SubTurret::SetTurretTarget(units::degree_t angle) {
     _turretMotor.SetPositionTarget(angle);
@@ -113,14 +185,14 @@ void SubTurret::SetTurretAngle(units::degree_t angle) {
 }
 
 void SubTurret::ZeroTurret() {
-    SetTurretAngle(GetTurretAngle());
-    _turretMotor.SetPositionTarget(GetTurretAngle());
+    SetTurretAngle(GetTurretAngleCRT());
+    _turretMotor.SetPositionTarget(GetTurretAngleCRT());
 }
 
 frc2::CommandPtr SubTurret::ZeroTurretCmd() {
     return RunOnce( [this] {
-    SetTurretAngle(GetTurretAngle());
-    _turretMotor.SetPositionTarget(GetTurretAngle());
+    SetTurretAngle(GetTurretAngleCRT());
+    _turretMotor.SetPositionTarget(GetTurretAngleCRT());
     });
 }
 
