@@ -118,8 +118,8 @@ units::degree_t SubTurret::CalcOptimisedTurretAngle(units::degree_t angle) {
     units::degree_t currentAngle = SubTurret::GetInstance().GetTurretAngle();
 
     //limit target angle to limits
-    if(angle > POS_LIMIT) { angle -= 360;}
-    if(angle < NEG_LIMIT) { angle += 360;}
+    if(angle > POS_LIMIT) { angle -= 360_deg;}
+    if(angle < NEG_LIMIT) { angle += 360_deg;}
 
     units::degree_t closestOffset = angle - currentAngle;
 
