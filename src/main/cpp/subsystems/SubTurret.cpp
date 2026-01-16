@@ -31,7 +31,7 @@ void SubTurret::Periodic() {
         Logger::Log("Turret/reset/crtPosition", crtPosition);
 
         bool CRTSameAsMotor = (units::math::abs(motorPosition - crtPosition) < 0.5_deg);
-        Logger::Log("Turret/CRTSameAsMotor", CRTSameAsMotor);
+        Logger::Log("Turret/reset/CRTSameAsMotor", CRTSameAsMotor);
 
         if(CRTSameAsMotor){
             _hasReset = true;
