@@ -59,9 +59,10 @@ class SubIntake : public frc2::SubsystemBase {
 
   frc::Timer _intakeHighCurrentTimer;
   frc::Timer _deployHighCurrentTimer;
-
+ 
   // Simulation components
   static constexpr double GEARING = 1.0;
+  static constexpr double DEPLOY_P = 0.2;
   static constexpr units::kilogram_square_meter_t MOI = 0.0000001_kg_sq_m;
   static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::NeoVortex();
   frc::LinearSystem<1, 1, 1> _flywheelSystem =

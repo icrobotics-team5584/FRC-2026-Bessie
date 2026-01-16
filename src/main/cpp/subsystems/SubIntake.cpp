@@ -14,7 +14,7 @@ SubIntake::SubIntake() {
   _deployMotorConfig.SmartCurrentLimit(60);
   _deployMotorConfig.encoder.PositionConversionFactor(1.0 / DEPLOY_GEARING);
   _deployMotorConfig.encoder.VelocityConversionFactor(1.0 / DEPLOY_GEARING);
-  _deployMotorConfig.closedLoop.P(0.2);
+  _deployMotorConfig.closedLoop.P(DEPLOY_P);
   _deployMotor.OverwriteConfig(_deployMotorConfig);
   Logger::Log("Intake/Intake Motor", &_intakeMotor);
   Logger::Log("Intake/Deploy Motor", &_deployMotor);
@@ -29,12 +29,12 @@ frc2::CommandPtr SubIntake::IntakeOff() {
 };
 
 frc2::CommandPtr SubIntake::DeployIntake() {
-  return StartEnd([this] { _deployMotor.SetPositionTarget(5_tr); },
-    [this] { _deployMotor.SetPositionTarget(0_tr); });
+  return StartEnd([this] { _deployMotor.SetPositionTarget(90_deg); },
+    [this] { _deployMotor.SetPositionTarget(0_deg); });
 };
 
 frc2::CommandPtr SubIntake::RetractIntake() {
-  return RunOnce([this] { _deployMotor.SetPositionTarget(0_tr); });
+  return RunOnce([this] { _deployMotor.SetPositionTarget(0_deg); });
 }
 
 void SubIntake::IntakeCurrentHighTimer() {
@@ -55,8 +55,8 @@ void SubIntake::DeployCurrentHighTimer() {
 
 // This method will be called once per scheduler run
 void SubIntake::Periodic() {
-  units::ampere_t intakeCurrent = _intakeMotor.GetOutputCurrent() * 1_A;
-  units::ampere_t deployCurrent = _deployMotor.GetOutputCurrent() * 1_A;
+  units::ampere_t intakeCurrent = _intakeMotor.GetStatorCurrent();
+  units::ampere_t deployCurrent = _deployMotor.GetStatorCurrent();
   Logger::Log("Intake/Intake Motor Current", intakeCurrent);
   Logger::Log("Intake/Deploy Motor Current", deployCurrent);
   if (intakeCurrent > 20_A) {
