@@ -74,7 +74,6 @@ class SubTurret : public frc2::SubsystemBase {
   double P = 2.0;
   double I = 0;
   double D = 0;
-  double F = 1.0;
   
   static constexpr double ENCODER1_RATIO = 21.0/94.0;
   static constexpr double ENCODER2_RATIO = 20.0/94.0;

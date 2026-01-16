@@ -51,7 +51,6 @@ class SubHood : public frc2::SubsystemBase {
   double P = 1.0;
   double I = 0.0;
   double D = 0.0;
-  double F = 0.0;
 
   units::ampere_t zeroingCurrentLimit = 10_A;
 
