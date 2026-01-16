@@ -36,10 +36,10 @@ frc2::CommandPtr SubHood::SetHoodPositionTarget(units::degree_t angle) {
 frc2::CommandPtr SubHood::ZeroHood() {
     return RunOnce([this] {_resetting = true;}).AndThen(ManualHoodDown())
     .Until([this] {return HoodCurrentCheck();})
-    .AndThen([this] {_hoodMotor.SetPosition(12.5_deg);})
+    .AndThen([this] {_hoodMotor.SetPosition(LOWER_LIMIT);})
     .FinallyDo([this] {
         _hoodMotor.StopMotor();
-        _hoodMotor.SetPositionTarget(15_deg);
+        _hoodMotor.SetPositionTarget(LOWER_LIMIT);
         _resetting = false;
     });
 }
