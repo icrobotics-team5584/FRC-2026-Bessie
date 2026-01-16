@@ -34,10 +34,15 @@ class SubHood : public frc2::SubsystemBase {
   bool HoodCurrentCheck(); 
   
   units::ampere_t GetHoodMotorCurrent();
+  units::degree_t CalcLowHoodAngle(units::meter_t distance);
+  units::degree_t CalcHighHoodAngle(units::meter_t distance);
+  units::degree_t CalcPassHoodAngle(units::meter_t distance);
 
   frc2::CommandPtr ManualHoodDown(); 
   frc2::CommandPtr StowHood(); 
-  frc2::CommandPtr PivotFromVision(std::function<units::meter_t()> distance);
+  frc2::CommandPtr LowPivotFromVision(std::function<units::meter_t()> distance);
+  frc2::CommandPtr HighPivotFromVision(std::function<units::meter_t()> distance);
+  frc2::CommandPtr PassPivotFromVision(std::function<units::meter_t()> distance);
   frc2::CommandPtr ZeroHood();
   frc2::CommandPtr SetHoodPositionTarget(units::degree_t angle);
   
@@ -64,7 +69,9 @@ class SubHood : public frc2::SubsystemBase {
 
   units::turn_t STOW_TURNS = 0_tr;
 
-  wpi::interpolating_map<units::meter_t, units::degree_t> _pitchTable;
+  wpi::interpolating_map<units::meter_t, units::degree_t> _highPitchTable;
+  wpi::interpolating_map<units::meter_t, units::degree_t> _lowPitchTable;
+  wpi::interpolating_map<units::meter_t, units::degree_t> _passPitchTable;
 
   double GEAR_RATIO = (42.0/8.0) * (400.0/24.0);
   units::centimeter_t ARM_LENGTH = 20_cm;
