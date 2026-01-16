@@ -48,10 +48,7 @@ SubShooter::SubShooter() {
 // This method will be called once per scheduler run
 void SubShooter::Periodic() {
     Logger::Log("Shooter/IsAtSpeed", IsAtSpeed());
-}
 
-void SubShooter::SimulationPeriodic() {
-    
     units::angle::degree_t motor1Position = _shooterMotor1.GetPosition().GetValue();
     _shooterMechTopRoller.SetAngle(motor1Position);
 
@@ -77,6 +74,10 @@ void SubShooter::SimulationPeriodic() {
     rightState.SetRotorVelocity(_rightFlywheelSim.GetAngularVelocity());
     rightState.SetRotorAcceleration(_rightFlywheelSim.GetAngularAcceleration());
     rightState.AddRotorPosition(_rightFlywheelSim.GetAngularVelocity().value()/(3.14*2)*360*0.02*1_tr);
+}
+
+void SubShooter::SimulationPeriodic() {
+
 }
 
 frc2::CommandPtr SubShooter::SetShooterTarget(units::turns_per_second_t speed) {

@@ -24,14 +24,15 @@ SubHood::SubHood() {
 
 // This method will be called once per scheduler run
 void SubHood::Periodic() {
-}
-
-void SubHood::SimulationPeriodic() {
     _hoodSim.SetInputVoltage(_hoodMotor.CalcSimVoltage());
     _hoodMotor.IterateSim(_hoodSim.GetAngularVelocity(), _hoodSim.GetAngularPosition());
     _hoodSim.Update(20_ms);
 
     _hoodMechCircle.SetAngle(_hoodMotor.GetPosition());
+}
+
+void SubHood::SimulationPeriodic() {
+
 }
 
 frc2::CommandPtr SubHood::SetHoodPosition(units::degree_t angle) {
