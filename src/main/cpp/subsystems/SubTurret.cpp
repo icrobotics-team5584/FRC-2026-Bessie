@@ -25,12 +25,12 @@ SubTurret::SubTurret() {
 void SubTurret::Periodic() {
 
     if(_hasReset == false && _turretEncoder1.IsConnected() && _turretEncoder2.IsConnected()) {
-        units::degree_t _motorPosition = _turretMotor.GetPosition();
-        units::degree_t _crtPosition = GetTurretAngleCRT();
-        Logger::Log("Turret/reset/_motorPosition", _motorPosition);
-        Logger::Log("Turret/reset/_crtPosition", _crtPosition);
+        units::degree_t motorPosition = _turretMotor.GetPosition();
+        units::degree_t crtPosition = GetTurretAngleCRT();
+        Logger::Log("Turret/reset/motorPosition", motorPosition);
+        Logger::Log("Turret/reset/crtPosition", crtPosition);
 
-        bool CRTSameAsMotor = (units::math::abs(_motorPosition - _crtPosition) < 0.5_deg);
+        bool CRTSameAsMotor = (units::math::abs(motorPosition - crtPosition) < 0.5_deg);
         Logger::Log("Turret/CRTSameAsMotor", CRTSameAsMotor);
 
         if(CRTSameAsMotor){
