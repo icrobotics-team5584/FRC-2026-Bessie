@@ -40,7 +40,7 @@ void SubFeeder::CurrentHighTimer() {
 void SubFeeder::Periodic() {
   Logger::Log("Feeder/Feeder Is Full", FeederIsFull());
   Logger::Log("Feeder/Feeder Is Empty", FeederIsEmpty());
-  units::ampere_t current = _feederMotor.GetOutputCurrent() * 1_A;
+  units::ampere_t current = _feederMotor.GetStatorCurrent();
   Logger::Log("Feeder/Feeder Motor Current", current);
   if (current > 20_A) {
     SubFeeder::CurrentHighTimer();
@@ -52,9 +52,9 @@ void SubFeeder::Periodic() {
   units::celsius_t temperature = _feederMotor.GetTemperature();
   Logger::Log("Feeder/Feeder Motor Temperature", temperature);
   if (temperature > 60_degC) {
-    highTempuratureAlert.Set(true);
+    highTemperatureAlert.Set(true);
   } else {
-    highTempuratureAlert.Set(false);
+    highTemperatureAlert.Set(false);
   }
 }
 

@@ -36,7 +36,7 @@ class SubFeeder : public frc2::SubsystemBase {
   void CurrentHighTimer();
 
   frc::Alert feederCurrentAlert{"Feeder Motor Overcurrent!", frc::Alert::AlertType::kWarning};
-  frc::Alert highTempuratureAlert{
+  frc::Alert highTemperatureAlert{
     "Feeder Motor High Temperature!", frc::Alert::AlertType::kWarning};
 
   void Periodic() override;
