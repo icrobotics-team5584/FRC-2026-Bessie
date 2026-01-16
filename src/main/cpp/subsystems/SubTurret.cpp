@@ -145,37 +145,6 @@ units::degree_t SubTurret::CalcOptimisedTurretAngle(units::degree_t angle) {
     return finalOffset;
 }
 
-    // public static double convertToClosestBoundedTurretAngleDegrees(
-    //     double targetAngleDegrees, Rotation2d current, double forwardLimitDegrees, double reverseLimitDegrees) {
-    //     double currentTotalRadians = (current.getRotations() * 2 * Math.PI);
-    //     double closestOffset = Units.degreesToRadians(targetAngleDegrees) - current.getRadians();
-    //     if (closestOffset > Math.PI) {
-
-    //         closestOffset -= 2 * Math.PI;
-
-    //     } else if (closestOffset < -Math.PI) {
-    //         closestOffset += 2 * Math.PI;
-    //     }
-
-    //     double finalOffset = currentTotalRadians + closestOffset;
-    //     if ((currentTotalRadians + closestOffset) % (2 * Math.PI)
-    //             == (currentTotalRadians - closestOffset)
-    //                     % (2 * Math.PI)) { // If the offset can go either way, go closer to zero
-    //         if (finalOffset > 0) {
-    //             finalOffset = currentTotalRadians - Math.abs(closestOffset);
-    //         } else {
-    //             finalOffset = currentTotalRadians + Math.abs(closestOffset);
-    //         }
-    //     }
-    //     if (finalOffset > Units.degreesToRadians(forwardLimitDegrees)) { // if past upper rotation limit
-    //         finalOffset -= (2 * Math.PI);
-    //     } else if (finalOffset < Units.degreesToRadians(reverseLimitDegrees)) { // if below lower rotation limit
-    //         finalOffset += (2 * Math.PI);
-    //     }
-
-    //     return Units.radiansToDegrees(finalOffset);
-    // }
-
 void SubTurret::SetTurretTarget(units::degree_t angle) {
     _turretMotor.SetPositionTarget(angle);
 }
