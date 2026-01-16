@@ -36,8 +36,8 @@ class SubIntake : public frc2::SubsystemBase {
 
   
   void EnableSoftLimit(bool enabled);
-  frc2::CommandPtr ResetDeploy();
-  frc2::CommandPtr DeployAutoReset();
+  frc2::CommandPtr ZeroDeploy();
+  frc2::CommandPtr DeployAutoZero();
 
   void IntakeCurrentHighTimer();
   void DeployCurrentHighTimer();

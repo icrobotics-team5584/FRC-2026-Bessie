@@ -10,7 +10,7 @@
 SubIntake::SubIntake() {
   _intakeMotorConfig.SmartCurrentLimit(60);
   _intakeMotor.OverwriteConfig(_intakeMotorConfig);
-  _deployMotorConfig.SmartCurrentLimit(20);  // Motor disabled until they have zeroed
+  _deployMotorConfig.SmartCurrentLimit(60);  // Motor disabled until they have zeroed
   _deployMotorConfig.softLimit.ForwardSoftLimit(DEPLOY_MAX_ANGLE.value());
   _deployMotorConfig.softLimit.ReverseSoftLimit(DEPLOY_MIN_ANGLE.value());
   _deployMotorConfig.encoder.PositionConversionFactor(1.0 / DEPLOY_GEARING);
@@ -38,7 +38,6 @@ frc2::CommandPtr SubIntake::RetractIntake() {
   return RunOnce([this] { _deployMotor.SetPositionTarget(0_deg); });
 };
 
-
 void SubIntake::EnableSoftLimit(bool enabled) {
   if (!enabled) {
     _deployMotorConfig.softLimit.ForwardSoftLimitEnabled(false);
@@ -51,11 +50,11 @@ void SubIntake::EnableSoftLimit(bool enabled) {
   }
 }
 
-frc2::CommandPtr SubIntake::ResetDeploy() {
+frc2::CommandPtr SubIntake::ZeroDeploy() {
   return RunOnce([this] { _deployMotor.SetPosition(0_deg); });
 };
 
-frc2::CommandPtr SubIntake::DeployAutoReset() {
+frc2::CommandPtr SubIntake::DeployAutoZero() {
   return RunOnce([this] {
     EnableSoftLimit(false);
     _deployMotor.SetVoltage(-1_V);
@@ -64,7 +63,7 @@ frc2::CommandPtr SubIntake::DeployAutoReset() {
   })
     .AndThen(frc2::cmd::WaitUntil(
       [this] { return abs(_deployMotor.GetOutputCurrent()) * 1_A > zeroingCurrentLimit; }))
-    .AndThen(ResetDeploy())
+    .AndThen(ZeroDeploy())
     .AndThen([this] {
       _deployMotor.StopMotor();
       _hasReset = true;
@@ -115,7 +114,7 @@ void SubIntake::Periodic() {
   units::celsius_t deployTemperature = _deployMotor.GetTemperature();
   Logger::Log("Intake/Intake Motor Temperature", intakeTemperature);
   Logger::Log("Intake/Deploy Motor Temperature", deployTemperature);
- 
+
   if (intakeTemperature > 60_degC) {
     intakeHighTemperatureAlert.Set(true);
   } else {
@@ -126,13 +125,7 @@ void SubIntake::Periodic() {
   } else {
     deployHighTemperatureAlert.Set(false);
   }
-
-  if (!_hasReset && !_currentlyZeroing) {
-    //_deployMotor.StopMotor();
-  }
 }
-
-  
 
 void SubIntake::SimulationPeriodic() {
   _sim.SetInputVoltage(_intakeMotor.CalcSimVoltage());
