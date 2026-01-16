@@ -59,14 +59,14 @@ frc2::CommandPtr SubIntake::DeployAutoZero() {
     EnableSoftLimit(false);
     _deployMotor.SetVoltage(-1_V);
     _currentlyZeroing = true;
-    _hasReset = false;
+    _hasZeroed = false;
   })
     .AndThen(frc2::cmd::WaitUntil(
       [this] { return abs(_deployMotor.GetOutputCurrent()) * 1_A > zeroingCurrentLimit; }))
     .AndThen(ZeroDeploy())
     .AndThen([this] {
       _deployMotor.StopMotor();
-      _hasReset = true;
+      _hasZeroed = true;
     })
     .FinallyDo([this] {
       _currentlyZeroing = false;

@@ -65,7 +65,7 @@ class SubIntake : public frc2::SubsystemBase {
   frc::Timer _intakeHighCurrentTimer;
   frc::Timer _deployHighCurrentTimer;
 
-  bool _hasReset = false;
+  bool _hasZeroed = false;
   bool _currentlyZeroing = false;
   static constexpr units::ampere_t zeroingCurrentLimit = 5_A;
   // Simulation components
