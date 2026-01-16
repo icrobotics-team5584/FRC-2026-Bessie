@@ -39,6 +39,8 @@ class SubDrivebase : public frc2::SubsystemBase {
 
   void SetBrakeMode(bool mode);
 
+  void SetPose(frc::Pose2d pose);
+
   /* ------------------------------------------------------------------------------------------------------------- */
   /* Getters & calculations*/
 
@@ -53,6 +55,8 @@ class SubDrivebase : public frc2::SubsystemBase {
   units::turns_per_second_t CalcRotateSpeed(units::turn_t rotationError);
   frc::ChassisSpeeds CalcDriveToPoseSpeeds(frc::Pose2d targetPose);
   frc::ChassisSpeeds CalcJoystickSpeeds(frc2::CommandXboxController& controller);
+
+  wpi::array<frc::SwerveModulePosition, 4U> GetSwerveStates();
 
   /* ------------------------------------------------------------------------------------------------------------- */
   /* Commands */

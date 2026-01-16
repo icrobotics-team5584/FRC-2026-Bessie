@@ -63,7 +63,7 @@ frc2::CommandPtr AimAndShoot(frc::Translation3d target_pose) {
         auto vel = SubDrivebase::GetInstance().GetVelocityXY();
         units::meter_t distance = hypot(target_pose.X().value() - curr_pos.X().value(), target_pose.Y().value() - curr_pos.Y().value()) * 1_m;
         ShootConfig conf = CalShootOnMove(0.5, target_pose, SubHood::GetInstance().GetAngleFromDistance(distance),
-                                          -vel.first, -vel.second);
+                                          vel.first, vel.second);
 
         frc::Pose2d end {curr_pos.X() + 3 * cos(conf.Yaw.Radians().value()) * 1_m, curr_pos.Y() + 3 * sin(conf.Yaw.Radians().value()) * 1_m, frc::Rotation2d(0_deg)};
 

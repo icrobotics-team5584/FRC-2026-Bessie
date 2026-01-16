@@ -8,6 +8,7 @@
 #include "subsystems/SubDrivebase.h"
 #include "commands/DriveCommands.h"
 #include "subsystems/SubIntake.h"
+#include "subsystems/SubIndexer.h"
 #include "commands/AutonCommands.h"
 #include "Subsystems/SubVision.h"
 #include "subsystems/SubTurret.h"
@@ -16,6 +17,8 @@
 #include "subsystems/SubTurret.h"
 #include "commands/DriveCommands.h"
 #include "commands/ShootCommands.h"
+
+#include "utilities/PoseHandler.h"
 
 RobotContainer::RobotContainer() {
   SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
@@ -40,6 +43,9 @@ void RobotContainer::ConfigureBindings() {
   _driverController.LeftBumper().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle(-45_deg));
 
   _driverController.RightTrigger().WhileTrue(cmd::AimAndShoot({0_m, 0_m, 0_m}));
+  _driverController.LeftTrigger().OnTrue(frc2::cmd::RunOnce([]{
+    SubDrivebase::GetInstance().SetPose(frc::Pose2d{0_m,0_m,0_deg});
+  }));
 }
 
 std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {

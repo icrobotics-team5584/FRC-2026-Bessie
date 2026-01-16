@@ -241,7 +241,7 @@ class ICSpark : public wpi::Sendable {
   /**
    * Get the temperature of the motor.
    */
-  units::celsius_t GetMotorTemperature();
+  units::celsius_t GetTemperature();
 
   /**
    * Common interface to stop the motor until Set is called again or closed loop control is started.
