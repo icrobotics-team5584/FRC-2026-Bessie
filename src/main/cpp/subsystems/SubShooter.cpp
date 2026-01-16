@@ -87,6 +87,6 @@ frc2::CommandPtr SubShooter::StopShooter() {
 }
 
 bool SubShooter::IsAtSpeed() {
-    return abs(_shooterMotor1.GetVelocity().GetValueAsDouble() - _flywheelTargetVelocity.Velocity()) < 1.0 &&
-    abs(_shooterMotor2.GetVelocity().GetValueAsDouble() - _flywheelTargetVelocity.Velocity()) < 1.0;
+    return units::math::abs(_shooterMotor1.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 1.0_tps &&
+    units::math::abs(_shooterMotor2.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 1.0_tps;
 }
