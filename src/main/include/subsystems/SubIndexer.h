@@ -32,7 +32,7 @@ class SubIndexer : public frc2::SubsystemBase {
   void CurrentHighTimer();
 
   frc::Alert IndexerCurrentAlert{"Indexer Motor Overcurrent!", frc::Alert::AlertType::kWarning};
-  frc::Alert highTempuratureAlert{
+  frc::Alert highTemperatureAlert{
     "Indexer Motor High Temperature!", frc::Alert::AlertType::kWarning};
   /**
    * Will be called periodically whenever the CommandScheduler runs.

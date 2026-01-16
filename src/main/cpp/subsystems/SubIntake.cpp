@@ -44,9 +44,9 @@ void SubIntake::Periodic() {
   Logger::Log("Intake/Intake Motor Temperature", temperature);
 
   if (temperature > 60_degC) {
-    highTempuratureAlert.Set(true);
+    highTemperatureAlert.Set(true);
   } else {
-    highTempuratureAlert.Set(false);
+    highTemperatureAlert.Set(false);
   }
 }
 
