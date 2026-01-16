@@ -5,6 +5,7 @@
 #include "subsystems/SubHood.h"
 #include "frc/smartdashboard/SmartDashboard.h"
 #include "frc/RobotBase.h"
+#include "utilities/Logger.h"
 
 SubHood::SubHood() {
 
@@ -21,6 +22,12 @@ SubHood::SubHood() {
 // This method will be called once per scheduler run
 void SubHood::Periodic() {
     _hoodMechCircle.SetAngle(_hoodMotor.GetPosition());
+    if (_hasreset == false && _resetting == false) {
+        _hoodMotor.Set(0);
+    }
+
+    Logger::Log("Hood/hasReset", _hasreset);
+    Logger::Log("Hood/resetting", _resetting);
 }
 
 void SubHood::SimulationPeriodic() {
