@@ -8,6 +8,7 @@
 
 #include <frc/Alert.h>
 #include <frc/Timer.h>
+#include <frc/simulation/DCMotorSim.h>
 #include <frc/simulation/FlywheelSim.h>
 #include <frc/system/plant/DCMotor.h>
 #include <frc/system/plant/LinearSystemId.h>
@@ -30,6 +31,9 @@ class SubIntake : public frc2::SubsystemBase {
   frc2::CommandPtr IntakeOn();
   frc2::CommandPtr IntakeOff();
 
+  frc2::CommandPtr DeployIntake();
+  frc2::CommandPtr RetractIntake();
+
   void CurrentHighTimer();
 
   frc::Alert intakeCurrentAlert{"Intake Motor Overcurrent!", frc::Alert::AlertType::kWarning};
@@ -44,7 +48,10 @@ class SubIntake : public frc2::SubsystemBase {
 
  private:
   ICSparkFlex _intakeMotor{canid::INTAKE};
+  ICSparkFlex _deployMotor{canid::INTAKE_DEPLOY};
+
   rev::spark::SparkFlexConfig _intakeMotorConfig;
+  rev::spark::SparkFlexConfig _deployMotorConfig;
 
   frc::Timer _intakeHighCurrentTimer;
 
@@ -55,4 +62,11 @@ class SubIntake : public frc2::SubsystemBase {
   frc::LinearSystem<1, 1, 1> _flywheelSystem =
     frc::LinearSystemId::FlywheelSystem(MOTOR_MODEL, MOI, GEARING);
   frc::sim::FlywheelSim _sim{_flywheelSystem, MOTOR_MODEL};
+
+  static constexpr double DEPLOY_GEARING = 1.0;
+  static constexpr units::kilogram_square_meter_t DEPLOY_MOI = 0.0000005_kg_sq_m;
+  static constexpr frc::DCMotor DEPLOY_MOTOR_MODEL = frc::DCMotor::NeoVortex();
+  frc::LinearSystem<2, 1, 2> _deployFlywheelSystem =
+    frc::LinearSystemId::DCMotorSystem(DEPLOY_MOTOR_MODEL, DEPLOY_MOI, DEPLOY_GEARING);
+  frc::sim::DCMotorSim _deploySim{_deployFlywheelSystem, DEPLOY_MOTOR_MODEL};
 };
