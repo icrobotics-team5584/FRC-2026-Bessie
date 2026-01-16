@@ -7,28 +7,31 @@
 #include "utilities/ICSparkFlex.h"
 
 #include <frc/Alert.h>
+#include <frc/DigitalInput.h>
 #include <frc/Timer.h>
 #include <frc/simulation/FlywheelSim.h>
 #include <frc/system/plant/DCMotor.h>
 #include <frc/system/plant/LinearSystemId.h>
 #include <frc2/command/SubsystemBase.h>
 
-
-#include "frc2/command/Commands.h"
 #include <rev/config/SparkFlexConfig.h>
 
 #include "Constants.h"
+#include "frc2/command/Commands.h"
 
 class SubFeeder : public frc2::SubsystemBase {
  public:
- static SubFeeder& GetInstance() {
+  static SubFeeder& GetInstance() {
     static SubFeeder instance;
     return instance;
   }
   SubFeeder();
-  
+
   frc2::CommandPtr FeederOn();
   frc2::CommandPtr FeederOff();
+
+  bool FeederIsFull();
+  bool FeederIsEmpty();
 
   void CurrentHighTimer();
 
@@ -43,6 +46,9 @@ class SubFeeder : public frc2::SubsystemBase {
  private:
   ICSparkFlex _feederMotor{canid::FEEDER};
   rev::spark::SparkFlexConfig _feederMotorConfig;
+
+  frc::DigitalInput _feederFullSensor{dio::FEEDER_FULL_SENSOR};
+  frc::DigitalInput _feederEmptySensor{dio::FEEDER_EMPTY_SENSOR};
 
   frc::Timer _feederHighCurrentTimer;
 

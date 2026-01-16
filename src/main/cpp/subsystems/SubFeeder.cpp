@@ -3,10 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "subsystems/SubFeeder.h"
-
-#include <frc/Alert.h>
-#include <frc/smartdashboard/SmartDashboard.h>
-
 #include <units/current.h>
 #include <utilities/Logger.h>
 
@@ -24,6 +20,14 @@ frc2::CommandPtr SubFeeder::FeederOff() {
   return RunOnce([this] { _feederMotor.Set(0); });
 };
 
+bool SubFeeder::FeederIsFull() {
+  return _feederFullSensor.Get();
+}
+
+bool SubFeeder::FeederIsEmpty() {
+  return _feederEmptySensor.Get();
+}
+
 void SubFeeder::CurrentHighTimer() {
   _feederHighCurrentTimer.Start();
 
@@ -34,8 +38,10 @@ void SubFeeder::CurrentHighTimer() {
 
 // This method will be called once per scheduler run
 void SubFeeder::Periodic() {
+  Logger::Log("Feeder/Feeder Is Full", FeederIsFull());
+  Logger::Log("Feeder/Feeder Is Empty", FeederIsEmpty());
   units::ampere_t current = _feederMotor.GetOutputCurrent() * 1_A;
-  frc::SmartDashboard::PutNumber("Feeder/Current", current.value());
+  Logger::Log("Feeder/Feeder Motor Current", current);
   if (current > 20_A) {
     SubFeeder::CurrentHighTimer();
   } else {
@@ -44,7 +50,7 @@ void SubFeeder::Periodic() {
   }
 
   units::celsius_t temperature = _feederMotor.GetTemperature();
-  frc::SmartDashboard::PutNumber("Feeder/FeederMotor Temperature", temperature.value());
+  Logger::Log("Feeder/Feeder Motor Temperature", temperature);
   if (temperature > 60_degC) {
     highTempuratureAlert.Set(true);
   } else {
