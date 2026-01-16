@@ -42,10 +42,6 @@ void SubTurret::Periodic() {
         }
     }
 
-    _turretSim.SetInputVoltage(_turretMotor.CalcSimVoltage());
-    _turretMotor.IterateSim(_turretSim.GetAngularVelocity(), _turretSim.GetAngularPosition());
-    _turretSim.Update(20_ms);
-
     _turretMechCircle.SetAngle(_turretMotor.GetPosition());
 
     Logger::Log("Turret/CRT Positiion", GetTurretAngle());
@@ -64,17 +60,10 @@ void SubTurret::Periodic() {
 }
 
 void SubTurret::SimulationPeriodic() {
-
+    _turretSim.SetInputVoltage(_turretMotor.CalcSimVoltage());
+    _turretSim.Update(20_ms);
+    _turretMotor.IterateSim(_turretSim.GetAngularVelocity(), _turretSim.GetAngularPosition());
 }
-
-// units::turn_t SubTurret::GetTurretAngle() {
-//     double encoder1 = _turretEncoder1.Get();
-//     double encoder2 = _turretEncoder2.Get();
-
-//     double difference = encoder1 - encoder2;
-//     double angle = difference * (ENCODER1_RATIO - ENCODER2_RATIO);
-//     return angle*1_tr;
-// }
 
 units::degree_t SubTurret::GetTurretAngle() {
     double e1deg = getEncoder1Degrees().value();

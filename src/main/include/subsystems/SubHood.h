@@ -57,7 +57,7 @@ class SubHood : public frc2::SubsystemBase {
   static constexpr units::degree_t UPPER_LIMIT = 35.0_deg;
   static constexpr units::degree_t LOWER_LIMIT = 12.5_deg;
   static constexpr bool SIMULATE_GRAVITY = true;
-  static constexpr units::degree_t STARTING_ANGLE = 12.5_deg;
+  static constexpr units::degree_t STARTING_ANGLE = 13_deg;
 
   bool _resetting = false;
   bool _hasreset = false;
@@ -66,7 +66,7 @@ class SubHood : public frc2::SubsystemBase {
 
   wpi::interpolating_map<units::meter_t, units::degree_t> _pitchTable;
 
-  double GEAR_RATIO = (8.0/42.0) * (24.0/400.0);
+  double GEAR_RATIO = (42.0/8.0) * (400.0/24.0);
   units::centimeter_t ARM_LENGTH = 20_cm;
   ICSparkMax _hoodMotor{canid::HOOD_MOTOR};
   rev::spark::SparkBaseConfig _hoodMotorConfig;

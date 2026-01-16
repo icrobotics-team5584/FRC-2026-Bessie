@@ -25,6 +25,10 @@ RobotContainer::RobotContainer() {
   );
 
   frc::SmartDashboard::PutData("CHOSEN AUTON:", &_autoManager.GetAutonChooser());
+
+  SubTurret::GetInstance();
+  SubHood::GetInstance();
+  SubShooter::GetInstance();
 }
 
 void RobotContainer::ConfigureBindings() {
@@ -36,7 +40,8 @@ void RobotContainer::ConfigureBindings() {
   // _driverController.RightBumper().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle(45_deg));
   // _driverController.LeftBumper().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle(-45_deg));
 
-  _driverController.A().OnTrue(SubHood::GetInstance().ZeroHood());
+  // _driverController.A().OnTrue(SubHood::GetInstance().ZeroHood());
+  _driverController.A().OnTrue(SubHood::GetInstance().SetHoodPositionTarget(35_deg));
   _driverController.RightBumper().OnTrue(SubHood::GetInstance().SetHoodPositionTarget(12.5_deg));
   _driverController.LeftBumper().OnTrue(SubHood::GetInstance().SetHoodPositionTarget(35_deg));
 }
