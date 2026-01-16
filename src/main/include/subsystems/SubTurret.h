@@ -32,13 +32,14 @@ class SubTurret : public frc2::SubsystemBase {
   void SimulationPeriodic();
 
   units::degree_t GetTurretAngle();
-  frc2::CommandPtr SetTurretTargetAngle(units::degree_t angle);
+  
   void SetTurretAngle(units::degree_t angle);
   void ZeroTurret();
-  frc2::CommandPtr ZeroTurretCmd();
-  frc2::CommandPtr zeroEncoders();
   void SetTurretTarget(units::degree_t angle);
 
+  frc2::CommandPtr SetTurretTargetAngle(units::degree_t angle);
+  frc2::CommandPtr ZeroTurretCmd();
+  frc2::CommandPtr zeroEncoders();
 
   /**
    * Will be called periodically whenever the CommandScheduler runs.

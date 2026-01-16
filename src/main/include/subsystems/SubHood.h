@@ -30,13 +30,15 @@ class SubHood : public frc2::SubsystemBase {
 
   void SimulationPeriodic();
 
-  frc2::CommandPtr SetHoodPosition(units::degree_t angle);
   bool HoodCurrentCheck(); 
-  frc2::CommandPtr ZeroHood();
+  
   units::ampere_t GetHoodMotorCurrent();
+
   frc2::CommandPtr ManualHoodDown(); 
   frc2::CommandPtr StowHood(); 
   frc2::CommandPtr PivotFromVision(std::function<units::meter_t()> distance);
+  frc2::CommandPtr ZeroHood();
+  frc2::CommandPtr SetHoodPosition(units::degree_t angle);
   
   /**
    * Will be called periodically whenever the CommandScheduler runs.
