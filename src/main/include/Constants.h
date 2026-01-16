@@ -25,6 +25,9 @@ namespace canid {
     constexpr int PIGEON_2 = 13; 
     constexpr int INTAKE = 14;
     constexpr int Indexer = 16;
+    constexpr int FEEDER = 17;
+    constexpr int INTAKE_DEPLOY = 18;
+   
 
 }
 
@@ -32,6 +35,8 @@ namespace dio {
     constexpr int BRAKE_COAST_BUTTON = 0;
     constexpr int TURRET_ENCODER_1 = 2;
     constexpr int TURRET_ENCODER_2 = 1;
+    constexpr int FEEDER_FULL_SENSOR = 4;
+    constexpr int FEEDER_EMPTY_SENSOR = 5;
 }
 
 namespace pwm {
