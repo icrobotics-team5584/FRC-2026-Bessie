@@ -52,7 +52,7 @@ class SubHood : public frc2::SubsystemBase {
   double I = 0.0;
   double D = 0.0;
 
-  units::ampere_t zeroingCurrentLimit = 10_A;
+  units::ampere_t zeroingCurrentLimit = 15_A;
 
   static constexpr units::degree_t UPPER_LIMIT = 35.0_deg;
   static constexpr units::degree_t LOWER_LIMIT = 12.5_deg;
@@ -76,7 +76,8 @@ class SubHood : public frc2::SubsystemBase {
 
   //Sim
   frc::LinearSystem<2,1,2> _hoodSystem = frc::LinearSystemId::SingleJointedArmSystem(MOTOR_MODEL, MOI, GEAR_RATIO);
-  frc::sim::SingleJointedArmSim _hoodSim{_hoodSystem, MOTOR_MODEL, GEAR_RATIO, ARM_LENGTH, LOWER_LIMIT, UPPER_LIMIT, SIMULATE_GRAVITY, STARTING_ANGLE};
+  frc::sim::SingleJointedArmSim _hoodSim{_hoodSystem, MOTOR_MODEL, GEAR_RATIO, ARM_LENGTH, 
+    LOWER_LIMIT, UPPER_LIMIT, SIMULATE_GRAVITY, STARTING_ANGLE};
 
   //mechanism2d
   frc::Mechanism2d _hoodMech{0.25, 0.25};

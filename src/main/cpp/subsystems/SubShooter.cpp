@@ -54,7 +54,9 @@ void SubShooter::Periodic() {
 
     units::angle::degree_t motor2Position = _shooterMotor2.GetPosition().GetValue();
     _shooterMechBottomRoller.SetAngle(motor2Position);
+}
 
+void SubShooter::SimulationPeriodic() {
     auto& leftState = _shooterMotor1.GetSimState();
     leftState.SetSupplyVoltage(12.0_V);
 
@@ -73,11 +75,7 @@ void SubShooter::Periodic() {
 
     rightState.SetRotorVelocity(_rightFlywheelSim.GetAngularVelocity());
     rightState.SetRotorAcceleration(_rightFlywheelSim.GetAngularAcceleration());
-    rightState.AddRotorPosition(_rightFlywheelSim.GetAngularVelocity().value()/(3.14*2)*360*0.02*1_tr);
-}
-
-void SubShooter::SimulationPeriodic() {
-
+    rightState.AddRotorPosition(_rightFlywheelSim.GetAngularVelocity()*20_ms);
 }
 
 frc2::CommandPtr SubShooter::SetShooterTarget(units::turns_per_second_t speed) {

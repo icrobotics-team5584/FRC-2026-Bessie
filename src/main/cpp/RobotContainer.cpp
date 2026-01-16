@@ -40,8 +40,7 @@ void RobotContainer::ConfigureBindings() {
   // _driverController.RightBumper().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle(45_deg));
   // _driverController.LeftBumper().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle(-45_deg));
 
-  // _driverController.A().OnTrue(SubHood::GetInstance().ZeroHood());
-  _driverController.A().OnTrue(SubHood::GetInstance().SetHoodPositionTarget(35_deg));
+  _driverController.A().OnTrue(SubHood::GetInstance().ZeroHood());
   _driverController.RightBumper().OnTrue(SubHood::GetInstance().SetHoodPositionTarget(12.5_deg));
   _driverController.LeftBumper().OnTrue(SubHood::GetInstance().SetHoodPositionTarget(35_deg));
 }
