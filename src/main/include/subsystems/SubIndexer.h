@@ -13,29 +13,27 @@
 #include <frc/system/plant/LinearSystemId.h>
 #include <frc2/command/SubsystemBase.h>
 
-#include "Constants.h"
-#include "frc2/command/Commands.h"
-#include "frc2/command/SubsystemBase.h"
-#include "rev/config/SparkFlexConfig.h"
-#include "rev/config/SparkFlexConfigAccessor.h"
+#include <Constants.h>
 
-class SubIntake : public frc2::SubsystemBase {
+#include "frc2/command/Commands.h"
+#include "rev/config/SparkFlexConfig.h"
+
+class SubIndexer : public frc2::SubsystemBase {
  public:
-  static SubIntake& GetInstance() {
-    static SubIntake instance;
+  static SubIndexer& GetInstance() {
+    static SubIndexer instance;
     return instance;
   }
-  SubIntake();
+  SubIndexer();
 
-  frc2::CommandPtr IntakeOn();
-  frc2::CommandPtr IntakeOff();
+  frc2::CommandPtr IndexerOn();
+  frc2::CommandPtr IndexerOff();
 
   void CurrentHighTimer();
 
-  frc::Alert intakeCurrentAlert{"Intake Motor Overcurrent!", frc::Alert::AlertType::kWarning};
+  frc::Alert IndexerCurrentAlert{"Indexer Motor Overcurrent!", frc::Alert::AlertType::kWarning};
   frc::Alert highTempuratureAlert{
-    "Intake Motor High Temperature!", frc::Alert::AlertType::kWarning};
-
+    "Indexer Motor High Temperature!", frc::Alert::AlertType::kWarning};
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */
@@ -43,10 +41,10 @@ class SubIntake : public frc2::SubsystemBase {
   void SimulationPeriodic() override;
 
  private:
-  ICSparkFlex _intakeMotor{canid::INTAKE};
-  rev::spark::SparkFlexConfig _intakeMotorConfig;
+  ICSparkFlex _indexerMotor{canid::Indexer};
+  rev::spark::SparkFlexConfig _indexerMotorConfig;
 
-  frc::Timer _intakeHighCurrentTimer;
+  frc::Timer _indexerHighCurrentTimer;
 
   // Simulation components
   static constexpr double GEARING = 1.0;

@@ -324,7 +324,7 @@ units::ampere_t ICSpark::GetStatorCurrent() {
   return _spark->GetOutputCurrent() * 1_A;
 }
 
-units::celsius_t ICSpark::GetMotorTemperature() {
+units::celsius_t ICSpark::GetTemperature() {
   return _spark->GetMotorTemperature() * 1_degC;
 }
 
@@ -357,7 +357,7 @@ ICSpark::MPState ICSpark::CalcNextMotionTarget(MPState current, units::turn_t go
 
 void ICSpark::CheckAlerts() {
   // Temperature alert logic
-  if (GetMotorTemperature() > 70_degC) {
+  if (GetTemperature() > 70_degC) {
     if (!_temperatureAlert.Get()) {
       _temperatureAlert.SetText("TEMPERATURE TOO HIGH in Spark controller ID" +
                                 std::to_string(_spark->GetDeviceId()));

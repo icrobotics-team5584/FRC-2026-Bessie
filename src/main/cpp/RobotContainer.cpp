@@ -8,6 +8,7 @@
 #include "subsystems/SubDrivebase.h"
 #include "commands/DriveCommands.h"
 #include "subsystems/SubIntake.h"
+#include "subsystems/SubIndexer.h"
 #include "commands/AutonCommands.h"
 #include "Subsystems/SubVision.h"
 
