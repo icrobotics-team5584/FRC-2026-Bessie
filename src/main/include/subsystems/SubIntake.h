@@ -8,8 +8,8 @@
 
 #include <frc/Alert.h>
 #include <frc/Timer.h>
-#include <frc/simulation/DCMotorSim.h>
 #include <frc/simulation/FlywheelSim.h>
+#include <frc/simulation/SingleJointedArmSim.h>
 #include <frc/system/plant/DCMotor.h>
 #include <frc/system/plant/LinearSystemId.h>
 #include <frc2/command/SubsystemBase.h>
@@ -33,6 +33,11 @@ class SubIntake : public frc2::SubsystemBase {
 
   frc2::CommandPtr DeployIntake();
   frc2::CommandPtr RetractIntake();
+
+  void SetMotorVoltageLimits12V();
+  void EnableSoftLimit(bool enabled);
+  frc2::CommandPtr ResetDeploy();
+  frc2::CommandPtr DeployAutoReset();
 
   void IntakeCurrentHighTimer();
   void DeployCurrentHighTimer();
@@ -60,6 +65,8 @@ class SubIntake : public frc2::SubsystemBase {
   frc::Timer _intakeHighCurrentTimer;
   frc::Timer _deployHighCurrentTimer;
 
+  bool _hasReset = false;
+  static constexpr units::ampere_t zeroingCurrentLimit = 20_A;
   // Simulation components
   static constexpr double GEARING = 1.0;
   static constexpr units::kilogram_square_meter_t MOI = 0.0000001_kg_sq_m;
@@ -69,9 +76,14 @@ class SubIntake : public frc2::SubsystemBase {
   frc::sim::FlywheelSim _sim{_flywheelSystem, MOTOR_MODEL};
 
   static constexpr double DEPLOY_GEARING = 2.0;
+  static constexpr units::radian_t DEPLOY_MAX_ANGLE = 5.0_tr;
+  static constexpr units::radian_t DEPLOY_MIN_ANGLE = 0_tr;
+  static constexpr units::meter_t DEPLOY_ARM_LENGTH = 0.1_m;
+  static constexpr units::radian_t DEPLOY_START_ANGLE = 0_tr;
   static constexpr units::kilogram_square_meter_t DEPLOY_MOI = 0.0000005_kg_sq_m;
   static constexpr frc::DCMotor DEPLOY_MOTOR_MODEL = frc::DCMotor::NeoVortex();
   frc::LinearSystem<2, 1, 2> _deployFlywheelSystem =
-    frc::LinearSystemId::DCMotorSystem(DEPLOY_MOTOR_MODEL, DEPLOY_MOI, DEPLOY_GEARING);
-  frc::sim::DCMotorSim _deploySim{_deployFlywheelSystem, DEPLOY_MOTOR_MODEL};
+    frc::LinearSystemId::SingleJointedArmSystem(DEPLOY_MOTOR_MODEL, DEPLOY_MOI, DEPLOY_GEARING);
+  frc::sim::SingleJointedArmSim _deploySim{_deployFlywheelSystem, DEPLOY_MOTOR_MODEL,
+    DEPLOY_GEARING, DEPLOY_ARM_LENGTH, DEPLOY_MIN_ANGLE, DEPLOY_MAX_ANGLE, false, DEPLOY_START_ANGLE};
 };

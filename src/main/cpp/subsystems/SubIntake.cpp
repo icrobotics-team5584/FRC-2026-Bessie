@@ -10,8 +10,9 @@
 SubIntake::SubIntake() {
   _intakeMotorConfig.SmartCurrentLimit(60);
   _intakeMotor.OverwriteConfig(_intakeMotorConfig);
-
   _deployMotorConfig.SmartCurrentLimit(60);
+  _deployMotorConfig.softLimit.ForwardSoftLimit(DEPLOY_MAX_ANGLE.value());
+  _deployMotorConfig.softLimit.ReverseSoftLimit(DEPLOY_MIN_ANGLE.value());
   _deployMotorConfig.encoder.PositionConversionFactor(1.0 / DEPLOY_GEARING);
   _deployMotorConfig.encoder.VelocityConversionFactor(1.0 / DEPLOY_GEARING);
   _deployMotorConfig.closedLoop.P(0.2);
@@ -35,7 +36,42 @@ frc2::CommandPtr SubIntake::DeployIntake() {
 
 frc2::CommandPtr SubIntake::RetractIntake() {
   return RunOnce([this] { _deployMotor.SetPositionTarget(0_tr); });
+};
+
+// TO DO
+void SubIntake::SetMotorVoltageLimits12V() {}
+
+void SubIntake::EnableSoftLimit(bool enabled) {
+  if (!enabled) {
+    _deployMotorConfig.softLimit.ForwardSoftLimitEnabled(false);
+    _deployMotorConfig.softLimit.ReverseSoftLimitEnabled(false);
+    _deployMotor.AdjustConfig(_deployMotorConfig);
+  } else {
+    _deployMotorConfig.softLimit.ForwardSoftLimitEnabled(true);
+    _deployMotorConfig.softLimit.ReverseSoftLimitEnabled(true);
+    _deployMotor.AdjustConfig(_deployMotorConfig);
+  }
 }
+
+frc2::CommandPtr SubIntake::ResetDeploy() {
+  return RunOnce([this] { _deployMotor.SetPosition(0_tr); });
+};
+
+frc2::CommandPtr SubIntake::DeployAutoReset() {
+  return RunOnce([this] {
+    EnableSoftLimit(false);
+    _deployMotor.SetVoltage(-1_V);
+    _hasReset = false;
+  })
+    .AndThen(frc2::cmd::WaitUntil(
+      [this] { return _deployMotor.GetOutputCurrent() * 1_A > zeroingCurrentLimit; }))
+    .AndThen(ResetDeploy())
+    .AndThen([this] {
+      _deployMotor.StopMotor();
+      _hasReset = true;
+    })
+    .FinallyDo([this] { EnableSoftLimit(true); });
+};
 
 void SubIntake::IntakeCurrentHighTimer() {
   _intakeHighCurrentTimer.Start();
@@ -43,7 +79,7 @@ void SubIntake::IntakeCurrentHighTimer() {
   if (_intakeHighCurrentTimer.Get() > 3_s) {
     intakeCurrentAlert.Set(true);
   }
-}
+};
 
 void SubIntake::DeployCurrentHighTimer() {
   _deployHighCurrentTimer.Start();
@@ -96,5 +132,5 @@ void SubIntake::SimulationPeriodic() {
 
   _deploySim.SetInputVoltage(_deployMotor.CalcSimVoltage());
   _deploySim.Update(20_ms);
-  _deployMotor.IterateSim(_deploySim.GetAngularVelocity());
+  _deployMotor.IterateSim(_deploySim.GetVelocity(), _deploySim.GetAngle());
 }
