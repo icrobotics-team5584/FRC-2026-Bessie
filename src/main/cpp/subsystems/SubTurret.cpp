@@ -49,8 +49,8 @@ void SubTurret::Periodic() {
     Logger::Log("Turret/Encoder/Encoder2", _turretEncoder2.Get());
     Logger::Log("Turret/Encoder/ZeroedEncoder1", getEncoder1Degrees());
     Logger::Log("Turret/Encoder/ZeroedEncoder2", getEncoder2Degrees());
-    Logger::Log("Turret/Encoder/e1init", E1initial);
-    Logger::Log("Turret/Encoder/e2init", E2initial);
+    Logger::Log("Turret/Encoder/e1init", encoder1ZeroOffset);
+    Logger::Log("Turret/Encoder/e2init", encoder2ZeroOffset);
     Logger::Log("Turret/hasReset", _hasReset);
 
     Logger::Log("Turret/Encoder/Encoder1IsConnected", _turretEncoder1.IsConnected());
@@ -171,16 +171,16 @@ frc2::CommandPtr SubTurret::ZeroTurretCmd() {
 }
 
 units::degree_t SubTurret::getEncoder1Degrees() {
-    return (_turretEncoder1.Get()-E1initial)*360_deg;
+    return (_turretEncoder1.Get()-encoder1ZeroOffset)*360_deg;
 }
 
 units::degree_t SubTurret::getEncoder2Degrees() {
-    return (_turretEncoder2.Get()-E2initial)*360_deg;
+    return (_turretEncoder2.Get()-encoder2ZeroOffset)*360_deg;
 }
 
 frc2::CommandPtr SubTurret::zeroEncoders() {
     return RunOnce([this] {
-        E1initial = _turretEncoder1.Get();
-        E2initial = _turretEncoder2.Get();
+        encoder1ZeroOffset = _turretEncoder1.Get();
+        encoder2ZeroOffset = _turretEncoder2.Get();
     });
 }
