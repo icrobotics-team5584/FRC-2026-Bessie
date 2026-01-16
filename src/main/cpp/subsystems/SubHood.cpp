@@ -48,7 +48,7 @@ frc2::CommandPtr SubHood::ZeroHood() {
     .AndThen([this] {_hoodMotor.SetPosition(12.5_deg);})
     .FinallyDo([this] {
         _hoodMotor.StopMotor();
-        _hoodMotor.SetPositionTarget(12.5_deg);
+        _hoodMotor.SetPositionTarget(15_deg);
         _resetting = false;
     });
 }
