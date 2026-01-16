@@ -176,8 +176,7 @@ void SubTurret::ZeroTurret() {
 
 frc2::CommandPtr SubTurret::ZeroTurretCmd() {
     return RunOnce( [this] {
-    SetTurretAngle(GetTurretAngleCRT());
-    _turretMotor.SetPositionTarget(GetTurretAngleCRT());
+        ZeroTurret();
     });
 }
 
