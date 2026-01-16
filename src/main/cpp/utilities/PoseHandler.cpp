@@ -27,3 +27,8 @@ void PoseHandler::UpdateSim(frc::Rotation2d angle, wpi::array<frc::SwerveModuleP
     if (resetHeading) { _simPoseEstimator.ResetRotation(heading); }
     Logger::FieldDisplay::GetInstance().DisplayPose("Sim pose", _simPoseEstimator.GetEstimatedPosition());
 }
+
+void PoseHandler::AddVisionMeasurement(frc::Pose2d pose, units::second_t timeStamp, wpi::array<double,3> dev) {
+    _poseEstimator.AddVisionMeasurement(pose, timeStamp, dev);
+    Logger::FieldDisplay::GetInstance().SetRobotPose(_poseEstimator.GetEstimatedPosition());
+}

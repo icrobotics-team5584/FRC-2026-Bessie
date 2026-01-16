@@ -43,9 +43,9 @@ void SubIndexer::Periodic() {
   units::celsius_t temperature = _indexerMotor.GetTemperature();
   Logger::Log("Indexer/Indexer Motor Temperature", temperature);
   if (temperature > 60_degC) {
-    highTempuratureAlert.Set(true);
+    highTemperatureAlert.Set(true);
   } else {
-    highTempuratureAlert.Set(false);
+    highTemperatureAlert.Set(false);
   }
 }
 
