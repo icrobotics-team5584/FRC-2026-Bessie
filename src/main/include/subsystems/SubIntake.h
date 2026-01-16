@@ -76,10 +76,10 @@ class SubIntake : public frc2::SubsystemBase {
   frc::sim::FlywheelSim _sim{_flywheelSystem, MOTOR_MODEL};
 
   static constexpr double DEPLOY_GEARING = 2.0;
-  static constexpr units::radian_t DEPLOY_MAX_ANGLE = 5.0_tr;
-  static constexpr units::radian_t DEPLOY_MIN_ANGLE = 0_tr;
+  static constexpr units::degree_t DEPLOY_MAX_ANGLE = 90_deg;
+  static constexpr units::degree_t DEPLOY_MIN_ANGLE = 0_deg;
   static constexpr units::meter_t DEPLOY_ARM_LENGTH = 0.1_m;
-  static constexpr units::radian_t DEPLOY_START_ANGLE = 0_tr;
+  static constexpr units::degree_t DEPLOY_START_ANGLE = 0_deg;
   static constexpr units::kilogram_square_meter_t DEPLOY_MOI = 0.0000005_kg_sq_m;
   static constexpr frc::DCMotor DEPLOY_MOTOR_MODEL = frc::DCMotor::NeoVortex();
   frc::LinearSystem<2, 1, 2> _deployFlywheelSystem =

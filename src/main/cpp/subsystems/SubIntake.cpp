@@ -30,12 +30,12 @@ frc2::CommandPtr SubIntake::IntakeOff() {
 };
 
 frc2::CommandPtr SubIntake::DeployIntake() {
-  return StartEnd([this] { _deployMotor.SetPositionTarget(5_tr); },
-    [this] { _deployMotor.SetPositionTarget(0_tr); });
+  return StartEnd([this] { _deployMotor.SetPositionTarget(90_deg); },
+    [this] { _deployMotor.SetPositionTarget(0_deg); });
 };
 
 frc2::CommandPtr SubIntake::RetractIntake() {
-  return RunOnce([this] { _deployMotor.SetPositionTarget(0_tr); });
+  return RunOnce([this] { _deployMotor.SetPositionTarget(0_deg); });
 };
 
 // TO DO
@@ -54,7 +54,7 @@ void SubIntake::EnableSoftLimit(bool enabled) {
 }
 
 frc2::CommandPtr SubIntake::ResetDeploy() {
-  return RunOnce([this] { _deployMotor.SetPosition(0_tr); });
+  return RunOnce([this] { _deployMotor.SetPosition(0_deg); });
 };
 
 frc2::CommandPtr SubIntake::DeployAutoReset() {
