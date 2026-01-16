@@ -177,10 +177,3 @@ units::degree_t SubTurret::getEncoder1Degrees() {
 units::degree_t SubTurret::getEncoder2Degrees() {
     return (_turretEncoder2.Get()-encoder2ZeroOffset)*360_deg;
 }
-
-frc2::CommandPtr SubTurret::zeroEncoders() {
-    return RunOnce([this] {
-        encoder1ZeroOffset = _turretEncoder1.Get();
-        encoder2ZeroOffset = _turretEncoder2.Get();
-    });
-}
