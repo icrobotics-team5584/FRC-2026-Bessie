@@ -44,24 +44,23 @@ SubShooter::SubShooter() {
     _ball_to_shooter_turn.insert(20_mps, 20_tps);
     _ball_to_shooter_turn.insert(0_mps, 0_tps);
     _ball_to_shooter_turn.insert(30_mps, 30_tps);
+    Logger::LogFalcon("Shooter/Motor1", _shooterMotor1);
+    Logger::LogFalcon("Shooter/Motor2", _shooterMotor2);
+    frc::SmartDashboard::PutData("Shooter/mech2dDisplay", &_shooterMech);
 }
 
 // This method will be called once per scheduler run
 void SubShooter::Periodic() {
-    Logger::LogFalcon("Shooter/Motor1", _shooterMotor1);
-    Logger::LogFalcon("Shooter/Motor2", _shooterMotor2);
     Logger::Log("Shooter/IsAtSpeed", IsAtSpeed());
-}
 
-void SubShooter::SimulationPeriodic() {
-    frc::SmartDashboard::PutData("Shooter/mech2dDisplay", &_shooterMech);
-    
     units::angle::degree_t motor1Position = _shooterMotor1.GetPosition().GetValue();
     _shooterMechTopRoller.SetAngle(motor1Position);
 
     units::angle::degree_t motor2Position = _shooterMotor2.GetPosition().GetValue();
     _shooterMechBottomRoller.SetAngle(motor2Position);
+}
 
+void SubShooter::SimulationPeriodic() {
     auto& leftState = _shooterMotor1.GetSimState();
     leftState.SetSupplyVoltage(12.0_V);
 
@@ -80,7 +79,7 @@ void SubShooter::SimulationPeriodic() {
 
     rightState.SetRotorVelocity(_rightFlywheelSim.GetAngularVelocity());
     rightState.SetRotorAcceleration(_rightFlywheelSim.GetAngularAcceleration());
-    rightState.AddRotorPosition(_rightFlywheelSim.GetAngularVelocity().value()/(3.14*2)*360*0.02*1_tr);
+    rightState.AddRotorPosition(_rightFlywheelSim.GetAngularVelocity()*20_ms);
 }
 
 frc2::CommandPtr SubShooter::SetShooterTarget(units::turns_per_second_t speed) {

@@ -30,7 +30,11 @@ RobotContainer::RobotContainer() {
     AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton())
   );
 
-  frc::SmartDashboard::PutData("CHOSEN AUTON:", &_autoManager.GetAutonChooser());
+  frc::SmartDashboard::PutData("CHOSEN AUTON", &_autoManager.GetAutonChooser());
+
+  SubTurret::GetInstance();
+  SubHood::GetInstance();
+  SubShooter::GetInstance();
 }
 
 void RobotContainer::ConfigureBindings() {

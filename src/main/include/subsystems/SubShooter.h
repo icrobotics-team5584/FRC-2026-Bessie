@@ -33,6 +33,7 @@ class SubShooter : public frc2::SubsystemBase {
 
   void Stop();
   frc2::CommandPtr StopShooter();
+  
   bool IsAtSpeed();
 
   void SetTargetFromProjectileVel(units::meters_per_second_t speed);

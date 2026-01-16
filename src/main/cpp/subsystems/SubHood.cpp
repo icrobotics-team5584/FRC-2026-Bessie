@@ -12,7 +12,6 @@ SubHood::SubHood() {
     _hoodMotorConfig.encoder.PositionConversionFactor(1/GEAR_RATIO);
     _hoodMotorConfig.encoder.VelocityConversionFactor(1/GEAR_RATIO);
     _hoodMotorConfig.closedLoop.Pid(P, I, D);
-    _hoodMotorConfig.closedLoop.feedForward.kV(F);
     _hoodMotorConfig.SmartCurrentLimit(30);
     _hoodMotorConfig.softLimit.ForwardSoftLimitEnabled(true);
     _hoodMotorConfig.softLimit.ForwardSoftLimit(0.216667);
@@ -25,33 +24,28 @@ SubHood::SubHood() {
 
     Logger::Log("Hood/Max rotation", 0.216667);
     Logger::Log("Hood/Min rotation", 0.161111);
+
+    frc::SmartDashboard::PutData("Hood/Motor", &_hoodMotor);
+    frc::SmartDashboard::PutData("Hood/mech2dDisplay", &_hoodMech);
 }
 
 // This method will be called once per scheduler run
 void SubHood::Periodic() {
-    frc::SmartDashboard::PutData("Hood/Motor", &_hoodMotor);
-}
-
-void SubHood::SimulationPeriodic() {
-    frc::SmartDashboard::PutData("Hood/mech2dDisplay", &_hoodMech);
-
-    _hoodSim.SetInputVoltage(_hoodMotor.CalcSimVoltage());
-    _hoodMotor.IterateSim(_hoodSim.GetAngularVelocity(), _hoodSim.GetAngularPosition());
-    _hoodSim.Update(20_ms);
-
     _hoodMechCircle.SetAngle(_hoodMotor.GetPosition());
 }
 
-units::degree_t SubHood::GetAngleFromDistance(units::meter_t distance) {
-    return _pitchTable[distance];
+void SubHood::SimulationPeriodic() {
+    _hoodSim.SetInputVoltage(_hoodMotor.CalcSimVoltage());
+    _hoodSim.Update(20_ms);
+    _hoodMotor.IterateSim(_hoodSim.GetVelocity(), _hoodSim.GetAngle());
 }
 
-void SubHood::SetHoodPos(units::degree_t angle) {
+void SubHood::SetHoodPosTarget(units::degree_t angle) {
     _hoodMotor.SetPositionTarget(angle);
 }
 
-frc2::CommandPtr SubHood::SetHoodPosition(units::degree_t angle) {
-    return RunOnce([this, angle] {SetHoodPos(angle);});
+frc2::CommandPtr SubHood::SetHoodPositionTarget(units::degree_t angle) {
+    return RunOnce([this, angle] {SetHoodPosTarget(angle);});
 }
 
 frc2::CommandPtr SubHood::PivotFromVision(std::function<units::meter_t()> distance) {
@@ -73,12 +67,7 @@ frc2::CommandPtr SubHood::ZeroHood() {
 
 bool SubHood::HoodCurrentCheck() {
     _hasreset = false;
-    if(GetHoodMotorCurrent() > zeroingCurrentLimit) {
-        _hasreset = true;
-        return true;
-    }
-
-    if(frc::RobotBase::IsSimulation() == true) {
+    if(units::math::abs(GetHoodMotorCurrent()) > zeroingCurrentLimit) {
         _hasreset = true;
         return true;
     }
@@ -98,4 +87,8 @@ frc2::CommandPtr SubHood::ManualHoodDown() {
     return StartEnd([this] {_hoodMotor.SetVoltage(-1_V);}, 
     [this] {auto targRot = _hoodMotor.GetPosition();
     _hoodMotor.SetPositionTarget(targRot);});
+}
+
+units::degree_t SubHood::GetAngleFromDistance(units::meter_t distance) {
+    return _pitchTable[distance];
 }

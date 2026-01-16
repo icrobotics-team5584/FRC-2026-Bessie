@@ -31,12 +31,14 @@ class SubTurret : public frc2::SubsystemBase {
 
   void SimulationPeriodic();
 
+  units::degree_t GetTurretAngleCRT();
   units::degree_t GetTurretAngle();
-  
-  void SetTurretAngle(units::degree_t angle);
+  units::degree_t CalcOptimisedTurretAngle(units::degree_t angle);
+
   void ZeroTurret();
   void SetTurretTarget(units::degree_t angle);
 
+  frc2::CommandPtr SetMotorTargetAngle(units::degree_t angle);
   frc2::CommandPtr SetTurretTargetAngle(units::degree_t angle);
   frc2::CommandPtr ZeroTurretCmd();
   frc2::CommandPtr zeroEncoders();
@@ -56,8 +58,6 @@ class SubTurret : public frc2::SubsystemBase {
   units::degree_t getEncoder1Degrees();
   units::degree_t getEncoder2Degrees();
 
-  // void CalcInputAngle(units::degree_t )
-
   static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::NEO();
   static constexpr units::kilogram_square_meter_t MOI = 0.0001_kg_sq_m;
 
@@ -67,15 +67,14 @@ class SubTurret : public frc2::SubsystemBase {
   double E1initial = 0.998531;
   double E2initial = 0.339566;
 
-  double POS_LIMIT = 90;
-  double NEG_LIMIT = -90;
+  units::degree_t POS_LIMIT = 265_deg;
+  units::degree_t NEG_LIMIT = -265_deg;
 
   bool _hasReset = false;
 
   double P = 2.0;
   double I = 0;
   double D = 0;
-  double F = 1.0;
   
   static constexpr double ENCODER1_RATIO = 21.0/94.0;
   static constexpr double ENCODER2_RATIO = 20.0/94.0;
@@ -92,5 +91,5 @@ class SubTurret : public frc2::SubsystemBase {
   //mechanism2d
   frc::Mechanism2d _turretMech{0.25, 0.25};
   frc::MechanismRoot2d* _turretMechRoot = _turretMech.GetRoot("turretRoot", 0.125, 0.125);
-  MechanismCircle2d _turretMechCircle{_turretMechRoot, "turretTopRoller", 0.05, 90_deg};
+  MechanismCircle2d _turretMechCircle{_turretMechRoot, "turretCircle", 0.05, 0_deg};
 };
