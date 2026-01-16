@@ -66,29 +66,37 @@ void SubTurret::SimulationPeriodic() {
 }
 
 units::degree_t SubTurret::GetTurretAngleCRT() {
+
+    // get encoder values and difference
     double e1deg = getEncoder1Degrees().value();
     double e2deg = getEncoder2Degrees().value();
     double difference = e2deg - e1deg;
 
+    // clamp difference
     if(difference > 180) {
         difference -= 360;
     } else if(difference < -180) {
         difference += 360;
     } 
 
-    double SLOPE = (E2_TEETH * E1_TEETH) / (BIG_TOOTH);
+    // find slope and multiply to difference
+    static double SLOPE = (E2_TEETH * E1_TEETH) / (BIG_TOOTH);
     difference *= SLOPE;
 
+    // solve for encoder 1 total rotations
     double e1rotations = (difference * BIG_TOOTH / E1_TEETH) / 360.0;
     double e1rotations_floored = floor(e1rotations);
 
+    // solve for turret angle
     double turretAngle = (
         (e1rotations_floored * 360.0 + e1deg) *
         (E1_TEETH / BIG_TOOTH)
     );
 
+    // find period
     double period = (E1_TEETH / BIG_TOOTH) * 360.0;
 
+    // does turret angle make sense? if not + or - period
     if(turretAngle - difference < -period / 2) {
         turretAngle += period;
     } else if(turretAngle - difference > period / 2) {
