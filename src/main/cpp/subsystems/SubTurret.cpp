@@ -162,6 +162,10 @@ void SubTurret::SetTurretTarget(units::degree_t angle) {
     if(angle < POS_LIMIT && angle > NEG_LIMIT) {_turretMotor.SetPositionTarget(angle);}
 }
 
+frc2::CommandPtr SubTurret::SetTurretTargetAngle(std::function<units::degree_t()> angle) {
+  return Run([this, angle] { SetTurretTarget(angle()); });
+}
+
 void SubTurret::ZeroTurret() {
     _turretMotor.SetPosition(GetTurretAngleCRT());
 }
