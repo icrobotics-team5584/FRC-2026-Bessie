@@ -49,9 +49,12 @@ void RobotContainer::ConfigureBindings() {
     SubDrivebase::GetInstance().SetPose(frc::Pose2d{7.4_m,5.4_m,0_deg});
   }));
   _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
-  _driverController.LeftTrigger().OnTrue(frc2::cmd::RunOnce([]{
-    SubDrivebase::GetInstance().DriveToPose([]{return frc::Pose2d{3.3_m,5.4_m,0_deg};}, 1, 2_cm);
-  }));
+  // _driverController.LeftTrigger().OnTrue(frc2::cmd::RunOnce([]{
+  //   SubDrivebase::GetInstance().DriveToPose([]{return frc::Pose2d{3.3_m,5.4_m,0_deg};}, 1, 2_cm);
+  // }));
+  _driverController.LeftTrigger().OnTrue(
+    SubDrivebase::GetInstance().DriveToPose([]{return frc::Pose2d{3.3_m,5.4_m,0_deg};}, 1, 2_cm)
+  );
 }
 
 std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {
