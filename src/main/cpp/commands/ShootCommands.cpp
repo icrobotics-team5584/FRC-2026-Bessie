@@ -12,6 +12,7 @@
 #include <frc2/command/Commands.h>
 #include <frc/trajectory/Trajectory.h>
 #include <frc/trajectory/TrajectoryGenerator.h>
+#include "commands/TurretCommands.h"
 
 ShootConfig CalShootOnMove(double shooter_h, frc::Translation3d target, frc::Rotation2d piv,
                                units::meters_per_second_t bot_x, units::meters_per_second_t bot_y)
@@ -78,6 +79,7 @@ frc2::CommandPtr AimAndShoot(frc::Translation3d target_pose) {
         // SubHood::GetInstance().SetHoodPosTarget(90_deg - conf.PivotAngle.Degrees());
         // SubTurret::GetInstance().SetTurretTargetAngleVoid(conf.Yaw.Degrees());
         // SubShooter::GetInstance().SetTargetFromProjectileVel(conf.Velocity);
+        cmd::AimAtFieldRelative([conf] {return conf.Yaw.Degrees();});
     });
     // .FinallyDo([]{SubShooter::GetInstance().Stop();});
 }
