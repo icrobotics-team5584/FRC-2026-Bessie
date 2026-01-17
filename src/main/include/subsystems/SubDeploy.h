@@ -27,7 +27,7 @@ class SubDeploy : public frc2::SubsystemBase {
   SubDeploy();
 
   frc2::CommandPtr DeployIntake();
-  frc2::CommandPtr RetractIntake();
+  frc2::CommandPtr ToggleDeploy();
 
   void EnableSoftLimit(bool enabled);
   frc2::CommandPtr ZeroDeploy();
@@ -35,7 +35,7 @@ class SubDeploy : public frc2::SubsystemBase {
 
   void DeployCurrentHighTimer();
 
-  frc::Alert deployCurrentAlert{"Deploy Motor Overcurrent!", frc::Alert::AlertType::kWarning};
+    frc::Alert deployCurrentAlert{"Deploy Motor Overcurrent!", frc::Alert::AlertType::kWarning};
   frc::Alert deployHighTemperatureAlert{
     "Deploy Motor High Temperature!", frc::Alert::AlertType::kWarning};
 

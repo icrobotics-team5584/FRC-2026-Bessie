@@ -23,8 +23,14 @@ frc2::CommandPtr SubDeploy::DeployIntake() {
   return RunOnce([this] { _deployMotor.SetPositionTarget(90_deg); });
 }
 
-frc2::CommandPtr SubDeploy::RetractIntake() {
-  return RunOnce([this] { _deployMotor.SetPositionTarget(0_deg); });
+frc2::CommandPtr SubDeploy::ToggleDeploy() {
+  return RunOnce([this] {
+    if (_deployMotor.GetPosition() > 45_deg) {
+      _deployMotor.SetPositionTarget(0_deg);
+    } else {
+      _deployMotor.SetPositionTarget(90_deg);
+    }
+  });
 }
 
 frc2::CommandPtr SubDeploy::ZeroDeploy() {

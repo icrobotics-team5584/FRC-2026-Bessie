@@ -11,5 +11,4 @@ frc2::CommandPtr IntakeSequence() {
     .AlongWith(SubIndexer::GetInstance().IndexerOn());
 }
 
-
 }  // namespace cmd

@@ -31,7 +31,7 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureBindings() {
-  _driverController.LeftBumper().OnTrue(SubDeploy::GetInstance().RetractIntake());
+  _driverController.LeftBumper().ToggleOnTrue(SubDeploy::GetInstance().ToggleDeploy());
   _driverController.LeftTrigger().WhileTrue(cmd::IntakeSequence());
 
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
