@@ -62,7 +62,7 @@ class SubHood : public frc2::SubsystemBase {
   static constexpr units::centimeter_t ARM_LENGTH = 20_cm;
 
   bool _zeroing = false;
-  bool _haszeroed = false;
+  bool _hasZeroed = false;
 
   ICSparkMax _hoodMotor{canid::HOOD_MOTOR};
   rev::spark::SparkBaseConfig _hoodMotorConfig;

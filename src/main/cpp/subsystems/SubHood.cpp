@@ -22,12 +22,12 @@ SubHood::SubHood() {
 // This method will be called once per scheduler run
 void SubHood::Periodic() {
     _hoodMechCircle.SetAngle(_hoodMotor.GetPosition());
-    if (_hasreset == false && _resetting == false) {
+    if (_hasZeroed == false && _zeroing == false) {
         _hoodMotor.Set(0);
     }
 
-    Logger::Log("Hood/hasReset", _hasreset);
-    Logger::Log("Hood/resetting", _resetting);
+    Logger::Log("Hood/haszeroed", _hasZeroed);
+    Logger::Log("Hood/zeroing", _zeroing);
 }
 
 void SubHood::SimulationPeriodic() {
@@ -41,20 +41,20 @@ frc2::CommandPtr SubHood::SetHoodPositionTarget(units::degree_t angle) {
 }
 
 frc2::CommandPtr SubHood::ZeroHood() {
-    return RunOnce([this] {_resetting = true;}).AndThen(ManualHoodDown())
+    return RunOnce([this] {_zeroing = true;}).AndThen(ManualHoodDown())
     .Until([this] {return HoodCurrentCheck();})
     .AndThen([this] {_hoodMotor.SetPosition(LOWER_LIMIT);})
     .FinallyDo([this] {
         _hoodMotor.StopMotor();
         _hoodMotor.SetPositionTarget(LOWER_LIMIT);
-        _resetting = false;
+        _zeroing = false;
     });
 }
 
 bool SubHood::HoodCurrentCheck() {
-    _hasreset = false;
+    _hasZeroed = false;
     if(units::math::abs(GetHoodMotorCurrent()) > zeroingCurrentLimit) {
-        _hasreset = true;
+        _hasZeroed = true;
         return true;
     }
 

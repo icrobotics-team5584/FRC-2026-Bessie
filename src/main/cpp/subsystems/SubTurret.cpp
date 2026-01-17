@@ -24,7 +24,7 @@ SubTurret::SubTurret() {
 // This method will be called once per scheduler run
 void SubTurret::Periodic() {
 
-    if(_hasReset == false && _turretEncoder1.IsConnected() && _turretEncoder2.IsConnected()) {
+    if(_hasZeroed == false && _turretEncoder1.IsConnected() && _turretEncoder2.IsConnected()) {
         units::degree_t motorPosition = _turretMotor.GetPosition();
         units::degree_t crtPosition = GetTurretAngleCRT();
         Logger::Log("Turret/reset/motorPosition", motorPosition);
@@ -34,10 +34,10 @@ void SubTurret::Periodic() {
         Logger::Log("Turret/reset/CRTSameAsMotor", CRTSameAsMotor);
 
         if(CRTSameAsMotor){
-            _hasReset = true;
+            _hasZeroed = true;
         }
         if(!CRTSameAsMotor){
-            _hasReset = false;
+            _hasZeroed = false;
             ZeroTurret();
         }
     }
@@ -51,7 +51,7 @@ void SubTurret::Periodic() {
     Logger::Log("Turret/Encoder/ZeroedEncoder2", getEncoder2Degrees());
     Logger::Log("Turret/Encoder/e1init", encoder1ZeroOffset);
     Logger::Log("Turret/Encoder/e2init", encoder2ZeroOffset);
-    Logger::Log("Turret/hasReset", _hasReset);
+    Logger::Log("Turret/hasReset", _hasZeroed);
 
     Logger::Log("Turret/Encoder/Encoder1IsConnected", _turretEncoder1.IsConnected());
     Logger::Log("Turret/Encoder/Encoder2IsConnected", _turretEncoder2.IsConnected());
@@ -136,17 +136,7 @@ units::degree_t SubTurret::CalcOptimisedTurretAngle(units::degree_t angle) {
     
     Logger::Log("Turret/CalcOptimisedTurretAngle/closestOffset", closestOffset);
 
-    units::degree_t finalOffset = currentAngle + closestOffset;
-    units::degree_t newTarget;
-
-    // // if can rotate both ways to reach target, pick one closest to 0
-    // if( units::math::fmod(currentAngle + closestOffset, 360.0_deg) ==
-    //   units::math::fmod(currentAngle - closestOffset, 360.0_deg)) {
-    //     if(finalOffset > 0_deg) {newTarget = currentAngle - units::math::abs(closestOffset);}
-    //     else{newTarget = currentAngle + units::math::abs(closestOffset);}
-    //   }
-
-    newTarget = currentAngle + closestOffset;
+    units::degree_t newTarget = currentAngle + closestOffset;
 
     // clamp target to limits
     if(newTarget > POS_LIMIT) {
