@@ -44,8 +44,6 @@ void RobotContainer::ConfigureBindings() {
   _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
 
   _driverController.A().OnTrue(cmd::AimAt(frc::Pose2d(0_m,0_m,0_deg)));
-  _driverController.RightBumper().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle(45_deg));
-  _driverController.LeftBumper().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle(-45_deg));
 
   _driverController.RightTrigger().WhileTrue(cmd::AimAndShoot({4_m, 4.3_m, 2_m}));
   _driverController.LeftTrigger().OnTrue(frc2::cmd::RunOnce([]{
