@@ -12,6 +12,9 @@
 #include "subsystems/SubIndexer.h"
 #include "commands/AutonCommands.h"
 #include "Subsystems/SubVision.h"
+#include "subsystems/SubTurret.h"
+#include "subsystems/SubHood.h"
+#include "subsystems/SubShooter.h"
 #include "commands/VisionCommands.h"
 
 #include "utilities/PoseHandler.h"
@@ -26,7 +29,11 @@ RobotContainer::RobotContainer() {
     AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton())
   );
 
-  frc::SmartDashboard::PutData("CHOSEN AUTON:", &_autoManager.GetAutonChooser());
+  frc::SmartDashboard::PutData("CHOSEN AUTON", &_autoManager.GetAutonChooser());
+
+  SubTurret::GetInstance();
+  SubHood::GetInstance();
+  SubShooter::GetInstance();
 }
 
 void RobotContainer::ConfigureBindings() {
