@@ -13,7 +13,7 @@
 #include "commands/AutonCommands.h"
 #include "Subsystems/SubVision.h"
 #include "commands/VisionCommands.h"
-
+#include "Commands/FuelCommands.h"
 #include "utilities/PoseHandler.h"
 
 RobotContainer::RobotContainer() {
@@ -30,6 +30,8 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureBindings() {
+  _driverController.LeftTrigger().WhileTrue(cmd::IntakeSequence());
+
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
   _driverController.Y().OnTrue(SubDrivebase::GetInstance().ResetGyroCmd());
   _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());

@@ -21,7 +21,7 @@ namespace canid {
     constexpr int INTAKE = 14;
     constexpr int INDEXER = 16;
     constexpr int FEEDER = 17;
-    constexpr int INTAKE_DEPLOY = 18;
+    constexpr int DEPLOY = 18;
    
 
 }

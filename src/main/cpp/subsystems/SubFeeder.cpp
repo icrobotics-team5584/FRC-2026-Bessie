@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "subsystems/SubFeeder.h"
+
 #include <units/current.h>
 #include <utilities/Logger.h>
 
@@ -14,11 +15,11 @@ SubFeeder::SubFeeder() {
 
 frc2::CommandPtr SubFeeder::FeederOn() {
   return StartEnd([this] { _feederMotor.Set(1); }, [this] { _feederMotor.Set(0); });
-};
+}
 
 frc2::CommandPtr SubFeeder::FeederOff() {
   return RunOnce([this] { _feederMotor.Set(0); });
-};
+}
 
 bool SubFeeder::FeederIsFull() {
   return _feederFullSensor.Get();
@@ -34,7 +35,7 @@ void SubFeeder::CurrentHighTimer() {
   if (_feederHighCurrentTimer.Get() > 3_s) {
     feederCurrentAlert.Set(true);
   }
-};
+}
 
 // This method will be called once per scheduler run
 void SubFeeder::Periodic() {
