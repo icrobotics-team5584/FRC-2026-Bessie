@@ -41,7 +41,7 @@ void RobotContainer::ConfigureBindings() {
   _driverController.Y().OnTrue(SubDrivebase::GetInstance().ResetGyroCmd());
   _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
 
-  _driverController.A().OnTrue(cmd::AimAt(frc::Pose2d(0_m,0_m,0_deg)));
+  _driverController.A().OnTrue(cmd::AimAtPose(frc::Pose2d(0_m,0_m,0_deg)));
 
   _driverController.RightTrigger().WhileTrue(cmd::AimAndShoot({0_m, 0_m, 0_m}));
   _driverController.LeftTrigger().OnTrue(frc2::cmd::RunOnce([]{
