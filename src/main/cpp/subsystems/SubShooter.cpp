@@ -65,7 +65,7 @@ void SubShooter::SimulationPeriodic() {
 
     leftState.SetRotorVelocity(_leftFlywheelSim.GetAngularVelocity());
     leftState.SetRotorAcceleration(_leftFlywheelSim.GetAngularAcceleration());
-    leftState.AddRotorPosition(_leftFlywheelSim.GetAngularVelocity().value()/(3.14*2)*360*0.02*1_tr);
+    leftState.AddRotorPosition(_leftFlywheelSim.GetAngularVelocity()*20_ms);
 
     auto& rightState = _shooterMotor2.GetSimState();
     rightState.SetSupplyVoltage(12.0_V);
