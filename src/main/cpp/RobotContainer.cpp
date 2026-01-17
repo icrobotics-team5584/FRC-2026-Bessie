@@ -10,6 +10,7 @@
 #include "subsystems/SubIntake.h"
 #include "subsystems/SubFeeder.h"
 #include "subsystems/SubIndexer.h"
+#include "subsystems/SubDeploy.h"
 #include "commands/AutonCommands.h"
 #include "Subsystems/SubVision.h"
 #include "commands/VisionCommands.h"
@@ -30,6 +31,7 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureBindings() {
+  _driverController.LeftBumper().OnTrue(SubDeploy::GetInstance().RetractIntake());
   _driverController.LeftTrigger().WhileTrue(cmd::IntakeSequence());
 
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
