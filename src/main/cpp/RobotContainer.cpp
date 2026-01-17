@@ -15,6 +15,7 @@
 #include "subsystems/SubHood.h"
 #include "subsystems/SubShooter.h"
 #include "commands/TurretCommands.h"
+#include "commands/ShootCommands.h"
 
 #include "utilities/PoseHandler.h"
 
