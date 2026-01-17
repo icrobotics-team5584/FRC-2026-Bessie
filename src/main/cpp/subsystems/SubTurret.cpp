@@ -151,10 +151,6 @@ units::degree_t SubTurret::CalcOptimisedTurretAngle(units::degree_t angle) {
     return newTarget;
 }
 
-void SubTurret::SetTurretTarget(units::degree_t angle) {
-    _turretMotor.SetPositionTarget(angle);
-}
-
 void SubTurret::SetTurretAngle(units::degree_t angle) {
     _turretMotor.SetPosition(angle);
 }
