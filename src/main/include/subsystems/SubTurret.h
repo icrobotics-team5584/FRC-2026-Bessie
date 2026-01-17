@@ -67,7 +67,7 @@ class SubTurret : public frc2::SubsystemBase {
   units::degree_t POS_LIMIT = 270_deg;
   units::degree_t NEG_LIMIT = -270_deg;
 
-  bool _hasReset = false;
+  bool _hasZeroed = false;
 
   double P = 2.0;
   double I = 0;

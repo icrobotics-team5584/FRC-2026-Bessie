@@ -61,8 +61,8 @@ class SubHood : public frc2::SubsystemBase {
   static constexpr double GEAR_RATIO = (42.0/8.0) * (400.0/24.0);
   static constexpr units::centimeter_t ARM_LENGTH = 20_cm;
 
-  bool _resetting = false;
-  bool _hasreset = false;
+  bool _zeroing = false;
+  bool _haszeroed = false;
 
   ICSparkMax _hoodMotor{canid::HOOD_MOTOR};
   rev::spark::SparkBaseConfig _hoodMotorConfig;
