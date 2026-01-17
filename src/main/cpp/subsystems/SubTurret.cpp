@@ -111,19 +111,14 @@ units::degree_t SubTurret::GetTurretAngle() {
     return _turretMotor.GetPosition();
 }
 
-frc2::CommandPtr SubTurret::SetMotorTargetAngle(units::degree_t angle) {
-    return RunOnce([this, &angle] {
-        angle = std::clamp(angle, NEG_LIMIT, POS_LIMIT);
-        _turretMotor.SetPositionTarget(angle);
-    });
-}
-
-frc2::CommandPtr SubTurret::SetTurretTargetAngle(units::degree_t angle) {
-    return SetMotorTargetAngle(CalcOptimisedTurretAngle(angle));
+frc2::CommandPtr SubTurret::SetTurretTargetAngle(std::function<units::degree_t()> angle) {
+    return Run([this, angle] {_turretMotor.SetPositionTarget(CalcOptimisedTurretAngle(angle()));});
 }
 
 units::degree_t SubTurret::CalcOptimisedTurretAngle(units::degree_t angle) {
     units::degree_t currentAngle = SubTurret::GetInstance().GetTurretAngle();
+    Logger::Log("Turret/CalcOptimisedTurretAngle/CurrentAngle", currentAngle);
+    Logger::Log("Turret/CalcOptimisedTurretAngle/angle(input)", angle);
 
     //limit target angle to limits
     if(angle > POS_LIMIT) { angle -= 360_deg;}
@@ -135,19 +130,23 @@ units::degree_t SubTurret::CalcOptimisedTurretAngle(units::degree_t angle) {
     if(closestOffset > 180_deg) {
         closestOffset -= 360_deg;
     }
-    if(closestOffset < 180_deg) {
+    if(closestOffset < -180_deg) {
         closestOffset += 360_deg;
     }
+    
+    Logger::Log("Turret/CalcOptimisedTurretAngle/closestOffset", closestOffset);
 
     units::degree_t finalOffset = currentAngle + closestOffset;
     units::degree_t newTarget;
 
-    // if can rotate both ways to reach target, pick one closest to 0
-    if( units::math::fmod(currentAngle + closestOffset, 360.0_deg) ==
-      units::math::fmod(currentAngle - closestOffset, 360.0_deg)) {
-        if(finalOffset > 0_deg) {newTarget = currentAngle - units::math::abs(closestOffset);}
-        else{newTarget = currentAngle + units::math::abs(closestOffset);}
-      }
+    // // if can rotate both ways to reach target, pick one closest to 0
+    // if( units::math::fmod(currentAngle + closestOffset, 360.0_deg) ==
+    //   units::math::fmod(currentAngle - closestOffset, 360.0_deg)) {
+    //     if(finalOffset > 0_deg) {newTarget = currentAngle - units::math::abs(closestOffset);}
+    //     else{newTarget = currentAngle + units::math::abs(closestOffset);}
+    //   }
+
+    newTarget = currentAngle + closestOffset;
 
     // clamp target to limits
     if(newTarget > POS_LIMIT) {
@@ -158,6 +157,7 @@ units::degree_t SubTurret::CalcOptimisedTurretAngle(units::degree_t angle) {
         newTarget += 360_deg;
     }
 
+    Logger::Log("Turret/CalcOptimisedTurretAngle/newTarget(final output)", newTarget);
     return newTarget;
 }
 

@@ -11,6 +11,7 @@
 #include <frc2/command/Commands.h>
 #include <frc/DutyCycleEncoder.h>
 #include <units/angle.h>
+#include <frc2/command/button/CommandXboxController.h>
 
 #include <frc/simulation/DCMotorSim.h>
 #include <frc/system/plant/DCMotor.h>
@@ -39,8 +40,7 @@ class SubTurret : public frc2::SubsystemBase {
   void ZeroTurret();
   void SetTurretTarget(units::degree_t angle);
 
-  frc2::CommandPtr SetMotorTargetAngle(units::degree_t angle);
-  frc2::CommandPtr SetTurretTargetAngle(units::degree_t angle);
+  frc2::CommandPtr SetTurretTargetAngle(std::function<units::degree_t()> angle);
   frc2::CommandPtr ZeroTurretCmd();
 
   /**
@@ -64,8 +64,8 @@ class SubTurret : public frc2::SubsystemBase {
   const double encoder1ZeroOffset = 0.998531;
   const double encoder2ZeroOffset = 0.339566;
 
-  units::degree_t POS_LIMIT = 265_deg;
-  units::degree_t NEG_LIMIT = -265_deg;
+  units::degree_t POS_LIMIT = 270_deg;
+  units::degree_t NEG_LIMIT = -270_deg;
 
   bool _hasReset = false;
 
