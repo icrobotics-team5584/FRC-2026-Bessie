@@ -41,7 +41,7 @@ class SubIndexer : public frc2::SubsystemBase {
   void SimulationPeriodic() override;
 
  private:
-  ICSparkFlex _indexerMotor{canid::Indexer};
+  ICSparkFlex _indexerMotor{canid::INDEXER};
   rev::spark::SparkFlexConfig _indexerMotorConfig;
 
   frc::Timer _indexerHighCurrentTimer;

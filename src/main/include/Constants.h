@@ -17,16 +17,16 @@ namespace canid {
     constexpr int DRIVEBASE_BACK_LEFT_TURN = 11;
     constexpr int DRIVEBASE_BACK_LEFT_ENCODER = 12; 
 
-    constexpr int HOOD_MOTOR = 96; 
-    constexpr int SHOOTER_MOTOR_1 = 97; 
-    constexpr int SHOOTER_MOTOR_2 = 98;  
-    constexpr int TURRET_MOTOR = 17; 
+    constexpr int HOOD_MOTOR = 19; 
+    constexpr int SHOOTER_MOTOR_1 = 20; 
+    constexpr int SHOOTER_MOTOR_2 = 21;  
+    constexpr int TURRET_MOTOR = 22; 
 
-    constexpr int PIGEON_2 = 91; 
-    constexpr int INTAKE = 92;
-    constexpr int Indexer = 93;
-    constexpr int FEEDER = 94;
-    constexpr int INTAKE_DEPLOY = 95;
+    constexpr int PIGEON_2 = 13; 
+    constexpr int INTAKE = 14;
+    constexpr int INDEXER = 16;
+    constexpr int FEEDER = 17;
+    constexpr int INTAKE_DEPLOY = 18;
 }
 
 namespace dio {
