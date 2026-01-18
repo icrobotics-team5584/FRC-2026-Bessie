@@ -12,6 +12,9 @@
 #include "subsystems/SubIndexer.h"
 #include "commands/AutonCommands.h"
 #include "Subsystems/SubVision.h"
+#include "subsystems/SubTurret.h"
+#include "subsystems/SubHood.h"
+#include "subsystems/SubShooter.h"
 #include "commands/VisionCommands.h"
 
 #include "utilities/PoseHandler.h"
@@ -31,7 +34,11 @@ RobotContainer::RobotContainer() {
   //_autoManager.AddAuton("Hoard_RightBump", AutonHelper::MakeCommandPtrAuto(cmd::Hoard_RightBump()));
   //_autoManager.AddAuton("OutpostDepotClimb", AutonHelper::MakeCommandPtrAuto(cmd::OutpostDepotClimb()));
 
-  frc::SmartDashboard::PutData("CHOSEN AUTON:", &_autoManager.GetAutonChooser());
+  frc::SmartDashboard::PutData("CHOSEN AUTON", &_autoManager.GetAutonChooser());
+
+  SubTurret::GetInstance();
+  SubHood::GetInstance();
+  SubShooter::GetInstance();
 }
 
 void RobotContainer::ConfigureBindings() {
@@ -39,7 +46,11 @@ void RobotContainer::ConfigureBindings() {
   _driverController.Y().OnTrue(SubDrivebase::GetInstance().ResetGyroCmd());
   _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
   _driverController.A().OnTrue(frc2::cmd::RunOnce([]{
-    SubDrivebase::GetInstance().SetPose(frc::Pose2d{0_m,0_m,0_deg});
+    SubDrivebase::GetInstance().SetPose(frc::Pose2d{7.4_m,5.4_m,0_deg});
+  }));
+  _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
+  _driverController.LeftTrigger().OnTrue(frc2::cmd::RunOnce([]{
+    SubDrivebase::GetInstance().DriveToPose([]{return frc::Pose2d{3.3_m,5.4_m,0_deg};}, 1, 2_cm);
   }));
 }
 
