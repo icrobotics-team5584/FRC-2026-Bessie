@@ -23,7 +23,7 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureBindings() {
-  _driverController.RightTrigger().WhileTrue(SubDrivebase::GetInstance().AlignToAngle(_driverController, 135_deg));
+  _driverController.RightTrigger().WhileTrue(SubDrivebase::GetInstance().AlignToAngle(_driverController, 0_deg));
 
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
   _driverController.Y().WhileTrue(SubIntake::GetInstance().IntakeOn());
