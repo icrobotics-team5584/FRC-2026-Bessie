@@ -22,6 +22,9 @@ jobs:
     # Grant execute permission for gradlew
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+    # Will this work? 
+    - name: Set Java Home
+      run: export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
     # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
       run: ./gradlew build
