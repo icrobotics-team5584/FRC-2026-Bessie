@@ -34,9 +34,13 @@ namespace DrivebaseConfig {
   const units::turn_t BACK_RIGHT_MAG_OFFSET = -0.675048828125_tr;
   const units::turn_t BACK_LEFT_MAG_OFFSET = -0.824951171875_tr;
 
-  const frc::ProfiledPIDController<units::meters> TELE_TRANSLATION_PID{2.5, 0, 0, {MAX_VELOCITY, MAX_ACCEL}};
-  const frc::ProfiledPIDController<units::radian> TELE_ROTATION_PID{3.0, 0, 0.5, {MAX_ANGULAR_VELOCITY, MAX_ANGULAR_ACCEL}};
+  // PID constants for translation and rotation controllers
+  const frc::ProfiledPIDController<units::meters> TRANSLATION_PID{
+    2.5, 0, 0, {MAX_VELOCITY, MAX_ACCEL}};
+  const frc::ProfiledPIDController<units::radian> ROTATION_PID{
+    3.0, 0, 0.5, {MAX_ANGULAR_VELOCITY, MAX_ANGULAR_ACCEL}};
 
-  const pathplanner::PIDConstants AUTO_TRANSLATION_PID{3.2, 0.0, 0.3};
-  const pathplanner::PIDConstants AUTO_ROTATION_PID{1.5, 0.0, 0.0};
+  // pathplanner PID constants (for pathplanner autos only)
+  const pathplanner::PIDConstants PP_TRANSLATION_PID{3.2, 0.0, 0.3};
+  const pathplanner::PIDConstants PP_ROTATION_PID{1.5, 0.0, 0.0};
 }

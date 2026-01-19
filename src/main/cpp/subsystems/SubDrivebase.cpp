@@ -6,10 +6,10 @@
 #include <pathplanner/lib/config/RobotConfig.h>
 
 SubDrivebase::SubDrivebase() {
-  Logger::Log("Drivebase/PID/Rotation Controller", &_teleopRotationController);
-  Logger::Log("Drivebase/PID/Translation Controller", &_teleopTranslationController);
+  Logger::Log("Drivebase/PID/Rotation Controller", &_rotationController);
+  Logger::Log("Drivebase/PID/Translation Controller", &_translationController);
 
-  _teleopRotationController.EnableContinuousInput(0_deg, 360_deg);
+  _rotationController.EnableContinuousInput(0_deg, 360_deg);
 
   ctre::phoenix6::configs::Pigeon2Configuration gyroConfig;
   gyroConfig.MountPose.MountPosePitch = 0_deg;
@@ -289,7 +289,7 @@ frc2::Trigger SubDrivebase::CheckCoastButton() {
 }
 
 units::turns_per_second_t SubDrivebase::CalcRotateSpeed(units::turn_t rotationError) {
-  auto omega = _teleopRotationController.Calculate(rotationError, 0_deg) * 1_rad_per_s;
+  auto omega = _rotationController.Calculate(rotationError, 0_deg) * 1_rad_per_s;
   return omega;
 }
 
@@ -323,8 +323,8 @@ frc::ChassisSpeeds SubDrivebase::CalcDriveToPoseSpeeds(frc::Pose2d targetPose) {
   frc::Translation2d translationVector = frc::Translation2d(targetXMeters - currentXMeters, targetYMeters - currentYMeters);
 
   // Use PID controllers to calculate speeds
-  auto rawTranslationSpeed = _teleopTranslationController.Calculate(0_m, translationVector.Norm()) * 1_mps;
-  auto rawRotationSpeed = _teleopRotationController.Calculate(currentRotation, targetRotation) * 1_rad_per_s;
+  auto rawTranslationSpeed = _translationController.Calculate(0_m, translationVector.Norm()) * 1_mps;
+  auto rawRotationSpeed = _rotationController.Calculate(currentRotation, targetRotation) * 1_rad_per_s;
 
   // Apply acceleration limits
   auto translationCalcSpeed = _p2pTranslationLimiter.Calculate(rawTranslationSpeed);

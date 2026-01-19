@@ -119,8 +119,8 @@ class SubDrivebase : public frc2::SubsystemBase {
       DrivebaseConfig::BR_POSITION
   };
 
-  frc::ProfiledPIDController<units::meters> _teleopTranslationController = DrivebaseConfig::TELE_TRANSLATION_PID;
-  frc::ProfiledPIDController<units::radian> _teleopRotationController = DrivebaseConfig::TELE_ROTATION_PID;
+  frc::ProfiledPIDController<units::meters> _translationController = DrivebaseConfig::TRANSLATION_PID;
+  frc::ProfiledPIDController<units::radian> _rotationController = DrivebaseConfig::ROTATION_PID;
 
   // P2P
   units::meters_per_second_squared_t _tunedMaxP2pAccel = DrivebaseConfig::MAX_P2P_ACCEL;
@@ -130,8 +130,8 @@ class SubDrivebase : public frc2::SubsystemBase {
 
   std::shared_ptr<pathplanner::PPHolonomicDriveController> _pathplannerController =
     std::make_shared<pathplanner::PPHolonomicDriveController>(
-      DrivebaseConfig::AUTO_TRANSLATION_PID,
-      DrivebaseConfig::AUTO_ROTATION_PID
+      DrivebaseConfig::PP_TRANSLATION_PID,
+      DrivebaseConfig::PP_ROTATION_PID
     );
 
   // Joystick controller rate limiters
