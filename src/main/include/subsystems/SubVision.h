@@ -64,39 +64,37 @@ public:
   struct TagObservation _lastTagObservation;
 
   //Create field layout
-  std::string _tagMapFilePath = frc::filesystem::GetDeployDirectory() + "/-rebuilt.json";
+  std::string _tagMapFilePath = frc::filesystem::GetDeployDirectory() + "/2026-rebuilt.json";
   frc::AprilTagFieldLayout _tagMap{_tagMapFilePath};
 
   //Left camera config
-  std::string _leftCamName = "ICR_OV2981_L (1)";
+  std::string _leftCamName = "ICR_OV2981_L";
 
   photon::PhotonCamera _leftCamera{_leftCamName};
 
   photon::PhotonCameraSim _leftCamSim{&_leftCamera};
   photon::VisionSystemSim _visionSim{_leftCamName};
 
-  frc::Transform3d _leftBotToCam{{-270_mm,270_mm,220_mm},{0_deg,5_deg,45_deg}};
+  frc::Transform3d _leftBotToCam{{-320_mm,310_mm,220_mm},{0_deg,-35_deg,60_deg}};
 
   photon::PhotonPoseEstimator _leftPoseEstimater{
     _tagMap,
-    photon::PoseStrategy::MULTI_TAG_PNP_ON_COPROCESSOR,
     _leftBotToCam
   };
 
   std::optional<photon::EstimatedRobotPose> _leftEstPose;
 
   //Right camera config
-  std::string _rightCamName = "ICR_OV9281_R (1)";
+  std::string _rightCamName = "ICR_OV9281_R";
 
   photon::PhotonCamera _rightCamera{_rightCamName};
 
   photon::PhotonCameraSim _rightCamSim{&_rightCamera};
 
-  frc::Transform3d _rightBotToCam{{270_mm,270_mm,220_mm},{0_deg,5_deg,135_deg}};
+  frc::Transform3d _rightBotToCam{{320_mm,310_mm,220_mm},{0_deg,-35_deg,60_deg}};
 
   photon::PhotonPoseEstimator _rightPoseEstimater{
     _tagMap,
-    photon::PoseStrategy::MULTI_TAG_PNP_ON_COPROCESSOR,
     _rightBotToCam
   };
 

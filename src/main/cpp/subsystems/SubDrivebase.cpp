@@ -12,8 +12,10 @@ SubDrivebase::SubDrivebase() {
 }
 
 void SubDrivebase::Periodic() {
+  auto loopstart = frc::GetTime();
   LogDrivebaseStates();
   UpdateOdometry();
+  Logger::Log("Drivebase/loop time (sec)", (frc::GetTime() - loopstart));
 }
 
 void SubDrivebase::SimulationPeriodic() {
@@ -79,15 +81,19 @@ void SubDrivebase::LogDrivebaseStates() {
   _frontRight.SendSensorsToDash();
   _backLeft.SendSensorsToDash();
   _backRight.SendSensorsToDash();
-} 
+}
 
-void SubDrivebase::UpdateOdometry() {
-  wpi::array<frc::SwerveModulePosition, 4U> states = {
+wpi::array<frc::SwerveModulePosition, 4U> SubDrivebase::GetSwerveStates() {
+  return {
     _frontLeft.GetPosition(),
     _frontRight.GetPosition(),
     _backLeft.GetPosition(),
     _backRight.GetPosition()
   };
+}
+
+void SubDrivebase::UpdateOdometry() {
+  wpi::array<frc::SwerveModulePosition, 4U> states = GetSwerveStates();
 
   if (frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kBlue) ==
       frc::DriverStation::Alliance::kBlue) {
@@ -404,4 +410,17 @@ frc2::CommandPtr SubDrivebase::CharacteriseWheels() {
     Logger::Log("Drivebase/WheelCharacterisation/BLdelta", BLdelta);
     Logger::Log("Drivebase/WheelCharacterisation/BRdelta", BRdelta);
   })));
+}
+
+void SubDrivebase::SetPose(frc::Pose2d pose) {
+  auto states = GetSwerveStates();
+
+  auto alliance = frc::DriverStation::GetAlliance();
+  if (alliance.value_or(frc::DriverStation::Alliance::kBlue) == frc::DriverStation::Alliance::kBlue) {
+    ResetGyroHeading(pose.Rotation().Degrees());
+  } else {
+    ResetGyroHeading(pose.Rotation().Degrees() - 180_deg);
+  }
+
+  PoseHandler::GetInstance().SetPose(pose, states);
 }
