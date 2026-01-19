@@ -11,11 +11,12 @@
 #include "subsystems/SubFeeder.h"
 #include "subsystems/SubIndexer.h"
 #include "commands/AutonCommands.h"
-#include "Subsystems/SubVision.h"
+#include "subsystems/SubVision.h"
 #include "subsystems/SubTurret.h"
 #include "subsystems/SubHood.h"
 #include "subsystems/SubShooter.h"
 #include "commands/VisionCommands.h"
+#include "commands/TurretCommands.h"
 
 #include "utilities/PoseHandler.h"
 
@@ -52,6 +53,9 @@ void RobotContainer::ConfigureBindings() {
   _driverController.LeftTrigger().OnTrue(frc2::cmd::RunOnce([]{
     SubDrivebase::GetInstance().DriveToPose([]{return frc::Pose2d{3.3_m,5.4_m,0_deg};}, 1, 2_cm);
   }));
+  _driverController.POVUp().OnTrue(cmd::AimAtFieldRelative([] {return 0_deg;}));
+  _driverController.POVDown().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle([] {return 0_deg;}));
+  _driverController.POVRight().OnTrue(cmd::AimAtPose(frc::Pose2d{0_m,0_m,0_deg}));
 }
 
 std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {
