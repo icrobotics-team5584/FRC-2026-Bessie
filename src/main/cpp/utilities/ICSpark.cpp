@@ -312,10 +312,6 @@ double ICSpark::GetDutyCycle() const {
   }
 }
 
-units::ampere_t ICSpark::GetMotorOutputCurrent() {
-  return _spark->GetOutputCurrent()*1_A;
-}
-
 units::volt_t ICSpark::GetMotorVoltage() {
   if constexpr (frc::RobotBase::IsSimulation()) {
     return CalcSimVoltage();
