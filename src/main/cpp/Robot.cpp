@@ -15,8 +15,8 @@ void Robot::RobotPeriodic() {
   Logger::Log("Robot/RioInputVoltage", frc::RobotController::GetInputVoltage());
   Logger::Log("Robot/RioInputCurrent", frc::RobotController::GetInputCurrent());
   Logger::Log("Robot/BatteryVoltage", frc::RobotController::GetBatteryVoltage());
-  Logger::Log("Robot/PDHInputVoltage", frc::RobotController::GetInputVoltage());
-  Logger::Log("Robot/PDHTotalCurrent", frc::RobotController::GetInputCurrent());
+  Logger::Log("Robot/PDHInputVoltage", m_pdh.GetVoltage());
+  Logger::Log("Robot/PDHTotalCurrent", m_pdh.GetTotalCurrent());
 }
 
 void Robot::DisabledInit() {}
