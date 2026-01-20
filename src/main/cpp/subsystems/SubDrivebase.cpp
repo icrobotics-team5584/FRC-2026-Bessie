@@ -231,6 +231,8 @@ frc::Pose2d SubDrivebase::PredictPose(units::second_t predictionTime){
 
   frc::Pose2d predictedPose {newX, newY, currentPose.Rotation()};
 
+  Logger::FieldDisplay::GetInstance().DisplayPose("Drivebase/predictedPose", predictedPose);
+
   return predictedPose;
 }
 

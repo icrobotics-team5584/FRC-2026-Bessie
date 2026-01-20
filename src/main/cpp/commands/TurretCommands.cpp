@@ -47,6 +47,9 @@ frc2::CommandPtr ShootOnTheMove(frc::Pose3d ShooterTarget) {
 
   units::second_t travelTime = (exitVelocityY + units::math::sqrt(discriminant)) / g;
 
+  Logger::Log("Shooter/fuelTravelTime", travelTime);
+  Logger::Log("Shooter/calculatedDiscriminant", discriminant.value());
+
   return cmd::AimAtPose(SubDrivebase::GetInstance().PredictPose(travelTime));
 };
 }  // namespace cmd

@@ -3,7 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "RobotContainer.h"
-
 #include <frc2/command/Commands.h>
 #include "subsystems/SubDrivebase.h"
 #include "commands/DriveCommands.h"
@@ -17,6 +16,7 @@
 #include "subsystems/SubShooter.h"
 #include "commands/VisionCommands.h"
 #include "commands/TurretCommands.h"
+#include <frc/geometry/Pose3d.h>
 
 #include "utilities/PoseHandler.h"
 
@@ -38,7 +38,7 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureBindings() {
-  _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
+  _driverController.X().WhileTrue(cmd::ShootOnTheMove(frc::Pose3d{0_m, 0_m, 0_m, frc::Rotation3d{0_deg, 0_deg, 0_deg}}));
   _driverController.Y().OnTrue(SubDrivebase::GetInstance().ResetGyroCmd());
   _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
   _driverController.A().OnTrue(frc2::cmd::RunOnce([]{
