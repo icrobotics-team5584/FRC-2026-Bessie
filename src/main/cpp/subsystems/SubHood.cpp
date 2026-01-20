@@ -75,6 +75,6 @@ frc2::CommandPtr SubHood::ManualHoodDown() {
     _hoodMotor.SetPositionTarget(targRot);});
 }
 
-units::degree_t GetHoodAngle(){
+units::degree_t SubHood::GetHoodAngle(){
     return _hoodMotor.GetPosition();
 }
