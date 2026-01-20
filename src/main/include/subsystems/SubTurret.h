@@ -11,6 +11,7 @@
 #include <frc2/command/Commands.h>
 #include <frc/DutyCycleEncoder.h>
 #include <units/angle.h>
+#include <frc2/command/button/CommandXboxController.h>
 
 #include <frc/simulation/DCMotorSim.h>
 #include <frc/system/plant/DCMotor.h>
@@ -34,14 +35,12 @@ class SubTurret : public frc2::SubsystemBase {
   units::degree_t GetTurretAngleCRT();
   units::degree_t GetTurretAngle();
   units::degree_t CalcOptimisedTurretAngle(units::degree_t angle);
-
+  
+  void SetTurretAngle(units::degree_t angle);
   void ZeroTurret();
-  void SetTurretTarget(units::degree_t angle);
 
-  frc2::CommandPtr SetMotorTargetAngle(units::degree_t angle);
-  frc2::CommandPtr SetTurretTargetAngle(units::degree_t angle);
+  frc2::CommandPtr SetTurretTargetAngle(std::function<units::degree_t()> angle);
   frc2::CommandPtr ZeroTurretCmd();
-  frc2::CommandPtr zeroEncoders();
 
   /**
    * Will be called periodically whenever the CommandScheduler runs.
@@ -61,28 +60,28 @@ class SubTurret : public frc2::SubsystemBase {
   static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::NEO();
   static constexpr units::kilogram_square_meter_t MOI = 0.0001_kg_sq_m;
 
-  // double E1initial;
-  // double E2initial;
+  const double encoder1ZeroOffset = 0.998531;
+  const double encoder2ZeroOffset = 0.339566;
 
-  double E1initial = 0.998531;
-  double E2initial = 0.339566;
+  units::degree_t POS_LIMIT = 270_deg;
+  units::degree_t NEG_LIMIT = -270_deg;
 
-  units::degree_t POS_LIMIT = 265_deg;
-  units::degree_t NEG_LIMIT = -265_deg;
-
-  bool _hasReset = false;
+  bool _hasZeroed = false;
 
   double P = 2.0;
   double I = 0;
   double D = 0;
   
-  static constexpr double ENCODER1_RATIO = 21.0/94.0;
-  static constexpr double ENCODER2_RATIO = 20.0/94.0;
-  static constexpr double GEAR_RATIO = (48.0/12.0) * (94.0/10.0);
-
   static constexpr double E1_TEETH = 21;
   static constexpr double E2_TEETH = 20;
-  static constexpr double BIG_TOOTH = 94;
+  static constexpr double BIG_TEETH = 94;
+  static constexpr double ENCODER1_RATIO = E1_TEETH/BIG_TEETH;
+  static constexpr double ENCODER2_RATIO = E2_TEETH/BIG_TEETH;
+  static constexpr double GEAR_RATIO = (48.0/12.0) * (94.0/10.0);
+
+
+  static constexpr units::hertz_t ENCODER_FREQUENCY = 975.6_Hz; 
+  //force set encoder frequency to avoid 1sec startup time
 
   //Sim
   frc::LinearSystem<2,1,2> _turretSystem = frc::LinearSystemId::DCMotorSystem(MOTOR_MODEL, MOI, GEAR_RATIO);

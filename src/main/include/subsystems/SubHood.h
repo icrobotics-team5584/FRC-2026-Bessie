@@ -31,16 +31,15 @@ class SubHood : public frc2::SubsystemBase {
 
   void SimulationPeriodic();
 
-  units::degree_t GetAngleFromDistance(units::meter_t distance);
-
-  void SetHoodPosTarget(units::degree_t angle);
   bool HoodCurrentCheck(); 
+
+  wpi::interpolating_map<units::meter_t, units::degree_t> _pitchTable;
   
   units::ampere_t GetHoodMotorCurrent();
+  units::degree_t GetAngleFromDistance(units::meter_t distance);
 
   frc2::CommandPtr ManualHoodDown(); 
   frc2::CommandPtr StowHood(); 
-  frc2::CommandPtr PivotFromVision(std::function<units::meter_t()> distance);
   frc2::CommandPtr ZeroHood();
   frc2::CommandPtr SetHoodPositionTarget(units::degree_t angle);
   
@@ -51,10 +50,9 @@ class SubHood : public frc2::SubsystemBase {
 
  private:
 
-  double P = 7;//5;
+  double P = 1.0;
   double I = 0.0;
   double D = 0.0;
-  double F = 0.1;
 
   units::ampere_t zeroingCurrentLimit = 15_A;
 
@@ -62,21 +60,18 @@ class SubHood : public frc2::SubsystemBase {
   static constexpr units::degree_t LOWER_LIMIT = 12.5_deg;
   static constexpr bool SIMULATE_GRAVITY = true;
   static constexpr units::degree_t STARTING_ANGLE = 13_deg;
+  static constexpr units::degree_t STOW_ANGLE = 12.5_deg;
+  static constexpr double GEAR_RATIO = (42.0/8.0) * (400.0/24.0);
+  static constexpr units::centimeter_t ARM_LENGTH = 20_cm;
 
-  bool _resetting = false;
-  bool _hasreset = false;
+  bool _zeroing = false;
+  bool _hasZeroed = false;
 
-  units::turn_t STOW_TURNS = 0_tr;
-
-  wpi::interpolating_map<units::meter_t, units::degree_t> _pitchTable;
-
-  double GEAR_RATIO = (42.0/8.0) * (400.0/24.0);
-  units::centimeter_t ARM_LENGTH = 20_cm;
   ICSparkMax _hoodMotor{canid::HOOD_MOTOR};
   rev::spark::SparkBaseConfig _hoodMotorConfig;
 
   static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::NEO550();
-  static constexpr units::kilogram_square_meter_t MOI = 0.00001_kg_sq_m;
+  static constexpr units::kilogram_square_meter_t MOI = 0.0001_kg_sq_m;
 
   //Sim
   frc::LinearSystem<2,1,2> _hoodSystem = frc::LinearSystemId::SingleJointedArmSystem(MOTOR_MODEL, MOI, GEAR_RATIO);

@@ -10,47 +10,43 @@
 
 SubShooter::SubShooter() {
     // Coast Mode
-    _shooterMotor1Config.MotorOutput.NeutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
+    _shooterMotorConfig.MotorOutput.NeutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
 
     // invert motors if needed
-    _shooterMotor1Config.MotorOutput.Inverted = true;
+    _shooterMotorConfig.MotorOutput.Inverted = true;
 
     // Current Limits no idea what to actually put here
-    _shooterMotor1Config.CurrentLimits.SupplyCurrentLimitEnable = true;
-    _shooterMotor1Config.CurrentLimits.SupplyCurrentLowerLimit = 20.0_A;
-    _shooterMotor1Config.CurrentLimits.SupplyCurrentLimit = 60.0_A;
-    _shooterMotor1Config.CurrentLimits.SupplyCurrentLowerTime = 0.5_s;
-    _shooterMotor1Config.CurrentLimits.StatorCurrentLimitEnable = true;
-    _shooterMotor1Config.CurrentLimits.StatorCurrentLimit = 80.0_A;
+    _shooterMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+    _shooterMotorConfig.CurrentLimits.SupplyCurrentLowerLimit = 20.0_A;
+    _shooterMotorConfig.CurrentLimits.SupplyCurrentLimit = 60.0_A;
+    _shooterMotorConfig.CurrentLimits.SupplyCurrentLowerTime = 0.5_s;
+    _shooterMotorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+    _shooterMotorConfig.CurrentLimits.StatorCurrentLimit = 80.0_A;
 
     // PIDs
-    _shooterMotor1Config.Slot0.kP = P;
-    _shooterMotor1Config.Slot0.kI = I;
-    _shooterMotor1Config.Slot0.kD = D;
-    _shooterMotor1Config.Slot0.kV = V;
+    _shooterMotorConfig.Slot0.kP = P;
+    _shooterMotorConfig.Slot0.kI = I;
+    _shooterMotorConfig.Slot0.kD = D;
+    _shooterMotorConfig.Slot0.kV = V;
 
     // Feedback Sensor Ratio
-    _shooterMotor1Config.Feedback.SensorToMechanismRatio = GEAR_RATIO;
+    _shooterMotorConfig.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
-    _shooterMotor1.GetConfigurator().Apply(_shooterMotor1Config);
-    _shooterMotor2.GetConfigurator().Apply(_shooterMotor1Config);
+    _shooterMotor1.GetConfigurator().Apply(_shooterMotorConfig);
+    _shooterMotor2.GetConfigurator().Apply(_shooterMotorConfig);
 
     // Set motor 2 to follow motor 1
     _shooterMotor2.SetControl(ctre::phoenix6::controls::Follower(_shooterMotor1.GetDeviceID(), ctre::phoenix6::signals::MotorAlignmentValue::Opposed));
 
     _shooterMotor1.GetClosedLoopReference().SetUpdateFrequency(100_Hz);
 
-    _ball_to_shooter_turn.insert(10_mps, 10_tps);
-    _ball_to_shooter_turn.insert(20_mps, 20_tps);
-    _ball_to_shooter_turn.insert(0_mps, 0_tps);
-    _ball_to_shooter_turn.insert(30_mps, 30_tps);
-    Logger::LogFalcon("Shooter/Motor1", _shooterMotor1);
-    Logger::LogFalcon("Shooter/Motor2", _shooterMotor2);
     frc::SmartDashboard::PutData("Shooter/mech2dDisplay", &_shooterMech);
 }
 
 // This method will be called once per scheduler run
 void SubShooter::Periodic() {
+    Logger::LogFalcon("Shooter/Motor1", _shooterMotor1);
+    Logger::LogFalcon("Shooter/Motor2", _shooterMotor2);
     Logger::Log("Shooter/IsAtSpeed", IsAtSpeed());
 
     units::angle::degree_t motor1Position = _shooterMotor1.GetPosition().GetValue();
@@ -69,7 +65,7 @@ void SubShooter::SimulationPeriodic() {
 
     leftState.SetRotorVelocity(_leftFlywheelSim.GetAngularVelocity());
     leftState.SetRotorAcceleration(_leftFlywheelSim.GetAngularAcceleration());
-    leftState.AddRotorPosition(_leftFlywheelSim.GetAngularVelocity().value()/(3.14*2)*360*0.02*1_tr);
+    leftState.AddRotorPosition(_leftFlywheelSim.GetAngularVelocity()*20_ms);
 
     auto& rightState = _shooterMotor2.GetSimState();
     rightState.SetSupplyVoltage(12.0_V);
@@ -86,19 +82,11 @@ frc2::CommandPtr SubShooter::SetShooterTarget(units::turns_per_second_t speed) {
     return RunOnce([this, speed] {_shooterMotor1.SetControl(_flywheelTargetVelocity.WithVelocity(speed));});
 }
 
-void SubShooter::Stop() {
-    _shooterMotor1.SetControl(_flywheelTargetVelocity.WithVelocity(0_tps));
-}
-
 frc2::CommandPtr SubShooter::StopShooter() {
-    return RunOnce([this] {Stop();});
+    return RunOnce([this] {_shooterMotor1.SetControl(_flywheelTargetVelocity.WithVelocity(0_tps));});
 }
 
 bool SubShooter::IsAtSpeed() {
-    return abs(_shooterMotor1.GetVelocity().GetValueAsDouble() - _flywheelTargetVelocity.Velocity()) < 1.0 &&
-    abs(_shooterMotor2.GetVelocity().GetValueAsDouble() - _flywheelTargetVelocity.Velocity()) < 1.0;
-}
-
-void SubShooter::SetTargetFromProjectileVel(units::meters_per_second_t speed) {
-    _shooterMotor1.SetControl(_flywheelTargetVelocity.WithVelocity(_ball_to_shooter_turn[speed]));
+    return units::math::abs(_shooterMotor1.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 1.0_tps &&
+    units::math::abs(_shooterMotor2.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 1.0_tps;
 }

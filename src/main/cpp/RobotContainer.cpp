@@ -14,8 +14,7 @@
 #include "subsystems/SubTurret.h"
 #include "subsystems/SubHood.h"
 #include "subsystems/SubShooter.h"
-#include "subsystems/SubTurret.h"
-#include "commands/DriveCommands.h"
+#include "commands/TurretCommands.h"
 #include "commands/ShootCommands.h"
 
 #include "utilities/PoseHandler.h"
@@ -42,14 +41,15 @@ void RobotContainer::ConfigureBindings() {
   _driverController.Y().OnTrue(SubDrivebase::GetInstance().ResetGyroCmd());
   _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
 
-  _driverController.A().OnTrue(SubTurret::GetInstance().ZeroTurretCmd());
-  _driverController.RightBumper().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle(45_deg));
-  _driverController.LeftBumper().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle(-45_deg));
+  _driverController.A().OnTrue(cmd::AimAtPose(frc::Pose2d(0_m,0_m,0_deg)));
 
   _driverController.RightTrigger().WhileTrue(cmd::AimAndShoot({0_m, 0_m, 0_m}));
   _driverController.LeftTrigger().OnTrue(frc2::cmd::RunOnce([]{
     SubDrivebase::GetInstance().SetPose(frc::Pose2d{0_m,0_m,0_deg});
   }));
+  _driverController.POVUp().OnTrue(cmd::AimAtFieldRelative([] {return 0_deg;}));
+  _driverController.POVDown().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle([] {return 0_deg;}));
+  _driverController.POVRight().OnTrue(cmd::AimAtPose(frc::Pose2d{0_m,0_m,0_deg}));
 }
 
 std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {
