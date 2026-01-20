@@ -76,7 +76,7 @@ frc2::CommandPtr AimAndShoot(frc::Translation3d target_pose) {
         Logger::Log("ShootOnMove/Target Velocity", conf.Velocity());
         
         SubHood::GetInstance().SetHoodPosTarget(90_deg - conf.PivotAngle.Degrees());
-        SubTurret::GetInstance().SetTurretTarget(conf.Yaw.Degrees());
+        SubTurret::GetInstance().SetTurretTarget(conf.Yaw.Degrees() - SubTurret::GetInstance().GetTurretAngle()); //Robot relative angle
         SubShooter::GetInstance().SetTargetFromProjectileVel(conf.Velocity);
     })
     .FinallyDo([]{SubShooter::GetInstance().Stop();});
