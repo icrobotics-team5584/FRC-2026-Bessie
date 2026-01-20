@@ -33,6 +33,8 @@ class SubShooter : public frc2::SubsystemBase {
   
   bool IsAtSpeed();
 
+  units::revolutions_per_minute_t GetShooterSpeed();
+
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */

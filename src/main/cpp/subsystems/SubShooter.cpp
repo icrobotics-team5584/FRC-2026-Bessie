@@ -90,3 +90,8 @@ bool SubShooter::IsAtSpeed() {
     return units::math::abs(_shooterMotor1.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 1.0_tps &&
     units::math::abs(_shooterMotor2.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 1.0_tps;
 }
+
+units::revolutions_per_minute_t SubShooter::GetShooterSpeed(){
+    auto vel = _shooterMotor1.GetVelocity().GetValue();
+    return vel*60;
+}

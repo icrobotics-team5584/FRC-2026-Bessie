@@ -219,6 +219,21 @@ units::turns_per_second_t SubDrivebase::CalcRotateSpeed(units::turn_t rotationEr
   return omega;
 }
 
+frc::Pose2d SubDrivebase::PredictPose(units::second_t predictionTime){
+  //Multiply current velocity by predictionTime and add them to the current robot pose to predict the pose predictionTime seconds into the future
+  auto speeds = _kinematics.ToChassisSpeeds(_frontLeft.GetState(), _frontRight.GetState(),
+                                            _backLeft.GetState(), _backRight.GetState());
+  
+  auto currentPose = PoseHandler::GetInstance().GetPose();
+
+  units::meter_t newX = currentPose.X()+(speeds.vx.value()*predictionTime.value())*1_m;
+  units::meter_t newY = currentPose.Y()+(speeds.vy.value()*predictionTime.value())*1_m;
+
+  frc::Pose2d predictedPose {newX, newY, currentPose.Rotation()};
+
+  return predictedPose;
+}
+
 frc::ChassisSpeeds SubDrivebase::CalcDriveToPoseSpeeds(frc::Pose2d targetPose) {
   double targetXMeters = targetPose.X().value();
   double targetYMeters = targetPose.Y().value();
