@@ -6,14 +6,26 @@ RebuiltShift ShiftHandler::GetShift()
     if(frc::DriverStation::IsAutonomousEnabled()) {
         return RebuiltShift::AUTON;
     }
-
     units::second_t secondsPassed = frc::DriverStation::GetMatchTime();
     if(secondsPassed < 10_s) {
         return RebuiltShift::TRANS;
     }
-    if(secondsPassed < 
 
-    if(frc::)
+    RebuiltShift winningShift = GetWinningShift();
+    RebuiltShift losingShift = winningShift == RebuiltShift::BLUE ? RebuiltShift::BLUE : RebuiltShift::RED;
+    if(secondsPassed < 35_s) { /* Shift 1 */
+        return losingShift;
+    }
+    if(secondsPassed < 60_s) { /* Shift 2 */
+        return winningShift;
+    }
+    if(secondsPassed < 75_s) { /* Shift 3 */
+        return losingShift;
+    }
+    if(secondsPassed < 100_s) { /* Shift 4 */
+        return winningShift;
+    }
+    return RebuiltShift::ENDGAME;
 }
 
 RebuiltShift ShiftHandler::GetWinningShift()
