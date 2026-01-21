@@ -36,7 +36,7 @@ SubShooter::SubShooter() {
     _shooterMotor2.GetConfigurator().Apply(_shooterMotorConfig);
 
     // Set motor 2 to follow motor 1
-    _shooterMotor2.SetControl(ctre::phoenix6::controls::Follower(_shooterMotor1.GetDeviceID(), ctre::phoenix6::signals::MotorAlignmentValue::Opposed));
+    _shooterMotor2.SetControl(ctre::phoenix6::controls::Follower(_shooterMotor1.GetDeviceID(), ctre::phoenix6::signals::MotorAlignmentValue::Aligned));
 
     _shooterMotor1.GetClosedLoopReference().SetUpdateFrequency(100_Hz);
 

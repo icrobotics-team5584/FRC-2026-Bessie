@@ -43,6 +43,9 @@ void RobotContainer::ConfigureBindings() {
   _driverController.Y().OnTrue(SubShooter::GetInstance().SetShooterTarget(3_tps));
   _driverController.B().OnTrue(SubShooter::GetInstance().SetShooterTarget(0_tps));
   _driverController.X().OnTrue(SubShooter::GetInstance().StopShooter());
+  
+  _driverController.POVUp().OnTrue(SubFeeder::GetInstance().FeederOn());
+  _driverController.POVDown().OnTrue(SubFeeder::GetInstance().FeederOff());
 }
 
 std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {
