@@ -6,11 +6,11 @@
 #include "utilities/Logger.h"
 
 SubClimber::SubClimber() {
-  _climbMotorConfig.encoder.PositionConversionFactor(1 / GEAR_RATIO);
-  _climbMotorConfig.encoder.VelocityConversionFactor(1 / GEAR_RATIO);
+  _climbMotorConfig.encoder.PositionConversionFactor(1 / _GEAR_RATIO);
+  _climbMotorConfig.encoder.VelocityConversionFactor(1 / _GEAR_RATIO);
   _climbMotorConfig.SmartCurrentLimit(60);                             /* Amps */
   _climbMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
-  _climbMotorConfig.closedLoop.Pid(P, I, D, rev::spark::ClosedLoopSlot::kSlot0);
+  _climbMotorConfig.closedLoop.Pid(_P, _I, _D, rev::spark::ClosedLoopSlot::kSlot0);
 
   _leftClimbMotor.OverwriteConfig(_climbMotorConfig);
   _rightClimbMotor.OverwriteConfig(_climbMotorConfig);
@@ -36,15 +36,15 @@ void SubClimber::SimulationPeriodic() {}
 
 /* Instaneous */
 void SubClimber::SetBrakeMode(bool isbrake) {
-  rev::spark::SparkBaseConfig mode;
+  rev::spark::SparkBaseConfig neutralModeConfig;
   if (isbrake) {
-    mode.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
+    neutralModeConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
   } else {
-    mode.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kCoast);
+    neutralModeConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kCoast);
   }
 
-  _leftClimbMotor.AdjustConfigNoPersist(mode);
-  _rightClimbMotor.AdjustConfigNoPersist(mode);
+  _leftClimbMotor.AdjustConfigNoPersist(neutralModeConfig);
+  _rightClimbMotor.AdjustConfigNoPersist(neutralModeConfig);
 }
 
 bool SubClimber::IsAtTarget() {
@@ -86,22 +86,17 @@ frc2::CommandPtr SubClimber::WaitUntilReset() {
   })).Until([this]{ return _hasReset; });
 }
 
+frc2::CommandPtr SubClimber::StowClimber() {
+  _leftClimbMotor.SetPositionTarget(_STOW_TURNS);
+  _rightClimbMotor.SetPositionTarget(_STOW_TURNS);
+}
+
 frc2::CommandPtr SubClimber::ReadyClimber() {
-  _leftClimbMotor.SetPositionTarget(LEFT_READY_TURNS);
-  _rightClimbMotor.SetPositionTarget(RIGHT_READY_TURNS);
+  _leftClimbMotor.SetPositionTarget(_READY_TURNS);
+  _rightClimbMotor.SetPositionTarget(_READY_TURNS);
 }
 
 frc2::CommandPtr SubClimber::ClimbL1() {
-  _leftClimbMotor.SetPositionTarget(LEFT_L1_TURNS);
-  _rightClimbMotor.SetPositionTarget(RIGHT_L1_TURNS);
+  _leftClimbMotor.SetPositionTarget(_L1_TURNS);
+  _rightClimbMotor.SetPositionTarget(_L1_TURNS);
 }
-
-// frc2::CommandPtr SubClimber::ClimbL2() {
-//   _leftClimbMotor.SetPositionTarget(LEFT_L2_TURNS);
-//   _rightClimbMotor.SetPositionTarget(RIGHT_L2_TURNS);
-// }
-
-// frc2::CommandPtr SubClimber::ClimbL3() {
-//   _leftClimbMotor.SetPositionTarget(LEFT_L3_TURNS);
-//   _rightClimbMotor.SetPositionTarget(RIGHT_L3_TURNS);
-// }

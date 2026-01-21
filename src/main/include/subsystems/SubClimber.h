@@ -39,6 +39,7 @@ class SubClimber : public frc2::SubsystemBase {
   
   /* Commands */
   frc2::CommandPtr WaitUntilReset();
+  frc2::CommandPtr StowClimber();
   frc2::CommandPtr ReadyClimber();
   frc2::CommandPtr ClimbL1();
   //frc2::CommandPtr ClimbL2();
@@ -50,23 +51,18 @@ class SubClimber : public frc2::SubsystemBase {
   bool _resetting = false;
 
   /* place holder values */
-  static constexpr units::turn_t LEFT_READY_TURNS = 0_deg;
-  static constexpr units::turn_t RIGHT_READY_TURNS = 0_deg;
-  static constexpr units::turn_t LEFT_L1_TURNS = 0_deg;
-  static constexpr units::turn_t RIGHT_L1_TURNS = 0_deg;
-  static constexpr units::turn_t LEFT_L2_TURNS = 0_deg;
-  static constexpr units::turn_t RIGHT_L2_TURNS = 0_deg;
-  static constexpr units::turn_t LEFT_L3_TURNS = 0_deg;
-  static constexpr units::turn_t RIGHT_L3_TURNS = 0_deg;
+  static constexpr units::degree_t _STOW_TURNS = 0_deg;
+  static constexpr units::degree_t _READY_TURNS = 0_deg;
+  static constexpr units::degree_t _L1_TURNS = 0_deg;
 
-  static constexpr units::turn_t TOLERANCE = 1_deg;
+  static constexpr units::degree_t TOLERANCE = 1_deg;
   static constexpr units::ampere_t ZEROING_CURRENT = 30_A;
 
   /* place holder values */
-  const double P = 0;
-  const double I = 0;
-  const double D = 0;
-  const double GEAR_RATIO = 1;
+  static constexpr double _P = 0;
+  static constexpr double _I = 0;
+  static constexpr double _D = 0;
+  static constexpr double _GEAR_RATIO = 1;
 
   ICSparkFlex _leftClimbMotor{canid::CLIMBER_LEFT};
   ICSparkFlex _rightClimbMotor{canid::CLIMBER_RIGHT};
