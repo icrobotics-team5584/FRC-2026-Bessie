@@ -82,3 +82,21 @@ frc2::CommandPtr SubClimber::RunCurrentZeroingSequence() {
       _hasZeroed = true;
   });
 }
+
+frc2::CommandPtr SubClimber::ManualClimberUp() {
+  return StartEnd(
+    [this] { _climberMotor.SetVoltage(4_V); },
+    [this] {
+      auto targRot = _climberMotor.GetPosition();
+      _climberMotor.SetMaxMotionTarget(targRot);
+    });
+}
+
+frc2::CommandPtr SubClimber::ManualClimberDown() {
+  return StartEnd(
+    [this] { _climberMotor.SetVoltage(-4_V); },
+    [this] {
+      auto targRot = _climberMotor.GetPosition();
+      _climberMotor.SetMaxMotionTarget(targRot);
+    });
+}

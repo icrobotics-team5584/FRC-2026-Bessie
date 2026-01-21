@@ -41,6 +41,9 @@ class SubClimber : public frc2::SubsystemBase {
   frc2::CommandPtr ReadyClimber();
   frc2::CommandPtr ClimbL1();
 
+  frc2::CommandPtr ManualClimberUp();
+  frc2::CommandPtr ManualClimberDown();
+
   frc2::CommandPtr RunCurrentZeroingSequence();
 
 
