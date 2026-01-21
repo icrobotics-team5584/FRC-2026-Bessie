@@ -72,5 +72,5 @@ units::second_t ShiftHandler::GetTimeLeft()
 
 bool ShiftHandler::IsShift(RebuiltShift shift)
 {
-    RebuiltShift currentShift = GetCurrentShift()
+    return GetCurrentShift() == shift ? true : false; /* check if matching */
 }
