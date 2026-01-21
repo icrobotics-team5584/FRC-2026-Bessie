@@ -24,7 +24,7 @@ void SubClimber::Periodic() {
     _climberMotor.Set(0);
   }
   Logger::Log("Climber/Has Zeroed", _hasZeroed);
-  Logger::Log("Climber/resettiing", _zeroing);
+  Logger::Log("Climber/Zeroing", _zeroing);
 }
 
 void SubClimber::SimulationPeriodic() {}
