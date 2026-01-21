@@ -35,8 +35,11 @@ void SubDrivebase::SimulationPeriodic() {
   units::degree_t newHeading = GetGyroAngle().RotateBy(changeInRot).Degrees();
   _gyro.SetYaw(newHeading);
 
-  wpi::array<frc::SwerveModulePosition, 4U> states = {_frontLeft.GetPosition(),
-    _frontRight.GetPosition(), _backLeft.GetPosition(), _backRight.GetPosition()};
+  wpi::array<frc::SwerveModulePosition, 4U> states = {
+    _frontLeft.GetPosition(),
+    _frontRight.GetPosition(),
+    _backLeft.GetPosition(),
+    _backRight.GetPosition()};
 
   PoseHandler::GetInstance().UpdateSim(
     GetGyroAngle(), states, true, PoseHandler::GetInstance().GetPose().Rotation());
