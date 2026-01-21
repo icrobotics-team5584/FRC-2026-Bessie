@@ -41,8 +41,8 @@ void SubDrivebase::SimulationPeriodic() {
     _backLeft.GetPosition(),
     _backRight.GetPosition()};
 
-  PoseHandler::GetInstance().UpdateSim(
-    GetGyroAngle(), states, true, PoseHandler::GetInstance().GetPose().Rotation());
+  PoseHandler::GetInstance().UpdateSim(GetGyroAngle(), states, true, 
+    PoseHandler::GetInstance().GetPose().Rotation());
 }
 
 // Commands
