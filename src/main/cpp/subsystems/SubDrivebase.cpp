@@ -204,8 +204,8 @@ frc2::CommandPtr SubDrivebase::AlignToAngle(
 
 frc::Rotation2d SubDrivebase::GetGyroAngle(bool allianceRelated) {
   auto alliance = frc::DriverStation::GetAlliance();
-  if (!allianceRelated || alliance.value_or(frc::DriverStation::Alliance::kBlue) ==
-                            frc::DriverStation::Alliance::kBlue) {
+  if (!allianceRelated || 
+    alliance.value_or(frc::DriverStation::Alliance::kBlue) == frc::DriverStation::Alliance::kBlue) {
     return _gyro.GetRotation2d();
   } else {
     return _gyro.GetRotation2d() - 180_deg;
