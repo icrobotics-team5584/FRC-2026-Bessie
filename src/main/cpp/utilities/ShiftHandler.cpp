@@ -70,7 +70,7 @@ units::second_t ShiftHandler::GetTimeLeft()
     return 140_s - matchTime;
 }
 
-std::string GetShiftName(RebuiltShift shift)
+std::string ShiftHandler::GetShiftName(RebuiltShift shift)
 {
     switch(shift) {
     case RebuiltShift::AUTON:

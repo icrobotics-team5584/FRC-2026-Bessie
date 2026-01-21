@@ -11,10 +11,10 @@ enum RebuiltShift {
 
 class ShiftHandler {
     public:
-        RebuiltShift GetCurrentShift();
-        RebuiltShift GetWinningShift();
-        units::second_t GetTimeLeft();
-        std::string GetShiftName(RebuiltShift shift);
-        bool IsShift(RebuiltShift shift);
-        bool IsActiveShift();
+        static RebuiltShift GetCurrentShift();
+        static RebuiltShift GetWinningShift();
+        static units::second_t GetTimeLeft();
+        static std::string GetShiftName(RebuiltShift shift);
+        static bool IsShift(RebuiltShift shift);
+        static bool IsActiveShift();
 };
