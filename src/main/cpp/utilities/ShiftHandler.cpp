@@ -47,7 +47,27 @@ RebuiltShift ShiftHandler::GetWinningShift()
 
 units::second_t ShiftHandler::GetTimeLeft()
 {
-    printf("balh\n");
+    units::second_t matchTime = frc::DriverStation::GetMatchTime();
+    if(frc::DriverStation::IsAutonomousEnabled()) {
+        return 20_s - matchTime;
+    }
+
+    if(matchTime < 10_s) {
+        return 10_s - matchTime;
+    }
+    if(matchTime < 35_s) { /* Shift 1 */
+        return 35_s - matchTime;
+    }
+    if(matchTime < 60_s) { /* Shift 2 */
+        return 60_s - matchTime;
+    }
+    if(matchTime < 75_s) { /* Shift 3 */
+        return 75_s - matchTime;
+    }
+    if(matchTime < 100_s) { /* Shift 4 */
+        return 100_s - matchTime;
+    }
+    return 130_s - matchTime;
 }
 
 bool ShiftHandler::IsShift(RebuiltShift shift)
