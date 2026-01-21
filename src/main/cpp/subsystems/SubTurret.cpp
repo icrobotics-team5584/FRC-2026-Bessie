@@ -173,3 +173,7 @@ units::degree_t SubTurret::getEncoder1Degrees() {
 units::degree_t SubTurret::getEncoder2Degrees() {
     return (_turretEncoder2.Get()-encoder2ZeroOffset)*360_deg;
 }
+
+frc::Pose2d SubTurret::GetBotToTurret() {
+    return bot_to_turr;
+}

@@ -35,6 +35,8 @@ class SubTurret : public frc2::SubsystemBase {
   units::degree_t GetTurretAngleCRT();
   units::degree_t GetTurretAngle();
   units::degree_t CalcOptimisedTurretAngle(units::degree_t angle);
+
+  frc::Pose2d GetBotToTurret();
   
   void SetTurretAngle(units::degree_t angle);
   void ZeroTurret();
@@ -79,6 +81,7 @@ class SubTurret : public frc2::SubsystemBase {
   static constexpr double ENCODER2_RATIO = E2_TEETH/BIG_TEETH;
   static constexpr double GEAR_RATIO = (48.0/12.0) * (94.0/10.0);
 
+  frc::Pose2d bot_to_turr {-0.2_m, 0_m, 0_deg};
 
   static constexpr units::hertz_t ENCODER_FREQUENCY = 975.6_Hz; 
   //force set encoder frequency to avoid 1sec startup time

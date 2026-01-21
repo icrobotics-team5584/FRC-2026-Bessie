@@ -61,10 +61,16 @@ frc2::CommandPtr AimAndShoot(frc::Translation3d target_pose) {
     Logger::FieldDisplay::GetInstance().DisplayPose("ShootOnMove/target", {target_pose.X(), target_pose.Y(), 0_deg});
     return Run([target_pose] {
         auto curr_pos = PoseHandler::GetInstance().GetPose();
-        auto vel = SubDrivebase::GetInstance().GetVelocityXY();
+        auto vel = SubDrivebase::GetInstance().GetVelocityComponets();
+        auto bot_to_turret = SubTurret::GetInstance().GetBotToTurret();
+        curr_pos.TransformBy({bot_to_turret.Translation(), 0_deg});
+        auto magn = hypot(curr_pos.X().value(),curr_pos.Y().value());
+        auto turr_ang =  SubTurret::GetInstance().GetTurretAngle().value() / 180 * 3.142;
+        auto x_vel = vel.vx - vel.omega.value() * magn * sin(turr_ang) * 1_ms;
+        auto y_vel = vel.vy + vel.omega.value() * magn * cos(turr_ang) * 1_ms;
         units::meter_t distance = hypot(target_pose.X().value() - curr_pos.X().value(), target_pose.Y().value() - curr_pos.Y().value()) * 1_m;
         ShootConfig conf = CalShootOnMove(0.5, target_pose, SubHood::GetInstance().GetAngleFromDistance(distance),
-                                          vel.first, vel.second);
+                                          x_vel, y_vel);
 
         frc::Pose2d end {curr_pos.X() + 3 * cos(conf.Yaw.Radians().value()) * 1_m, curr_pos.Y() + 3 * sin(conf.Yaw.Radians().value()) * 1_m, frc::Rotation2d(0_deg)};
 
@@ -77,7 +83,7 @@ frc2::CommandPtr AimAndShoot(frc::Translation3d target_pose) {
         Logger::Log("ShootOnMove/Target Velocity", conf.Velocity());
         
     //     SubHood::GetInstance().SetHoodPosTarget(90_deg - conf.PivotAngle.Degrees());
-    //     SubTurret::GetInstance().SetTurretTarget(conf.Yaw.Degrees() - SubTurret::GetInstance().GetTurretAngle()); //Robot relative angle
+    //     SubTurret::GetInstance().SetTurretTarget(conf.Yaw.Degrees() -turr_ang); //Robot relative angle
     //     SubShooter::GetInstance().SetTargetFromProjectileVel(conf.Velocity);
     // })
     // .FinallyDo([]{SubShooter::GetInstance().Stop();});

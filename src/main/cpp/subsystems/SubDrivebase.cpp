@@ -208,11 +208,11 @@ units::meters_per_second_t SubDrivebase::GetVelocity() {
   return m::sqrt(m::pow<2>(speeds.vx) + m::pow<2>(speeds.vy));
 }
 
-std::pair<units::meters_per_second_t,units::meters_per_second_t> SubDrivebase::GetVelocityXY() {
+frc::ChassisSpeeds SubDrivebase::GetVelocityComponets() {
   auto speeds = _kinematics.ToChassisSpeeds(_frontLeft.GetState(), _frontRight.GetState(),
                                             _backLeft.GetState(), _backRight.GetState());
 
-  return {speeds.vx, speeds.vy};
+  return speeds;
 }
 
 frc2::Trigger SubDrivebase::CheckCoastButton() {
