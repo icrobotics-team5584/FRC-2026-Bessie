@@ -58,7 +58,7 @@ class SubHood : public frc2::SubsystemBase {
   static constexpr bool SIMULATE_GRAVITY = true;
   static constexpr units::degree_t STARTING_ANGLE = 13_deg;
   static constexpr units::degree_t STOW_ANGLE = 12.5_deg;
-  static constexpr double GEAR_RATIO = (42.0/8.0) * (400.0/24.0);
+  static constexpr double GEAR_RATIO = (56.0/8.0) * (370.0/34.0);
   static constexpr units::centimeter_t ARM_LENGTH = 20_cm;
 
   bool _zeroing = false;
