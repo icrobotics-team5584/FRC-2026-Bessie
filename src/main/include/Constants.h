@@ -27,6 +27,8 @@ namespace canid {
     constexpr int SHOOTER_MOTOR_1 = 20; 
     constexpr int SHOOTER_MOTOR_2 = 21;  
     constexpr int TURRET_MOTOR = 22; 
+
+    constexpr int INDEXER_OUT = 23;
 }
 
 namespace dio {
