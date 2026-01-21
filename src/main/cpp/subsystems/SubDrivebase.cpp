@@ -331,8 +331,8 @@ frc::ChassisSpeeds SubDrivebase::CalcDriveToPoseSpeeds(frc::Pose2d targetPose) {
   auto rotationCalcSpeed = _p2pRotationLimiter.Calculate(rawRotationSpeed);
 
   // Clamp translation speed to max velocity
-  translationCalcSpeed = units::math::min(translationCalcSpeed, DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
-  translationCalcSpeed = units::math::max(translationCalcSpeed, -DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
+  translationCalcSpeed = units::math::min(translationCalcSpeed, DrivebaseConfig::MAX_P2P_VELOCITY);
+  translationCalcSpeed = units::math::max(translationCalcSpeed, -DrivebaseConfig::MAX_P2P_VELOCITY);
 
   //Convert Polar back into Cartesian X and Y
   frc::Translation2d translationSpeedVector = frc::Translation2d((translationCalcSpeed.value()*1_m), translationVector.Angle());
