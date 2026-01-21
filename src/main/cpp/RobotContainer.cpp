@@ -36,17 +36,7 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureBindings() {
-  _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
-  _driverController.Y().OnTrue(SubDrivebase::GetInstance().ResetGyroCmd());
-  _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
-
-  _driverController.A().OnTrue(cmd::AimAtPose(frc::Pose2d(0_m,0_m,0_deg)));
-  _driverController.LeftTrigger().OnTrue(frc2::cmd::RunOnce([]{
-    SubDrivebase::GetInstance().SetPose(frc::Pose2d{0_m,0_m,0_deg});
-  }));
-  _driverController.POVUp().OnTrue(cmd::AimAtFieldRelative([] {return 0_deg;}));
-  _driverController.POVDown().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle([] {return 0_deg;}));
-  _driverController.POVRight().OnTrue(cmd::AimAtPose(frc::Pose2d{0_m,0_m,0_deg}));
+_driverController.A().OnTrue(cmd::Shoot());
 }
 
 std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {
