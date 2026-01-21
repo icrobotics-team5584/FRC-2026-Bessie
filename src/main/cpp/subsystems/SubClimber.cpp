@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "subsystems/SubClimber.h"
+#include "utilities/Logger.h"
 
 SubClimber::SubClimber() {
   _climbMotorConfig.encoder.PositionConversionFactor(1 / GEAR_RATIO);
@@ -14,21 +15,21 @@ SubClimber::SubClimber() {
   _leftClimbMotor.OverwriteConfig(_climbMotorConfig);
   _rightClimbMotor.OverwriteConfig(_climbMotorConfig);
 
-  frc::SmartDashboard::PutData("Climber/topClimbMotor", &_leftClimbMotor);
-  frc::SmartDashboard::PutData("Climber/bottomClimbMotor", &_rightClimbMotor);
-  frc::SmartDashboard::PutNumber("Climber/target tolerance", TOLERANCE.value());
-  frc::SmartDashboard::PutBoolean("Climber/has reset", _hasReset);
-  frc::SmartDashboard::PutBoolean("Climber/resettiing", _resetting);
+  Logger::Log("Climber/topClimbMotor", &_leftClimbMotor);
+  Logger::Log("Climber/bottomClimbMotor", &_rightClimbMotor);
+  Logger::Log("Climber/target tolerance", TOLERANCE.value());
+  Logger::Log("Climber/has reset", _hasReset);
+  Logger::Log("Climber/resettiing", _resetting);
 }
 
 // This method will be called once per scheduler run
 void SubClimber::Periodic() {
-    if(_hasReset == false && _resetting == false) {
-        _leftClimbMotor.Set(0);
-        _rightClimbMotor.Set(0);
-    }
-    frc::SmartDashboard::PutBoolean("Climber/has reset", _hasReset);
-    frc::SmartDashboard::PutBoolean("Climber/resettiing", _resetting);
+  if(_hasReset == false && _resetting == false) {
+    _leftClimbMotor.Set(0);
+    _rightClimbMotor.Set(0);
+  }
+  Logger::Log("Climber/has reset", _hasReset);
+  Logger::Log("Climber/resettiing", _resetting);
 }
 
 void SubClimber::SimulationPeriodic() {}
