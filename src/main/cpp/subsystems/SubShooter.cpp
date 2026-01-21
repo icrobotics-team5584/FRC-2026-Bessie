@@ -102,8 +102,8 @@ units::revolutions_per_minute_t SubShooter::GetShooterSpeed(){
     return vel*60;
 }
 
-frc2::CommandPtr SubShooter::SpinWithDistance(units::meter_t distance) {
-    return SetShooterTarget(_rpmTable[distance]);
+frc2::CommandPtr SubShooter::SpinWithDistance(std::function<units::meter_t()> distance) {
+    return SetShooterTarget(_rpmTable[distance()]);
 }
 
 units::second_t SubShooter::GetTimeOfFLightWithDistance(units::meter_t distance) {
