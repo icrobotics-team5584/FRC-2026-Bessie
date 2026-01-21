@@ -12,10 +12,11 @@
 #include <frc/smartdashboard/Mechanism2d.h>
 #include <frc/smartdashboard/MechanismLigament2d.h>
 #include <frc/smartdashboard/MechanismRoot2d.h>
-#include <utilities/MechanismCircle2d.h>
 #include <frc/system/plant/DCMotor.h>
 #include <frc/system/plant/LinearSystemId.h>
 #include <frc2/command/SubsystemBase.h>
+
+#include <utilities/MechanismCircle2d.h>
 
 #include "Constants.h"
 #include "frc2/command/Commands.h"
@@ -74,10 +75,4 @@ class SubDeploy : public frc2::SubsystemBase {
   frc::sim::SingleJointedArmSim _deploySim{_deployFlywheelSystem, DEPLOY_MOTOR_MODEL,
     DEPLOY_GEARING, DEPLOY_ARM_LENGTH, DEPLOY_MIN_ANGLE, DEPLOY_MAX_ANGLE, false,
     DEPLOY_START_ANGLE};
-
-
-  
-    
-    
-  
 };
