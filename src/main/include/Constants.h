@@ -24,10 +24,16 @@ namespace canid {
     constexpr int DEPLOY = 18;
    
 
+    constexpr int HOOD_MOTOR = 19; 
+    constexpr int SHOOTER_MOTOR_1 = 20; 
+    constexpr int SHOOTER_MOTOR_2 = 21;  
+    constexpr int TURRET_MOTOR = 22; 
 }
 
 namespace dio {
     constexpr int BRAKE_COAST_BUTTON = 0;
+    constexpr int TURRET_ENCODER_1 = 2;
+    constexpr int TURRET_ENCODER_2 = 1;
     constexpr int FEEDER_FULL_SENSOR = 4;
     constexpr int FEEDER_EMPTY_SENSOR = 5;
 }
