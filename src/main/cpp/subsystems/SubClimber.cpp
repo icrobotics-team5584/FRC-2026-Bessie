@@ -15,8 +15,8 @@ SubClimber::SubClimber() {
   _leftClimbMotor.OverwriteConfig(_climbMotorConfig);
   _rightClimbMotor.OverwriteConfig(_climbMotorConfig);
 
-  Logger::Log("Climber/topClimbMotor", &_leftClimbMotor);
-  Logger::Log("Climber/bottomClimbMotor", &_rightClimbMotor);
+  Logger::Log("Climber/leftClimbMotor", &_leftClimbMotor);
+  Logger::Log("Climber/rightClimbMotor", &_rightClimbMotor);
   Logger::Log("Climber/target tolerance", TOLERANCE.value());
   Logger::Log("Climber/has reset", _hasReset);
   Logger::Log("Climber/resettiing", _resetting);
