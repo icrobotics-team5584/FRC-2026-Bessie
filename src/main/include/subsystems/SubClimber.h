@@ -70,6 +70,5 @@ class SubClimber : public frc2::SubsystemBase {
 
   ICSparkFlex _leftClimbMotor{canid::CLIMBER_LEFT};
   ICSparkFlex _rightClimbMotor{canid::CLIMBER_RIGHT};
-  rev::spark::SparkBaseConfig _leftClimbMotorConfig;
-  rev::spark::SparkBaseConfig _rightClimbMotorConfig;
+  rev::spark::SparkBaseConfig _climbMotorConfig;
 };
