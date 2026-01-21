@@ -9,6 +9,7 @@
 #include "Constants.h"
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/Commands.h>
+#include <wpi/interpolating_map.h>
 
 #include <frc/simulation/FlywheelSim.h>
 #include <frc/system/plant/DCMotor.h>
@@ -28,12 +29,14 @@ class SubShooter : public frc2::SubsystemBase {
   void SimulationPeriodic();
 
   frc2::CommandPtr SetShooterTarget(units::turns_per_second_t speed);
-  frc2::CommandPtr SpinUpShooter();
+  frc2::CommandPtr SpinWithDistance(units::meter_t distance);
   frc2::CommandPtr StopShooter();
   
   bool IsAtSpeed();
 
   units::revolutions_per_minute_t GetShooterSpeed();
+
+  units::second_t GetTimeOfFLightWithDistance(units::meter_t distance);
 
   /**
    * Will be called periodically whenever the CommandScheduler runs.
@@ -54,6 +57,9 @@ class SubShooter : public frc2::SubsystemBase {
 
   ctre::phoenix6::configs::TalonFXConfiguration _shooterMotorConfig;
   ctre::phoenix6::controls::VelocityVoltage _flywheelTargetVelocity{0_tps};
+
+  wpi::interpolating_map<units::meter_t, units::revolutions_per_minute_t> _rpmTable;
+  wpi::interpolating_map<units::meter_t, units::second_t> _timeOfFLightTable;
 
   //Sim
   frc::LinearSystem<1,1,1> _leftFlywheelSystem = frc::LinearSystemId::FlywheelSystem(MOTOR_MODEL, MOI, GEAR_RATIO);

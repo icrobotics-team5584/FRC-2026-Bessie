@@ -15,6 +15,9 @@ SubHood::SubHood() {
     _hoodMotorConfig.SmartCurrentLimit(30);
     _hoodMotor.OverwriteConfig(_hoodMotorConfig);
 
+    _pitchTable.insert(0_m, 35_deg);
+    _pitchTable.insert(10_m, 12.5_deg);
+
     frc::SmartDashboard::PutData("Hood/Motor", &_hoodMotor);
     frc::SmartDashboard::PutData("Hood/mech2dDisplay", &_hoodMech);
 }
@@ -75,6 +78,10 @@ frc2::CommandPtr SubHood::ManualHoodDown() {
     _hoodMotor.SetPositionTarget(targRot);});
 }
 
-units::degree_t SubHood::GetHoodAngle(){
+units::degree_t SubHood::GetHoodAngle() {
     return _hoodMotor.GetPosition();
+}
+
+frc2::CommandPtr SubHood::AimWithDistance(units::meter_t distance) {
+    return SetHoodPositionTarget(_pitchTable[distance]);
 }

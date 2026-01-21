@@ -40,6 +40,12 @@ SubShooter::SubShooter() {
 
     _shooterMotor1.GetClosedLoopReference().SetUpdateFrequency(100_Hz);
 
+    _rpmTable.insert(0_m, 300_rpm);
+    _rpmTable.insert(10_m, 600_rpm);
+
+    _timeOfFLightTable.insert(0_m, 1_s);
+    _timeOfFLightTable.insert(10_m, 10_s);
+
     frc::SmartDashboard::PutData("Shooter/mech2dDisplay", &_shooterMech);
 }
 
@@ -94,4 +100,12 @@ bool SubShooter::IsAtSpeed() {
 units::revolutions_per_minute_t SubShooter::GetShooterSpeed(){
     auto vel = _shooterMotor1.GetVelocity().GetValue();
     return vel*60;
+}
+
+frc2::CommandPtr SubShooter::SpinWithDistance(units::meter_t distance) {
+    return SetShooterTarget(_rpmTable[distance]);
+}
+
+units::second_t SubShooter::GetTimeOfFLightWithDistance(units::meter_t distance) {
+    return _timeOfFLightTable[distance];
 }
