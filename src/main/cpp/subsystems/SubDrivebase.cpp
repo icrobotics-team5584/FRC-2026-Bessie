@@ -58,9 +58,11 @@ void SubDrivebase::LogDrivebaseStates() {
       _frontRight.GetState(),
       _backLeft.GetState(),
       _backRight.GetState()});
-  Logger::Log("Drivebase/CANCoder Swerve States",
-    wpi::array{_frontLeft.GetCANCoderState(), _frontRight.GetCANCoderState(),
-      _backLeft.GetCANCoderState(), _backRight.GetCANCoderState()});
+  Logger::Log("Drivebase/CANCoder Swerve States", wpi::array{
+    _frontLeft.GetCANCoderState(),
+    _frontRight.GetCANCoderState(),
+    _backLeft.GetCANCoderState(),
+    _backRight.GetCANCoderState()});
   Logger::Log("Drivebase/Pigeon raw angle", _gyro.GetYaw().GetValue().value());
   Logger::Log("Drivebase/Pigeon raw Rotation2d", _gyro.GetRotation2d().Degrees());
 
