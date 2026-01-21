@@ -2,6 +2,7 @@
 #include "subsystems/SubDrivebase.h"
 #include "utilities/PoseHandler.h"
 #include "utilities/Logger.h"
+#include "utilities/ShiftHandler.h"
 
 SubDrivebase::SubDrivebase() {
   ctre::phoenix6::configs::Pigeon2Configuration gyroConfig;
@@ -16,6 +17,11 @@ void SubDrivebase::Periodic() {
   LogDrivebaseStates();
   UpdateOdometry();
   Logger::Log("Drivebase/loop time (sec)", (frc::GetTime() - loopstart));
+
+  Logger::Log("Rebuilt/Hub Active", ShiftHandler::IsActiveShift());
+  Logger::Log("Rebuilt/Won Auton Shift", ShiftHandler::GetShiftName(ShiftHandler::GetWinningShift()));
+  Logger::Log("Rebuilt/Current Shift", ShiftHandler::GetShiftName(ShiftHandler::GetCurrentShift()));
+  Logger::Log("Rebuilt/Seconds Left on Shift", ShiftHandler::GetTimeLeft());
 }
 
 void SubDrivebase::SimulationPeriodic() {
