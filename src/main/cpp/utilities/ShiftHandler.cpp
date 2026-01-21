@@ -19,10 +19,10 @@ RebuiltShift ShiftHandler::GetCurrentShift()
     if(secondsPassed < 60_s) { /* Shift 2 */
         return winningShift;
     }
-    if(secondsPassed < 75_s) { /* Shift 3 */
+    if(secondsPassed < 85_s) { /* Shift 3 */
         return losingShift;
     }
-    if(secondsPassed < 100_s) { /* Shift 4 */
+    if(secondsPassed < 110_s) { /* Shift 4 */
         return winningShift;
     }
     return RebuiltShift::ENDGAME;
@@ -61,16 +61,56 @@ units::second_t ShiftHandler::GetTimeLeft()
     if(matchTime < 60_s) { /* Shift 2 */
         return 60_s - matchTime;
     }
-    if(matchTime < 75_s) { /* Shift 3 */
-        return 75_s - matchTime;
+    if(matchTime < 85_s) { /* Shift 3 */
+        return 78_s - matchTime;
     }
-    if(matchTime < 100_s) { /* Shift 4 */
-        return 100_s - matchTime;
+    if(matchTime < 110_s) { /* Shift 4 */
+        return 110_s - matchTime;
     }
-    return 130_s - matchTime;
+    return 140_s - matchTime;
+}
+
+std::string GetShiftName(RebuiltShift shift)
+{
+    switch(shift) {
+    case RebuiltShift::AUTON:
+        return "Autonomous";
+    case RebuiltShift::TRANS:
+        return "Transition";
+    case RebuiltShift::BLUE:
+        return "Blue";
+    case RebuiltShift::RED:
+        return "Red";
+    case RebuiltShift::ENDGAME:
+        return "Endgame";
+    }
 }
 
 bool ShiftHandler::IsShift(RebuiltShift shift)
 {
     return GetCurrentShift() == shift ? true : false; /* check if matching */
+}
+
+bool ShiftHandler::IsActiveShift()
+{
+    units::second_t matchTime = frc::DriverStation::GetMatchTime();
+    RebuiltShift currentShift = GetCurrentShift();
+    frc::DriverStation::Alliance allicance = frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kBlue);
+    bool wonAutonShift = (allicance == frc::DriverStation::Alliance::kBlue) && (currentShift == RebuiltShift::BLUE);
+    bool shift2 = 60_s > matchTime && matchTime > 35_s;     /* 35s - 60s */
+    bool shift4 = 110_s > matchTime && matchTime > 85_s;    /* 85 - 110 */
+
+    if(
+        currentShift == RebuiltShift::AUTON ||
+        currentShift == RebuiltShift::TRANS ||
+        currentShift == RebuiltShift::ENDGAME
+    ) {
+        return true;
+    }
+
+    if(wonAutonShift && (shift2||shift4)) {
+        return true;
+    }
+
+    return false;
 }

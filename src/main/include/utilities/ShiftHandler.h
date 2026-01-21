@@ -14,5 +14,8 @@ class ShiftHandler {
         RebuiltShift GetCurrentShift();
         RebuiltShift GetWinningShift();
         units::second_t GetTimeLeft();
+        std::string GetShiftName(RebuiltShift shift);
         bool IsShift(RebuiltShift shift);
+        bool WonAutonShift();
+        bool IsActiveShift();
 };
