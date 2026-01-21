@@ -20,7 +20,7 @@
 #include "commands/TurretCommands.h"
 
 #include "utilities/PoseHandler.h"
-
+#include "commands/FuelCommands.h"
 RobotContainer::RobotContainer() {
   SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
   ConfigureBindings();

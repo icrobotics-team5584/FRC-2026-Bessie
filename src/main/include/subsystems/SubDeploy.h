@@ -77,7 +77,4 @@ class SubDeploy : public frc2::SubsystemBase {
   frc::MechanismRoot2d* _deployRoot = _deployMech.GetRoot("Deploy Root", 0.05, 0);
   frc::MechanismLigament2d* _deployLigament =
     _deployRoot->Append<frc::MechanismLigament2d>("Deploy", DEPLOY_ARM_LENGTH.value(), 90_deg);
-
-  frc::Mechanism2d _CircleMech{0.5, 0.5};
-  frc::MechanismRoot2d* _CircleRoot = _CircleMech.GetRoot("Circle Root", 0.5, 0.5);
 };
