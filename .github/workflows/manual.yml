@@ -19,9 +19,6 @@ jobs:
     # Declares the repository safe and not under dubious ownership.
     - name: Add repository to git safe directories
       run: git config --global --add safe.directory $GITHUB_WORKSPACE
-    # Update our gcc version to fix linking errors with GLIBC in gcc12 package
-    # - name: Update and install newer GCC version
-    #   run: apt-get update && apt-get install -y gcc 
     # Grant execute permission for gradlew
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
