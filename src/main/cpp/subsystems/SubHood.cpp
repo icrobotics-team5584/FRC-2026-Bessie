@@ -85,3 +85,7 @@ units::degree_t SubHood::GetHoodAngle() {
 frc2::CommandPtr SubHood::AimWithDistance(units::meter_t distance) {
     return SetHoodPositionTarget(_pitchTable[distance]);
 }
+
+bool SubHood::IsAtTarget() {
+    return units::math::abs(GetHoodAngle()) < TOLARANCE;
+}

@@ -3,12 +3,16 @@
 #include "subsystems/SubHood.h"
 #include "subsystems/SubShooter.h"
 #include "subsystems/SubTurret.h"
+#include "subsystems/SubFeeder.h"
+#include "subsystems/SubDrivebase.h"
 
 #include "utilities/Logger.h"
 #include "utilities/PoseHandler.h"
 
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/Commands.h>
+
+#include <frc/geometry/Pose2d.h>
 
 namespace cmd {
 frc2::CommandPtr AimAtFieldRelative(std::function<units::degree_t()> target) {
@@ -30,30 +34,36 @@ frc2::CommandPtr AimAtPose(frc::Pose2d pose) {
   });
 }
 
-// frc2::CommandPtr ShootOnTheMove(frc::Pose3d ShooterTarget) {
-  
-//   units::meters_per_second_t exitVelocity = 3_mps;
-//   units::meters_per_second_squared_t g = 9.81_mps_sq;
-
-//   units::meter_t launchHeight = 0.5_m;
-//   units::meter_t deltaHeight = ShooterTarget.Z() - launchHeight;
-
-//   auto theta = SubHood::GetInstance().GetHoodAngle();
-
-//   auto exitVelocityY = exitVelocity * units::math::sin(theta);
-
-//   // discriminant = (exitVelocityY)^2 - 2gh
-//   auto discriminant = exitVelocityY * exitVelocityY - 2 * g * deltaHeight;
-
-//   units::second_t travelTime = (exitVelocityY + units::math::sqrt(discriminant)) / g;
-
-//   Logger::Log("Shooter/fuelTravelTime", travelTime);
-//   Logger::Log("Shooter/calculatedDiscriminant", discriminant.value());
-
-//   return cmd::AimAtPose(SubDrivebase::GetInstance().PredictPose(travelTime));
-// };
-
 frc2::CommandPtr ShootOnTheMove(frc::Pose3d ShooterTarget) {
-  
+  // Calculate distance to target **FROM TURRET**
+  auto target = frc::Pose2d{0_m,0_m,0_deg};
+  auto robot = PoseHandler::GetInstance().GetPose(); // add distance turret relative to robot
+  units::meter_t distance = target.Translation().Distance(robot.Translation());
+
+  // Calculate field relative turret velocity
+  units::meters_per_second_t robotX = SubDrivebase::GetInstance().GetVelocityX();
+  units::meters_per_second_t robotY = SubDrivebase::GetInstance().GetVelocityY();
+  // Adjust with rotation speed and turret relative to robot
+
+  // Account for robot velocity
+  // Get future pose
+  units::second_t TOF = SubShooter::GetInstance().GetTimeOfFLightWithDistance(distance);
+  units::meter_t offsetX = robotX * TOF;
+  units::meter_t offsetY = robotY * TOF;
+  frc::Pose2d futurePose = frc::Pose2d(offsetX, offsetY, robot.Rotation());
+
+  // Find parameters from future pose to target
+  units::meter_t futureDistance = target.Translation().Distance(futurePose.Translation());
+  units::radian_t angleFromFutureToTarget = atan2((target.Y() - futurePose.Y()).value(), (target.X() - futurePose.X()).value()) * 1_rad;
+  units::degree_t angleFromFutureToTargetDegrees = angleFromFutureToTarget;
+
+  // set shooting parameters
+  cmd::AimAtFieldRelative([angleFromFutureToTargetDegrees] {return angleFromFutureToTargetDegrees;});
+  SubShooter::GetInstance().SpinWithDistance(futureDistance);
+  SubHood::GetInstance().AimWithDistance(futureDistance);
+  // if all on target then shoot **CONSIDER VELOCITIES LATER**
+  if(SubShooter::GetInstance().IsAtSpeed() && SubHood::GetInstance().IsAtTarget() && SubTurret::GetInstance().IsAtTarget()) {
+    return SubFeeder::GetInstance().FeederOn();
+  }
 }
 }  // namespace cmd

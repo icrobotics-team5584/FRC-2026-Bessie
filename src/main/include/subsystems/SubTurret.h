@@ -32,6 +32,8 @@ class SubTurret : public frc2::SubsystemBase {
 
   void SimulationPeriodic();
 
+  bool IsAtTarget();
+
   units::degree_t GetTurretAngleCRT();
   units::degree_t GetTurretAngle();
   units::degree_t CalcOptimisedTurretAngle(units::degree_t angle);
@@ -78,8 +80,9 @@ class SubTurret : public frc2::SubsystemBase {
   static constexpr double ENCODER1_RATIO = E1_TEETH/BIG_TEETH;
   static constexpr double ENCODER2_RATIO = E2_TEETH/BIG_TEETH;
   static constexpr double GEAR_RATIO = (48.0/12.0) * (94.0/10.0);
+  
 
-
+  static constexpr units::degree_t TOLARANCE = 0.5_deg;
   static constexpr units::hertz_t ENCODER_FREQUENCY = 975.6_Hz; 
   //force set encoder frequency to avoid 1sec startup time
 

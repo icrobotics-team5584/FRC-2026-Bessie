@@ -1,4 +1,5 @@
 #include <frc2/command/Commands.h>
+#include <frc2/command/Command.h>
 #include <units/angle.h>
 #include <frc/geometry/Pose2d.h>
 #include <frc/geometry/Pose3d.h>
