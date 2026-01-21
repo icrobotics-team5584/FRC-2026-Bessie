@@ -13,13 +13,15 @@ namespace cmd {
       auto robotPose = PoseHandler::GetInstance().GetPose();
       Logger::Log("Turret/AimAtFieldRelative/robotPose/Rotation", robotPose.Rotation().Degrees());
       units::degree_t targetAngle = target() - robotPose.Rotation().Degrees();
+      Logger::Log("Turret/AimAtFieldRelative/TargetAngle", targetAngle);
       return targetAngle;});
   }
 
   frc2::CommandPtr AimAtPose(frc::Pose2d pose) {
-    return cmd::AimAtFieldRelative([pose] {
+    return AimAtFieldRelative([pose] {
       auto robotPose = PoseHandler::GetInstance().GetPose();
       units::radian_t angle = atan2( (pose.Y()-robotPose.Y()).value(), (pose.X()-robotPose.X()).value() ) * 1_rad;
+      Logger::Log("Turret/AimAtPose/angle", angle);
       units::degree_t degrees = angle;
       return degrees;
     });

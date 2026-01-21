@@ -5,6 +5,7 @@
 #include "subsystems/SubTurret.h"
 #include <frc/smartdashboard/SmartDashboard.h>
 #include "utilities/Logger.h"
+#include "utilities/PoseHandler.h"
 
 SubTurret::SubTurret() {
     _turretMotorConfig.encoder.PositionConversionFactor(1/GEAR_RATIO);
@@ -44,6 +45,7 @@ void SubTurret::Periodic() {
 
     _turretMechCircle.SetAngle(_turretMotor.GetPosition());
 
+    Logger::Log("Turret/Field Relative Turret Angle", GetFieldRelativeTurretAngle());
     Logger::Log("Turret/CRT Positiion", GetTurretAngleCRT());
     Logger::Log("Turret/Encoder/Encoder1", _turretEncoder1.Get());
     Logger::Log("Turret/Encoder/Encoder2", _turretEncoder2.Get());
@@ -172,4 +174,9 @@ units::degree_t SubTurret::getEncoder1Degrees() {
 
 units::degree_t SubTurret::getEncoder2Degrees() {
     return (_turretEncoder2.Get()-encoder2ZeroOffset)*360_deg;
+}
+
+units::degree_t SubTurret::GetFieldRelativeTurretAngle() {
+    auto robot = PoseHandler::GetInstance().GetPose();
+    return robot.Rotation().Degrees() + GetTurretAngle();
 }
