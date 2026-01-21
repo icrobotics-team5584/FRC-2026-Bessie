@@ -30,26 +30,30 @@ frc2::CommandPtr AimAtPose(frc::Pose2d pose) {
   });
 }
 
+// frc2::CommandPtr ShootOnTheMove(frc::Pose3d ShooterTarget) {
+  
+//   units::meters_per_second_t exitVelocity = 3_mps;
+//   units::meters_per_second_squared_t g = 9.81_mps_sq;
+
+//   units::meter_t launchHeight = 0.5_m;
+//   units::meter_t deltaHeight = ShooterTarget.Z() - launchHeight;
+
+//   auto theta = SubHood::GetInstance().GetHoodAngle();
+
+//   auto exitVelocityY = exitVelocity * units::math::sin(theta);
+
+//   // discriminant = (exitVelocityY)^2 - 2gh
+//   auto discriminant = exitVelocityY * exitVelocityY - 2 * g * deltaHeight;
+
+//   units::second_t travelTime = (exitVelocityY + units::math::sqrt(discriminant)) / g;
+
+//   Logger::Log("Shooter/fuelTravelTime", travelTime);
+//   Logger::Log("Shooter/calculatedDiscriminant", discriminant.value());
+
+//   return cmd::AimAtPose(SubDrivebase::GetInstance().PredictPose(travelTime));
+// };
+
 frc2::CommandPtr ShootOnTheMove(frc::Pose3d ShooterTarget) {
   
-  units::meters_per_second_t exitVelocity = 3_mps;
-  units::meters_per_second_squared_t g = 9.81_mps_sq;
-
-  units::meter_t launchHeight = 0.5_m;
-  units::meter_t deltaHeight = ShooterTarget.Z() - launchHeight;
-
-  auto theta = SubHood::GetInstance().GetHoodAngle();
-
-  auto exitVelocityY = exitVelocity * units::math::sin(theta);
-
-  // discriminant = (exitVelocityY)^2 - 2gh
-  auto discriminant = exitVelocityY * exitVelocityY - 2 * g * deltaHeight;
-
-  units::second_t travelTime = (exitVelocityY + units::math::sqrt(discriminant)) / g;
-
-  Logger::Log("Shooter/fuelTravelTime", travelTime);
-  Logger::Log("Shooter/calculatedDiscriminant", discriminant.value());
-
-  return cmd::AimAtPose(SubDrivebase::GetInstance().PredictPose(travelTime));
-};
+}
 }  // namespace cmd
