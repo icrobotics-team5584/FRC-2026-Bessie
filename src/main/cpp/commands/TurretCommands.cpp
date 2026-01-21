@@ -34,7 +34,7 @@ frc2::CommandPtr AimAtPose(frc::Pose2d pose) {
   });
 }
 
-units::meter_t CalcShootOnTheMoveDistance() { [] {
+units::meter_t CalcShootOnTheMoveDistance() {
   // Calculate distance to target **FROM TURRET**
   auto target = frc::Pose2d{0_m,0_m,0_deg};
   auto robot = PoseHandler::GetInstance().GetPose(); // add distance turret relative to robot
@@ -67,10 +67,10 @@ units::meter_t CalcShootOnTheMoveDistance() { [] {
 
   Logger::Log("SOTM/CalcFutureDistance", futureDistance);
 
-  return futureDistance; };
+  return futureDistance;
 }
 
-units::degree_t CalcShootOnTheMoveAngle() { [] {
+units::degree_t CalcShootOnTheMoveAngle() {
   // Calculate distance to target **FROM TURRET**
   auto target = frc::Pose2d{0_m,0_m,0_deg};
   auto robot = PoseHandler::GetInstance().GetPose(); // add distance turret relative to robot
@@ -103,7 +103,7 @@ units::degree_t CalcShootOnTheMoveAngle() { [] {
 
   Logger::Log("SOTM/CalcTurretAngle", angleFromFutureToTargetDegrees);
 
-  return angleFromFutureToTargetDegrees;};
+  return angleFromFutureToTargetDegrees;
 }
 
 frc2::CommandPtr Shoot() {
