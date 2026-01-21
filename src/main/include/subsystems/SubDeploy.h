@@ -5,10 +5,14 @@
 #pragma once
 
 #include "utilities/ICSparkFlex.h"
+#include "utilities/MechanismCircle2d.h"
 
 #include <frc/Alert.h>
 #include <frc/Timer.h>
 #include <frc/simulation/SingleJointedArmSim.h>
+#include <frc/smartdashboard/Mechanism2d.h>
+#include <frc/smartdashboard/MechanismLigament2d.h>
+#include <frc/smartdashboard/MechanismRoot2d.h>
 #include <frc/system/plant/DCMotor.h>
 #include <frc/system/plant/LinearSystemId.h>
 #include <frc2/command/SubsystemBase.h>
@@ -17,7 +21,6 @@
 #include "frc2/command/Commands.h"
 #include "rev/config/SparkFlexConfig.h"
 #include "rev/config/SparkFlexConfigAccessor.h"
-
 class SubDeploy : public frc2::SubsystemBase {
  public:
   static SubDeploy& GetInstance() {
@@ -35,7 +38,7 @@ class SubDeploy : public frc2::SubsystemBase {
 
   void DeployCurrentHighTimer();
 
-    frc::Alert deployCurrentAlert{"Deploy Motor Overcurrent!", frc::Alert::AlertType::kWarning};
+  frc::Alert deployCurrentAlert{"Deploy Motor Overcurrent!", frc::Alert::AlertType::kWarning};
   frc::Alert deployHighTemperatureAlert{
     "Deploy Motor High Temperature!", frc::Alert::AlertType::kWarning};
 
@@ -54,7 +57,7 @@ class SubDeploy : public frc2::SubsystemBase {
   bool _hasZeroed = false;
   bool _currentlyZeroing = false;
 
-  static constexpr units::ampere_t zeroingCurrentLimit = 5_A;
+  static constexpr units::ampere_t ZEROINGCURRENTLIMIT = 5_A;
 
   // Simulation components
   static constexpr double DEPLOY_P = 0.2;
@@ -70,4 +73,11 @@ class SubDeploy : public frc2::SubsystemBase {
   frc::sim::SingleJointedArmSim _deploySim{_deployFlywheelSystem, DEPLOY_MOTOR_MODEL,
     DEPLOY_GEARING, DEPLOY_ARM_LENGTH, DEPLOY_MIN_ANGLE, DEPLOY_MAX_ANGLE, false,
     DEPLOY_START_ANGLE};
+  frc::Mechanism2d _deployMech{0.5, 0.5};
+  frc::MechanismRoot2d* _deployRoot = _deployMech.GetRoot("Deploy Root", 0.05, 0);
+  frc::MechanismLigament2d* _deployLigament =
+    _deployRoot->Append<frc::MechanismLigament2d>("Deploy", DEPLOY_ARM_LENGTH.value(), 90_deg);
+
+  frc::Mechanism2d _CircleMech{0.5, 0.5};
+  frc::MechanismRoot2d* _CircleRoot = _CircleMech.GetRoot("Circle Root", 0.5, 0.5);
 };

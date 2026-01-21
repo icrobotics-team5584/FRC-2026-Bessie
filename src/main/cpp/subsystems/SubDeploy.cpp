@@ -17,6 +17,7 @@ SubDeploy::SubDeploy() {
   _deployMotor.OverwriteConfig(_deployMotorConfig);
 
   Logger::Log("Deploy/Deploy Motor", &_deployMotor);
+  Logger::Log("Deploy/Deploy Motor Visual", &_deployMech);
 }
 
 frc2::CommandPtr SubDeploy::DeployIntake() {
@@ -45,7 +46,7 @@ frc2::CommandPtr SubDeploy::DeployAutoZero() {
     _hasZeroed = false;
   })
     .AndThen(frc2::cmd::WaitUntil(
-      [this] { return abs(_deployMotor.GetOutputCurrent()) * 1_A > zeroingCurrentLimit; }))
+      [this] { return abs(_deployMotor.GetOutputCurrent()) * 1_A > ZEROINGCURRENTLIMIT; }))
     .AndThen(ZeroDeploy())
     .AndThen([this] {
       _deployMotor.StopMotor();
@@ -103,4 +104,7 @@ void SubDeploy::SimulationPeriodic() {
   _deploySim.SetInputVoltage(_deployMotor.CalcSimVoltage());
   _deploySim.Update(20_ms);
   _deployMotor.IterateSim(_deploySim.GetVelocity(), _deploySim.GetAngle());
+
+  _deployLigament->SetAngle(_deploySim.GetAngle());
+  
 }
