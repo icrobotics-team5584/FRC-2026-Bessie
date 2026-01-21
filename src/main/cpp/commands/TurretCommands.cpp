@@ -107,9 +107,9 @@ units::degree_t CalcShootOnTheMoveAngle() {
 }
 
 frc2::CommandPtr Shoot() {
-  return SubShooter::GetInstance().SpinWithDistance(CalcShootOnTheMoveDistance)
-  .AlongWith(SubHood::GetInstance().AimWithDistance(CalcShootOnTheMoveDistance))
-  .AlongWith(AimAtFieldRelative(CalcShootOnTheMoveAngle))
+  return SubShooter::GetInstance().SpinWithDistance( [] {return CalcShootOnTheMoveDistance();})
+  .AlongWith(SubHood::GetInstance().AimWithDistance([] {return CalcShootOnTheMoveDistance();}))
+  .AlongWith(AimAtFieldRelative([] {return CalcShootOnTheMoveAngle();}))
   .AndThen(SubFeeder::GetInstance().FeederOn())
   .OnlyIf([] {return SubShooter::GetInstance().IsAtSpeed() && SubTurret::GetInstance().IsAtTarget() && SubHood::GetInstance().IsAtTarget();} );
 }
