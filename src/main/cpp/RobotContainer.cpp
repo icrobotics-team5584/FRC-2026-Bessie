@@ -3,30 +3,29 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "RobotContainer.h"
+
 #include <frc2/command/Commands.h>
 #include "subsystems/SubDrivebase.h"
 #include "commands/DriveCommands.h"
 #include "subsystems/SubIntake.h"
-#include "subsystems/SubFeeder.h"
 #include "subsystems/SubIndexer.h"
 #include "commands/AutonCommands.h"
-#include "subsystems/SubVision.h"
+#include "Subsystems/SubVision.h"
 #include "subsystems/SubTurret.h"
 #include "subsystems/SubHood.h"
 #include "subsystems/SubShooter.h"
-#include "commands/VisionCommands.h"
 #include "commands/TurretCommands.h"
-#include <frc/geometry/Pose3d.h>
+#include "commands/ShootCommands.h"
 
 #include "utilities/PoseHandler.h"
 
 RobotContainer::RobotContainer() {
   SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
   ConfigureBindings();
-  SubVision::GetInstance().SetDefaultCommand(cmd::AddVisionMeasurement());
+  SubVision::GetInstance();
 
   _autoManager.AddDefaultAuton(
-    "default",  
+    "default",
     AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton())
   );
 
@@ -38,10 +37,14 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureBindings() {
-  _driverController.X().WhileTrue(cmd::ShootOnTheMove(frc::Pose3d{0_m, 0_m, 0_m, frc::Rotation3d{0_deg, 0_deg, 0_deg}}));
+  _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
   _driverController.Y().OnTrue(SubDrivebase::GetInstance().ResetGyroCmd());
   _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
-  _driverController.A().OnTrue(frc2::cmd::RunOnce([]{
+
+  _driverController.A().OnTrue(cmd::AimAtPose(frc::Pose2d(0_m,0_m,0_deg)));
+
+  _driverController.RightTrigger().WhileTrue(cmd::AimAndShoot({0_m, 0_m, 0_m}));
+  _driverController.LeftTrigger().OnTrue(frc2::cmd::RunOnce([]{
     SubDrivebase::GetInstance().SetPose(frc::Pose2d{0_m,0_m,0_deg});
   }));
   _driverController.POVUp().OnTrue(cmd::AimAtFieldRelative([] {return 0_deg;}));
