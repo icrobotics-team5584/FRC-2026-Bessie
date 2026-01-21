@@ -35,19 +35,18 @@ class SubClimber : public frc2::SubsystemBase {
   void SetBrakeMode(bool isBrake);
   bool IsAtTarget();
   units::ampere_t GetMotorCurrent();
-  units::ampere_t GetRightMotorCurrent();
   
   /* Commands */
   frc2::CommandPtr StowClimber();
   frc2::CommandPtr ReadyClimber();
   frc2::CommandPtr ClimbL1();
 
-  frc2::CommandPtr WaitUntilReset();
+  frc2::CommandPtr RunCurrentZeroingSequence();
 
 
  private:
   bool _hasZeroed = false;
-  bool _resetting = false;
+  bool _zeroing = false;
 
   /* place holder values */
   static constexpr units::degree_t _STOW_TURNS = 0_deg;
