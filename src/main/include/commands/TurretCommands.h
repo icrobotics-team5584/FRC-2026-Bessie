@@ -7,5 +7,10 @@
 namespace cmd {
     frc2::CommandPtr AimAtFieldRelative(std::function<units::degree_t()> target);
     frc2::CommandPtr AimAtPose(frc::Pose2d pose);
-    frc2::CommandPtr ShootOnTheMove(frc::Pose3d ShooterTarget);
+    frc2::CommandPtr Shoot();
+
+    units::meter_t CalcShootOnTheMoveDistance();
+    units::degree_t CalcShootOnTheMoveAngle();
 }
+
+

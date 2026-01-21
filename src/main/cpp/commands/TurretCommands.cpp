@@ -34,7 +34,7 @@ frc2::CommandPtr AimAtPose(frc::Pose2d pose) {
   });
 }
 
-frc2::CommandPtr ShootOnTheMove(frc::Pose3d ShooterTarget) {
+units::meter_t CalcShootOnTheMoveDistance() {
   // Calculate distance to target **FROM TURRET**
   auto target = frc::Pose2d{0_m,0_m,0_deg};
   auto robot = PoseHandler::GetInstance().GetPose(); // add distance turret relative to robot
@@ -57,13 +57,39 @@ frc2::CommandPtr ShootOnTheMove(frc::Pose3d ShooterTarget) {
   units::radian_t angleFromFutureToTarget = atan2((target.Y() - futurePose.Y()).value(), (target.X() - futurePose.X()).value()) * 1_rad;
   units::degree_t angleFromFutureToTargetDegrees = angleFromFutureToTarget;
 
-  // set shooting parameters
-  cmd::AimAtFieldRelative([angleFromFutureToTargetDegrees] {return angleFromFutureToTargetDegrees;});
-  SubShooter::GetInstance().SpinWithDistance(futureDistance);
-  SubHood::GetInstance().AimWithDistance(futureDistance);
-  // if all on target then shoot **CONSIDER VELOCITIES LATER**
-  if(SubShooter::GetInstance().IsAtSpeed() && SubHood::GetInstance().IsAtTarget() && SubTurret::GetInstance().IsAtTarget()) {
-    return SubFeeder::GetInstance().FeederOn();
-  }
+  return futureDistance;
 }
+
+units::degree_t CalcShootOnTheMoveAngle() {
+  // Calculate distance to target **FROM TURRET**
+  auto target = frc::Pose2d{0_m,0_m,0_deg};
+  auto robot = PoseHandler::GetInstance().GetPose(); // add distance turret relative to robot
+  units::meter_t distance = target.Translation().Distance(robot.Translation());
+
+  // Calculate field relative turret velocity
+  units::meters_per_second_t robotX = SubDrivebase::GetInstance().GetVelocityX();
+  units::meters_per_second_t robotY = SubDrivebase::GetInstance().GetVelocityY();
+  // Adjust with rotation speed and turret relative to robot
+
+  // Account for robot velocity
+  // Get future pose
+  units::second_t TOF = SubShooter::GetInstance().GetTimeOfFLightWithDistance(distance);
+  units::meter_t offsetX = robotX * TOF;
+  units::meter_t offsetY = robotY * TOF;
+  frc::Pose2d futurePose = frc::Pose2d(offsetX, offsetY, robot.Rotation());
+
+  // Find parameters from future pose to target
+  units::meter_t futureDistance = target.Translation().Distance(futurePose.Translation());
+  units::radian_t angleFromFutureToTarget = atan2((target.Y() - futurePose.Y()).value(), (target.X() - futurePose.X()).value()) * 1_rad;
+  units::degree_t angleFromFutureToTargetDegrees = angleFromFutureToTarget;
+
+  return angleFromFutureToTargetDegrees;
+}
+
+frc2::CommandPtr Shoot() {
+  return SubShooter::GetInstance().SpinWithDistance(CalcShootOnTheMoveDistance())
+  .AlongWith(SubHood::GetInstance().AimWithDistance(CalcShootOnTheMoveDistance()))
+  .AlongWith(AimAtFieldRelative(CalcShootOnTheMoveAngle))
+}
+
 }  // namespace cmd
