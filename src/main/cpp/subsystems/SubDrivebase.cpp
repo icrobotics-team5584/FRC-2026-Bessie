@@ -179,8 +179,8 @@ frc2::CommandPtr SubDrivebase::Drive(std::function<frc::ChassisSpeeds()> speeds,
 frc2::CommandPtr SubDrivebase::LockWheelsInXShape() {
   return Run([this] {
     auto fl = frc::SwerveModuleState{0_mps, frc::Rotation2d{45_deg}};
-    auto fr = frc::SwerveModuleState{0_mps, frc::Rotation2d{45_deg}};
-    auto bl = frc::SwerveModuleState{0_mps, frc::Rotation2d{45_deg}};
+    auto fr = frc::SwerveModuleState{0_mps, frc::Rotation2d{135_deg}};
+    auto bl = frc::SwerveModuleState{0_mps, frc::Rotation2d{135_deg}};
     auto br = frc::SwerveModuleState{0_mps, frc::Rotation2d{45_deg}};
 
     _frontLeft.SetDesiredState(fl);
