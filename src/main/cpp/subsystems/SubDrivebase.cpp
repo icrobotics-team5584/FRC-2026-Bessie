@@ -375,12 +375,10 @@ frc2::CommandPtr SubDrivebase::CharacteriseWheels() {
     limiter.Reset(0_deg_per_s);
     Logger::Log("Drivebase/WheelCharacterisation/DrivebaseRadius", drivebaseRadius);
   })
-    .AndThen(Drive(
-      [] {
-        auto speed = limiter.Calculate(100_deg_per_s);
-        return frc::ChassisSpeeds{0_mps, 0_mps, speed};
-      },
-      false))
+    .AndThen(Drive([] {
+      auto speed = limiter.Calculate(100_deg_per_s);
+      return frc::ChassisSpeeds{0_mps, 0_mps, speed};
+    }, false))
     .AlongWith(frc2::cmd::Wait(1_s).AndThen(frc2::cmd::Run([this] {
       // units::radian_t curGyroAngle = GetHeading().Radians(); using GetGyroAngle() instead
       units::radian_t curGyroAngle = GetGyroAngle().Radians();
