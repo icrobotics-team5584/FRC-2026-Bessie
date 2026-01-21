@@ -23,8 +23,6 @@ SubVision::SubVision() {
   _devTable.insert(2_m, 0.068);
   _devTable.insert(3_m, 0.230);
 
-  _leftPoseEstimater.SetMultiTagFallbackStrategy(photon::PoseStrategy::LOWEST_AMBIGUITY);
-
   // Sim set up
   _visionSim.AddAprilTags(_tagMap);
   _visionSim.AddCamera(&_leftCamSim, _leftBotToCam);
@@ -61,7 +59,7 @@ void SubVision::UpdateVision() {
   auto resultCount = results.size();
   if (resultCount > 0) {
     for (auto result : results) {
-      _leftEstPose = _leftPoseEstimater.Update(result);
+      _leftEstPose = _leftPoseEstimater.EstimateLowestAmbiguityPose(result);
       for (const auto& target : result.targets) {
         leftTargets += std::to_string(target.GetFiducialId()) + ", ";
         double targetArea = target.GetArea();
@@ -83,7 +81,7 @@ void SubVision::UpdateVision() {
   resultCount = results.size();
   if (resultCount > 0) {
     for (auto result : results) {
-      _rightEstPose = _rightPoseEstimater.Update(result);
+      _rightEstPose = _rightPoseEstimater.EstimateLowestAmbiguityPose(result);
 
       for (const auto& target : result.targets) {
         rightTargets += std::to_string(target.GetFiducialId()) + ", ";
@@ -139,8 +137,7 @@ bool SubVision::IsEstimateUsable(photon::EstimatedRobotPose pose) {
   }
   distance /= pose.targetsUsed.size();
 
-
-  return ((distance < 0.7_m) || (tagCount > 1));
+  return ((distance < 5_m) || (tagCount > 1));
 }
 
 frc::Pose2d SubVision::CalculateRelativePose(frc::Pose2d pose, units::meter_t x, units::meter_t y) {
