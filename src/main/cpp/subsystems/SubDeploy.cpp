@@ -15,9 +15,6 @@ SubDeploy::SubDeploy() {
   _deployMotorConfig.encoder.VelocityConversionFactor(1.0 / DEPLOY_GEARING);
   _deployMotorConfig.closedLoop.P(DEPLOY_P);
   _deployMotor.OverwriteConfig(_deployMotorConfig);
-
-  Logger::Log("Deploy/Deploy Motor", &_deployMotor);
-  Logger::Log("Deploy/Deploy Motor Visual", &_deployMech);
 }
 
 frc2::CommandPtr SubDeploy::DeployIntake() {
@@ -104,7 +101,4 @@ void SubDeploy::SimulationPeriodic() {
   _deploySim.SetInputVoltage(_deployMotor.CalcSimVoltage());
   _deploySim.Update(20_ms);
   _deployMotor.IterateSim(_deploySim.GetVelocity(), _deploySim.GetAngle());
-
-  _deployLigament->SetAngle(_deploySim.GetAngle());
-  
 }

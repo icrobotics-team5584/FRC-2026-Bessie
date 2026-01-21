@@ -10,9 +10,6 @@
 #include <frc/Alert.h>
 #include <frc/Timer.h>
 #include <frc/simulation/SingleJointedArmSim.h>
-#include <frc/smartdashboard/Mechanism2d.h>
-#include <frc/smartdashboard/MechanismLigament2d.h>
-#include <frc/smartdashboard/MechanismRoot2d.h>
 #include <frc/system/plant/DCMotor.h>
 #include <frc/system/plant/LinearSystemId.h>
 #include <frc2/command/SubsystemBase.h>
@@ -73,8 +70,4 @@ class SubDeploy : public frc2::SubsystemBase {
   frc::sim::SingleJointedArmSim _deploySim{_deployFlywheelSystem, DEPLOY_MOTOR_MODEL,
     DEPLOY_GEARING, DEPLOY_ARM_LENGTH, DEPLOY_MIN_ANGLE, DEPLOY_MAX_ANGLE, false,
     DEPLOY_START_ANGLE};
-  frc::Mechanism2d _deployMech{0.5, 0.5};
-  frc::MechanismRoot2d* _deployRoot = _deployMech.GetRoot("Deploy Root", 0.05, 0);
-  frc::MechanismLigament2d* _deployLigament =
-    _deployRoot->Append<frc::MechanismLigament2d>("Deploy", DEPLOY_ARM_LENGTH.value(), 90_deg);
 };
