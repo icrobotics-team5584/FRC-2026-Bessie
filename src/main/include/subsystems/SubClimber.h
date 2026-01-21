@@ -34,20 +34,19 @@ class SubClimber : public frc2::SubsystemBase {
   /* Instaneous */
   void SetBrakeMode(bool isBrake);
   bool IsAtTarget();
-  units::ampere_t GetLeftMotorCurrent();
+  units::ampere_t GetMotorCurrent();
   units::ampere_t GetRightMotorCurrent();
   
   /* Commands */
-  frc2::CommandPtr WaitUntilReset();
   frc2::CommandPtr StowClimber();
   frc2::CommandPtr ReadyClimber();
   frc2::CommandPtr ClimbL1();
-  //frc2::CommandPtr ClimbL2();
-  //frc2::CommandPtr ClimbL3();
+
+  frc2::CommandPtr WaitUntilReset();
 
 
  private:
-  bool _hasReset = false;
+  bool _hasZeroed = false;
   bool _resetting = false;
 
   /* place holder values */
@@ -55,8 +54,8 @@ class SubClimber : public frc2::SubsystemBase {
   static constexpr units::degree_t _READY_TURNS = 0_deg;
   static constexpr units::degree_t _L1_TURNS = 0_deg;
 
-  static constexpr units::degree_t TOLERANCE = 1_deg;
-  static constexpr units::ampere_t ZEROING_CURRENT = 30_A;
+  static constexpr units::degree_t _TOLERANCE = 1_deg;
+  static constexpr units::ampere_t _ZEROING_CURRENT = 30_A;
 
   /* place holder values */
   static constexpr double _P = 0;
@@ -64,7 +63,6 @@ class SubClimber : public frc2::SubsystemBase {
   static constexpr double _D = 0;
   static constexpr double _GEAR_RATIO = 1;
 
-  ICSparkFlex _leftClimbMotor{canid::CLIMBER_LEFT};
-  ICSparkFlex _rightClimbMotor{canid::CLIMBER_RIGHT};
-  rev::spark::SparkBaseConfig _climbMotorConfig;
+  ICSparkFlex _climberMotor{canid::CLIMBER};
+  rev::spark::SparkBaseConfig _climberMotorConfig;
 };

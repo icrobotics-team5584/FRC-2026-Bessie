@@ -6,29 +6,24 @@
 #include "utilities/Logger.h"
 
 SubClimber::SubClimber() {
-  _climbMotorConfig.encoder.PositionConversionFactor(1 / _GEAR_RATIO);
-  _climbMotorConfig.encoder.VelocityConversionFactor(1 / _GEAR_RATIO);
-  _climbMotorConfig.SmartCurrentLimit(60);                             /* Amps */
-  _climbMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
-  _climbMotorConfig.closedLoop.Pid(_P, _I, _D, rev::spark::ClosedLoopSlot::kSlot0);
+  _climberMotorConfig.encoder.PositionConversionFactor(1 / _GEAR_RATIO);
+  _climberMotorConfig.encoder.VelocityConversionFactor(1 / _GEAR_RATIO);
+  _climberMotorConfig.SmartCurrentLimit(60);                             /* Amps */
+  _climberMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
+  _climberMotorConfig.closedLoop.Pid(_P, _I, _D, rev::spark::ClosedLoopSlot::kSlot0);
 
-  _leftClimbMotor.OverwriteConfig(_climbMotorConfig);
-  _rightClimbMotor.OverwriteConfig(_climbMotorConfig);
+  _climberMotor.OverwriteConfig(_climberMotorConfig);
 
-  Logger::Log("Climber/leftClimbMotor", &_leftClimbMotor);
-  Logger::Log("Climber/rightClimbMotor", &_rightClimbMotor);
-  Logger::Log("Climber/target tolerance", TOLERANCE.value());
-  Logger::Log("Climber/has reset", _hasReset);
-  Logger::Log("Climber/resettiing", _resetting);
+  Logger::Log("Climber/Climber Motor", &_climberMotor);
+  Logger::Log("Climber/PID Tolerance", _TOLERANCE);
 }
 
 // This method will be called once per scheduler run
 void SubClimber::Periodic() {
-  if(_hasReset == false && _resetting == false) {
-    _leftClimbMotor.Set(0);
-    _rightClimbMotor.Set(0);
+  if(_hasZeroed == false && _resetting == false) {
+    _climberMotor.Set(0);
   }
-  Logger::Log("Climber/has reset", _hasReset);
+  Logger::Log("Climber/Has Zeroed", _hasZeroed);
   Logger::Log("Climber/resettiing", _resetting);
 }
 
@@ -43,60 +38,44 @@ void SubClimber::SetBrakeMode(bool isbrake) {
     neutralModeConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kCoast);
   }
 
-  _leftClimbMotor.AdjustConfigNoPersist(neutralModeConfig);
-  _rightClimbMotor.AdjustConfigNoPersist(neutralModeConfig);
+  _climberMotor.AdjustConfigNoPersist(neutralModeConfig);
 }
 
 bool SubClimber::IsAtTarget() {
-  bool rightAtTarget = false, leftAtTarget = false;
-  units::turn_t leftMotorPosition = _leftClimbMotor.GetPosition();
-  units::turn_t leftMotorTarget = _leftClimbMotor.GetPositionTarget();
-  
-  units::turn_t rightMotorPosition = _rightClimbMotor.GetPosition();
-  units::turn_t rightMotorTarget = _rightClimbMotor.GetPositionTarget();
+  units::turn_t currentPosition = _climberMotor.GetPosition();
+  units::turn_t currentTarget = _climberMotor.GetPositionTarget();
 
-  if (rightMotorPosition < (rightMotorTarget + TOLERANCE) && rightMotorPosition > (rightMotorTarget - TOLERANCE)) {
-    rightAtTarget = true;
+  if (currentPosition < (currentTarget + _TOLERANCE) && currentPosition > (currentTarget - _TOLERANCE)) {
+    return true;
+  } else {
+    return false;
   }
-
-  if (leftMotorPosition < (leftMotorTarget + TOLERANCE) && leftMotorPosition > (leftMotorTarget - TOLERANCE)) {
-    leftAtTarget = true;
-  }
-
-  return (rightAtTarget && leftAtTarget);
 }
 
-units::ampere_t SubClimber::GetLeftMotorCurrent() {
-  return (units::ampere_t)_leftClimbMotor.GetOutputCurrent();
-}
-
-units::ampere_t SubClimber::GetRightMotorCurrent() {
-  return (units::ampere_t)_rightClimbMotor.GetOutputCurrent();
+units::ampere_t SubClimber::GetMotorCurrent() {
+  return (units::ampere_t)_climberMotor.GetOutputCurrent();
 }
 
 /* Commands */
 frc2::CommandPtr SubClimber::WaitUntilReset() {
-  return frc2::cmd::RunOnce([this]{ _hasReset = false; }).AndThen(frc2::cmd::Run([this] {
-    if(GetLeftMotorCurrent() > ZEROING_CURRENT && GetRightMotorCurrent() > ZEROING_CURRENT) {
-      _hasReset = true;
+  return frc2::cmd::RunOnce([this]{ _hasZeroed = false; }).AndThen(frc2::cmd::Run([this] {
+    if(GetMotorCurrent() > _ZEROING_CURRENT && GetRightMotorCurrent() > _ZEROING_CURRENT) {
+      _hasZeroed = true;
     }
     if (frc::RobotBase::IsSimulation() == true) {
-      _hasReset = true;
+      _hasZeroed = true;
     }
-  })).Until([this]{ return _hasReset; });
+  })).Until([this]{ return _hasZeroed; });
 }
 
 frc2::CommandPtr SubClimber::StowClimber() {
-  _leftClimbMotor.SetPositionTarget(_STOW_TURNS);
-  _rightClimbMotor.SetPositionTarget(_STOW_TURNS);
+  _climberMotor.SetPositionTarget(_STOW_TURNS);
 }
 
 frc2::CommandPtr SubClimber::ReadyClimber() {
-  _leftClimbMotor.SetPositionTarget(_READY_TURNS);
-  _rightClimbMotor.SetPositionTarget(_READY_TURNS);
+  _climberMotor.SetPositionTarget(_READY_TURNS);
 }
 
 frc2::CommandPtr SubClimber::ClimbL1() {
-  _leftClimbMotor.SetPositionTarget(_L1_TURNS);
-  _rightClimbMotor.SetPositionTarget(_L1_TURNS);
+  _climberMotor.SetPositionTarget(_L1_TURNS);
 }
