@@ -92,7 +92,10 @@ void SubDrivebase::LogDrivebaseStates() {
 }
 
 wpi::array<frc::SwerveModulePosition, 4U> SubDrivebase::GetSwerveStates() {
-  return {_frontLeft.GetPosition(), _frontRight.GetPosition(), _backLeft.GetPosition(),
+  return {
+    _frontLeft.GetPosition(),
+    _frontRight.GetPosition(),
+    _backLeft.GetPosition(),
     _backRight.GetPosition()};
 }
 
