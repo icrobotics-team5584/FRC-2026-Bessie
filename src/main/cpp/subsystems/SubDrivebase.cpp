@@ -159,7 +159,8 @@ void SubDrivebase::Drive(units::meters_per_second_t xSpeed, units::meters_per_se
   // Set speed limit and apply speed limit to all modules
   _kinematics.DesaturateWheelSpeeds(
     &states, 
-    frc::SmartDashboard::GetNumber("Drivebase/Config/Max Velocity", DrivebaseConfig::MAX_VELOCITY.value()) *1_mps);
+    frc::SmartDashboard::GetNumber("Drivebase/Config/Max Velocity", DrivebaseConfig::MAX_VELOCITY.value()) *
+      1_mps);
 
   // Extract force feedforwards
   std::array<units::newton_t, 4> defaults{0_N, 0_N, 0_N, 0_N};
