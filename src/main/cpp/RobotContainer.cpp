@@ -36,7 +36,8 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureBindings() {
-_driverController.A().OnTrue(cmd::Shoot());
+_driverController.A().WhileTrue(cmd::Shoot());
+_driverController.B().OnTrue(cmd::AimAtPose(frc::Pose2d{0_m,0_m,0_deg}));
 }
 
 std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {
