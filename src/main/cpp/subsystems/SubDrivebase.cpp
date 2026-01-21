@@ -279,13 +279,10 @@ frc::ChassisSpeeds SubDrivebase::CalcDriveToPoseSpeeds(frc::Pose2d targetPose) {
 
 frc::ChassisSpeeds SubDrivebase::CalcJoystickSpeeds(frc2::CommandXboxController& controller) {
   std::string configPath = "Drivebase/Config/";
-  auto deadband =
-    Logger::Tune(configPath + "Joystick Deadband", DrivebaseConfig::JOYSTICK_DEADBAND);
+  auto deadband = Logger::Tune(configPath + "Joystick Deadband", DrivebaseConfig::JOYSTICK_DEADBAND);
   auto maxVelocity = Logger::Tune(configPath + "Max Velocity", DrivebaseConfig::MAX_VELOCITY);
-  auto maxAngularVelocity =
-    Logger::Tune(configPath + "Max Angular Velocity", DrivebaseConfig::MAX_ANGULAR_VELOCITY);
-  auto maxJoystickAccel =
-    Logger::Tune(configPath + "Max Joystick Accel", DrivebaseConfig::MAX_JOYSTICK_ACCEL);
+  auto maxAngularVelocity = Logger::Tune(configPath + "Max Angular Velocity", DrivebaseConfig::MAX_ANGULAR_VELOCITY);
+  auto maxJoystickAccel = Logger::Tune(configPath + "Max Joystick Accel", DrivebaseConfig::MAX_JOYSTICK_ACCEL);
   auto maxAngularJoystickAccel = Logger::Tune(
     configPath + "Max Joystick Angular Accel", DrivebaseConfig::MAX_ANGULAR_JOYSTICK_ACCEL);
   auto translationScaling =
@@ -348,16 +345,12 @@ frc::ChassisSpeeds SubDrivebase::CalcJoystickSpeeds(frc2::CommandXboxController&
 
 frc2::CommandPtr SubDrivebase::JoystickDrive(
   frc2::CommandXboxController& controller, bool fieldOriented, double speedScale) {
-  return Drive(
-    [this, speedScale, &controller] {
+  return Drive([this, speedScale, &controller] {
       auto speeds = CalcJoystickSpeeds(controller);
-      speeds.vx = std::clamp(
-        speeds.vx * speedScale, -DrivebaseConfig::MAX_VELOCITY, DrivebaseConfig::MAX_VELOCITY);
-      speeds.vy = std::clamp(
-        speeds.vy * speedScale, -DrivebaseConfig::MAX_VELOCITY, DrivebaseConfig::MAX_VELOCITY);
+      speeds.vx = std::clamp(speeds.vx * speedScale, -DrivebaseConfig::MAX_VELOCITY, DrivebaseConfig::MAX_VELOCITY);
+      speeds.vy = std::clamp(speeds.vy * speedScale, -DrivebaseConfig::MAX_VELOCITY, DrivebaseConfig::MAX_VELOCITY);
       return frc::ChassisSpeeds{speeds.vx, speeds.vy, speeds.omega};
-    },
-    fieldOriented);
+    }, fieldOriented);
 }
 
 // Special
