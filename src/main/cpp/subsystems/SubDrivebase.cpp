@@ -26,10 +26,11 @@ void SubDrivebase::SimulationPeriodic() {
   _backLeft.UpdateSim(20_ms);
   _backRight.UpdateSim(20_ms);
 
-  auto rotSpeed = _kinematics
-                    .ToChassisSpeeds(_frontLeft.GetState(), _frontRight.GetState(),
-                      _backLeft.GetState(), _backRight.GetState())
-                    .omega;
+  auto rotSpeed = _kinematics.ToChassisSpeeds(
+    _frontLeft.GetState(),
+    _frontRight.GetState(),
+    _backLeft.GetState(),
+    _backRight.GetState()).omega;
   units::radian_t changeInRot = rotSpeed * 20_ms;
   units::degree_t newHeading = GetGyroAngle().RotateBy(changeInRot).Degrees();
   _gyro.SetYaw(newHeading);
