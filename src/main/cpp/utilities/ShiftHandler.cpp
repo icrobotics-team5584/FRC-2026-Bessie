@@ -1,7 +1,7 @@
 #include "utilities/ShiftHandler.h"
 
 
-RebuiltShift ShiftHandler::GetShift()
+RebuiltShift ShiftHandler::GetCurrentShift()
 {
     if(frc::DriverStation::IsAutonomousEnabled()) {
         return RebuiltShift::AUTON;
@@ -72,5 +72,5 @@ units::second_t ShiftHandler::GetTimeLeft()
 
 bool ShiftHandler::IsShift(RebuiltShift shift)
 {
-    printf("balh\n");
+    RebuiltShift currentShift = GetCurrentShift()
 }

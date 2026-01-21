@@ -11,7 +11,7 @@ enum RebuiltShift {
 
 class ShiftHandler {
     public:
-        RebuiltShift GetShift();
+        RebuiltShift GetCurrentShift();
         RebuiltShift GetWinningShift();
         units::second_t GetTimeLeft();
         bool IsShift(RebuiltShift shift);
