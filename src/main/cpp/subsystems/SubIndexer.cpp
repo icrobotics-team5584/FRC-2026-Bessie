@@ -15,11 +15,11 @@ SubIndexer::SubIndexer() {
 
 frc2::CommandPtr SubIndexer::IndexerOn() {
   return StartEnd([this] { _indexerMotor.Set(1); }, [this] { _indexerMotor.Set(0); });
-};
+}
 
 frc2::CommandPtr SubIndexer::IndexerOff() {
   return RunOnce([this] { _indexerMotor.Set(0); });
-};
+}
 
 void SubIndexer::CurrentHighTimer() {
   _indexerHighCurrentTimer.Start();
@@ -27,7 +27,7 @@ void SubIndexer::CurrentHighTimer() {
   if (_indexerHighCurrentTimer.Get() > 3_s) {
     IndexerCurrentAlert.Set(true);
   }
-};
+}
 
 // This method will be called once per scheduler run
 void SubIndexer::Periodic() {
