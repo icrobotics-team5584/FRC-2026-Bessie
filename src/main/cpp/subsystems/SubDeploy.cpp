@@ -15,6 +15,8 @@ SubDeploy::SubDeploy() {
   _deployMotorConfig.encoder.VelocityConversionFactor(1.0 / DEPLOY_GEARING);
   _deployMotorConfig.closedLoop.P(DEPLOY_P);
   _deployMotor.OverwriteConfig(_deployMotorConfig);
+
+  Logger::Log("Deploy/DeployMotor", &_deployMotor);
 }
 
 frc2::CommandPtr SubDeploy::DeployIntake() {
