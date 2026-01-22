@@ -23,9 +23,11 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     # Runs a single command using the runners shell
-    - name: Compile and run tests on robot code
+    - name: Install Java
       run: |
-        ls /usr/lib/jvm
-        export JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
-        ./gradlew build
+        apt-get install -y openjdk-17-jdk-headless && \
+        export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+        java --version
+    - name: Compile and run tests on robot code
+      run: ./gradlew build
         
