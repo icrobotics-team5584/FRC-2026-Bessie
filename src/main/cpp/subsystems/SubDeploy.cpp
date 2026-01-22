@@ -73,7 +73,7 @@ void SubDeploy::DeployCurrentHighTimer() {
   _deployHighCurrentTimer.Start();
 
   if (_deployHighCurrentTimer.Get() > 3_s) {
-    deployCurrentAlert.Set(true);
+    _deployCurrentAlert.Set(true);
   }
 }
 
@@ -85,7 +85,7 @@ void SubDeploy::Periodic() {
   if (deployCurrent > 20_A) {
     DeployCurrentHighTimer();
   } else {
-    deployCurrentAlert.Set(false);
+    _deployCurrentAlert.Set(false);
     _deployHighCurrentTimer.Reset();
   }
 
@@ -93,9 +93,9 @@ void SubDeploy::Periodic() {
   Logger::Log("Deploy/Deploy Motor Temperature", deployTemperature);
 
   if (deployTemperature > 60_degC) {
-    deployHighTemperatureAlert.Set(true);
+    _deployHighTemperatureAlert.Set(true);
   } else {
-    deployHighTemperatureAlert.Set(false);
+    _deployHighTemperatureAlert.Set(false);
   }
 }
 
