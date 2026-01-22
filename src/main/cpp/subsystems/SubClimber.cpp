@@ -42,6 +42,8 @@ void SubClimber::SimulationPeriodic() {
   Logger::Log("Climber/Sim/Voltage", simVoltage);
   Logger::Log("Climber/Sim/Arm Position", simArmPosition);
   Logger::Log("Climber/Sim/Arm Velocity", simArmVelocity);
+  Logger::Log("Climber/Sim/Rotor Position", simRotorPosition);
+  Logger::Log("Climber/Sim/Rotor Velocity", simRotorVelocity);
 };
 
 /* Instaneous */
