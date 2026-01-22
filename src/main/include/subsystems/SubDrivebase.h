@@ -48,6 +48,7 @@ class SubDrivebase : public frc2::SubsystemBase {
   units::degree_t GetPitch();
   units::degree_t GetRoll();
 
+  units::degrees_per_second_t GetAngularVelocity();
   units::meters_per_second_t GetVelocity();
   units::meters_per_second_t GetVelocityX();
   units::meters_per_second_t GetVelocityY();

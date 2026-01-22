@@ -228,6 +228,15 @@ units::meters_per_second_t SubDrivebase::GetVelocityY() {
   return speeds.vy;
 }
 
+units::degrees_per_second_t SubDrivebase::GetAngularVelocity() {
+  auto speeds = _kinematics.ToChassisSpeeds(_frontLeft.GetState(), _frontRight.GetState(),
+                                            _backLeft.GetState(), _backRight.GetState());
+  namespace m = units::math;
+  Logger::Log("Drivebase/velocity/vx", speeds.vx);
+  Logger::Log("Drivebase/velocity/vy", speeds.vy);
+  return speeds.omega;
+}
+
 frc2::Trigger SubDrivebase::CheckCoastButton() {
   return frc2::Trigger{[this] { return !_toggleBrakeCoast.Get(); }};
 }
