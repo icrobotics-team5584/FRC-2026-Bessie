@@ -48,8 +48,8 @@ void RobotContainer::ConfigureBindings() {
   _driverController.POVUp().OnTrue(SubFeeder::GetInstance().FeederOn());
   _driverController.POVDown().OnTrue(SubFeeder::GetInstance().FeederOff());
 
-  _driverController.POVRight().OnTrue(SubIndexer::GetInstance().IndexerOn());
-  _driverController.POVLeft().OnTrue(SubIndexer::GetInstance().IndexerOff());
+  _driverController.POVRight().OnTrue(SubIndexer::GetInstance().Index());
+  _driverController.POVLeft().OnTrue(SubIndexer::GetInstance().NotIndex());
 
   // _driverController.POVUp().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle([] {return 0_deg;}));
   // _driverController.POVLeft().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle([] {return -90_deg;}));

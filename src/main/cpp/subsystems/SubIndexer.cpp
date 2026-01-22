@@ -13,6 +13,7 @@ SubIndexer::SubIndexer() {
   Logger::Log("Indexer/Indexer Motor", &_indexerMotor);
 
   _outdexerMotorConfig.SmartCurrentLimit(60);
+  _outdexerMotorConfig.Inverted(true);
   _outdexerMotor.OverwriteConfig(_outdexerMotorConfig);
   Logger::Log("Indexer/Indexer Out motor", &_outdexerMotor);
 }
@@ -96,4 +97,13 @@ void SubIndexer::SimulationPeriodic() {
   _sim.SetInputVoltage(_indexerMotor.CalcSimVoltage());
   _sim.Update(20_ms);
   _indexerMotor.IterateSim(_sim.GetAngularVelocity());
+}
+
+frc2::CommandPtr SubIndexer::Index() {
+  return StartEnd([this] { _indexerMotor.Set(0.5); _outdexerMotor.Set(0.5); }, [this] { _indexerMotor.Set(0); _outdexerMotor.Set(0);});
+}
+
+
+frc2::CommandPtr SubIndexer::NotIndex() {
+  return RunOnce([this] { _indexerMotor.Set(0); _outdexerMotor.Set(0); });
 }
