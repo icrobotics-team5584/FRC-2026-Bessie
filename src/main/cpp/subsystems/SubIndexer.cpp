@@ -11,41 +11,84 @@ SubIndexer::SubIndexer() {
   _indexerMotorConfig.SmartCurrentLimit(60);
   _indexerMotor.OverwriteConfig(_indexerMotorConfig);
   Logger::Log("Indexer/Indexer Motor", &_indexerMotor);
+
+  _outdexerMotorConfig.SmartCurrentLimit(60);
+  _outdexerMotor.OverwriteConfig(_outdexerMotorConfig);
+  Logger::Log("Indexer/Indexer Out motor", &_outdexerMotor);
 }
 
+
+//Spindexer motor
 frc2::CommandPtr SubIndexer::IndexerOn() {
   return StartEnd([this] { _indexerMotor.Set(1); }, [this] { _indexerMotor.Set(0); });
-};
+}
 
 frc2::CommandPtr SubIndexer::IndexerOff() {
   return RunOnce([this] { _indexerMotor.Set(0); });
-};
+}
 
-void SubIndexer::CurrentHighTimer() {
+void SubIndexer::IndexerCurrentHighTimer() {
   _indexerHighCurrentTimer.Start();
 
   if (_indexerHighCurrentTimer.Get() > 3_s) {
-    IndexerCurrentAlert.Set(true);
+    _indexerCurrentAlert.Set(true);
+  }
+}
+
+//Indexer horizontal roller motor
+frc2::CommandPtr SubIndexer::IndexerOutOn(){
+  return RunOnce([this]{ _outdexerMotor.Set(1); });
+}
+
+frc2::CommandPtr SubIndexer::IndexerOutOff(){
+  return RunOnce([this]{ _outdexerMotor.Set(0); });
+}
+
+void SubIndexer::IndexerOutCurrentHighTimer() {
+  _outdexerHighCurrentTimer.Start();
+
+  if (_outdexerHighCurrentTimer.Get() > 3_s) {
+    _outdexerCurrentAlert.Set(true);
   }
 };
 
+
+
 // This method will be called once per scheduler run
 void SubIndexer::Periodic() {
-  units::ampere_t current = _indexerMotor.GetOutputCurrent() * 1_A;
-  Logger::Log("Indexer/Indexer Motor Current", current);
-  if (current > 20_A) {
-    CurrentHighTimer();
+  units::ampere_t IndexerCurrent = _indexerMotor.GetOutputCurrent() * 1_A;
+  Logger::Log("Indexer/Indexer Motor Current", IndexerCurrent);
+  if (IndexerCurrent > 20_A) {
+    IndexerCurrentHighTimer();
   } else {
-    IndexerCurrentAlert.Set(false);
+    _indexerCurrentAlert.Set(false);
     _indexerHighCurrentTimer.Reset();
   }
 
-  units::celsius_t temperature = _indexerMotor.GetTemperature();
-  Logger::Log("Indexer/Indexer Motor Temperature", temperature);
-  if (temperature > 60_degC) {
-    highTemperatureAlert.Set(true);
+  units::celsius_t IndexerTemp = _indexerMotor.GetTemperature();
+  Logger::Log("Indexer/Indexer Motor Temperature", IndexerTemp);
+  if (IndexerTemp > 60_degC) {
+    _indexerHighTemperatureAlert.Set(true);
   } else {
-    highTemperatureAlert.Set(false);
+    _indexerHighTemperatureAlert.Set(false);
+  }
+
+
+  units::ampere_t IndexerOutcurrent = _outdexerMotor.GetOutputCurrent() * 1_A;
+  Logger::Log("Indexer/Indexer Motor Current", IndexerOutcurrent);
+  if (IndexerOutcurrent > 20_A) {
+    IndexerOutCurrentHighTimer();
+  } else {
+    _outdexerCurrentAlert.Set(false);
+    _outdexerHighCurrentTimer.Reset();
+  }
+
+  units::celsius_t IndexerOutTemp = _outdexerMotor.GetTemperature();
+  Logger::Log("Indexer/Indexer Motor Temperature", IndexerOutTemp);
+  if (IndexerOutTemp > 60_degC) {
+    _outdexerHighTemperatureAlert.Set(true);
+  } else {
+    _outdexerHighTemperatureAlert.Set(false);
   }
 }
 

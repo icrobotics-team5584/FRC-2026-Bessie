@@ -21,12 +21,15 @@ namespace canid {
     constexpr int INTAKE = 14;
     constexpr int INDEXER = 16;
     constexpr int FEEDER = 17;
-    constexpr int INTAKE_DEPLOY = 18;
+    constexpr int DEPLOY = 18;
+   
 
     constexpr int HOOD_MOTOR = 19; 
     constexpr int SHOOTER_MOTOR_1 = 20; 
     constexpr int SHOOTER_MOTOR_2 = 21;  
     constexpr int TURRET_MOTOR = 22; 
+
+    constexpr int OUTDEXER = 23;
 }
 
 namespace dio {

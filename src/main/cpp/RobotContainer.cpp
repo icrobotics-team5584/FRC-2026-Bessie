@@ -4,21 +4,25 @@
 
 #include "RobotContainer.h"
 
-#include <frc2/command/Commands.h>
+#include "subsystems/SubDeploy.h"
 #include "subsystems/SubDrivebase.h"
-#include "commands/DriveCommands.h"
-#include "subsystems/SubIntake.h"
 #include "subsystems/SubFeeder.h"
-#include "subsystems/SubIndexer.h"
-#include "commands/AutonCommands.h"
-#include "subsystems/SubVision.h"
-#include "subsystems/SubTurret.h"
 #include "subsystems/SubHood.h"
+#include "subsystems/SubIndexer.h"
+#include "subsystems/SubIntake.h"
 #include "subsystems/SubShooter.h"
-#include "commands/VisionCommands.h"
+#include "subsystems/SubTurret.h"
+#include "subsystems/SubVision.h"
+
+#include "commands/AutonCommands.h"
+#include "commands/DriveCommands.h"
+#include "commands/FuelCommands.h"
 #include "commands/TurretCommands.h"
+#include "commands/VisionCommands.h"
 
 #include "utilities/PoseHandler.h"
+
+#include <frc2/command/Commands.h>
 
 RobotContainer::RobotContainer() {
   SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
@@ -26,10 +30,7 @@ RobotContainer::RobotContainer() {
   ConfigureBindings();
   SubVision::GetInstance().SetDefaultCommand(cmd::AddVisionMeasurement());
 
-  _autoManager.AddDefaultAuton(
-    "default",  
-    AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton())
-  );
+  _autoManager.AddDefaultAuton("default", AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton()));
 
   frc::SmartDashboard::PutData("CHOSEN AUTON", &_autoManager.GetAutonChooser());
 
@@ -63,5 +64,5 @@ void RobotContainer::ConfigureBindings() {
 
 std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {
   AutonHelper::AutonPtr chosen = _autoManager.GetChosenAuton();
-  return chosen; 
+  return chosen;
 }
