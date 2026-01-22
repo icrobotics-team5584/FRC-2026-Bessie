@@ -25,7 +25,8 @@ jobs:
     # Runs a single command using the runners shell
     - name: Install Java
       run: |
-        apt-get install -y openjdk-17-jdk-headless && \
+        apt-get update -y
+        apt-get install default-jre -y
         export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
         java --version
     - name: Compile and run tests on robot code
