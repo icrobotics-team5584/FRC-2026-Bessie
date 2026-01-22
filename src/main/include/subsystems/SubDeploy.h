@@ -35,8 +35,8 @@ class SubDeploy : public frc2::SubsystemBase {
 
   void DeployCurrentHighTimer();
 
-  frc::Alert deployCurrentAlert{"Deploy Motor Overcurrent!", frc::Alert::AlertType::kWarning};
-  frc::Alert deployHighTemperatureAlert{
+  frc::Alert _deployCurrentAlert{"Deploy Motor Overcurrent!", frc::Alert::AlertType::kWarning};
+  frc::Alert _deployHighTemperatureAlert{
     "Deploy Motor High Temperature!", frc::Alert::AlertType::kWarning};
 
   /**

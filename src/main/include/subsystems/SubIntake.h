@@ -32,9 +32,9 @@ class SubIntake : public frc2::SubsystemBase {
 
   void IntakeCurrentHighTimer();
 
-  frc::Alert intakeCurrentAlert{"Intake Motor Overcurrent!", frc::Alert::AlertType::kWarning};
+  frc::Alert _intakeCurrentAlert{"Intake Motor Overcurrent!", frc::Alert::AlertType::kWarning};
 
-  frc::Alert intakeHighTemperatureAlert{
+  frc::Alert _intakeHighTemperatureAlert{
     "Intake Motor High Temperature!", frc::Alert::AlertType::kWarning};
 
   /**

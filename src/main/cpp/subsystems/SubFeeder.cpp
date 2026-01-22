@@ -33,7 +33,7 @@ void SubFeeder::CurrentHighTimer() {
   _feederHighCurrentTimer.Start();
 
   if (_feederHighCurrentTimer.Get() > 3_s) {
-    feederCurrentAlert.Set(true);
+    _feederCurrentAlert.Set(true);
   }
 }
 
@@ -46,16 +46,16 @@ void SubFeeder::Periodic() {
   if (current > 20_A) {
     SubFeeder::CurrentHighTimer();
   } else {
-    feederCurrentAlert.Set(false);
+    _feederCurrentAlert.Set(false);
     _feederHighCurrentTimer.Reset();
   }
 
   units::celsius_t temperature = _feederMotor.GetTemperature();
   Logger::Log("Feeder/Feeder Motor Temperature", temperature);
   if (temperature > 60_degC) {
-    highTemperatureAlert.Set(true);
+    _feederHighTemperatureAlert.Set(true);
   } else {
-    highTemperatureAlert.Set(false);
+    _feederHighTemperatureAlert.Set(false);
   }
 }
 
