@@ -27,7 +27,22 @@ void SubClimber::Periodic() {
   Logger::Log("Climber/Zeroing", _zeroing);
 }
 
-void SubClimber::SimulationPeriodic() {}
+void SubClimber::SimulationPeriodic() {
+  units::volt_t simVoltage = _climberMotor.CalcSimVoltage();
+  _climberSim.SetInputVoltage(simVoltage);
+  _climberSim.Update(20_ms);
+
+  units::meter_t simArmPosition = _climberSim.GetPosition();
+  units::meters_per_second_t simArmVelocity = _climberSim.GetVelocity();
+
+  units::turn_t simRotorPosition = (simArmPosition / _DRUM_CIRCUMFERENCE) * 1_tr;
+  units::turns_per_second_t simRotorVelocity = (simArmVelocity / _DRUM_CIRCUMFERENCE) * 1_tr;
+  _climberMotor.IterateSim(simRotorVelocity, simRotorPosition);
+
+  Logger::Log("Climber/Sim/Voltage", simVoltage);
+  Logger::Log("Climber/Sim/Arm Position", simArmPosition);
+  Logger::Log("Climber/Sim/Arm Velocity", simArmVelocity);
+};
 
 /* Instaneous */
 void SubClimber::SetBrakeMode(bool isbrake) {
