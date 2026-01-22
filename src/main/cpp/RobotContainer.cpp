@@ -9,17 +9,19 @@
 #include "subsystems/SubDrivebase.h"
 #include "subsystems/SubIntake.h"
 #include "subsystems/SubFeeder.h"
-#include "subsystems/SubIndexer.h"
 #include "subsystems/SubVision.h"
 #include "subsystems/SubTurret.h"
 #include "subsystems/SubHood.h"
+#include "subsystems/SubIndexer.h"
 #include "subsystems/SubShooter.h"
 #include "subsystems/SubClimber.h"
+#include "subsystems/SubDeploy.h"
 
 #include "commands/AutonCommands.h"
 #include "commands/DriveCommands.h"
 #include "commands/VisionCommands.h"
 #include "commands/TurretCommands.h"
+#include "commands/FuelCommands.h"
 
 #include "utilities/PoseHandler.h"
 
@@ -28,10 +30,7 @@ RobotContainer::RobotContainer() {
   ConfigureBindings();
   SubVision::GetInstance().SetDefaultCommand(cmd::AddVisionMeasurement());
 
-  _autoManager.AddDefaultAuton(
-    "default",  
-    AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton())
-  );
+  _autoManager.AddDefaultAuton("default", AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton()));
 
   frc::SmartDashboard::PutData("CHOSEN AUTON", &_autoManager.GetAutonChooser());
 
@@ -42,9 +41,11 @@ RobotContainer::RobotContainer() {
 
 void RobotContainer::ConfigureBindings() {
   //Triggers
-  _driverController.LeftTrigger().WhileTrue(SubClimber::GetInstance().RunCurrentZeroingSequence());
+  _driverController.LeftBumper().ToggleOnTrue(SubDeploy::GetInstance().ToggleDeploy());
+  _driverController.LeftTrigger().WhileTrue(cmd::IntakeSequence());
 
   //Bumpers
+  _driverController.RightTrigger().WhileTrue(SubClimber::GetInstance().RunCurrentZeroingSequence());
 
   //Letters
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
@@ -55,9 +56,10 @@ void RobotContainer::ConfigureBindings() {
   }));
 
   //POVs
-  _driverController.POVUp().OnTrue(cmd::AimAtFieldRelative([] {return 0_deg;}));
-  _driverController.POVDown().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle([] {return 0_deg;}));
-  _driverController.POVRight().OnTrue(cmd::AimAtPose(frc::Pose2d{0_m,0_m,0_deg}));
+  _driverController.POVUp().OnTrue(cmd::AimAtFieldRelative([] { return 0_deg; }));
+  _driverController.POVDown().OnTrue(
+    SubTurret::GetInstance().SetTurretTargetAngle([] { return 0_deg; }));
+  _driverController.POVRight().OnTrue(cmd::AimAtPose(frc::Pose2d{0_m, 0_m, 0_deg}));
 
   //Sticks
 
@@ -67,5 +69,5 @@ void RobotContainer::ConfigureBindings() {
 
 std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {
   AutonHelper::AutonPtr chosen = _autoManager.GetChosenAuton();
-  return chosen; 
+  return chosen;
 }
