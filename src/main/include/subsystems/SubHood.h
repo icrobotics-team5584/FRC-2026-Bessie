@@ -53,8 +53,8 @@ class SubHood : public frc2::SubsystemBase {
 
   units::ampere_t zeroingCurrentLimit = 15_A;
 
-  static constexpr units::degree_t UPPER_LIMIT = 35.0_deg;
-  static constexpr units::degree_t LOWER_LIMIT = 12.5_deg;
+  static constexpr units::degree_t UPPER_LIMIT = 37.5_deg;
+  static constexpr units::degree_t LOWER_LIMIT = 16.5_deg;
   static constexpr bool SIMULATE_GRAVITY = true;
   static constexpr units::degree_t STARTING_ANGLE = 13_deg;
   static constexpr units::degree_t STOW_ANGLE = 12.5_deg;
