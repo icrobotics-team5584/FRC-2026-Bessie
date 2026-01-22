@@ -35,12 +35,12 @@ class SubIndexer : public frc2::SubsystemBase {
   void IndexerCurrentHighTimer();
   void IndexerOutCurrentHighTimer();
 
-  frc::Alert IndexerCurrentAlert{"Indexer Motor Overcurrent!", frc::Alert::AlertType::kWarning};
-  frc::Alert IndexerHighTemperatureAlert{
+  frc::Alert _indexerCurrentAlert{"Indexer Motor Overcurrent!", frc::Alert::AlertType::kWarning};
+  frc::Alert _indexerHighTemperatureAlert{
     "Indexer Motor High Temperature!", frc::Alert::AlertType::kWarning};
 
-  frc::Alert IndexerOutCurrentAlert{"IndexerOut Motor Overcurrent!", frc::Alert::AlertType::kWarning};
-  frc::Alert IndexerOutHighTemperatureAlert{
+  frc::Alert _outdexerCurrentAlert{"IndexerOut Motor Overcurrent!", frc::Alert::AlertType::kWarning};
+  frc::Alert _outdexerHighTemperatureAlert{
     "IndexerOut Motor High Temperature!", frc::Alert::AlertType::kWarning};
   /**
    * Will be called periodically whenever the CommandScheduler runs.
@@ -54,10 +54,10 @@ class SubIndexer : public frc2::SubsystemBase {
 
   frc::Timer _indexerHighCurrentTimer;
 
-  ICSparkFlex _indexerOutMotor{canid::INDEXER_OUT};
-  rev::spark::SparkFlexConfig _indexerOutMotorConfig;
+  ICSparkFlex _outdexerMotor{canid::OUTDEXER};
+  rev::spark::SparkFlexConfig _outdexerMotorConfig;
 
-  frc::Timer _indexerOutHighCurrentTimer;
+  frc::Timer _outdexerHighCurrentTimer;
 
    
   // Simulation components
