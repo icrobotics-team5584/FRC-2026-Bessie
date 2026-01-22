@@ -27,7 +27,7 @@ void SubIntake::IntakeCurrentHighTimer() {
   _intakeHighCurrentTimer.Start();
 
   if (_intakeHighCurrentTimer.Get() > 3_s) {
-    intakeCurrentAlert.Set(true);
+    _intakeCurrentAlert.Set(true);
   }
 }
 
@@ -40,7 +40,7 @@ void SubIntake::Periodic() {
   if (intakeCurrent > 20_A) {
     IntakeCurrentHighTimer();
   } else {
-    intakeCurrentAlert.Set(false);
+    _intakeCurrentAlert.Set(false);
     _intakeHighCurrentTimer.Reset();
   }
 
@@ -49,9 +49,9 @@ void SubIntake::Periodic() {
   Logger::Log("Intake/Intake Motor Temperature", intakeTemperature);
 
   if (intakeTemperature > 60_degC) {
-    intakeHighTemperatureAlert.Set(true);
+    _intakeHighTemperatureAlert.Set(true);
   } else {
-    intakeHighTemperatureAlert.Set(false);
+    _intakeHighTemperatureAlert.Set(false);
   }
   RobotVisualisation::GetInstace()._intakeWheel.SetAngle(_intakeMotor.GetPosition());
 }

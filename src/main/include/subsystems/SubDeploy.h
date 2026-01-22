@@ -5,6 +5,7 @@
 #pragma once
 
 #include "utilities/ICSparkFlex.h"
+#include "utilities/MechanismCircle2d.h"
 
 #include <frc/Alert.h>
 #include <frc/Timer.h>
@@ -22,7 +23,6 @@
 #include "frc2/command/Commands.h"
 #include "rev/config/SparkFlexConfig.h"
 #include "rev/config/SparkFlexConfigAccessor.h"
-
 class SubDeploy : public frc2::SubsystemBase {
  public:
   static SubDeploy& GetInstance() {
@@ -40,8 +40,8 @@ class SubDeploy : public frc2::SubsystemBase {
 
   void DeployCurrentHighTimer();
 
-  frc::Alert deployCurrentAlert{"Deploy Motor Overcurrent!", frc::Alert::AlertType::kWarning};
-  frc::Alert deployHighTemperatureAlert{
+  frc::Alert _deployCurrentAlert{"Deploy Motor Overcurrent!", frc::Alert::AlertType::kWarning};
+  frc::Alert _deployHighTemperatureAlert{
     "Deploy Motor High Temperature!", frc::Alert::AlertType::kWarning};
 
   /**
@@ -59,7 +59,7 @@ class SubDeploy : public frc2::SubsystemBase {
   bool _hasZeroed = false;
   bool _currentlyZeroing = false;
 
-  static constexpr units::ampere_t zeroingCurrentLimit = 5_A;
+  static constexpr units::ampere_t ZEROINGCURRENTLIMIT = 5_A;
 
   // Simulation components
   static constexpr double DEPLOY_P = 0.2;
