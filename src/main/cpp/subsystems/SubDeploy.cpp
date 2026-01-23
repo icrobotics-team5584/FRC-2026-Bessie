@@ -99,11 +99,12 @@ void SubDeploy::Periodic() {
   } else {
     _deployHighTemperatureAlert.Set(false);
   }
+   RobotVisualisation::GetInstance()._deployLigament->SetAngle(_deployMotor.GetPosition());
 }
 
 void SubDeploy::SimulationPeriodic() {
   _deploySim.SetInputVoltage(_deployMotor.CalcSimVoltage());
   _deploySim.Update(20_ms);
   _deployMotor.IterateSim(_deploySim.GetVelocity(), _deploySim.GetAngle());
-  RobotVisualisation::GetInstance()._deployLigament->SetAngle(_deploySim.GetAngle());
+ 
 }
