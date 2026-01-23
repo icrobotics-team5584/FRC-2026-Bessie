@@ -47,6 +47,7 @@ RebuiltShift ShiftHandler::GetWinningShift()
 
 units::second_t ShiftHandler::GetTimeLeft()
 {
+    printf("TEST\n");
     units::second_t matchTime = frc::DriverStation::GetMatchTime();
     if(frc::DriverStation::IsAutonomousEnabled()) {
         return 20_s - matchTime;
@@ -84,6 +85,8 @@ std::string ShiftHandler::GetShiftName(RebuiltShift shift)
     case RebuiltShift::ENDGAME:
         return "Endgame";
     }
+
+    return "Default path here to stop the compliler throwing a warning";
 }
 
 bool ShiftHandler::IsShift(RebuiltShift shift)
