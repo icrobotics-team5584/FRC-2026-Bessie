@@ -39,6 +39,7 @@ class SubHood : public frc2::SubsystemBase {
   frc2::CommandPtr StowHood(); 
   frc2::CommandPtr ZeroHood();
   frc2::CommandPtr SetHoodPositionTarget(units::degree_t angle);
+  frc2::CommandPtr SetHoodPositionTargetFromDist(units::meter_t distanceToTarget);
   
   /**
    * Will be called periodically whenever the CommandScheduler runs.
@@ -66,6 +67,8 @@ class SubHood : public frc2::SubsystemBase {
 
   ICSparkMax _hoodMotor{canid::HOOD_MOTOR};
   rev::spark::SparkBaseConfig _hoodMotorConfig;
+
+  wpi::interpolating_map<units::meter_t, units::degree_t> _hoodPitchTable;
 
   static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::NEO550();
   static constexpr units::kilogram_square_meter_t MOI = 0.0001_kg_sq_m;

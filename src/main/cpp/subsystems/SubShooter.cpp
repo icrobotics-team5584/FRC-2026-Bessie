@@ -32,11 +32,11 @@ SubShooter::SubShooter() {
     // Feedback Sensor Ratio
     _shooterMotorConfig.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
-    _shooterMotor1.GetConfigurator().Apply(_shooterMotorConfig);
-    _shooterMotor2.GetConfigurator().Apply(_shooterMotorConfig);
-
     // Set motor 2 to follow motor 1
     _shooterMotor2.SetControl(ctre::phoenix6::controls::Follower(_shooterMotor1.GetDeviceID(), ctre::phoenix6::signals::MotorAlignmentValue::Opposed));
+
+    _shooterMotor1.GetConfigurator().Apply(_shooterMotorConfig);
+    _shooterMotor2.GetConfigurator().Apply(_shooterMotorConfig);
 
     _shooterMotor1.GetClosedLoopReference().SetUpdateFrequency(100_Hz);
 
@@ -80,6 +80,10 @@ void SubShooter::SimulationPeriodic() {
 
 frc2::CommandPtr SubShooter::SetShooterTarget(units::turns_per_second_t speed) {
     return RunOnce([this, speed] {_shooterMotor1.SetControl(_flywheelTargetVelocity.WithVelocity(speed));});
+}
+
+frc2::CommandPtr SubShooter::SetShooterTargetFromDist(units::meter_t distanceToTarget){
+    return RunOnce([this, distanceToTarget] {_shooterMotor1.SetControl(_flywheelTargetVelocity.WithVelocity(_flyWheelSpeedTable[distanceToTarget]));});
 }
 
 frc2::CommandPtr SubShooter::StopShooter() {
