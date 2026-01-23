@@ -10,14 +10,9 @@
 #include <frc/Alert.h>
 #include <frc/Timer.h>
 #include <frc/simulation/SingleJointedArmSim.h>
-#include <frc/smartdashboard/Mechanism2d.h>
-#include <frc/smartdashboard/MechanismLigament2d.h>
-#include <frc/smartdashboard/MechanismRoot2d.h>
 #include <frc/system/plant/DCMotor.h>
 #include <frc/system/plant/LinearSystemId.h>
 #include <frc2/command/SubsystemBase.h>
-
-#include <utilities/MechanismCircle2d.h>
 
 #include "Constants.h"
 #include "frc2/command/Commands.h"

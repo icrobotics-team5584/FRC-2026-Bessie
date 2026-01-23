@@ -12,7 +12,7 @@ class RobotVisualisation {
     RobotVisualisation(){
         Logger::Log("RobotVisualisation", &_display);
     }
-   static RobotVisualisation& GetInstace() {
+   static RobotVisualisation& GetInstance() {
     static RobotVisualisation intstance;
     return intstance;
    }

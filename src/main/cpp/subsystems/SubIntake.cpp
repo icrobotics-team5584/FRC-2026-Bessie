@@ -53,7 +53,7 @@ void SubIntake::Periodic() {
   } else {
     _intakeHighTemperatureAlert.Set(false);
   }
-  RobotVisualisation::GetInstace()._intakeWheel.SetAngle(_intakeMotor.GetPosition());
+  RobotVisualisation::GetInstance()._intakeWheel.SetAngle(_intakeMotor.GetPosition());
 }
 
 void SubIntake::SimulationPeriodic() {

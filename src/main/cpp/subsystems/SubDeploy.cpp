@@ -3,9 +3,11 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "subsystems/SubDeploy.h"
+
+#include "utilities/RobotVisualisation.h"
+
 #include <units/current.h>
 #include <utilities/Logger.h>
-#include "utilities/RobotVisualisation.h"
 
 SubDeploy::SubDeploy() {
   _deployMotorConfig.SmartCurrentLimit(60);
@@ -97,15 +99,11 @@ void SubDeploy::Periodic() {
   } else {
     _deployHighTemperatureAlert.Set(false);
   }
-
-   
-  
 }
 
 void SubDeploy::SimulationPeriodic() {
   _deploySim.SetInputVoltage(_deployMotor.CalcSimVoltage());
   _deploySim.Update(20_ms);
   _deployMotor.IterateSim(_deploySim.GetVelocity(), _deploySim.GetAngle());
-  RobotVisualisation::GetInstace()._deployLigament->SetAngle(_deploySim.GetAngle());
- 
+  RobotVisualisation::GetInstance()._deployLigament->SetAngle(_deploySim.GetAngle());
 }
