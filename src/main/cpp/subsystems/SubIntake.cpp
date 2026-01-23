@@ -15,7 +15,7 @@ SubIntake::SubIntake() {
 }
 
 frc2::CommandPtr SubIntake::IntakeOn() {
-  return StartEnd([this] { _intakeMotor.Set(1); }, [this] { _intakeMotor.Set(0); });
+  return StartEnd([this] { _intakeMotor.Set(1.0); }, [this] { _intakeMotor.Set(0); });
 }
 
 frc2::CommandPtr SubIntake::IntakeOff() {
@@ -26,7 +26,7 @@ void SubIntake::IntakeCurrentHighTimer() {
   _intakeHighCurrentTimer.Start();
 
   if (_intakeHighCurrentTimer.Get() > 3_s) {
-    intakeCurrentAlert.Set(true);
+    _intakeCurrentAlert.Set(true);
   }
 }
 
@@ -39,7 +39,7 @@ void SubIntake::Periodic() {
   if (intakeCurrent > 20_A) {
     IntakeCurrentHighTimer();
   } else {
-    intakeCurrentAlert.Set(false);
+    _intakeCurrentAlert.Set(false);
     _intakeHighCurrentTimer.Reset();
   }
 
@@ -48,9 +48,9 @@ void SubIntake::Periodic() {
   Logger::Log("Intake/Intake Motor Temperature", intakeTemperature);
 
   if (intakeTemperature > 60_degC) {
-    intakeHighTemperatureAlert.Set(true);
+    _intakeHighTemperatureAlert.Set(true);
   } else {
-    intakeHighTemperatureAlert.Set(false);
+    _intakeHighTemperatureAlert.Set(false);
   }
 }
 
