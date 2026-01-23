@@ -26,7 +26,6 @@
 
 RobotContainer::RobotContainer() {
   SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
-
   ConfigureBindings();
   SubVision::GetInstance().SetDefaultCommand(cmd::AddVisionMeasurement());
 
@@ -40,30 +39,18 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureBindings() {
-  _driverController.A().OnTrue(SubShooter::GetInstance().SetShooterTarget(1_tps));
-  _driverController.Y().OnTrue(SubShooter::GetInstance().SetShooterTarget(1500_rpm));
-  _driverController.B().OnTrue(SubShooter::GetInstance().SetShooterTarget(0_tps));
-  _driverController.X().OnTrue(SubShooter::GetInstance().StopShooter());
-  
-  _driverController.POVUp().OnTrue(SubFeeder::GetInstance().FeederOn());
-  _driverController.POVDown().OnTrue(SubFeeder::GetInstance().FeederOff());
-
-  _driverController.POVRight().OnTrue(SubIndexer::GetInstance().Index());
-  _driverController.POVLeft().OnTrue(SubIndexer::GetInstance().StopIndex());
-
-  _driverController.RightTrigger().WhileTrue(SubIntake::GetInstance().IntakeOn());
-  _driverController.LeftTrigger().WhileTrue(SubIntake::GetInstance().IntakeOff());
-
-  // _driverController.POVUp().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle([] {return 0_deg;}));
-  // _driverController.POVLeft().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle([] {return -90_deg;}));
-  // _driverController.POVRight().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle([] {return 90_deg;}));
-  // _driverController.POVDown().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle([] {return 180_deg;}));
+  _driverController.LeftBumper().ToggleOnTrue(SubDeploy::GetInstance().ToggleDeploy());
+  _driverController.LeftTrigger().WhileTrue(cmd::IntakeSequence());
+  _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
+  _driverController.Y().OnTrue(SubDrivebase::GetInstance().ResetGyroCmd());
+  _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
+  _driverController.A().OnTrue(
+    frc2::cmd::RunOnce([] { SubDrivebase::GetInstance().SetPose(frc::Pose2d{0_m, 0_m, 0_deg}); }));
+  _driverController.POVUp().OnTrue(cmd::AimAtFieldRelative([] { return 0_deg; }));
+  _driverController.POVDown().OnTrue(
+    SubTurret::GetInstance().SetTurretTargetAngle([] { return 0_deg; }));
+  _driverController.POVRight().OnTrue(cmd::AimAtPose(frc::Pose2d{0_m, 0_m, 0_deg}));
 }
-
-
-
-
-
 
 std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {
   AutonHelper::AutonPtr chosen = _autoManager.GetChosenAuton();
