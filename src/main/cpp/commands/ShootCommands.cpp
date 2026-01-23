@@ -59,6 +59,8 @@ using namespace frc2::cmd;
 
 frc2::CommandPtr AimAndShoot(frc::Translation3d target_pose) {
     Logger::FieldDisplay::GetInstance().DisplayPose("ShootOnMove/target", {target_pose.X(), target_pose.Y(), 0_deg});
+    ShootConfig c {0_deg, 0_deg, 0_mps};
+    static ShootConfig* conf = &c;
     return Run([target_pose] {
         auto curr_pos = PoseHandler::GetInstance().GetPose();
         auto vel = SubDrivebase::GetInstance().GetVelocityComponets();
@@ -66,33 +68,31 @@ frc2::CommandPtr AimAndShoot(frc::Translation3d target_pose) {
         curr_pos.TransformBy({bot_to_turret.Translation(), 0_deg});
         auto magn = hypot(curr_pos.X().value(),curr_pos.Y().value());
         auto turr_ang =  SubTurret::GetInstance().GetTurretAngle().value() / 180 * 3.142;
-        auto x_vel = vel.vx - vel.omega.value() * magn * sin(turr_ang) * 1_ms;
-        auto y_vel = vel.vy + vel.omega.value() * magn * cos(turr_ang) * 1_ms;
+        auto x_vel = vel.vx + vel.omega.value() / 3.142 / 2 * magn * sin(turr_ang) * 1_mps;
+        auto y_vel = vel.vy - vel.omega.value() / 3.142 / 2 * magn * cos(turr_ang) * 1_mps;
         units::meter_t distance = hypot(target_pose.X().value() - curr_pos.X().value(), target_pose.Y().value() - curr_pos.Y().value()) * 1_m;
-        ShootConfig conf = CalShootOnMove(0.5, target_pose, SubHood::GetInstance().GetAngleFromDistance(distance),
+        *conf = CalShootOnMove(0.5, target_pose, SubHood::GetInstance().GetAngleFromDistance(distance),
                                           x_vel, y_vel);
 
-        frc::Pose2d end {curr_pos.X() + 3 * cos(conf.Yaw.Radians().value()) * 1_m, curr_pos.Y() + 3 * sin(conf.Yaw.Radians().value()) * 1_m, frc::Rotation2d(0_deg)};
+        frc::Pose2d end {curr_pos.X() + 3 * cos(conf->Yaw.Radians().value()) * 1_m, curr_pos.Y() + 3 * sin(conf->Yaw.Radians().value()) * 1_m, frc::Rotation2d(0_deg)};
 
         Logger::FieldDisplay::GetInstance().DisplayPose("Turret yaw", end);
 
         Logger::Log("ShootOnMove/End x",end.X().value());
         Logger::Log("ShootOnMove/End y",end.Y().value());
-        Logger::Log("ShootOnMove/Yaw", conf.Yaw.Degrees());
-        Logger::Log("ShootOnMove/Pivot Angle", 90 - conf.PivotAngle.Degrees().value());
-        Logger::Log("ShootOnMove/Target Velocity", conf.Velocity());
-        
-    //     SubHood::GetInstance().SetHoodPosTarget(90_deg - conf.PivotAngle.Degrees());
-    //     SubTurret::GetInstance().SetTurretTarget(conf.Yaw.Degrees() -turr_ang); //Robot relative angle
-    //     SubShooter::GetInstance().SetTargetFromProjectileVel(conf.Velocity);
-    // })
-    // .FinallyDo([]{SubShooter::GetInstance().Stop();});
-    //     // SubHood::GetInstance().SetHoodPosTarget(90_deg - conf.PivotAngle.Degrees());
-    //     // SubTurret::GetInstance().SetTurretTargetAngleVoid(conf.Yaw.Degrees());
-    //     // SubShooter::GetInstance().SetTargetFromProjectileVel(conf.Velocity);
-        cmd::AimAtFieldRelative([conf] {return conf.Yaw.Degrees();});
-    });
-    // .FinallyDo([]{SubShooter::GetInstance().Stop();});
+        Logger::Log("ShootOnMove/Yaw", conf->Yaw.Degrees());
+        Logger::Log("ShootOnMove/Pivot Angle", 90 - conf->PivotAngle.Degrees().value());
+        Logger::Log("ShootOnMove/Target Velocity", conf->Velocity());
+    }).AlongWith(
+        SubHood::GetInstance().SetHoodPositionTarget([]{return 90_deg - conf->PivotAngle.Degrees();})
+    ).AlongWith(
+        SubTurret::GetInstance().SetTurretTargetAngle([]{return conf->Yaw.Degrees() - SubTurret::GetInstance().GetTurretAngle();})
+    ).AlongWith(
+        SubShooter::GetInstance().SetShooterTarget(
+            std::function<units::meters_per_second_t()>{[] {return conf->Velocity;}})
+    )
+    // .FinallyDo(SubShooter::GetInstance().StopShooter())
+    ;
 }
 
 }

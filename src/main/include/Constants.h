@@ -1,4 +1,5 @@
 #pragma once
+#include <frc/geometry/Pose3d.h>
 
 namespace canid {
     constexpr int DRIVEBASE_FRONT_RIGHT_DRIVE = 1; 
@@ -36,4 +37,8 @@ namespace dio {
 
 namespace pwm {
     constexpr int LED = 0;
+}
+
+namespace pose {
+    constexpr frc::Translation3d HUB_POSE {4.625_m, 4.025_m, 1.823_m};
 }

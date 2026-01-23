@@ -43,7 +43,7 @@ void RobotContainer::ConfigureBindings() {
 
   _driverController.A().OnTrue(cmd::AimAtPose(frc::Pose2d(0_m,0_m,0_deg)));
 
-  _driverController.RightTrigger().WhileTrue(cmd::AimAndShoot({0_m, 0_m, 0_m}));
+  _driverController.RightTrigger().WhileTrue(cmd::AimAndShoot(pose::HUB_POSE));
   _driverController.LeftTrigger().OnTrue(frc2::cmd::RunOnce([]{
     SubDrivebase::GetInstance().SetPose(frc::Pose2d{0_m,0_m,0_deg});
   }));

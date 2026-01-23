@@ -15,6 +15,9 @@ SubHood::SubHood() {
     _hoodMotorConfig.SmartCurrentLimit(30);
     _hoodMotor.OverwriteConfig(_hoodMotorConfig);
 
+    _pitchTable.insert(0_m, 22_deg);
+    _pitchTable.insert(4_m, 22_deg);
+
     frc::SmartDashboard::PutData("Hood/Motor", &_hoodMotor);
     frc::SmartDashboard::PutData("Hood/mech2dDisplay", &_hoodMech);
 }
@@ -38,6 +41,10 @@ void SubHood::SimulationPeriodic() {
 
 frc2::CommandPtr SubHood::SetHoodPositionTarget(units::degree_t angle) {
     return RunOnce([this, angle] {_hoodMotor.SetPositionTarget(angle);});
+}
+
+frc2::CommandPtr SubHood::SetHoodPositionTarget(std::function<units::degree_t()> angle) {
+    return RunOnce([this, angle] {_hoodMotor.SetPositionTarget(angle());});
 }
 
 frc2::CommandPtr SubHood::ZeroHood() {
