@@ -41,6 +41,9 @@ SubShooter::SubShooter() {
     _shooterMotor1.GetClosedLoopReference().SetUpdateFrequency(100_Hz);
 
     frc::SmartDashboard::PutData("Shooter/mech2dDisplay", &_shooterMech);
+
+    _flyWheelSpeedTable.insert(1_m, 20_tps);
+    _flyWheelSpeedTable.insert(2_m, 40_tps);
 }
 
 // This method will be called once per scheduler run

@@ -17,6 +17,9 @@ SubHood::SubHood() {
 
     frc::SmartDashboard::PutData("Hood/Motor", &_hoodMotor);
     frc::SmartDashboard::PutData("Hood/mech2dDisplay", &_hoodMech);
+
+    _hoodPitchTable.insert(1_m, 15_deg);
+    _hoodPitchTable.insert(2_m, 18_deg);
 }
 
 // This method will be called once per scheduler run
@@ -28,6 +31,7 @@ void SubHood::Periodic() {
 
     Logger::Log("Hood/haszeroed", _hasZeroed);
     Logger::Log("Hood/zeroing", _zeroing);
+    Logger::Log("Hood/IsAtTarget", HoodIsAtTarget());
 }
 
 void SubHood::SimulationPeriodic() {
@@ -80,5 +84,5 @@ frc2::CommandPtr SubHood::SetHoodPositionTargetFromDist(std::function<units::met
 }
 
 bool SubHood::HoodIsAtTarget(){
-    return _hoodMotor.GetPosError() < 0.5_deg;
+    return units::math::abs(_hoodMotor.GetPosError()) < 0.5_deg;
 }

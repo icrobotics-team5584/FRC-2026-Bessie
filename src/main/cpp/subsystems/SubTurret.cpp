@@ -52,6 +52,7 @@ void SubTurret::Periodic() {
     Logger::Log("Turret/Encoder/e1init", encoder1ZeroOffset);
     Logger::Log("Turret/Encoder/e2init", encoder2ZeroOffset);
     Logger::Log("Turret/hasReset", _hasZeroed);
+    Logger::Log("Turret/IsAtTarget", TurretIsAtTarget());
 
     Logger::Log("Turret/Encoder/Encoder1IsConnected", _turretEncoder1.IsConnected());
     Logger::Log("Turret/Encoder/Encoder2IsConnected", _turretEncoder2.IsConnected());
@@ -175,5 +176,5 @@ units::degree_t SubTurret::getEncoder2Degrees() {
 }
 
 bool SubTurret::TurretIsAtTarget(){
-    return _turretMotor.GetPosError() < 0.5_deg;
+    return units::math::abs(_turretMotor.GetPosError()) < 0.5_deg;
 }

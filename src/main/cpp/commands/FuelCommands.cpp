@@ -7,6 +7,7 @@
 #include "subsystems/SubIntake.h"
 #include "subsystems/SubShooter.h"
 #include "subsystems/SubTurret.h"
+#include "utilities/Logger.h"
 
 #include "commands/TurretCommands.h"
 
@@ -21,13 +22,14 @@ frc2::CommandPtr IntakeSequence() {
 }
 
 frc2::CommandPtr StationaryShootAt(frc::Pose2d target) {
-  frc::Pose2d currentPose = PoseHandler::GetInstance().GetPose();
-
-  units::meter_t distanceToTarget = target.Translation().Distance(currentPose.Translation());
+  auto distanceToTarget = [target] {
+    auto curPose = PoseHandler::GetInstance().GetPose().Translation();
+    Logger::Log("Shooter/distToTargetInner", target.Translation().Distance(curPose));
+    return target.Translation().Distance(curPose);};
 
   return frc2::cmd::Parallel(cmd::AimAtPose(target),
-    SubShooter::GetInstance().SetShooterTargetFromDist([distanceToTarget]{return distanceToTarget;}),
-    SubHood::GetInstance().SetHoodPositionTargetFromDist([distanceToTarget]{return distanceToTarget;}))
+    SubShooter::GetInstance().SetShooterTargetFromDist(distanceToTarget),
+    SubHood::GetInstance().SetHoodPositionTargetFromDist(distanceToTarget))
     .Until([] {
       return SubShooter::GetInstance().IsAtSpeed() && SubTurret::GetInstance().TurretIsAtTarget() &&
              SubHood::GetInstance().HoodIsAtTarget();
