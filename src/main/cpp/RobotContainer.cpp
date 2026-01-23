@@ -44,14 +44,17 @@ void RobotContainer::ConfigureBindings() {
 
   //Bumpers
   _driverController.LeftBumper().ToggleOnTrue(SubDeploy::GetInstance().ToggleDeploy());
+  _driverController.RightBumper().OnTrue(SubVision::GetInstance().CalibrateRobotToCamera(
+    frc::Translation3d{1_m, 0_m, 1.12395_m})); //1m away from april tag
 
   //Letters
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
   _driverController.Y().OnTrue(SubDrivebase::GetInstance().ResetGyroCmd());
   _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
-  _driverController.A().OnTrue(
-    frc2::cmd::RunOnce([] { SubDrivebase::GetInstance().SetPose(frc::Pose2d{0_m, 0_m, 0_deg}); }));
-  
+  _driverController.A().OnTrue(frc2::cmd::RunOnce([] {
+    SubDrivebase::GetInstance().SetPose(frc::Pose2d{3.0218614_m, 4.3902376_m, 0_deg}); //1m away from april tag 25
+  }));
+
   //POVs
   _driverController.POVUp().OnTrue(cmd::AimAtFieldRelative([] { return 0_deg; }));
   _driverController.POVDown().OnTrue(

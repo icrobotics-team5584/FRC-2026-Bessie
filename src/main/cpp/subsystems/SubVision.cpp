@@ -172,7 +172,7 @@ int SubVision::GetClosestTag(frc::Pose2d currentPose){
 }
 
 std::optional<frc::Transform3d> SubVision::CalculateRobotToCamera(
-  photon::PhotonCamera camera, frc::Transform3d robotToTag) {
+  photon::PhotonCamera &camera, frc::Transform3d robotToTag) {
   auto results = camera.GetAllUnreadResults();
   if (!results.empty()) {
     auto result = results.back();
@@ -187,4 +187,34 @@ std::optional<frc::Transform3d> SubVision::CalculateRobotToCamera(
   } else {
     return std::nullopt;
   }
+}
+
+frc2::CommandPtr SubVision::CalibrateRobotToCamera(frc::Translation3d robotToTag) {
+  return frc2::cmd::RunOnce([this, robotToTag] {
+    //Left camera
+    auto leftResult = CalculateRobotToCamera(_leftCamera, frc::Transform3d{robotToTag, {}});
+    Logger::Log("Vision/RobotToCamera/Left/Result Received", leftResult.has_value());
+    if (leftResult.has_value()) {
+      auto leftRobotToCamera = leftResult.value();
+      Logger::Log("Vision/RobotToCamera/Left/X", leftRobotToCamera.X());
+      Logger::Log("Vision/RobotToCamera/Left/Y", leftRobotToCamera.Y());
+      Logger::Log("Vision/RobotToCamera/Left/Z", leftRobotToCamera.Z());
+      Logger::Log("Vision/RobotToCamera/Left/Roll", leftRobotToCamera.Rotation().X());
+      Logger::Log("Vision/RobotToCamera/Left/Pitch", leftRobotToCamera.Rotation().Y());
+      Logger::Log("Vision/RobotToCamera/Left/Yaw", leftRobotToCamera.Rotation().Z());
+    }
+
+    //Right camera
+    auto rightResult = CalculateRobotToCamera(_rightCamera, frc::Transform3d{robotToTag, {}});
+    Logger::Log("Vision/RobotToCamera/Right/Result Received", rightResult.has_value());
+    if (rightResult.has_value()) {
+      auto rightRobotToCamera = rightResult.value();
+      Logger::Log("Vision/RobotToCamera/Right/X", rightRobotToCamera.X());
+      Logger::Log("Vision/RobotToCamera/Right/Y", rightRobotToCamera.Y());
+      Logger::Log("Vision/RobotToCamera/Right/Z", rightRobotToCamera.Z());
+      Logger::Log("Vision/RobotToCamera/Right/Roll", rightRobotToCamera.Rotation().X());
+      Logger::Log("Vision/RobotToCamera/Right/Pitch", rightRobotToCamera.Rotation().Y());
+      Logger::Log("Vision/RobotToCamera/Right/Yaw", rightRobotToCamera.Rotation().Z());
+    }
+  });
 }

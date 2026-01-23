@@ -46,6 +46,8 @@ public:
 
   frc::Pose2d CalculateRelativePose(frc::Pose2d pose, units::meter_t xTransform, units::meter_t yTransform);
 
+  std::optional<frc::Transform3d> CalculateRobotToCamera(photon::PhotonCamera &camera, frc::Transform3d robotToTag);
+
   int GetClosestTag(frc::Pose2d currentPose);
 
   bool IsEstimateUsable(photon::EstimatedRobotPose pose);
@@ -54,10 +56,9 @@ public:
 
   double GetDev(photon::EstimatedRobotPose pose);
 
-  std::optional<frc::Transform3d> CalculateRobotToCamera(photon::PhotonCamera camera, frc::Transform3d robotToTag);
+  frc2::CommandPtr CalibrateRobotToCamera(frc::Translation3d robotToTag);
 
  private:
-
   struct TagObservation {
     photon::PhotonTrackedTarget tag;
     Side cameraSide;
@@ -79,10 +80,7 @@ public:
 
   frc::Transform3d _leftBotToCam{{-320_mm,310_mm,220_mm},{0_deg,-35_deg,60_deg}};
 
-  photon::PhotonPoseEstimator _leftPoseEstimater{
-    _tagMap,
-    _leftBotToCam
-  };
+  photon::PhotonPoseEstimator _leftPoseEstimater{_tagMap, _leftBotToCam};
 
   std::optional<photon::EstimatedRobotPose> _leftEstPose;
 
@@ -95,10 +93,7 @@ public:
 
   frc::Transform3d _rightBotToCam{{320_mm,310_mm,220_mm},{0_deg,-35_deg,60_deg}};
 
-  photon::PhotonPoseEstimator _rightPoseEstimater{
-    _tagMap,
-    _rightBotToCam
-  };
+  photon::PhotonPoseEstimator _rightPoseEstimater{_tagMap, _rightBotToCam};
 
   std::optional<photon::EstimatedRobotPose> _rightEstPose;
 
