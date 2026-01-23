@@ -178,5 +178,5 @@ units::degree_t SubTurret::getEncoder2Degrees() {
 }
 
 bool SubTurret::TurretIsAtTarget(){
-    return units::math::abs(_turretMotor.GetPosError()) < 0.5_deg;
+    return units::math::abs(_turretMotor.GetPosError()) < 2_deg;
 }

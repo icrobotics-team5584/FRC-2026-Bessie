@@ -12,6 +12,7 @@
 #include "commands/TurretCommands.h"
 
 #include "utilities/PoseHandler.h"
+#include <frc/geometry/Transform2d.h>
 
 namespace cmd {
 frc2::CommandPtr IntakeSequence() {
@@ -23,9 +24,13 @@ frc2::CommandPtr IntakeSequence() {
 
 frc2::CommandPtr StationaryShootAt(frc::Pose2d target) {
   auto distanceToTarget = [target] {
-    auto curPose = PoseHandler::GetInstance().GetPose().Translation();
-    Logger::Log("Shooter/distToTargetInner", target.Translation().Distance(curPose));
-    return target.Translation().Distance(curPose);};
+    auto curPose = PoseHandler::GetInstance().GetPose();
+    auto turretPose = curPose.TransformBy(frc::Transform2d{0_mm, 235_mm, 0_deg});
+
+    Logger::FieldDisplay::GetInstance().DisplayPose("Turret/turretPose", turretPose);
+    Logger::Log("Shooter/distToTargetInner", target.Translation().Distance(turretPose.Translation()));
+
+    return target.Translation().Distance(turretPose.Translation());};
 
   return frc2::cmd::Parallel(cmd::AimAtPose(target),
     SubShooter::GetInstance().SetShooterTargetFromDist(distanceToTarget),
@@ -35,7 +40,7 @@ frc2::CommandPtr StationaryShootAt(frc::Pose2d target) {
              SubHood::GetInstance().HoodIsAtTarget();
     })
     .AndThen(frc2::cmd::Parallel(SubIntake::GetInstance().IntakeOn(),
-      SubFeeder::GetInstance().FeederOn(), SubIndexer::GetInstance().IndexerOn()));
+      SubFeeder::GetInstance().FeederOn(), SubIndexer::GetInstance().Index()));
 }
 
 }  // namespace cmd
