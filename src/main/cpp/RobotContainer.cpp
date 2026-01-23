@@ -49,7 +49,7 @@ void RobotContainer::ConfigureBindings() {
   _driverController.POVDown().OnTrue(SubFeeder::GetInstance().FeederOff());
 
   _driverController.POVRight().OnTrue(SubIndexer::GetInstance().Index());
-  _driverController.POVLeft().OnTrue(SubIndexer::GetInstance().NotIndex());
+  _driverController.POVLeft().OnTrue(SubIndexer::GetInstance().StopIndex());
 
   _driverController.RightTrigger().WhileTrue(SubIntake::GetInstance().IntakeOn());
   _driverController.LeftTrigger().WhileTrue(SubIntake::GetInstance().IntakeOff());
