@@ -170,3 +170,21 @@ int SubVision::GetClosestTag(frc::Pose2d currentPose){
 
   return closestTagID;
 }
+
+std::optional<frc::Transform3d> SubVision::CalculateRobotToCamera(
+  photon::PhotonCamera camera, frc::Transform3d robotToTag) {
+  auto results = camera.GetAllUnreadResults();
+  if (!results.empty()) {
+    auto result = results.back();
+    if (result.HasTargets()) {
+      auto target = result.GetBestTarget();
+      frc::Transform3d tagToCamera = target.GetBestCameraToTarget().Inverse();
+      frc::Transform3d robotToCamera = robotToTag + tagToCamera;
+      return robotToCamera;
+    } else {
+      return std::nullopt;
+    }
+  } else {
+    return std::nullopt;
+  }
+}

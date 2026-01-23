@@ -54,6 +54,8 @@ public:
 
   double GetDev(photon::EstimatedRobotPose pose);
 
+  std::optional<frc::Transform3d> CalculateRobotToCamera(photon::PhotonCamera camera, frc::Transform3d robotToTag);
+
  private:
 
   struct TagObservation {
