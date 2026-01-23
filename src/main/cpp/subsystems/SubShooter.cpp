@@ -41,14 +41,22 @@ SubShooter::SubShooter() {
 
     frc::SmartDashboard::PutData("Shooter/mech2dDisplay", &_shooterMech);
 
-    _flyWheelSpeedTable.insert(1.8575_m, 25_tps);
-    _flyWheelSpeedTable.insert(2.3575_m, 26_tps);
-    _flyWheelSpeedTable.insert(2.8575_m, 28_tps);
-    _flyWheelSpeedTable.insert(3.3575_m, 32_tps);
-    _flyWheelSpeedTable.insert(3.8575_m, 34_tps);
-    _flyWheelSpeedTable.insert(4.3575_m, 37.5_tps);
-    _flyWheelSpeedTable.insert(4.6875_m, 40_tps);
-    _flyWheelSpeedTable.insert(5.1875_m, 43_tps);
+    // _flyWheelSpeedTable.insert(1.8575_m, 25_tps);
+    // _flyWheelSpeedTable.insert(2.3575_m, 26_tps);
+    // _flyWheelSpeedTable.insert(2.8575_m, 28_tps);
+    // _flyWheelSpeedTable.insert(3.3575_m, 32_tps);
+    // _flyWheelSpeedTable.insert(3.8575_m, 34_tps);
+    // _flyWheelSpeedTable.insert(4.3575_m, 37.5_tps);
+    // _flyWheelSpeedTable.insert(4.6875_m, 40_tps);
+    // _flyWheelSpeedTable.insert(5.1875_m, 43_tps);
+    _flyWheelSpeedTable.insert(1.8575_m, 26_tps);
+    _flyWheelSpeedTable.insert(2.3575_m, 27_tps);
+    _flyWheelSpeedTable.insert(2.8575_m, 29_tps);
+    _flyWheelSpeedTable.insert(3.3575_m, 33_tps);
+    _flyWheelSpeedTable.insert(3.8575_m, 35_tps);
+    _flyWheelSpeedTable.insert(4.3575_m, 38.5_tps);
+    _flyWheelSpeedTable.insert(4.6875_m, 41_tps);
+    _flyWheelSpeedTable.insert(5.1875_m, 44_tps);
 }
 
 // This method will be called once per scheduler run

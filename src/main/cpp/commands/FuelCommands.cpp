@@ -25,7 +25,7 @@ frc2::CommandPtr IntakeSequence() {
 frc2::CommandPtr StationaryShootAt(frc::Pose2d target) {
   auto distanceToTarget = [target] {
     auto curPose = PoseHandler::GetInstance().GetPose();
-    auto turretPose = curPose.TransformBy(frc::Transform2d{0_mm, 235_mm, 0_deg});
+    auto turretPose = curPose.TransformBy(frc::Transform2d{-235_mm, 0_mm, 0_deg});
 
     Logger::FieldDisplay::GetInstance().DisplayPose("Turret/turretPose", turretPose);
     Logger::Log("Shooter/distToTargetInner", target.Translation().Distance(turretPose.Translation()));
