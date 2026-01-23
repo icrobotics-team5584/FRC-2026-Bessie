@@ -173,3 +173,7 @@ units::degree_t SubTurret::getEncoder1Degrees() {
 units::degree_t SubTurret::getEncoder2Degrees() {
     return (_turretEncoder2.Get()-encoder2ZeroOffset)*360_deg;
 }
+
+bool SubTurret::TurretIsAtTarget(){
+    return _turretMotor.GetPosError() < 0.5_deg;
+}

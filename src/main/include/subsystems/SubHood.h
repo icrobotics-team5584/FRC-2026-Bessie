@@ -32,6 +32,8 @@ class SubHood : public frc2::SubsystemBase {
   void SimulationPeriodic();
 
   bool HoodCurrentCheck(); 
+
+  bool HoodIsAtTarget();
   
   units::ampere_t GetHoodMotorCurrent();
 

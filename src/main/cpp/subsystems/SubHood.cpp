@@ -78,3 +78,7 @@ frc2::CommandPtr SubHood::ManualHoodDown() {
 frc2::CommandPtr SubHood::SetHoodPositionTargetFromDist(units::meter_t distanceToTarget){
     return RunOnce([this, distanceToTarget] {_hoodMotor.SetPositionTarget(_hoodPitchTable[distanceToTarget]);});
 }
+
+bool SubHood::HoodIsAtTarget(){
+    return _hoodMotor.GetPosError() < 0.5_deg;
+}

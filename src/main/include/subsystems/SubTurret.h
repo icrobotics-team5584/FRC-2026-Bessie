@@ -39,6 +39,8 @@ class SubTurret : public frc2::SubsystemBase {
   void SetTurretAngle(units::degree_t angle);
   void ZeroTurret();
 
+  bool TurretIsAtTarget();
+
   frc2::CommandPtr SetTurretTargetAngle(std::function<units::degree_t()> angle);
   frc2::CommandPtr ZeroTurretCmd();
 
