@@ -56,7 +56,7 @@ public:
 
   double GetDev(photon::EstimatedRobotPose pose);
 
-  frc2::CommandPtr CalibrateRobotToCamera(frc::Translation3d robotToTag);
+  frc2::CommandPtr CalibrateRobotToCamera(frc::Transform3d robotToTag);
 
  private:
   struct TagObservation {

@@ -204,10 +204,10 @@ std::optional<frc::Transform3d> SubVision::CalculateRobotToCamera(
   }
 }
 
-frc2::CommandPtr SubVision::CalibrateRobotToCamera(frc::Translation3d robotToTag) {
+frc2::CommandPtr SubVision::CalibrateRobotToCamera(frc::Transform3d robotToTag) {
   return frc2::cmd::RunOnce([this, robotToTag] {
     //Left camera
-    auto leftResult = CalculateRobotToCamera(_leftCamera, frc::Transform3d{robotToTag, {}});
+    auto leftResult = CalculateRobotToCamera(_leftCamera, robotToTag);
     Logger::Log("Vision/RobotToCamera/Left/Result Received", leftResult.has_value());
     if (leftResult.has_value()) {
       auto leftRobotToCamera = leftResult.value();
@@ -220,7 +220,7 @@ frc2::CommandPtr SubVision::CalibrateRobotToCamera(frc::Translation3d robotToTag
     }
 
     //Right camera
-    auto rightResult = CalculateRobotToCamera(_rightCamera, frc::Transform3d{robotToTag, {}});
+    auto rightResult = CalculateRobotToCamera(_rightCamera, robotToTag);
     Logger::Log("Vision/RobotToCamera/Right/Result Received", rightResult.has_value());
     if (rightResult.has_value()) {
       auto rightRobotToCamera = rightResult.value();

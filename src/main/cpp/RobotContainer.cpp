@@ -45,7 +45,8 @@ void RobotContainer::ConfigureBindings() {
   //Bumpers
   _driverController.LeftBumper().ToggleOnTrue(SubDeploy::GetInstance().ToggleDeploy());
   _driverController.RightBumper().OnTrue(SubVision::GetInstance().CalibrateRobotToCamera(
-    frc::Translation3d{1_m, 0_m, 1.12395_m})); //1m away from april tag
+    frc::Transform3d{frc::Translation3d{1_m, 0_m, 1.12395_m},
+      frc::Rotation3d{0_deg, 0_deg, 180_deg}}));  // 1m away from april tag
 
   //Letters
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
