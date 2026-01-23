@@ -6,11 +6,18 @@
 
 #include <frc2/command/CommandScheduler.h>
 #include <utilities/ICSparkFlex.h>
+#include "utilities/ShiftHandler.h"
+#include "utilities/Logger.h"
 
 Robot::Robot() {}
 
 void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();
+
+  Logger::Log("Rebuilt/Hub Active", ShiftHandler::IsActiveShift());
+  Logger::Log("Rebuilt/Won Auton Shift", ShiftHandler::GetShiftName(ShiftHandler::GetWinningShift()));
+  Logger::Log("Rebuilt/Current Shift", ShiftHandler::GetShiftName(ShiftHandler::GetCurrentShift()));
+  Logger::Log("Rebuilt/Seconds Left on Shift", ShiftHandler::GetTimeLeft());
 }
 
 void Robot::DisabledInit() {}

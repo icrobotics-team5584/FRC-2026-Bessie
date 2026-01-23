@@ -1,4 +1,5 @@
 #include "utilities/ShiftHandler.h"
+#include "utilities/Logger.h"
 
 
 RebuiltShift ShiftHandler::GetCurrentShift()
@@ -7,22 +8,33 @@ RebuiltShift ShiftHandler::GetCurrentShift()
         return RebuiltShift::AUTON;
     }
     units::second_t secondsPassed = frc::DriverStation::GetMatchTime();
-    if(secondsPassed < 10_s) {
+    if(secondsPassed == -1_s) {
+        return RebuiltShift::NONE;
+    }
+
+    Logger::Log("ShiftHandler/matchTime", secondsPassed);
+    Logger::Log("ShiftHandler/realMatchTime", frc::DriverStation::GetMatchTime());
+
+    if(secondsPassed > 130_s) {
         return RebuiltShift::TRANS;
     }
 
-    RebuiltShift winningShift = GetWinningShift();
-    RebuiltShift losingShift = winningShift == RebuiltShift::BLUE ? RebuiltShift::BLUE : RebuiltShift::RED;
-    if(secondsPassed < 35_s) { /* Shift 1 */
+    RebuiltShift losingShift, winningShift = GetWinningShift();
+    if(winningShift == RebuiltShift::NONE) {
+        losingShift = RebuiltShift::NONE;
+    } else { /* filps RebuiltShift::BLUE to RebuiltShift::RED and vice versa*/
+        losingShift = (winningShift == RebuiltShift::BLUE ? RebuiltShift::RED : RebuiltShift::BLUE);
+    }
+    if(secondsPassed > 105_s) { /* Shift 1 */
         return losingShift;
     }
-    if(secondsPassed < 60_s) { /* Shift 2 */
+    if(secondsPassed > 80_s) { /* Shift 2 */
         return winningShift;
     }
-    if(secondsPassed < 85_s) { /* Shift 3 */
+    if(secondsPassed > 55_s) { /* Shift 3 */
         return losingShift;
     }
-    if(secondsPassed < 110_s) { /* Shift 4 */
+    if(secondsPassed > 30_s) { /* Shift 4 */
         return winningShift;
     }
     return RebuiltShift::ENDGAME;
@@ -32,7 +44,7 @@ RebuiltShift ShiftHandler::GetWinningShift()
 {
     std::string data = frc::DriverStation::GetGameSpecificMessage();
     if(data.length() < 0) { /* No winning shift message recieved */
-        return RebuiltShift::AUTON;
+        return RebuiltShift::NONE;
     }
 
     switch(data[0]) {
@@ -42,33 +54,32 @@ RebuiltShift ShiftHandler::GetWinningShift()
         return RebuiltShift::RED;
     }
 
-    return RebuiltShift::AUTON; /* Corrupt data */
+    return RebuiltShift::NONE; /* Corrupt data */
 }
 
 units::second_t ShiftHandler::GetTimeLeft()
 {
-    printf("TEST\n");
     units::second_t matchTime = frc::DriverStation::GetMatchTime();
     if(frc::DriverStation::IsAutonomousEnabled()) {
-        return 20_s - matchTime;
+        return matchTime;
     }
 
-    if(matchTime < 10_s) {
-        return 10_s - matchTime;
+    if(matchTime > 130_s) {
+        return matchTime - 130_s;
     }
-    if(matchTime < 35_s) { /* Shift 1 */
-        return 35_s - matchTime;
+    if(matchTime > 105_s) { /* Shift 1 */
+        return matchTime - 105_s;
     }
-    if(matchTime < 60_s) { /* Shift 2 */
-        return 60_s - matchTime;
+    if(matchTime > 80_s) { /* Shift 2 */
+        return matchTime - 80_s;
     }
-    if(matchTime < 85_s) { /* Shift 3 */
-        return 78_s - matchTime;
+    if(matchTime > 55_s) { /* Shift 3 */
+        return matchTime - 55_s;
     }
-    if(matchTime < 110_s) { /* Shift 4 */
-        return 110_s - matchTime;
+    if(matchTime > 30_s) { /* Shift 4 */
+        return matchTime - 30_s;
     }
-    return 140_s - matchTime;
+    return matchTime;
 }
 
 std::string ShiftHandler::GetShiftName(RebuiltShift shift)
@@ -86,7 +97,7 @@ std::string ShiftHandler::GetShiftName(RebuiltShift shift)
         return "Endgame";
     }
 
-    return "Default path here to stop the compliler throwing a warning";
+    return "None";
 }
 
 bool ShiftHandler::IsShift(RebuiltShift shift)
@@ -100,8 +111,8 @@ bool ShiftHandler::IsActiveShift()
     RebuiltShift currentShift = GetCurrentShift();
     frc::DriverStation::Alliance allicance = frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kBlue);
     bool wonAutonShift = (allicance == frc::DriverStation::Alliance::kBlue) && (currentShift == RebuiltShift::BLUE);
-    bool shift2 = 60_s > matchTime && matchTime > 35_s;     /* 35s - 60s */
-    bool shift4 = 110_s > matchTime && matchTime > 85_s;    /* 85 - 110 */
+    bool shift2 = 105_s > matchTime && matchTime > 80_s;     /* 1:45 - 80s */
+    bool shift4 = 55_s > matchTime && matchTime > 30_s;    /* 0:55 - 0:30 */
 
     if(
         currentShift == RebuiltShift::AUTON ||
