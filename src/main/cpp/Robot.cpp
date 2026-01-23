@@ -6,11 +6,17 @@
 
 #include <frc2/command/CommandScheduler.h>
 #include <utilities/ICSparkFlex.h>
-
+#include "utilities/ShotPlanner.h"
+#include "utilities/PoseHandler.h"
+#include "utilities/Logger.h"
+#include <frc/geometry/Translation3d.h>
+#include <frc/geometry/Transform2d.h>
 Robot::Robot() {}
 
 void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();
+  frc::Translation3d shotTarget = ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose());
+  Logger::FieldDisplay::GetInstance().DisplayPose("Shot Target",ShotPlanner::convertToPose2d(shotTarget));
 }
 
 void Robot::DisabledInit() {}
