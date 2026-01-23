@@ -21,11 +21,11 @@ frc::Translation3d ShotPlanner::CalculateShotTarget(frc::Pose2d robotPos) {
   frc::Translation2d blueAllianceZoneTopRight{4_m, 8_m};
   frc::Translation2d blueAllianceZoneBottomLeft{0_m, 0_m};
 
-  frc::Translation2d topZoneTopRight{16.5_m, 8_m};
-  frc::Translation2d topZoneBottomLeft{4_m, 4_m};
+  frc::Translation2d topPassingZoneTopRight{16.5_m, 8_m};
+  frc::Translation2d topPassingZoneBottomLeft{4_m, 4_m};
 
-  frc::Translation2d bottomZoneTopRight{16.5_m, 4_m};
-  frc::Translation2d bottomZoneBottomLeft{4_m, 0_m};
+  frc::Translation2d bottomPassingZoneTopRight{16.5_m, 4_m};
+  frc::Translation2d bottomPassingZoneBottomLeft{4_m, 0_m};
 
   frc::Translation2d hubPosition{4_m, 4_m};
 
@@ -36,9 +36,9 @@ frc::Translation3d ShotPlanner::CalculateShotTarget(frc::Pose2d robotPos) {
 
   if (IsWithinZone(blueAllianceZoneTopRight, blueAllianceZoneBottomLeft, robotPos)) {
     target = frc::Translation3d(hubPosition.X(), hubPosition.Y(), 1.83_m);
-  } else if (IsWithinZone(topZoneTopRight, topZoneBottomLeft, robotPos)) {
+  } else if (IsWithinZone(topPassingZoneTopRight, topPassingZoneBottomLeft, robotPos)) {
     target = frc::Translation3d(topAllianceZonePosition);
-  } else if (IsWithinZone(bottomZoneTopRight, bottomZoneBottomLeft, robotPos)) {
+  } else if (IsWithinZone(bottomPassingZoneTopRight, bottomPassingZoneBottomLeft, robotPos)) {
     target = frc::Translation3d(bottomAllianceZonePosition);
   } else {
     target = frc::Translation3d(hubPosition.X(), hubPosition.Y(), 1.83_m);
@@ -54,9 +54,9 @@ frc::Translation3d ShotPlanner::CalculateShotTarget(frc::Pose2d robotPos) {
 }
 
 bool ShotPlanner::IsWithinZone(
-  frc::Translation2d corner1, frc::Translation2d corner2, frc::Pose2d robotPos) {
-  if (robotPos.X() < corner1.X() && robotPos.X() > corner2.X()) {
-    if (robotPos.Y() < corner1.Y() && robotPos.Y() > corner2.Y()) {
+  frc::Translation2d topRightCorner, frc::Translation2d bottomLeftCorner, frc::Pose2d robotPos) {
+  if (robotPos.X() < topRightCorner.X() && robotPos.X() > bottomLeftCorner.X()) {
+    if (robotPos.Y() < topRightCorner.Y() && robotPos.Y() > bottomLeftCorner.Y()) {
       return true;
     }
   }
