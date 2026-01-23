@@ -14,8 +14,8 @@ SubFeeder::SubFeeder() {
 }
 
 frc2::CommandPtr SubFeeder::FeederOn() {
-  return StartEnd([this] { _feederMotor.Set(1); }, [this] { _feederMotor.Set(0); });
-}
+  return StartEnd([this] { _feederMotor.Set(0.5); }, [this] { _feederMotor.Set(0); });
+};
 
 frc2::CommandPtr SubFeeder::FeederOff() {
   return RunOnce([this] { _feederMotor.Set(0); });

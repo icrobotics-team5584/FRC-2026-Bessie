@@ -78,7 +78,7 @@ public:
   photon::PhotonCameraSim _leftCamSim{&_leftCamera};
   photon::VisionSystemSim _visionSim{_leftCamName};
 
-  frc::Transform3d _leftBotToCam{{-320_mm,310_mm,220_mm},{0_deg,-35_deg,60_deg}};
+  frc::Transform3d _leftBotToCam{{-300_mm,300_mm,220_mm},{0_deg,-45_deg,45_deg}};
 
   photon::PhotonPoseEstimator _leftPoseEstimater{_tagMap, _leftBotToCam};
 
@@ -91,7 +91,7 @@ public:
 
   photon::PhotonCameraSim _rightCamSim{&_rightCamera};
 
-  frc::Transform3d _rightBotToCam{{320_mm,310_mm,220_mm},{0_deg,-35_deg,60_deg}};
+  frc::Transform3d _rightBotToCam{{210_mm,140_mm,220_mm},{90_deg,-45_deg,-45_deg}};
 
   photon::PhotonPoseEstimator _rightPoseEstimater{_tagMap, _rightBotToCam};
 
