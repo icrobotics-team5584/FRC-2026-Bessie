@@ -20,8 +20,7 @@ frc2::CommandPtr IntakeSequence() {
 frc2::CommandPtr StationaryShootAt(frc::Pose2d target){
   frc::Pose2d currentPose = PoseHandler::GetInstance().GetPose();
   
-  //sqrt[(curX-TargX)^2 + (curY-TargY)^2] <- pythag
-  units::meter_t distanceToTarget = sqrt(pow((currentPose.X().value()-target.X().value()),2) + pow((currentPose.Y().value()-target.Y().value()),2))*1_m;
+  units::meter_t distanceToTarget = target.Translation().Distance(currentPose.Translation());
 
   return cmd::AimAtPose(target)
   .AlongWith(SubHood::GetInstance().SetHoodPositionTargetFromDist(distanceToTarget))
