@@ -41,7 +41,7 @@ class SubHood : public frc2::SubsystemBase {
   frc2::CommandPtr StowHood(); 
   frc2::CommandPtr ZeroHood();
   frc2::CommandPtr SetHoodPositionTarget(units::degree_t angle);
-  frc2::CommandPtr SetHoodPositionTargetFromDist(units::meter_t distanceToTarget);
+  frc2::CommandPtr SetHoodPositionTargetFromDist(std::function<units::meter_t()> distanceToTarget);
   
   /**
    * Will be called periodically whenever the CommandScheduler runs.

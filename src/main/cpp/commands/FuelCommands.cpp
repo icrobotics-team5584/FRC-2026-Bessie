@@ -26,8 +26,8 @@ frc2::CommandPtr StationaryShootAt(frc::Pose2d target) {
   units::meter_t distanceToTarget = target.Translation().Distance(currentPose.Translation());
 
   return frc2::cmd::Parallel(cmd::AimAtPose(target),
-    SubShooter::GetInstance().SetShooterTargetFromDist(distanceToTarget),
-    SubHood::GetInstance().SetHoodPositionTargetFromDist(distanceToTarget))
+    SubShooter::GetInstance().SetShooterTargetFromDist([distanceToTarget]{return distanceToTarget;}),
+    SubHood::GetInstance().SetHoodPositionTargetFromDist([distanceToTarget]{return distanceToTarget;}))
     .Until([] {
       return SubShooter::GetInstance().IsAtSpeed() && SubTurret::GetInstance().TurretIsAtTarget() &&
              SubHood::GetInstance().HoodIsAtTarget();

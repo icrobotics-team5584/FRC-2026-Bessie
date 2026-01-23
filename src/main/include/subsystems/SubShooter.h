@@ -30,7 +30,7 @@ class SubShooter : public frc2::SubsystemBase {
   void SimulationPeriodic();
 
   frc2::CommandPtr SetShooterTarget(units::turns_per_second_t speed);
-  frc2::CommandPtr SetShooterTargetFromDist(units::meter_t distancetoTarget);
+  frc2::CommandPtr SetShooterTargetFromDist(std::function<units::meter_t()> distancetoTarget);
   frc2::CommandPtr StopShooter();
   
   bool IsAtSpeed();
