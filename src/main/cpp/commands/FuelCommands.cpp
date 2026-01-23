@@ -1,13 +1,16 @@
 #include "commands/FuelCommands.h"
 
 #include "subsystems/SubDeploy.h"
+#include "subsystems/SubFeeder.h"
+#include "subsystems/SubHood.h"
 #include "subsystems/SubIndexer.h"
 #include "subsystems/SubIntake.h"
-#include "commands/TurretCommands.h"
-#include "subsystems/SubHood.h"
 #include "subsystems/SubShooter.h"
+#include "subsystems/SubTurret.h"
+
+#include "commands/TurretCommands.h"
+
 #include "utilities/PoseHandler.h"
-#include "subsystems/SubFeeder.h"
 
 namespace cmd {
 frc2::CommandPtr IntakeSequence() {
@@ -17,18 +20,20 @@ frc2::CommandPtr IntakeSequence() {
     .AlongWith(SubIndexer::GetInstance().IndexerOn());
 }
 
-frc2::CommandPtr StationaryShootAt(frc::Pose2d target){
+frc2::CommandPtr StationaryShootAt(frc::Pose2d target) {
   frc::Pose2d currentPose = PoseHandler::GetInstance().GetPose();
-  
+
   units::meter_t distanceToTarget = target.Translation().Distance(currentPose.Translation());
 
-  return cmd::AimAtPose(target)
-  .AlongWith(SubHood::GetInstance().SetHoodPositionTargetFromDist(distanceToTarget))
-  .AlongWith(SubShooter::GetInstance().SetShooterTargetFromDist(distanceToTarget))
-  .Until([]{return SubShooter::GetInstance().IsAtSpeed();})
-  .AndThen(SubFeeder::GetInstance().FeederOn())
-  .AlongWith(SubIntake::GetInstance().IntakeOn())
-  .AlongWith(SubIndexer::GetInstance().IndexerOn());
+  return frc2::cmd::Parallel(cmd::AimAtPose(target),
+    SubShooter::GetInstance().SetShooterTargetFromDist(distanceToTarget),
+    SubHood::GetInstance().SetHoodPositionTargetFromDist(distanceToTarget))
+    .Until([] {
+      return SubShooter::GetInstance().IsAtSpeed() && SubTurret::GetInstance().TurretIsAtTarget() &&
+             SubHood::GetInstance().HoodIsAtTarget();
+    })
+    .AndThen(frc2::cmd::Parallel(SubIntake::GetInstance().IntakeOn(),
+      SubFeeder::GetInstance().FeederOn(), SubIndexer::GetInstance().IndexerOn()));
 }
 
 }  // namespace cmd
