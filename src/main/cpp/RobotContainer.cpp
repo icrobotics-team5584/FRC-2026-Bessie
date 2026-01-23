@@ -4,20 +4,28 @@
 
 #include "RobotContainer.h"
 
-#include <frc2/command/Commands.h>
+#include "subsystems/SubDeploy.h"
 #include "subsystems/SubDrivebase.h"
 #include "commands/DriveCommands.h"
 #include "subsystems/SubIntake.h"
+#include "subsystems/SubFeeder.h"
 #include "subsystems/SubIndexer.h"
+#include "subsystems/SubIntake.h"
+#include "subsystems/SubShooter.h"
+#include "subsystems/SubTurret.h"
+#include "subsystems/SubVision.h"
+
 #include "commands/AutonCommands.h"
 #include "Subsystems/SubVision.h"
 #include "subsystems/SubTurret.h"
 #include "subsystems/SubHood.h"
 #include "subsystems/SubShooter.h"
+#include "commands/VisionCommands.h"
 #include "commands/TurretCommands.h"
-#include "commands/ShootCommands.h"
 
 #include "utilities/PoseHandler.h"
+
+#include <frc2/command/Commands.h>
 
 RobotContainer::RobotContainer() {
   SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
@@ -25,7 +33,7 @@ RobotContainer::RobotContainer() {
   SubVision::GetInstance();
 
   _autoManager.AddDefaultAuton(
-    "default",
+    "default",  
     AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton())
   );
 
@@ -37,16 +45,15 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureBindings() {
+  _driverController.LeftBumper().ToggleOnTrue(SubDeploy::GetInstance().ToggleDeploy());
+  _driverController.LeftTrigger().WhileTrue(cmd::IntakeSequence());
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
   _driverController.Y().OnTrue(SubDrivebase::GetInstance().ResetGyroCmd());
   _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
-
-  _driverController.A().OnTrue(cmd::AimAtPose(frc::Pose2d(0_m,0_m,0_deg)));
-
-  _driverController.RightTrigger().WhileTrue(cmd::AimAndShoot(pose::HUB_POSE));
-  _driverController.LeftTrigger().OnTrue(frc2::cmd::RunOnce([]{
+  _driverController.A().OnTrue(frc2::cmd::RunOnce([]{
     SubDrivebase::GetInstance().SetPose(frc::Pose2d{0_m,0_m,0_deg});
   }));
+  _driverController.RightTrigger().WhileTrue(cmd::AimAndShoot(pose::HUB_POSE));
   _driverController.POVUp().OnTrue(cmd::AimAtFieldRelative([] {return 0_deg;}));
   _driverController.POVDown().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle([] {return 0_deg;}));
   _driverController.POVRight().OnTrue(cmd::AimAtPose(frc::Pose2d{0_m,0_m,0_deg}));
@@ -54,5 +61,5 @@ void RobotContainer::ConfigureBindings() {
 
 std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {
   AutonHelper::AutonPtr chosen = _autoManager.GetChosenAuton();
-  return chosen; 
+  return chosen;
 }

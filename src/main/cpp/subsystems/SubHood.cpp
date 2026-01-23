@@ -13,6 +13,8 @@ SubHood::SubHood() {
     _hoodMotorConfig.encoder.VelocityConversionFactor(1/GEAR_RATIO);
     _hoodMotorConfig.closedLoop.Pid(P, I, D);
     _hoodMotorConfig.SmartCurrentLimit(30);
+    _hoodMotorConfig.Inverted(true);
+    _hoodMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
     _hoodMotor.OverwriteConfig(_hoodMotorConfig);
 
     _pitchTable.insert(0_m, 22_deg);

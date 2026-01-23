@@ -5,10 +5,11 @@
 #pragma once
 
 #include "utilities/ICSparkFlex.h"
+#include "utilities/MechanismCircle2d.h"
 
 #include <frc/Alert.h>
 #include <frc/Timer.h>
-#include <frc/simulation/FlywheelSim.h>
+#include <frc/simulation/SingleJointedArmSim.h>
 #include <frc/system/plant/DCMotor.h>
 #include <frc/system/plant/LinearSystemId.h>
 #include <frc2/command/SubsystemBase.h>
@@ -17,33 +18,26 @@
 #include "frc2/command/Commands.h"
 #include "rev/config/SparkFlexConfig.h"
 #include "rev/config/SparkFlexConfigAccessor.h"
-
-class SubIntake : public frc2::SubsystemBase {
+class SubDeploy : public frc2::SubsystemBase {
  public:
-  static SubIntake& GetInstance() {
-    static SubIntake instance;
+  static SubDeploy& GetInstance() {
+    static SubDeploy instance;
     return instance;
   }
-  SubIntake();
-
-  frc2::CommandPtr IntakeOn();
-  frc2::CommandPtr IntakeOff();
+  SubDeploy();
 
   frc2::CommandPtr DeployIntake();
-  frc2::CommandPtr RetractIntake();
+  frc2::CommandPtr ToggleDeploy();
 
-  
   void EnableSoftLimit(bool enabled);
   frc2::CommandPtr ZeroDeploy();
   frc2::CommandPtr DeployAutoZero();
 
-  void IntakeCurrentHighTimer();
   void DeployCurrentHighTimer();
 
-  frc::Alert intakeCurrentAlert{"Intake Motor Overcurrent!", frc::Alert::AlertType::kWarning};
-  frc::Alert deployCurrentAlert{"Deploy Motor Overcurrent!", frc::Alert::AlertType::kWarning};
-  frc::Alert intakeHighTemperatureAlert{
-    "Intake Motor High Temperature!", frc::Alert::AlertType::kWarning};
+  frc::Alert _deployCurrentAlert{"Deploy Motor Overcurrent!", frc::Alert::AlertType::kWarning};
+  frc::Alert _deployHighTemperatureAlert{
+    "Deploy Motor High Temperature!", frc::Alert::AlertType::kWarning};
 
   /**
    * Will be called periodically whenever the CommandScheduler runs.
@@ -52,21 +46,18 @@ class SubIntake : public frc2::SubsystemBase {
   void SimulationPeriodic() override;
 
  private:
-  ICSparkFlex _intakeMotor{canid::INTAKE};
-  ICSparkFlex _deployMotor{canid::INTAKE_DEPLOY};
+  ICSparkFlex _deployMotor{canid::DEPLOY};
+  rev::spark::SparkFlexConfig _deployMotorConfig;
 
-  rev::spark::SparkFlexConfig _intakeMotorConfig;
+  frc::Timer _deployHighCurrentTimer;
 
-  frc::Timer _intakeHighCurrentTimer;
+  bool _hasZeroed = false;
+  bool _currentlyZeroing = false;
+
+  static constexpr units::ampere_t ZEROINGCURRENTLIMIT = 5_A;
 
   // Simulation components
-  static constexpr double GEARING = 1.0;
-  static constexpr units::kilogram_square_meter_t MOI = 0.0000001_kg_sq_m;
-  static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::NeoVortex();
-  frc::LinearSystem<1, 1, 1> _flywheelSystem =
-    frc::LinearSystemId::FlywheelSystem(MOTOR_MODEL, MOI, GEARING);
-  frc::sim::FlywheelSim _sim{_flywheelSystem, MOTOR_MODEL};
-
+  static constexpr double DEPLOY_P = 0.2;
   static constexpr double DEPLOY_GEARING = 2.0;
   static constexpr units::degree_t DEPLOY_MAX_ANGLE = 90_deg;
   static constexpr units::degree_t DEPLOY_MIN_ANGLE = 0_deg;
@@ -77,5 +68,6 @@ class SubIntake : public frc2::SubsystemBase {
   frc::LinearSystem<2, 1, 2> _deployFlywheelSystem =
     frc::LinearSystemId::SingleJointedArmSystem(DEPLOY_MOTOR_MODEL, DEPLOY_MOI, DEPLOY_GEARING);
   frc::sim::SingleJointedArmSim _deploySim{_deployFlywheelSystem, DEPLOY_MOTOR_MODEL,
-    DEPLOY_GEARING, DEPLOY_ARM_LENGTH, DEPLOY_MIN_ANGLE, DEPLOY_MAX_ANGLE, false, DEPLOY_START_ANGLE};
+    DEPLOY_GEARING, DEPLOY_ARM_LENGTH, DEPLOY_MIN_ANGLE, DEPLOY_MAX_ANGLE, false,
+    DEPLOY_START_ANGLE};
 };
