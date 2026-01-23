@@ -59,10 +59,9 @@ void SubClimber::SetBrakeMode(bool isbrake) {
 }
 
 bool SubClimber::IsAtTarget() {
-  units::turn_t currentPosition = _climberMotor.GetPosition();
-  units::turn_t currentTarget = _climberMotor.GetPositionTarget();
+  units::turn_t posError = units::math::abs(_climberMotor.GetPosError());
 
-  if (currentPosition < (currentTarget + _TOLERANCE) && currentPosition > (currentTarget - _TOLERANCE)) {
+  if (posError < _TOLERANCE) {
     return true;
   } else {
     return false;
