@@ -205,7 +205,7 @@ frc2::CommandPtr SubVision::CalibrateRobotToCamera(frc::Transform3d robotToTag) 
       Logger::Log("Vision/RobotToCamera/Left/~Y_Pitch", static_cast<units::degree_t>(leftRobotToCamera.Rotation().Y()));
       Logger::Log("Vision/RobotToCamera/Left/~Z_Yaw", static_cast<units::degree_t>(leftRobotToCamera.Rotation().Z()));
 
-      auto estimatedLeftCamPose = frc::Pose3d{PoseHandler::GetInstance().GetSimPose()}.TransformBy(leftRobotToCamera);
+      auto estimatedLeftCamPose = frc::Pose3d{PoseHandler::GetInstance().GetPose()}.TransformBy(leftRobotToCamera);
       Logger::FieldDisplay::GetInstance().DisplayPose("EstimatedLeftCamPose", estimatedLeftCamPose.ToPose2d());
     }
 
@@ -221,7 +221,7 @@ frc2::CommandPtr SubVision::CalibrateRobotToCamera(frc::Transform3d robotToTag) 
       Logger::Log("Vision/RobotToCamera/Right/~Y_Pitch", static_cast<units::degree_t>(rightRobotToCamera.Rotation().Y()));
       Logger::Log("Vision/RobotToCamera/Right/~Z_Yaw", static_cast<units::degree_t>(rightRobotToCamera.Rotation().Z()));
 
-      auto estimatedRightCamPose = frc::Pose3d{PoseHandler::GetInstance().GetSimPose()}.TransformBy(rightRobotToCamera);
+      auto estimatedRightCamPose = frc::Pose3d{PoseHandler::GetInstance().GetPose()}.TransformBy(rightRobotToCamera);
       Logger::FieldDisplay::GetInstance().DisplayPose("EstimatedRightCamPose", estimatedRightCamPose.ToPose2d());
     }
   });
