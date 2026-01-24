@@ -98,7 +98,6 @@ bool ShiftHandler::IsShift(RebuiltShift shift) {
 }
 
 bool ShiftHandler::IsActiveShift() {
-  units::second_t matchTime = frc::DriverStation::GetMatchTime();
   RebuiltShift currentShift = GetCurrentShift();
   RebuiltShift myShift = (RebuiltShift)frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kBlue);
 
