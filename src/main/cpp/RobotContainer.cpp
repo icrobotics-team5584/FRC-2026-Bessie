@@ -8,7 +8,6 @@
 #include "subsystems/SubDrivebase.h"
 #include "commands/DriveCommands.h"
 #include "subsystems/SubIntake.h"
-#include "subsystems/SubFeeder.h"
 #include "subsystems/SubIndexer.h"
 #include "subsystems/SubIntake.h"
 #include "subsystems/SubShooter.h"
@@ -20,8 +19,9 @@
 #include "subsystems/SubTurret.h"
 #include "subsystems/SubHood.h"
 #include "subsystems/SubShooter.h"
-#include "commands/VisionCommands.h"
 #include "commands/TurretCommands.h"
+#include "commands/FuelCommands.h"
+#include "commands/ShootCommands.h"
 
 #include "utilities/PoseHandler.h"
 

@@ -38,8 +38,8 @@ class SubIndexer : public frc2::SubsystemBase {
   void IndexerCurrentHighTimer();
   void IndexerOutCurrentHighTimer();
 
-  frc::Alert IndexerCurrentAlert{"Indexer Motor Overcurrent!", frc::Alert::AlertType::kWarning};
-  frc::Alert highTemperatureAlert{
+  frc::Alert _indexerCurrentAlert{"Indexer Motor Overcurrent!", frc::Alert::AlertType::kWarning};
+  frc::Alert _highTemperatureAlert{
     "Indexer Motor High Temperature!", frc::Alert::AlertType::kWarning};
 
   frc::Alert _outdexerCurrentAlert{"IndexerOut Motor Overcurrent!", frc::Alert::AlertType::kWarning};
@@ -52,7 +52,7 @@ class SubIndexer : public frc2::SubsystemBase {
   void SimulationPeriodic() override;
 
  private:
-  ICSparkFlex _indexerMotor{canid::Indexer};
+  ICSparkFlex _indexerMotor{canid::INDEXER};
   rev::spark::SparkFlexConfig _indexerMotorConfig;
 
   frc::Timer _indexerHighCurrentTimer;
