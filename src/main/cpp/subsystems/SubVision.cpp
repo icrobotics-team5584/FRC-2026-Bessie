@@ -184,7 +184,7 @@ std::optional<frc::Transform3d> SubVision::CalculateRobotToCamera(
       Logger::Log("Vision/temp/cameraToTag/Y", cameraToTag.Y());
       Logger::Log("Vision/temp/cameraToTag/Z", cameraToTag.Z());
       Logger::Log("Vision/temp/cameraToTag/~X_Roll", static_cast<units::degree_t>(cameraToTag.Rotation().X()));
-      Logger::Log("Vision/temp/cameraToTag/~Y_Ritch", static_cast<units::degree_t>(cameraToTag.Rotation().Y()));
+      Logger::Log("Vision/temp/cameraToTag/~Y_Pitch", static_cast<units::degree_t>(cameraToTag.Rotation().Y()));
       Logger::Log("Vision/temp/cameraToTag/~Z_Yaw", static_cast<units::degree_t>(cameraToTag.Rotation().Z()));
 
       frc::Transform3d tagToCamera = cameraToTag.Inverse();
@@ -192,7 +192,7 @@ std::optional<frc::Transform3d> SubVision::CalculateRobotToCamera(
       Logger::Log("Vision/temp/tagToCamera/Y", tagToCamera.Y());
       Logger::Log("Vision/temp/tagToCamera/Z", tagToCamera.Z());
       Logger::Log("Vision/temp/tagToCamera/~X_Roll", static_cast<units::degree_t>(tagToCamera.Rotation().X()));
-      Logger::Log("Vision/temp/tagToCamera/~Y_Ritch", static_cast<units::degree_t>(tagToCamera.Rotation().Y()));
+      Logger::Log("Vision/temp/tagToCamera/~Y_Pitch", static_cast<units::degree_t>(tagToCamera.Rotation().Y()));
       Logger::Log("Vision/temp/tagToCamera/~Z_Yaw", static_cast<units::degree_t>(tagToCamera.Rotation().Z()));
 
       frc::Transform3d robotToCamera = robotToTag + tagToCamera;
@@ -218,7 +218,7 @@ frc2::CommandPtr SubVision::CalibrateRobotToCamera(frc::Transform3d robotToTag) 
       Logger::Log("Vision/RobotToCamera/Left/Y", leftRobotToCamera.Y());
       Logger::Log("Vision/RobotToCamera/Left/Z", leftRobotToCamera.Z());
       Logger::Log("Vision/RobotToCamera/Left/~X_Roll", static_cast<units::degree_t>(leftRobotToCamera.Rotation().X()));
-      Logger::Log("Vision/RobotToCamera/Left/~Y_Ritch", static_cast<units::degree_t>(leftRobotToCamera.Rotation().Y()));
+      Logger::Log("Vision/RobotToCamera/Left/~Y_Pitch", static_cast<units::degree_t>(leftRobotToCamera.Rotation().Y()));
       Logger::Log("Vision/RobotToCamera/Left/~Z_Yaw", static_cast<units::degree_t>(leftRobotToCamera.Rotation().Z()));
     }
 
@@ -231,7 +231,7 @@ frc2::CommandPtr SubVision::CalibrateRobotToCamera(frc::Transform3d robotToTag) 
       Logger::Log("Vision/RobotToCamera/Right/Y", rightRobotToCamera.Y());
       Logger::Log("Vision/RobotToCamera/Right/Z", rightRobotToCamera.Z());
       Logger::Log("Vision/RobotToCamera/Right/~X_Roll", static_cast<units::degree_t>(rightRobotToCamera.Rotation().X()));
-      Logger::Log("Vision/RobotToCamera/Right/~Y_Ritch", static_cast<units::degree_t>(rightRobotToCamera.Rotation().Y()));
+      Logger::Log("Vision/RobotToCamera/Right/~Y_Pitch", static_cast<units::degree_t>(rightRobotToCamera.Rotation().Y()));
       Logger::Log("Vision/RobotToCamera/Right/~Z_Yaw", static_cast<units::degree_t>(rightRobotToCamera.Rotation().Z()));
     }
   });
