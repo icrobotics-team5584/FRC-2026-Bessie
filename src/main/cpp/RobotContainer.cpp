@@ -42,17 +42,18 @@ RobotContainer::RobotContainer() {
 void RobotContainer::ConfigureBindings() {
   //Triggers
   _driverController.LeftBumper().ToggleOnTrue(SubDeploy::GetInstance().ToggleDeploy());
-  _driverController.LeftTrigger().WhileTrue(cmd::IntakeSequence());
+  _driverController.RightBumper().WhileTrue(SubDrivebase::GetInstance().LockWheelsInXShape());
 
   //Bumpers
+  _driverController.LeftTrigger().WhileTrue(cmd::IntakeSequence());
   _driverController.RightTrigger().WhileTrue(SubClimber::GetInstance().RunCurrentZeroingSequence());
 
   //Letters
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
   _driverController.Y().OnTrue(SubClimber::GetInstance().ClimbL1());
   _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
-  _driverController.A().OnTrue(frc2::cmd::RunOnce([]{
-    SubDrivebase::GetInstance().SetPose(frc::Pose2d{0_m,0_m,0_deg});
+  _driverController.A().OnTrue(frc2::cmd::RunOnce([] {
+    SubDrivebase::GetInstance().SetPose(frc::Pose2d{0_m, 0_m, 0_deg});
   }));
 
   //POVs

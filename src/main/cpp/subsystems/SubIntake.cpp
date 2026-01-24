@@ -6,6 +6,7 @@
 
 #include <units/current.h>
 #include <utilities/Logger.h>
+#include "utilities/RobotVisualisation.h"
 
 SubIntake::SubIntake() {
   _intakeMotorConfig.SmartCurrentLimit(60);
@@ -15,7 +16,7 @@ SubIntake::SubIntake() {
 }
 
 frc2::CommandPtr SubIntake::IntakeOn() {
-  return StartEnd([this] { _intakeMotor.Set(1); }, [this] { _intakeMotor.Set(0); });
+  return StartEnd([this] { _intakeMotor.Set(1.0); }, [this] { _intakeMotor.Set(0); });
 }
 
 frc2::CommandPtr SubIntake::IntakeOff() {
@@ -52,6 +53,7 @@ void SubIntake::Periodic() {
   } else {
     _intakeHighTemperatureAlert.Set(false);
   }
+  RobotVisualisation::GetInstance()._intakeWheel.SetAngle(_intakeMotor.GetPosition());
 }
 
 void SubIntake::SimulationPeriodic() {
@@ -59,3 +61,4 @@ void SubIntake::SimulationPeriodic() {
   _sim.Update(20_ms);
   _intakeMotor.IterateSim(_sim.GetAngularVelocity());
 }
+
