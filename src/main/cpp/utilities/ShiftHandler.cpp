@@ -100,19 +100,10 @@ bool ShiftHandler::IsShift(RebuiltShift shift) {
 bool ShiftHandler::IsActiveShift() {
   units::second_t matchTime = frc::DriverStation::GetMatchTime();
   RebuiltShift currentShift = GetCurrentShift();
-  frc::DriverStation::Alliance allicance =
-    frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kBlue);
-  bool wonAutonShift =
-    (allicance == frc::DriverStation::Alliance::kBlue) && (currentShift == RebuiltShift::BLUE);
-  bool shift2 = 105_s > matchTime && matchTime > 80_s; /* 1:45 - 80s */
-  bool shift4 = 55_s > matchTime && matchTime > 30_s;  /* 0:55 - 0:30 */
+  RebuiltShift myShift = (RebuiltShift)frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kBlue);
 
   if (currentShift == RebuiltShift::AUTON || currentShift == RebuiltShift::TRANS ||
-      currentShift == RebuiltShift::ENDGAME) {
-    return true;
-  }
-
-  if (wonAutonShift && (shift2 || shift4)) {
+      currentShift == RebuiltShift::ENDGAME || myShift == currentShift) {
     return true;
   }
 

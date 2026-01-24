@@ -6,8 +6,8 @@ enum RebuiltShift {
   NONE,
   AUTON,
   TRANS,
-  RED,
-  BLUE,
+  RED = 0, /* set to match frc::DriverStation::Alliance */
+  BLUE = 1,
   ENDGAME,
 };
 
