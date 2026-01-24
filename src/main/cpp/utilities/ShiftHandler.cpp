@@ -11,9 +11,6 @@ RebuiltShift ShiftHandler::GetCurrentShift() {
     return RebuiltShift::NONE;
   }
 
-  Logger::Log("ShiftHandler/matchTime", secondsPassed);
-  Logger::Log("ShiftHandler/realMatchTime", frc::DriverStation::GetMatchTime());
-
   if (secondsPassed > 130_s) {
     return RebuiltShift::TRANS;
   }
@@ -91,9 +88,9 @@ std::string ShiftHandler::GetShiftName(RebuiltShift shift) {
       return "Red";
     case RebuiltShift::ENDGAME:
       return "Endgame";
+    default:
+      return "None";
   }
-
-  return "None";
 }
 
 bool ShiftHandler::IsShift(RebuiltShift shift) {
