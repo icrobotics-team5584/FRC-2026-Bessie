@@ -3,12 +3,12 @@
 #include <units/time.h>
 
 enum RebuiltShift {
-  NONE,
-  AUTON,
-  TRANS,
   RED = 0, /* set to match frc::DriverStation::Alliance */
   BLUE = 1,
-  ENDGAME,
+  AUTON = 2,
+  TRANS = 3,
+  ENDGAME = 4,
+  NONE = 5,
 };
 
 class ShiftHandler {
