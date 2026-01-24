@@ -38,7 +38,7 @@ RebuiltShift ShiftHandler::GetCurrentShift() {
 
 RebuiltShift ShiftHandler::GetWinningShift() {
   std::string data = frc::DriverStation::GetGameSpecificMessage();
-  if (data.length() < 0) { /* No winning shift message recieved */
+  if (data.length() == 0) { /* No winning shift message recieved */
     return RebuiltShift::NONE;
   }
 
