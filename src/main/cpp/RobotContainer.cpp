@@ -27,7 +27,7 @@
 RobotContainer::RobotContainer() {
   SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
   ConfigureBindings();
-  SubVision::GetInstance();//.SetDefaultCommand(cmd::AddVisionMeasurement());
+  SubVision::GetInstance().SetDefaultCommand(cmd::AddVisionMeasurement());
 
   _autoManager.AddDefaultAuton("default", AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton()));
 
@@ -44,16 +44,14 @@ void RobotContainer::ConfigureBindings() {
 
   //Bumpers
   _driverController.LeftBumper().ToggleOnTrue(SubDeploy::GetInstance().ToggleDeploy());
-  _driverController.X().OnTrue(SubVision::GetInstance().CalibrateRobotToCamera(
-    frc::Transform3d{frc::Translation3d{-2_m, 0_m, 1.12395_m},
-      frc::Rotation3d{0_deg, 0_deg, 0_deg}}));  //2m away from april tag
+  _driverController.RightBumper().WhileTrue(SubDrivebase::GetInstance().LockWheelsInXShape());
 
   //Letters
-  //_driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
+  _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
   _driverController.Y().OnTrue(SubDrivebase::GetInstance().ResetGyroCmd());
   _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
   _driverController.A().OnTrue(frc2::cmd::RunOnce([] {
-    SubDrivebase::GetInstance().SetPose(frc::Pose2d{2.0218614_m, 4.3902376_m, 180_deg}); //2m away from april tag 25
+    SubDrivebase::GetInstance().SetPose(frc::Pose2d{0_m, 0_m, 0_deg});
   }));
 
   //POVs
