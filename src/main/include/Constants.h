@@ -19,8 +19,6 @@ namespace canid {
 
     constexpr int PIGEON_2 = 13; 
     
-    constexpr int PDH = 15;
-    
     constexpr int INTAKE = 14;
     constexpr int INDEXER = 16;
     constexpr int FEEDER = 17;
@@ -33,6 +31,8 @@ namespace canid {
     constexpr int TURRET_MOTOR = 22; 
 
     constexpr int OUTDEXER = 23;
+
+    constexpr int PDH = 40;
 }
 
 namespace dio {

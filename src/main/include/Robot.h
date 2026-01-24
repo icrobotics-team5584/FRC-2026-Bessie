@@ -35,5 +35,5 @@ class Robot : public frc::TimedRobot {
 
   RobotContainer m_container;
 
-  frc::PowerDistribution m_pdh{canid::PDH, frc::PowerDistribution::ModuleType::kRev};;
+  frc::PowerDistribution m_pdh{canid::PDH, frc::PowerDistribution::ModuleType::kRev};
 };
