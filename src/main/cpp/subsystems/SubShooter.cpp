@@ -43,8 +43,14 @@ SubShooter::SubShooter() {
     _rpmTable.insert(0_m, 300_rpm);
     _rpmTable.insert(10_m, 600_rpm);
 
-    _timeOfFLightTable.insert(0_m, 1_s);
-    _timeOfFLightTable.insert(10_m, 2_s);
+    _timeOfFLightTable.insert(1270_mm, 0.8_s);
+    _timeOfFLightTable.insert(1770_mm, 0.5_s);
+    _timeOfFLightTable.insert(2270_mm, 0.93_s);
+    _timeOfFLightTable.insert(2770_mm, 1.1_s);
+    _timeOfFLightTable.insert(3770_mm, 1.18_s);
+    _timeOfFLightTable.insert(3770_mm, 1.18_s);
+    _timeOfFLightTable.insert(4270_mm, 1.28_s);
+    _timeOfFLightTable.insert(4770_mm, 1.28_s);
 
     frc::SmartDashboard::PutData("Shooter/mech2dDisplay", &_shooterMech);
 }
