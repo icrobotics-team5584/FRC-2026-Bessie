@@ -39,35 +39,31 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureBindings() {
-  // _driverController.LeftBumper().ToggleOnTrue(SubDeploy::GetInstance().ToggleDeploy());
-  // _driverController.LeftTrigger().WhileTrue(cmd::IntakeSequence());
-  // _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
+  //Triggers
+  _driverController.LeftTrigger().WhileTrue(cmd::IntakeSequence());
+
+  //Bumpers
+  _driverController.LeftBumper().ToggleOnTrue(SubDeploy::GetInstance().ToggleDeploy());
+  _driverController.RightBumper().WhileTrue(SubDrivebase::GetInstance().LockWheelsInXShape());
+
+  //Letters
+  _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
   _driverController.Y().OnTrue(SubDrivebase::GetInstance().ResetGyroCmd());
-  // _driverController.B().WhileTrue(cmd::StationaryShootAt(frc::Pose2d{0_m, 0_m, 0_deg}));
-  _driverController.LeftTrigger().OnTrue(
-    frc2::cmd::RunOnce([] { SubDrivebase::GetInstance().SetPose(frc::Pose2d{3.5_m, 4_m, 0_deg}); }));
-  // _driverController.POVUp().OnTrue(cmd::AimAtFieldRelative([] { return 0_deg; }));
-  // _driverController.POVDown().OnTrue(
-  //   SubTurret::GetInstance().SetTurretTargetAngle([] { return 0_deg; }));
-  // _driverController.POVRight().OnTrue(cmd::AimAtPose(frc::Pose2d{0_m, 0_m, 0_deg}));
+  _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
+  _driverController.A().OnTrue(frc2::cmd::RunOnce([] {
+    SubDrivebase::GetInstance().SetPose(frc::Pose2d{0_m, 0_m, 0_deg});
+  }));
 
-  _driverController.RightBumper().OnTrue(SubHood::GetInstance().SetHoodPositionTarget([] {return 35.0_deg;}));
-  _driverController.LeftBumper().OnTrue(SubHood::GetInstance().SetHoodPositionTarget([] {return 16.5_deg;}));
+  //POVs
+  _driverController.POVUp().OnTrue(cmd::AimAtFieldRelative([] { return 0_deg; }));
+  _driverController.POVDown().OnTrue(
+    SubTurret::GetInstance().SetTurretTargetAngle([] { return 0_deg; }));
+  _driverController.POVRight().OnTrue(cmd::AimAtPose(frc::Pose2d{0_m, 0_m, 0_deg}));
 
-  _driverController.POVUp().OnTrue(SubHood::GetInstance().MoveHoodUp1Degree());
-  _driverController.POVDown().OnTrue(SubHood::GetInstance().MoveHoodDown1Degree());
+  //Sticks
 
-  _driverController.POVRight().OnTrue(SubFeeder::GetInstance().FeederOn());
-  _driverController.POVLeft().OnTrue(SubFeeder::GetInstance().FeederOff());
+  //Other
 
-  _driverController.POVRight().OnTrue(SubIndexer::GetInstance().Index());
-  _driverController.POVLeft().OnTrue(SubIndexer::GetInstance().StopIndex());
-
-  _driverController.A().OnTrue(SubHood::GetInstance().ZeroHood());
-  _driverController.X().OnTrue(SubShooter::GetInstance().SetShooterTarget(0_rpm));
-  _driverController.B().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle([] {return 0_deg;}));
-
-  _driverController.RightTrigger().WhileTrue(cmd::StationaryShootAt(frc::Pose2d{4.621_m, 4.016_m, 0_deg}));
 }
 
 std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {
