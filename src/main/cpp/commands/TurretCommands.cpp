@@ -78,10 +78,12 @@ units::degree_t CalcShootOnTheMoveAngle() {
   units::meter_t distance = target.Translation().Distance(robot.Translation());
 
   // Calculate field relative turret velocity
-  units::meters_per_second_t robotX = SubDrivebase::GetInstance().GetVelocityX();
-  units::meters_per_second_t robotY = SubDrivebase::GetInstance().GetVelocityY();
-  Logger::Log("SOTM/velX", robotX);
-  Logger::Log("SOTM/velY", robotY);
+  units::meters_per_second_t robotVelX = SubDrivebase::GetInstance().GetVelocityX();
+  units::meters_per_second_t robotVelY = SubDrivebase::GetInstance().GetVelocityY();
+  units::degrees_per_second_t robotVelRot = SubDrivebase::GetInstance().GetAngularVelocity();
+  Logger::Log("SOTM/velX", robotVelX);
+  Logger::Log("SOTM/velY", robotVelY);
+  Logger::Log("SOTM/velRot", robotVelRot);
   // Adjust with rotation speed and turret relative to robot
 
   // Account for robot velocity
@@ -89,9 +91,22 @@ units::degree_t CalcShootOnTheMoveAngle() {
   units::second_t TOF = SubShooter::GetInstance().GetTimeOfFLightWithDistance(distance);
   Logger::Log("SOTM/ToF", TOF);
 
-  units::meter_t offsetX = robotX * TOF;
-  units::meter_t offsetY = robotY * TOF;
-  frc::Pose2d futurePose = frc::Pose2d(offsetX, offsetY, robot.Rotation());
+  units::meter_t offsetX = robotVelX * TOF;
+  units::meter_t offsetY = robotVelY * TOF;
+  units::degree_t offsetRot = robotVelRot * TOF;
+  units::degree_t robotRotation = robot.Rotation().Degrees();
+  units::meter_t robotX = robot.X();
+  units::meter_t robotY = robot.Y();
+
+  Logger::Log("SOTM/robotX", robotX);
+  Logger::Log("SOTM/robotY", robotY);
+  Logger::Log("SOTM/robotRotation", robotRotation);
+
+  Logger::Log("SOTM/offsetX", offsetX);
+  Logger::Log("SOTM/offsetY", offsetY);
+  Logger::Log("SOTM/offsetRot", offsetRot);
+  
+  frc::Pose2d futurePose = frc::Pose2d(robotX - offsetX, robotY - offsetY, robot.Rotation().Degrees() - offsetRot);
   Logger::FieldDisplay::GetInstance().DisplayPose("SOTM/Future Pose", futurePose);
 
   // Find parameters from future pose to target
@@ -107,11 +122,12 @@ units::degree_t CalcShootOnTheMoveAngle() {
 }
 
 frc2::CommandPtr Shoot() {
-  return SubShooter::GetInstance().SpinWithDistance( [] {return CalcShootOnTheMoveDistance();})
-  .AlongWith(SubHood::GetInstance().AimWithDistance([] {return CalcShootOnTheMoveDistance();}))
-  .AlongWith(AimAtFieldRelative([] {return CalcShootOnTheMoveAngle();}))
-  .AndThen(SubFeeder::GetInstance().FeederOn())
-  .OnlyIf([] {return SubShooter::GetInstance().IsAtSpeed() && SubTurret::GetInstance().IsAtTarget() && SubHood::GetInstance().IsAtTarget();} );
+  // return SubShooter::GetInstance().SpinWithDistance( [] {return CalcShootOnTheMoveDistance();})
+  // .AlongWith(SubHood::GetInstance().AimWithDistance([] {return CalcShootOnTheMoveDistance();}))
+  // .AlongWith(AimAtFieldRelative([] {return CalcShootOnTheMoveAngle();}))
+  // .AndThen(SubFeeder::GetInstance().FeederOn())
+  // .OnlyIf([] {return SubShooter::GetInstance().IsAtSpeed() && SubTurret::GetInstance().IsAtTarget() && SubHood::GetInstance().IsAtTarget();} );
+  return AimAtFieldRelative([] {return CalcShootOnTheMoveAngle();});
 }
 
 }  // namespace cmd
