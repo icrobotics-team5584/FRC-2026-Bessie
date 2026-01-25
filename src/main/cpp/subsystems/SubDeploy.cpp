@@ -4,6 +4,8 @@
 
 #include "subsystems/SubDeploy.h"
 
+#include "utilities/RobotVisualisation.h"
+
 #include <units/current.h>
 #include <utilities/Logger.h>
 
@@ -20,15 +22,15 @@ SubDeploy::SubDeploy() {
 }
 
 frc2::CommandPtr SubDeploy::DeployIntake() {
-  return RunOnce([this] { _deployMotor.SetPositionTarget(90_deg); });
+  return RunOnce([this] { _deployMotor.SetPositionTarget(DEPLOY_MIN_ANGLE); });
 }
 
 frc2::CommandPtr SubDeploy::ToggleDeploy() {
   return RunOnce([this] {
     if (_deployMotor.GetPosition() > 45_deg) {
-      _deployMotor.SetPositionTarget(0_deg);
+      _deployMotor.SetPositionTarget(DEPLOY_MIN_ANGLE);
     } else {
-      _deployMotor.SetPositionTarget(90_deg);
+      _deployMotor.SetPositionTarget(DEPLOY_MAX_ANGLE);
     }
   });
 }
@@ -97,10 +99,12 @@ void SubDeploy::Periodic() {
   } else {
     _deployHighTemperatureAlert.Set(false);
   }
+   RobotVisualisation::GetInstance()._deployLigament->SetAngle(_deployMotor.GetPosition());
 }
 
 void SubDeploy::SimulationPeriodic() {
   _deploySim.SetInputVoltage(_deployMotor.CalcSimVoltage());
   _deploySim.Update(20_ms);
   _deployMotor.IterateSim(_deploySim.GetVelocity(), _deploySim.GetAngle());
+ 
 }

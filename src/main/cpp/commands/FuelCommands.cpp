@@ -18,8 +18,7 @@ namespace cmd {
 frc2::CommandPtr IntakeSequence() {
   return SubDeploy::GetInstance()
     .DeployIntake()
-    .AlongWith(SubIntake::GetInstance().IntakeOn())
-    .AlongWith(SubIndexer::GetInstance().IndexerOn());
+    .AlongWith(SubIntake::GetInstance().IntakeOn());
 }
 
 frc2::CommandPtr StationaryShootAt(frc::Pose2d target) {
