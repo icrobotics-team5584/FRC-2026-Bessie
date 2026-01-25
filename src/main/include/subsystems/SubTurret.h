@@ -12,6 +12,7 @@
 #include <frc/DutyCycleEncoder.h>
 #include <units/angle.h>
 #include <frc2/command/button/CommandXboxController.h>
+#include <frc/geometry/Transform2d.h>
 
 #include <frc/simulation/DCMotorSim.h>
 #include <frc/system/plant/DCMotor.h>
@@ -43,6 +44,8 @@ class SubTurret : public frc2::SubsystemBase {
 
   frc2::CommandPtr SetTurretTargetAngle(std::function<units::degree_t()> angle);
   frc2::CommandPtr ZeroTurretCmd();
+
+  static constexpr frc::Transform2d ROBOT_TO_TURRET = frc::Transform2d{-235_mm, 0_mm, 0_deg};
 
   /**
    * Will be called periodically whenever the CommandScheduler runs.
