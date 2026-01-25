@@ -21,17 +21,17 @@ frc2::CommandPtr IntakeSequence() {
     .AlongWith(SubIntake::GetInstance().IntakeOn());
 }
 
-frc2::CommandPtr StationaryShootAt(frc::Pose2d target) {
+frc2::CommandPtr StationaryShootAt(frc::Translation2d target) {
   auto distanceToTarget = [target] {
     auto curPose = PoseHandler::GetInstance().GetPose();
     auto turretPose = curPose.TransformBy(SubTurret::ROBOT_TO_TURRET);
 
     Logger::FieldDisplay::GetInstance().DisplayPose("Turret/turretPose", turretPose);
-    Logger::Log("Shooter/distToTargetInner", target.Translation().Distance(turretPose.Translation()));
+    Logger::Log("Shooter/distToTargetInner", target.Distance(turretPose.Translation()));
 
-    return target.Translation().Distance(turretPose.Translation());};
+    return target.Distance(turretPose.Translation());};
 
-  return frc2::cmd::Parallel(cmd::AimAtPose(target),
+  return frc2::cmd::Parallel(cmd::AimAtSpot(target),
     SubShooter::GetInstance().SetShooterTargetFromDist(distanceToTarget),
     SubHood::GetInstance().SetHoodPositionTargetFromDist(distanceToTarget))
     .Until([] {

@@ -16,10 +16,10 @@ namespace cmd {
       return targetAngle;});
   }
 
-  frc2::CommandPtr AimAtPose(frc::Pose2d pose) {
-    return cmd::AimAtFieldRelative([pose] {
+  frc2::CommandPtr AimAtSpot(frc::Translation2d target) {
+    return cmd::AimAtFieldRelative([target] {
       auto robotPose = PoseHandler::GetInstance().GetPose();
-      units::radian_t angle = atan2( (pose.Y()-robotPose.Y()).value(), (pose.X()-robotPose.X()).value() ) * 1_rad;
+      units::radian_t angle = atan2( (target.Y()-robotPose.Y()).value(), (target.X()-robotPose.X()).value() ) * 1_rad;
       units::degree_t degrees = angle;
       return degrees;
     });
