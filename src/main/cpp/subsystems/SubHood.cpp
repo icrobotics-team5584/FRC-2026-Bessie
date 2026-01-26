@@ -12,14 +12,23 @@ SubHood::SubHood() {
     _hoodMotorConfig.encoder.PositionConversionFactor(1/GEAR_RATIO);
     _hoodMotorConfig.encoder.VelocityConversionFactor(1/GEAR_RATIO);
     _hoodMotorConfig.closedLoop.Pid(P, I, D);
+    _hoodMotorConfig.closedLoop.feedForward.kS(S);
     _hoodMotorConfig.SmartCurrentLimit(30);
+    _hoodMotorConfig.Inverted(true);
+    _hoodMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
     _hoodMotor.OverwriteConfig(_hoodMotorConfig);
-
-    _pitchTable.insert(0_m, 35_deg);
-    _pitchTable.insert(10_m, 12.5_deg);
 
     frc::SmartDashboard::PutData("Hood/Motor", &_hoodMotor);
     frc::SmartDashboard::PutData("Hood/mech2dDisplay", &_hoodMech);
+
+    _hoodPitchTable.insert(1.8575_m, 0.07611_tr);
+    _hoodPitchTable.insert(2.3575_m, 0.093056_tr);
+    _hoodPitchTable.insert(2.8575_m, 0.093056_tr);
+    _hoodPitchTable.insert(3.3575_m, 0.093056_tr);
+    _hoodPitchTable.insert(3.8575_m, 0.098611_tr);
+    _hoodPitchTable.insert(4.3575_m, 0.098611_tr);
+    _hoodPitchTable.insert(4.6875_m, 0.098611_tr);
+    _hoodPitchTable.insert(5.1875_m, 0.098611_tr);
 }
 
 // This method will be called once per scheduler run
@@ -31,6 +40,7 @@ void SubHood::Periodic() {
 
     Logger::Log("Hood/haszeroed", _hasZeroed);
     Logger::Log("Hood/zeroing", _zeroing);
+    Logger::Log("Hood/IsAtTarget", HoodIsAtTarget());
 }
 
 void SubHood::SimulationPeriodic() {
@@ -39,8 +49,13 @@ void SubHood::SimulationPeriodic() {
     _hoodMotor.IterateSim(_hoodSim.GetVelocity(), _hoodSim.GetAngle());
 }
 
-frc2::CommandPtr SubHood::SetHoodPositionTarget(units::degree_t angle) {
-    return RunOnce([this, angle] {_hoodMotor.SetPositionTarget(angle);});
+frc2::CommandPtr SubHood::SetHoodPositionTarget(std::function<units::degree_t()> angle) {
+    return RunOnce([this, angle] {
+        units::degree_t target = angle();
+        if(target > UPPER_LIMIT) {target = UPPER_LIMIT;}
+        if(target < LOWER_LIMIT) {target = LOWER_LIMIT;}
+
+        _hoodMotor.SetPositionTarget(target);});
 }
 
 frc2::CommandPtr SubHood::ZeroHood() {
@@ -78,14 +93,18 @@ frc2::CommandPtr SubHood::ManualHoodDown() {
     _hoodMotor.SetPositionTarget(targRot);});
 }
 
-units::degree_t SubHood::GetHoodAngle() {
-    return _hoodMotor.GetPosition();
+frc2::CommandPtr SubHood::SetHoodPositionTargetFromDist(std::function<units::meter_t()> distanceToTarget){
+    return SetHoodPositionTarget([this, distanceToTarget] { return _hoodPitchTable[distanceToTarget()]; });
 }
 
-frc2::CommandPtr SubHood::AimWithDistance(std::function<units::meter_t()> distance) {
-    return SetHoodPositionTarget(_pitchTable[distance()]);
+bool SubHood::HoodIsAtTarget(){
+    return units::math::abs(_hoodMotor.GetPosError()) < 0.5_deg;
 }
 
-bool SubHood::IsAtTarget() {
-    return units::math::abs(GetHoodAngle()) < TOLARANCE;
+frc2::CommandPtr SubHood::MoveHoodUp1Degree() {
+    return SetHoodPositionTarget([this] {return _hoodMotor.GetPositionTarget() + 1_deg;});
+}
+
+frc2::CommandPtr SubHood::MoveHoodDown1Degree() {
+    return SetHoodPositionTarget([this] {return _hoodMotor.GetPositionTarget() - 1_deg;});
 }

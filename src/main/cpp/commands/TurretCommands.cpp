@@ -12,27 +12,24 @@
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/Commands.h>
 
-#include <frc/geometry/Pose2d.h>
+namespace cmd {  
+   
+  frc2::CommandPtr AimAtFieldRelative(std::function<units::degree_t()> target) {
+    return SubTurret::GetInstance().SetTurretTargetAngle([target] {     
+      auto robotPose = PoseHandler::GetInstance().GetPose();
+      Logger::Log("Turret/AimAtFieldRelative/robotPose/Rotation", robotPose.Rotation().Degrees());
+      units::degree_t targetAngle = target() - robotPose.Rotation().Degrees() - 180_deg;
+      return targetAngle;});
+  }
 
-namespace cmd {
-frc2::CommandPtr AimAtFieldRelative(std::function<units::degree_t()> target) {
-  return SubTurret::GetInstance().SetTurretTargetAngle([target] {
-    auto robotPose = PoseHandler::GetInstance().GetPose();
-    Logger::Log("Turret/AimAtFieldRelative/robotPose/Rotation", robotPose.Rotation().Degrees());
-    units::degree_t targetAngle = target() - robotPose.Rotation().Degrees();
-    return targetAngle;
-  });
-}
-
-frc2::CommandPtr AimAtPose(frc::Pose2d pose) {
-  return cmd::AimAtFieldRelative([pose] {
-    auto robotPose = PoseHandler::GetInstance().GetPose();
-    units::radian_t angle =
-      atan2((pose.Y() - robotPose.Y()).value(), (pose.X() - robotPose.X()).value()) * 1_rad;
-    units::degree_t degrees = angle;
-    return degrees;
-  });
-}
+  frc2::CommandPtr AimAtSpot(frc::Translation2d target) {
+    return cmd::AimAtFieldRelative([target] {
+      auto robotPose = PoseHandler::GetInstance().GetPose();
+      units::radian_t angle = atan2( (target.Y()-robotPose.Y()).value(), (target.X()-robotPose.X()).value() ) * 1_rad;
+      units::degree_t degrees = angle;
+      return degrees;
+    });
+  }
 
 units::meter_t CalcShootOnTheMoveDistance() {
   // Calculate distance to target **FROM TURRET**
@@ -61,11 +58,6 @@ units::meter_t CalcShootOnTheMoveDistance() {
   // Find parameters from future pose to target
   units::meter_t futureDistance = target.Translation().Distance(futurePose.Translation());
   Logger::Log("SOTM/futureDistance", futureDistance);
-
-  units::radian_t angleFromFutureToTarget = atan2((target.Y() - futurePose.Y()).value(), (target.X() - futurePose.X()).value()) * 1_rad;
-  units::degree_t angleFromFutureToTargetDegrees = angleFromFutureToTarget;
-
-  Logger::Log("SOTM/CalcFutureDistance", futureDistance);
 
   return futureDistance;
 }
@@ -110,8 +102,6 @@ units::degree_t CalcShootOnTheMoveAngle() {
   Logger::FieldDisplay::GetInstance().DisplayPose("SOTM/Future Pose", futurePose);
 
   // Find parameters from future pose to target
-  units::meter_t futureDistance = target.Translation().Distance(futurePose.Translation());
-  Logger::Log("SOTM/futureDistance", futureDistance);
 
   units::radian_t angleFromFutureToTarget = atan2((target.Y() - futurePose.Y()).value(), (target.X() - futurePose.X()).value()) * 1_rad;
   units::degree_t angleFromFutureToTargetDegrees = angleFromFutureToTarget;

@@ -17,6 +17,8 @@
 #include <frc/smartdashboard/Mechanism2d.h>
 #include <frc/smartdashboard/MechanismLigament2d.h>
 #include "utilities/MechanismCircle2d.h"
+#include <wpi/interpolating_map.h>
+
 
 class SubShooter : public frc2::SubsystemBase {
  public:
@@ -29,8 +31,8 @@ class SubShooter : public frc2::SubsystemBase {
   void SimulationPeriodic();
 
   frc2::CommandPtr SetShooterTarget(units::turns_per_second_t speed);
-  frc2::CommandPtr SpinWithDistance(std::function<units::meter_t()> distance);
   frc2::CommandPtr StopShooter();
+  frc2::CommandPtr SpinWithDistance(std::function<units::meter_t()> distance);
   
   bool IsAtSpeed();
 
@@ -50,16 +52,16 @@ class SubShooter : public frc2::SubsystemBase {
   static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::KrakenX60FOC();
   static constexpr double GEAR_RATIO = 1.0;
 
-  double P = 1.0;
+  double P = 0.4;
   double I = 0;
   double D = 0;
-  double V = 1.0;
+  double V = 0.12;
 
   ctre::phoenix6::configs::TalonFXConfiguration _shooterMotorConfig;
   ctre::phoenix6::controls::VelocityVoltage _flywheelTargetVelocity{0_tps};
 
-  wpi::interpolating_map<units::meter_t, units::revolutions_per_minute_t> _rpmTable;
-  wpi::interpolating_map<units::meter_t, units::second_t> _timeOfFLightTable;
+  wpi::interpolating_map<units::meter_t, units::turns_per_second_t> _flyWheelSpeedTable;
+  wpi::interpolating_map<units::meter_t, units::second_t> _timeOfFlightTable;
 
   //Sim
   frc::LinearSystem<1,1,1> _leftFlywheelSystem = frc::LinearSystemId::FlywheelSystem(MOTOR_MODEL, MOI, GEAR_RATIO);
@@ -78,3 +80,4 @@ class SubShooter : public frc2::SubsystemBase {
     _shooterMechRoot->Append<frc::MechanismLigament2d>("shooterLowerConnector", 0.05, -90_deg, 0);
   MechanismCircle2d _shooterMechBottomRoller{_shooterMechLowerConnector, "shooterBottomRoller", 0.025, 0_deg};
 };
+

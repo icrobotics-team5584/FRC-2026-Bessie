@@ -32,7 +32,7 @@ class SubHood : public frc2::SubsystemBase {
   void SimulationPeriodic();
 
   bool HoodCurrentCheck(); 
-  bool IsAtTarget();
+  bool HoodIsAtTarget();
 
   units::degree_t GetHoodAngle();
   
@@ -41,10 +41,10 @@ class SubHood : public frc2::SubsystemBase {
   frc2::CommandPtr ManualHoodDown(); 
   frc2::CommandPtr StowHood(); 
   frc2::CommandPtr ZeroHood();
-  frc2::CommandPtr SetHoodPositionTarget(units::degree_t angle);
-  frc2::CommandPtr AimWithDistance(std::function<units::meter_t()> distance);
-
-  wpi::interpolating_map<units::meter_t, units::degree_t> _pitchTable;
+  frc2::CommandPtr SetHoodPositionTarget(std::function<units::degree_t()> angle);
+  frc2::CommandPtr SetHoodPositionTargetFromDist(std::function<units::meter_t()> distanceToTarget);
+  frc2::CommandPtr MoveHoodUp1Degree();
+  frc2::CommandPtr MoveHoodDown1Degree();
   
   /**
    * Will be called periodically whenever the CommandScheduler runs.
@@ -53,18 +53,19 @@ class SubHood : public frc2::SubsystemBase {
 
  private:
 
-  double P = 1.0;
+  double P = 16.0;
   double I = 0.0;
-  double D = 0.0;
+  double D = 8.0;
+  double S = 0.6;
 
-  units::ampere_t zeroingCurrentLimit = 15_A;
+  units::ampere_t zeroingCurrentLimit = 23_A;
 
-  static constexpr units::degree_t UPPER_LIMIT = 35.0_deg;
-  static constexpr units::degree_t LOWER_LIMIT = 12.5_deg;
+  static constexpr units::degree_t UPPER_LIMIT = 37.5_deg;
+  static constexpr units::degree_t LOWER_LIMIT = 16.5_deg;
   static constexpr bool SIMULATE_GRAVITY = true;
   static constexpr units::degree_t STARTING_ANGLE = 13_deg;
   static constexpr units::degree_t STOW_ANGLE = 12.5_deg;
-  static constexpr double GEAR_RATIO = (42.0/8.0) * (400.0/24.0);
+  static constexpr double GEAR_RATIO = (56.0/8.0) * (370.0/34.0);
   static constexpr units::centimeter_t ARM_LENGTH = 20_cm;
   static constexpr units::degree_t TOLARANCE = 0.5_deg;
 
@@ -73,6 +74,8 @@ class SubHood : public frc2::SubsystemBase {
 
   ICSparkMax _hoodMotor{canid::HOOD_MOTOR};
   rev::spark::SparkBaseConfig _hoodMotorConfig;
+
+  wpi::interpolating_map<units::meter_t, units::degree_t> _hoodPitchTable;
 
   static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::NEO550();
   static constexpr units::kilogram_square_meter_t MOI = 0.0001_kg_sq_m;
