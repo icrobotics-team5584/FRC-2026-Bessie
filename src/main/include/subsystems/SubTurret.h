@@ -42,6 +42,8 @@ class SubTurret : public frc2::SubsystemBase {
   frc2::CommandPtr SetTurretTargetAngle(std::function<units::degree_t()> angle);
   frc2::CommandPtr ZeroTurretCmd();
 
+  frc::Translation2d GetBotToTurret();
+
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */
@@ -79,6 +81,7 @@ class SubTurret : public frc2::SubsystemBase {
   static constexpr double ENCODER2_RATIO = E2_TEETH/BIG_TEETH;
   static constexpr double GEAR_RATIO = (48.0/12.0) * (94.0/10.0);
 
+  frc::Translation2d BOT_TO_TURRET {-0.2_m, 0_m};
 
   static constexpr units::hertz_t ENCODER_FREQUENCY = 975.6_Hz; 
   //force set encoder frequency to avoid 1sec startup time

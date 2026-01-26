@@ -218,6 +218,11 @@ units::meters_per_second_t SubDrivebase::GetVelocity() {
   return m::sqrt(m::pow<2>(speeds.vx) + m::pow<2>(speeds.vy));
 }
 
+frc::ChassisSpeeds SubDrivebase::GetFieldRelativeVelocity() {
+  return _kinematics.ToChassisSpeeds(_frontLeft.GetState(), _frontRight.GetState(),
+                                            _backLeft.GetState(), _backRight.GetState());
+}
+
 frc2::Trigger SubDrivebase::CheckCoastButton() {
   return frc2::Trigger{[this] { return !_toggleBrakeCoast.Get(); }};
 }

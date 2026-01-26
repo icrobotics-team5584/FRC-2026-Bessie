@@ -42,6 +42,10 @@ frc2::CommandPtr SubHood::SetHoodPositionTarget(units::degree_t angle) {
     return RunOnce([this, angle] {_hoodMotor.SetPositionTarget(angle);});
 }
 
+frc2::CommandPtr SubHood::SetHoodPositionTarget(std::function<units::degree_t()> angle) {
+    return RunOnce([this, angle] {_hoodMotor.SetPositionTarget(angle());});
+}
+
 frc2::CommandPtr SubHood::ZeroHood() {
     return RunOnce([this] {_zeroing = true;}).AndThen(ManualHoodDown())
     .Until([this] {return HoodCurrentCheck();})
