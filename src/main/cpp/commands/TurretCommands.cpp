@@ -86,18 +86,21 @@ frc::Pose2d CalcFuturePose() {
   units::meter_t distance = target.Translation().Distance(robot.Translation());
 
   // Calculate field relative turret velocity
-  units::meters_per_second_t robotVelX = SubDrivebase::GetInstance().GetVelocityX();
-  units::meters_per_second_t robotVelY = SubDrivebase::GetInstance().GetVelocityY();
+  frc::ChassisSpeeds robotVel = SubDrivebase::GetInstance().GetFieldRelativeVelocity();
+  units::meters_per_second_t robotVelX = robotVel.vx;
+  units::meters_per_second_t robotVelY = robotVel.vy;
   units::degrees_per_second_t robotVelRot = SubDrivebase::GetInstance().GetAngularVelocity();
+  
   Logger::Log("SOTM/velX", robotVelX);
   Logger::Log("SOTM/velY", robotVelY);
   Logger::Log("SOTM/velRot", robotVelRot);
-  // Adjust with rotation speed and turret relative to robot
 
   // Account for robot velocity
   // Get future pose
   units::second_t TOF = SubShooter::GetInstance().GetTimeOfFLightWithDistance(distance);
   Logger::Log("SOTM/ToF", TOF);
+
+  // Account for robot acceleration
 
   units::meter_t offsetX = robotVelX * TOF;
   units::meter_t offsetY = robotVelY * TOF;

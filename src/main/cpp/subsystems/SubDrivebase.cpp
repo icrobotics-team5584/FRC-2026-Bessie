@@ -218,26 +218,13 @@ units::meters_per_second_t SubDrivebase::GetVelocity() {
   return m::sqrt(m::pow<2>(speeds.vx) + m::pow<2>(speeds.vy));
 }
 
-units::meters_per_second_t SubDrivebase::GetVelocityX() {
-  // Use pythag to find velocity from x and y components
+frc::ChassisSpeeds SubDrivebase::GetFieldRelativeVelocity() {
   auto speeds = _kinematics.ToChassisSpeeds(_frontLeft.GetState(), _frontRight.GetState(),
                                             _backLeft.GetState(), _backRight.GetState());
   speeds = frc::ChassisSpeeds::FromRobotRelativeSpeeds(speeds, GetGyroAngle(false).Degrees());
-  namespace m = units::math;
   Logger::Log("Drivebase/velocity/vx", speeds.vx);
   Logger::Log("Drivebase/velocity/vy", speeds.vy);
-  return speeds.vx;
-}
-
-units::meters_per_second_t SubDrivebase::GetVelocityY() {
-  // Use pythag to find velocity from x and y components
-  auto speeds = _kinematics.ToChassisSpeeds(_frontLeft.GetState(), _frontRight.GetState(),
-                                            _backLeft.GetState(), _backRight.GetState());
-  speeds = frc::ChassisSpeeds::FromRobotRelativeSpeeds(speeds, GetGyroAngle(false).Degrees());
-  namespace m = units::math;
-  Logger::Log("Drivebase/velocity/vx", speeds.vx);
-  Logger::Log("Drivebase/velocity/vy", speeds.vy);
-  return speeds.vy;
+  return speeds;
 }
 
 units::degrees_per_second_t SubDrivebase::GetAngularVelocity() {
