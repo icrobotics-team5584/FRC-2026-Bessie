@@ -95,8 +95,8 @@ void SubShooter::SimulationPeriodic() {
     rightState.AddRotorPosition(_rightFlywheelSim.GetAngularVelocity()*20_ms);
 }
 
-frc2::CommandPtr SubShooter::SetShooterTarget(units::turns_per_second_t speed) {
-    return RunOnce([this, speed] {_shooterMotor1.SetControl(_flywheelTargetVelocity.WithVelocity(speed));});
+frc2::CommandPtr SubShooter::SetShooterTarget(std::function<units::turns_per_second_t()> speed) {
+    return Run([this, speed] {_shooterMotor1.SetControl(_flywheelTargetVelocity.WithVelocity(speed()));});
 }
 
 frc2::CommandPtr SubShooter::StopShooter() {
@@ -114,7 +114,7 @@ units::revolutions_per_minute_t SubShooter::GetShooterSpeed(){
 }
 
 frc2::CommandPtr SubShooter::SpinWithDistance(std::function<units::meter_t()> distance) {
-    return SetShooterTarget(_flyWheelSpeedTable[distance()]);
+    return SetShooterTarget([this, distance] { return _flyWheelSpeedTable[distance()]; });
 }
 
 units::second_t SubShooter::GetTimeOfFLightWithDistance(units::meter_t distance) {

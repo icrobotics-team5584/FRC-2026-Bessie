@@ -5,6 +5,7 @@
 #include "subsystems/SubTurret.h"
 #include "subsystems/SubFeeder.h"
 #include "subsystems/SubDrivebase.h"
+#include "subsystems/SubIndexer.h"
 
 #include "utilities/Logger.h"
 #include "utilities/PoseHandler.h"
@@ -32,28 +33,9 @@ namespace cmd {
   }
 
 units::meter_t CalcShootOnTheMoveDistance() {
-  // Calculate distance to target **FROM TURRET**
-  auto target = frc::Pose2d{0_m,0_m,0_deg};
-  auto robot = PoseHandler::GetInstance().GetPose(); // add distance turret relative to robot
-  Logger::FieldDisplay::GetInstance().DisplayPose("SOTM/robotPose", robot);
-  units::meter_t distance = target.Translation().Distance(robot.Translation());
+  auto target = frc::Pose2d{4.65_m, 4_m, 0_deg};;
 
-  // Calculate field relative turret velocity
-  units::meters_per_second_t robotX = SubDrivebase::GetInstance().GetVelocityX();
-  units::meters_per_second_t robotY = SubDrivebase::GetInstance().GetVelocityY();
-  Logger::Log("SOTM/velX", robotX);
-  Logger::Log("SOTM/velY", robotY);
-  // Adjust with rotation speed and turret relative to robot
-
-  // Account for robot velocity
-  // Get future pose
-  units::second_t TOF = SubShooter::GetInstance().GetTimeOfFLightWithDistance(distance);
-  Logger::Log("SOTM/ToF", TOF);
-
-  units::meter_t offsetX = robotX * TOF;
-  units::meter_t offsetY = robotY * TOF;
-  frc::Pose2d futurePose = frc::Pose2d(offsetX, offsetY, robot.Rotation());
-  Logger::FieldDisplay::GetInstance().DisplayPose("SOTM/Future Pose", futurePose);
+  frc::Pose2d futurePose = CalcFuturePose();
 
   // Find parameters from future pose to target
   units::meter_t futureDistance = target.Translation().Distance(futurePose.Translation());
@@ -63,8 +45,41 @@ units::meter_t CalcShootOnTheMoveDistance() {
 }
 
 units::degree_t CalcShootOnTheMoveAngle() {
+  auto target = frc::Pose2d{4.65_m, 4_m, 0_deg};;
+  frc::Pose2d futurePose = CalcFuturePose();
+
+  // Find angle from future pose to target
+  units::radian_t angleFromFutureToTarget = atan2((target.Y() - futurePose.Y()).value(), (target.X() - futurePose.X()).value()) * 1_rad;
+  units::degree_t angleFromFutureToTargetDegrees = angleFromFutureToTarget;
+
+  Logger::Log("SOTM/CalcTurretAngle", angleFromFutureToTargetDegrees);
+
+  return angleFromFutureToTargetDegrees;
+}
+
+frc2::CommandPtr ShootWhenReady() {
+  return frc2::cmd::Either(SubFeeder::GetInstance().FeederOn().AlongWith(SubIndexer::GetInstance().Index()),
+    SubFeeder::GetInstance().FeederOff().AlongWith(SubIndexer::GetInstance().StopIndex()),
+    [] {
+      return SubHood::GetInstance().HoodIsAtTarget() && SubShooter::GetInstance().IsAtSpeed() &&
+             SubTurret::GetInstance().IsAtTarget();
+    })
+    .Repeatedly();
+}
+
+frc2::CommandPtr AimOnTheMove() {
+  return SubShooter::GetInstance().SpinWithDistance( [] {return CalcShootOnTheMoveDistance();})
+  .AlongWith(SubHood::GetInstance().SetHoodPositionTargetFromDist([] {return CalcShootOnTheMoveDistance();}))
+  .AlongWith(AimAtFieldRelative([] {return CalcShootOnTheMoveAngle();}));
+}
+
+frc2::CommandPtr ShootOnTheMove() {
+  return AimOnTheMove().AlongWith(ShootWhenReady());
+}
+
+frc::Pose2d CalcFuturePose() {
   // Calculate distance to target **FROM TURRET**
-  auto target = frc::Pose2d{0_m,0_m,0_deg};
+  auto target = frc::Pose2d{4.65_m, 4_m, 0_deg};
   auto robot = PoseHandler::GetInstance().GetPose(); // add distance turret relative to robot
   Logger::FieldDisplay::GetInstance().DisplayPose("SOTM/robotPose", robot);
   units::meter_t distance = target.Translation().Distance(robot.Translation());
@@ -98,26 +113,10 @@ units::degree_t CalcShootOnTheMoveAngle() {
   Logger::Log("SOTM/offsetY", offsetY);
   Logger::Log("SOTM/offsetRot", offsetRot);
   
-  frc::Pose2d futurePose = frc::Pose2d(robotX - offsetX, robotY - offsetY, robot.Rotation().Degrees() - offsetRot);
-  Logger::FieldDisplay::GetInstance().DisplayPose("SOTM/Future Pose", futurePose);
-
-  // Find parameters from future pose to target
-
-  units::radian_t angleFromFutureToTarget = atan2((target.Y() - futurePose.Y()).value(), (target.X() - futurePose.X()).value()) * 1_rad;
-  units::degree_t angleFromFutureToTargetDegrees = angleFromFutureToTarget;
-
-  Logger::Log("SOTM/CalcTurretAngle", angleFromFutureToTargetDegrees);
-
-  return angleFromFutureToTargetDegrees;
-}
-
-frc2::CommandPtr Shoot() {
-  // return SubShooter::GetInstance().SpinWithDistance( [] {return CalcShootOnTheMoveDistance();})
-  // .AlongWith(SubHood::GetInstance().AimWithDistance([] {return CalcShootOnTheMoveDistance();}))
-  // .AlongWith(AimAtFieldRelative([] {return CalcShootOnTheMoveAngle();}))
-  // .AndThen(SubFeeder::GetInstance().FeederOn())
-  // .OnlyIf([] {return SubShooter::GetInstance().IsAtSpeed() && SubTurret::GetInstance().IsAtTarget() && SubHood::GetInstance().IsAtTarget();} );
-  return AimAtFieldRelative([] {return CalcShootOnTheMoveAngle();});
+  frc::Pose2d futurePose = frc::Pose2d(robotX + offsetX, robotY + offsetY, robot.Rotation().Degrees() + offsetRot);
+  
+  Logger::FieldDisplay::GetInstance().DisplayPose("SOTM/futurePose", futurePose);
+  return futurePose;
 }
 
 }  // namespace cmd

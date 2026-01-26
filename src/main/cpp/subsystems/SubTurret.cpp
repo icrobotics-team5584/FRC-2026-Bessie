@@ -191,7 +191,7 @@ units::degree_t SubTurret::getEncoder2Degrees() {
 }
 
 bool SubTurret::IsAtTarget() {
-    return units::math::abs(GetTurretAngle()) < TOLARANCE;
+    return units::math::abs(_turretMotor.GetPosError()) < TOLARANCE;
 }
 
 units::degree_t SubTurret::GetFieldRelativeTurretAngle() {

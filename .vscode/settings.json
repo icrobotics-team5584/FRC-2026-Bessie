@@ -76,5 +76,6 @@
         "typeinfo": "cpp",
         "valarray": "cpp",
         "variant": "cpp"
-    }
+    },
+    "wpilib.autoStartRioLog": true
 }
