@@ -12,6 +12,7 @@
 #include <frc/DutyCycleEncoder.h>
 #include <units/angle.h>
 #include <frc2/command/button/CommandXboxController.h>
+#include <frc/geometry/Transform2d.h>
 
 #include <frc/simulation/DCMotorSim.h>
 #include <frc/system/plant/DCMotor.h>
@@ -39,8 +40,12 @@ class SubTurret : public frc2::SubsystemBase {
   void SetTurretAngle(units::degree_t angle);
   void ZeroTurret();
 
+  bool TurretIsAtTarget();
+
   frc2::CommandPtr SetTurretTargetAngle(std::function<units::degree_t()> angle);
   frc2::CommandPtr ZeroTurretCmd();
+
+  static constexpr frc::Transform2d ROBOT_TO_TURRET = frc::Transform2d{-235_mm, 0_mm, 0_deg};
 
   /**
    * Will be called periodically whenever the CommandScheduler runs.
@@ -63,13 +68,13 @@ class SubTurret : public frc2::SubsystemBase {
   const double encoder1ZeroOffset = 0.696408;
   const double encoder2ZeroOffset = 0.120609;
 
-  units::degree_t POS_LIMIT = 70_deg;
-  units::degree_t NEG_LIMIT = -315_deg;
+  units::degree_t POS_LIMIT = 90_deg;
+  units::degree_t NEG_LIMIT = -90_deg;
 
   bool _hasZeroed = false;
 
-  double P = 4.0;
-  double I = 0;
+  double P = 6.0;
+  double I = 0.01;
   double D = 0;
   
   static constexpr double E1_TEETH = 21;
