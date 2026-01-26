@@ -64,7 +64,7 @@ frc2::CommandPtr AimAndShoot(frc::Translation3d target_pose) {
     return Run([target_pose] {
         auto curr_pos = PoseHandler::GetInstance().GetPose();
         auto vel = SubDrivebase::GetInstance().GetFieldRelativeVelocity();
-        auto bot_to_turret = SubTurret::GetInstance().GetBotToTurret();
+        auto bot_to_turret = SubTurret::ROBOT_TO_TURRET.Translation();
         curr_pos.TransformBy({bot_to_turret, 0_deg});
         auto magn = hypot(bot_to_turret.X().value(),bot_to_turret.Y().value());
         auto turr_ang =  SubTurret::GetInstance().GetTurretAngle().value() / 180 * 3.142;
