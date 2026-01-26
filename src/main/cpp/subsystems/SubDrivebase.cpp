@@ -337,11 +337,10 @@ frc::ChassisSpeeds SubDrivebase::CalcJoystickSpeeds(frc2::CommandXboxController&
   double scaledTranslationY = scaledTranslationR * sin(translationTheta);
   double scaledTranslationX = scaledTranslationR * cos(translationTheta);
 
-  double scaledRotation;
-  if (rawRotation >= 0) {
-    scaledRotation = pow(rawRotation, rotationScaling);
-  } else {
-    scaledRotation = std::copysign(pow(abs(rawRotation), rotationScaling), rawRotation);
+  double scaledRotation = pow(rawRotation, rotationScaling);
+  // Bring back any negatives that may have been lost by applying the exponent
+  if (rawRotation < 0 && scaledRotation > 0){
+    scaledRotation *= 1;
   }
 
   // Apply joystick rate limits and calculate speed
