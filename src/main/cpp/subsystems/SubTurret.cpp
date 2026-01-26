@@ -10,8 +10,9 @@ SubTurret::SubTurret() {
     _turretMotorConfig.encoder.PositionConversionFactor(1/GEAR_RATIO);
     _turretMotorConfig.encoder.VelocityConversionFactor(1/GEAR_RATIO);
     _turretMotorConfig.closedLoop.Pid(P, I, D);
-    _turretMotorConfig.closedLoop.MaxOutput(0.25);
-    _turretMotorConfig.closedLoop.MinOutput(-0.25);
+    _turretMotorConfig.closedLoop.MaxOutput(0.5);
+    _turretMotorConfig.closedLoop.MinOutput(-0.5);
+    _turretMotorConfig.closedLoop.IMaxAccum(0.05);
     _turretMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kCoast);
     _turretMotorConfig.SmartCurrentLimit(30);
     _turretMotor.OverwriteConfig(_turretMotorConfig);
@@ -60,6 +61,8 @@ void SubTurret::Periodic() {
     Logger::Log("Turret/Encoder/Encoder2IsConnected", _turretEncoder2.IsConnected());
     Logger::Log("Turret/Encoder/Encoder1Frequency", _turretEncoder1.GetFrequency());
     Logger::Log("Turret/Encoder/Encoder2Frequency", _turretEncoder2.GetFrequency());
+
+
 }
 
 void SubTurret::SimulationPeriodic() {
@@ -142,12 +145,20 @@ units::degree_t SubTurret::CalcOptimisedTurretAngle(units::degree_t angle) {
     units::degree_t newTarget = currentAngle + closestOffset;
 
     // clamp target to limits
+    // if(newTarget > POS_LIMIT) {
+    //     newTarget -= 360_deg;
+    // }
+
+    // if(newTarget < NEG_LIMIT) {
+    //     newTarget += 360_deg;
+    // }
+
     if(newTarget > POS_LIMIT) {
-        newTarget -= 360_deg;
+        newTarget = POS_LIMIT;
     }
 
     if(newTarget < NEG_LIMIT) {
-        newTarget += 360_deg;
+        newTarget = NEG_LIMIT;
     }
 
     Logger::Log("Turret/CalcOptimisedTurretAngle/newTarget(final output)", newTarget);

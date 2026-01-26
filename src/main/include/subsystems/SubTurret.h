@@ -68,13 +68,13 @@ class SubTurret : public frc2::SubsystemBase {
   const double encoder1ZeroOffset = 0.696408;
   const double encoder2ZeroOffset = 0.120609;
 
-  units::degree_t POS_LIMIT = 70_deg;
-  units::degree_t NEG_LIMIT = -315_deg;
+  units::degree_t POS_LIMIT = 90_deg;
+  units::degree_t NEG_LIMIT = -90_deg;
 
   bool _hasZeroed = false;
 
-  double P = 4.0;
-  double I = 0;
+  double P = 6.0;
+  double I = 0.01;
   double D = 0;
   
   static constexpr double E1_TEETH = 21;

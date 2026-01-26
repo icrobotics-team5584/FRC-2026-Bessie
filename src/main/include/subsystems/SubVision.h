@@ -68,7 +68,7 @@ public:
   frc::AprilTagFieldLayout _tagMap{_tagMapFilePath};
 
   //Left camera config
-  std::string _leftCamName = "ICR_OV9281_L"; // "ICR_OV9281_L";
+  std::string _leftCamName = "ICR_OV9281_L";
 
   photon::PhotonCamera _leftCamera{_leftCamName};
 
