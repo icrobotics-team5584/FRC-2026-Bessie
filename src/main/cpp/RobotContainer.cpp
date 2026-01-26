@@ -40,8 +40,8 @@ RobotContainer::RobotContainer() {
 
 void RobotContainer::ConfigureBindings() {
   //Triggers
-  _driverController.LeftTrigger().WhileTrue(cmd::ShootOnTheMove());
-  _driverController.RightTrigger().WhileTrue(cmd::StationaryShootAt(frc::Translation2d(4.65_m, 4_m)));
+  _driverController.LeftTrigger().WhileTrue(SubIntake::GetInstance().IntakeOn());
+  _driverController.RightTrigger().WhileTrue(cmd::ShootOnTheMove());
 
   //Bumpers
   _driverController.LeftBumper().ToggleOnTrue(SubHood::GetInstance().ZeroHood());

@@ -6,6 +6,7 @@
 #include "subsystems/SubFeeder.h"
 #include "subsystems/SubDrivebase.h"
 #include "subsystems/SubIndexer.h"
+#include "subsystems/SubIntake.h"
 
 #include "utilities/Logger.h"
 #include "utilities/PoseHandler.h"
@@ -74,7 +75,7 @@ frc2::CommandPtr AimOnTheMove() {
 }
 
 frc2::CommandPtr ShootOnTheMove() {
-  return AimOnTheMove().AlongWith(ShootWhenReady());
+  return AimOnTheMove().AlongWith(ShootWhenReady()).AlongWith(SubIntake::GetInstance().IntakeOn());
 }
 
 frc::Pose2d CalcFuturePose() {
@@ -116,7 +117,11 @@ frc::Pose2d CalcFuturePose() {
   frc::Pose2d futurePose = frc::Pose2d(robotX + offsetX, robotY + offsetY, robot.Rotation().Degrees() + offsetRot);
   
   Logger::FieldDisplay::GetInstance().DisplayPose("SOTM/futurePose", futurePose);
-  return futurePose;
+
+  frc::Pose2d turretFuturePose = futurePose.TransformBy(SubTurret::ROBOT_TO_TURRET);
+
+  Logger::FieldDisplay::GetInstance().DisplayPose("SOTM/futureTurretPose", turretFuturePose);
+  return turretFuturePose;
 }
 
 }  // namespace cmd
