@@ -15,8 +15,9 @@ class MechanismCircle2d {
             units::degree_t angle,
             int spokes=4,
             double spokeWidth=6.0,
-            const frc::Color8Bit& color={255, 255, 255})
-        {
+            const frc::Color8Bit& indicatorColor={51, 149, 234}, /* #3395ea */
+            const frc::Color8Bit& color={255, 255, 255} /* #ffffff */
+        ) {
             _spokes = spokes;
 
             //Create circle background spokes
@@ -29,6 +30,8 @@ class MechanismCircle2d {
                         color); //append spoke ligament to chosen location
                 _backgroundSpokeLigaments.push_back(spoke); //add to list of spokes
             }
+
+            _indicatorLigament = location->template Append<frc::MechanismLigament2d>(name+"~indicator", radius, angle, spokeWidth/3, indicatorColor);
         }
         
         void SetAngle(units::degree_t angle);
