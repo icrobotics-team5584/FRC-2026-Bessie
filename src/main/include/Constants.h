@@ -29,6 +29,8 @@ namespace canid {
     constexpr int TURRET_MOTOR = 22;
     constexpr int OUTDEXER = 23;
     constexpr int CLIMBER = 24;
+
+    constexpr int PDH = 40;
 }
 
 namespace dio {

@@ -60,7 +60,7 @@ void RobotContainer::ConfigureBindings() {
   _driverController.POVUp().OnTrue(cmd::AimAtFieldRelative([] { return 0_deg; }));
   _driverController.POVDown().OnTrue(
     SubTurret::GetInstance().SetTurretTargetAngle([] { return 0_deg; }));
-  _driverController.POVRight().OnTrue(cmd::AimAtPose(frc::Pose2d{0_m, 0_m, 0_deg}));
+  _driverController.POVRight().OnTrue(cmd::AimAtSpot(frc::Translation2d{0_m, 0_m}));
 
   //Sticks
 

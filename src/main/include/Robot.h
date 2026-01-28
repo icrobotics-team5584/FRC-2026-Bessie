@@ -7,9 +7,11 @@
 #include <optional>
 
 #include <frc/TimedRobot.h>
+#include <frc/PowerDistribution.h>
 #include <frc2/command/CommandPtr.h>
 
 #include "RobotContainer.h"
+#include "Constants.h"
 
 class Robot : public frc::TimedRobot {
  public:
@@ -32,4 +34,6 @@ class Robot : public frc::TimedRobot {
   std::shared_ptr<frc2::CommandPtr> m_autonomousCommand;
 
   RobotContainer m_container;
+
+  frc::PowerDistribution m_pdh{canid::PDH, frc::PowerDistribution::ModuleType::kRev};
 };
