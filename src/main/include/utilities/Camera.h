@@ -1,0 +1,47 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
+#include <frc/geometry/Translation3d.h>
+#include <photon/PhotonCamera.h>
+#include <photon/PhotonPoseEstimator.h>
+#include <photon/simulation/PhotonCameraSim.h>
+
+#pragma once
+
+class Camera {
+public:
+  Camera(std::string name, frc::Transform3d botToCam, frc::AprilTagFieldLayout tagMap, std::string label = "");
+
+  std::optional<photon::EstimatedRobotPose> Update();
+
+  struct TagObservation {
+    photon::PhotonTrackedTarget tag;
+    units::time::second_t timestamp;
+  };
+
+  std::string GetCamName();
+  std::string GetCamLabel();
+  frc::Transform3d GetBotToCam();
+  photon::PhotonCameraSim* GetCamSim();
+
+  TagObservation GetLastTag();
+
+  std::optional<photon::EstimatedRobotPose> GetEstPose();
+
+private:
+  std::string _camName;
+  std::string _label;
+
+  frc::Transform3d _botToCam;
+
+  frc::AprilTagFieldLayout _tagMap;
+
+  photon::PhotonCamera _cam;
+  photon::PhotonCameraSim _camSim;
+
+  photon::PhotonPoseEstimator _poseEstimator;
+  std::optional<photon::EstimatedRobotPose> _estPose;
+
+  TagObservation _lastTagObservation;
+};

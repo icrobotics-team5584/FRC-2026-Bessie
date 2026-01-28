@@ -18,7 +18,6 @@
 #include "commands/DriveCommands.h"
 #include "commands/FuelCommands.h"
 #include "commands/TurretCommands.h"
-#include "commands/VisionCommands.h"
 
 #include "utilities/PoseHandler.h"
 
@@ -27,7 +26,6 @@
 RobotContainer::RobotContainer() {
   SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
   ConfigureBindings();
-  SubVision::GetInstance().SetDefaultCommand(cmd::AddVisionMeasurement());
 
   _autoManager.AddDefaultAuton("default", AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton()));
 
@@ -36,6 +34,7 @@ RobotContainer::RobotContainer() {
   SubTurret::GetInstance();
   SubHood::GetInstance();
   SubShooter::GetInstance();
+  SubVision::GetInstance();
 }
 
 void RobotContainer::ConfigureBindings() {

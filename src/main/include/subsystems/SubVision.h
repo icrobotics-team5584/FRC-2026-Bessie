@@ -15,6 +15,7 @@
 #include <photon/PhotonPoseEstimator.h>
 #include <frc/Filesystem.h>
 #include <wpi/interpolating_map.h>
+#include "utilities/Camera.h"
 
 class SubVision : public frc2::SubsystemBase {
 public:
@@ -33,24 +34,17 @@ public:
     Right = 2
   };
 
-  /**
-   * Update pose estimater with vision, should be called every frame
-   */
-  void UpdateVision();
-
-  Side GetLastCameraUsed();
+  // Side GetLastCameraUsed();
 
   std::optional<frc::Pose2d> GetAprilTagPose(int id);
 
-  std::map<Side, std::optional<photon::EstimatedRobotPose>> GetPose();
-
-  frc::Pose2d CalculateRelativePose(frc::Pose2d pose, units::meter_t xTransform, units::meter_t yTransform);
+  std::map<std::string, std::optional<photon::EstimatedRobotPose>> GetPose();
 
   int GetClosestTag(frc::Pose2d currentPose);
 
   bool IsEstimateUsable(photon::EstimatedRobotPose pose);
 
-  int GetLastSeenTagID();
+  // int GetLastSeenTagID();
 
   double GetDev(photon::EstimatedRobotPose pose);
 
@@ -70,35 +64,33 @@ public:
   //Left camera config
   std::string _leftCamName = "ICR_OV9281_L";
 
-  photon::PhotonCamera _leftCamera{_leftCamName};
-
-  photon::PhotonCameraSim _leftCamSim{&_leftCamera};
-  photon::VisionSystemSim _visionSim{_leftCamName};
-
   frc::Transform3d _leftBotToCam{{-350_mm,-470_mm,350_mm},{0_deg,-16_deg,190.54_deg}};
 
-  photon::PhotonPoseEstimator _leftPoseEstimater{
+  Camera _leftCam {
+    _leftCamName,
+    _leftBotToCam,
     _tagMap,
-    _leftBotToCam
+    "left"
   };
-
-  std::optional<photon::EstimatedRobotPose> _leftEstPose;
 
   //Right camera config
   std::string _rightCamName = "ICR_OV9281_R";
 
-  photon::PhotonCamera _rightCamera{_rightCamName};
-
-  photon::PhotonCameraSim _rightCamSim{&_rightCamera};
-
   frc::Transform3d _rightBotToCam{{-350_mm,470_mm,350_mm},{0_deg,-16_deg,-190.54_deg}};
 
-  photon::PhotonPoseEstimator _rightPoseEstimater{
+  Camera _rightCam {
+    _rightCamName,
+    _rightBotToCam,
     _tagMap,
-    _rightBotToCam
+    "right"
   };
 
-  std::optional<photon::EstimatedRobotPose> _rightEstPose;
+  std::vector<Camera*> _camList {
+    &_leftCam,
+    &_rightCam
+  };
+
+  photon::VisionSystemSim _visionSim{"VisionSim"};
 
   //Deviation table for further distances from tag
   wpi::interpolating_map<units::meter_t, double> _devTable;
