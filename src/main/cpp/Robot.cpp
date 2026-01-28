@@ -23,6 +23,7 @@ void Robot::RobotPeriodic() {
     ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose());
   Logger::FieldDisplay::GetInstance().DisplayPose(
     "Shot Target", ShotPlanner::ConvertToPose2d(shotTarget));
+    
   Logger::Log("Robot/RioBrownOut", frc::RobotController::IsBrownedOut());
   Logger::Log("Robot/RioInputVoltage", frc::RobotController::GetInputVoltage()*1_V);
   Logger::Log("Robot/RioInputCurrent", frc::RobotController::GetInputCurrent()*1_A);
