@@ -4,6 +4,8 @@
 
 #include "Robot.h"
 
+#include <frc2/command/CommandScheduler.h>
+#include "utilities/ShiftHandler.h"
 #include "utilities/Logger.h"
 #include "utilities/PoseHandler.h"
 #include "utilities/ShotPlanner.h"
@@ -14,6 +16,12 @@ Robot::Robot() {}
 
 void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();
+
+  Logger::Log("RebuiltShift/Hub Active", ShiftHandler::IsActiveShift());
+  Logger::Log("RebuiltShift/Won Auton Shift", ShiftHandler::GetShiftName(ShiftHandler::GetWinningShift()));
+  Logger::Log("RebuiltShift/Current Shift", ShiftHandler::GetShiftName(ShiftHandler::GetCurrentShift()));
+  Logger::Log("RebuiltShift/Seconds Left on Shift", ShiftHandler::GetTimeLeft());
+
   frc::Translation3d shotTarget =
     ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose());
   Logger::FieldDisplay::GetInstance().DisplayPose(
