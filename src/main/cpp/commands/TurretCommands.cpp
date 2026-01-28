@@ -50,12 +50,11 @@ units::degree_t CalcShootOnTheMoveAngle() {
   frc::Pose2d futurePose = CalcFuturePose();
 
   // Find angle from future turret pose to target
-  units::radian_t angleFromFutureToTarget = atan2((target.Y() - futurePose.Y()).value(), (target.X() - futurePose.X()).value()) * 1_rad;
-  units::degree_t angleFromFutureToTargetDegrees = angleFromFutureToTarget;
+  auto futurePoseToTarget = target - futurePose.Translation();
+  units::degree_t angleFromFutureToTarget = futurePoseToTarget.Angle().Degrees();
 
-  Logger::Log("SOTM/CalcTurretAngle", angleFromFutureToTargetDegrees);
-
-  return angleFromFutureToTargetDegrees;
+  Logger::Log("SOTM/CalcTurretAngle", angleFromFutureToTarget);
+  return angleFromFutureToTarget;
 }
 
 frc::Pose2d CalcFuturePose() {
