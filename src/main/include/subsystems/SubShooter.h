@@ -17,7 +17,6 @@
 #include <frc/smartdashboard/Mechanism2d.h>
 #include <frc/smartdashboard/MechanismLigament2d.h>
 #include "utilities/MechanismCircle2d.h"
-#include <wpi/interpolating_map.h>
 
 
 class SubShooter : public frc2::SubsystemBase {
