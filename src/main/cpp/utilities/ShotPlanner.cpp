@@ -4,6 +4,8 @@
 
 #include "utilities/ShotPlanner.h"
 
+#include "utilities/FieldConstants.h"
+
 #include <utilities/ICgeometry.h>
 #include <utilities/Logger.h>
 
@@ -18,30 +20,19 @@ frc::Translation3d ShotPlanner::CalculateShotTarget(frc::Pose2d robotPos) {
     Logger::FieldDisplay::GetInstance().DisplayPose("Shot Planner/Robot Position", robotPos);
   }
 
-  frc::Translation2d blueAllianceZoneTopRight{4_m, 8_m};
-  frc::Translation2d blueAllianceZoneBottomLeft{0_m, 0_m};
-
-  frc::Translation2d topPassingZoneTopRight{16.5_m, 8_m};
-  frc::Translation2d topPassingZoneBottomLeft{4_m, 4_m};
-
-  frc::Translation2d bottomPassingZoneTopRight{16.5_m, 4_m};
-  frc::Translation2d bottomPassingZoneBottomLeft{4_m, 0_m};
-
-  frc::Translation3d hubPosition{4_m, 4_m, 0_m};
-
-  frc::Translation3d topAllianceZonePosition{2.5_m, 5.5_m, 0_m};
-  frc::Translation3d bottomAllianceZonePosition{2.5_m, 2.75_m, 0_m};
-
   frc::Translation3d target;
 
-  if (IsWithinZone(blueAllianceZoneTopRight, blueAllianceZoneBottomLeft, robotPos)) {
-    target = hubPosition;
-  } else if (IsWithinZone(topPassingZoneTopRight, topPassingZoneBottomLeft, robotPos)) {
-    target = topAllianceZonePosition;
-  } else if (IsWithinZone(bottomPassingZoneTopRight, bottomPassingZoneBottomLeft, robotPos)) {
-    target = bottomAllianceZonePosition;
+  if (IsWithinZone(fieldpos::BLUE_ALLIANCE_ZONE_TOP_RIGHT, fieldpos::BLUE_ALLIANCE_ZONE_BOTTOM_LEFT,
+        robotPos)) {
+    target = fieldpos::HUB_POSITION;
+  } else if (IsWithinZone(fieldpos::TOP_PASSING_ZONE_TOP_RIGHT,
+               fieldpos::TOP_PASSING_ZONE_BOTTOM_LEFT, robotPos)) {
+    target = fieldpos::TOP_ALLIANCE_ZONE_POSITION;
+  } else if (IsWithinZone(fieldpos::BOTTOM_PASSING_ZONE_TOP_RIGHT,
+               fieldpos::BOTTOM_PASSING_ZONE_BOTTOM_LEFT, robotPos)) {
+    target = fieldpos::BOTTOM_ALLIANCE_ZONE_POSITION;
   } else {
-    target = hubPosition;
+    target = fieldpos::HUB_POSITION;
   }
 
   if (alliance) {
