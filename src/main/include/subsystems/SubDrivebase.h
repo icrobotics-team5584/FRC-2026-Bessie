@@ -67,8 +67,8 @@ class SubDrivebase : public frc2::SubsystemBase {
   /* Commands */
 
   // Joystick Drive
-  frc2::CommandPtr JoystickDrive(
-    frc2::CommandXboxController& controller, bool fieldOriented = true, double speedScale = 1);
+  frc2::CommandPtr JoystickDrive(frc2::CommandXboxController& controller, bool fieldOriented = true, double speedScale = 1);\
+  frc2::CommandPtr LockWheelsInXShape();
 
   // Pose drive
   frc2::CommandPtr Drive(std::function<frc::ChassisSpeeds()> speeds, bool fieldOriented);

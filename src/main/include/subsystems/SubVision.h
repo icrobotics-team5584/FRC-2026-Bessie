@@ -68,15 +68,14 @@ public:
   frc::AprilTagFieldLayout _tagMap{_tagMapFilePath};
 
   //Left camera config
-  std::string _leftCamName = "ICR_OV2981_L";
+  std::string _leftCamName = "ICR_OV9281_L";
 
   photon::PhotonCamera _leftCamera{_leftCamName};
 
   photon::PhotonCameraSim _leftCamSim{&_leftCamera};
   photon::VisionSystemSim _visionSim{_leftCamName};
 
-  //frc::Transform3d _leftBotToCam{{270_mm,270_mm,190_mm},{0_deg,300_deg,30_deg}};
-  frc::Transform3d _leftBotToCam{{-320_mm,310_mm,220_mm},{0_deg,-35_deg,60_deg}};
+  frc::Transform3d _leftBotToCam{{-350_mm,-470_mm,350_mm},{0_deg,-16_deg,190.54_deg}};
 
   photon::PhotonPoseEstimator _leftPoseEstimater{
     _tagMap,
@@ -92,8 +91,7 @@ public:
 
   photon::PhotonCameraSim _rightCamSim{&_rightCamera};
 
-  //frc::Transform3d _rightBotToCam{{270_mm,-270_mm,190_mm},{0_deg,300_deg,330_deg}};
-  frc::Transform3d _rightBotToCam{{320_mm,310_mm,220_mm},{0_deg,-35_deg,60_deg}};
+  frc::Transform3d _rightBotToCam{{-350_mm,470_mm,350_mm},{0_deg,-16_deg,-190.54_deg}};
 
   photon::PhotonPoseEstimator _rightPoseEstimater{
     _tagMap,

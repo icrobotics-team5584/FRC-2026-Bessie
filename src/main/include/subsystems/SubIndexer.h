@@ -29,11 +29,22 @@ class SubIndexer : public frc2::SubsystemBase {
   frc2::CommandPtr IndexerOn();
   frc2::CommandPtr IndexerOff();
 
-  void CurrentHighTimer();
+  frc2::CommandPtr IndexerOutOn();
+  frc2::CommandPtr IndexerOutOff();
 
-  frc::Alert IndexerCurrentAlert{"Indexer Motor Overcurrent!", frc::Alert::AlertType::kWarning};
-  frc::Alert highTemperatureAlert{
+  frc2::CommandPtr Index();
+  frc2::CommandPtr StopIndex();
+
+  void IndexerCurrentHighTimer();
+  void IndexerOutCurrentHighTimer();
+
+  frc::Alert _indexerCurrentAlert{"Indexer Motor Overcurrent!", frc::Alert::AlertType::kWarning};
+  frc::Alert _indexerHighTemperatureAlert{
     "Indexer Motor High Temperature!", frc::Alert::AlertType::kWarning};
+
+  frc::Alert _outdexerCurrentAlert{"IndexerOut Motor Overcurrent!", frc::Alert::AlertType::kWarning};
+  frc::Alert _outdexerHighTemperatureAlert{
+    "IndexerOut Motor High Temperature!", frc::Alert::AlertType::kWarning};
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */
@@ -46,6 +57,12 @@ class SubIndexer : public frc2::SubsystemBase {
 
   frc::Timer _indexerHighCurrentTimer;
 
+  ICSparkFlex _outdexerMotor{canid::OUTDEXER};
+  rev::spark::SparkFlexConfig _outdexerMotorConfig;
+
+  frc::Timer _outdexerHighCurrentTimer;
+
+   
   // Simulation components
   static constexpr double GEARING = 1.0;
   static constexpr units::kilogram_square_meter_t MOI = 0.0000001_kg_sq_m;

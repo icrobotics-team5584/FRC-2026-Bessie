@@ -1,3 +1,5 @@
+#pragma once
+
 #include <ctre/phoenix6/TalonFX.hpp>
 #include <frc/DriverStation.h>
 #include <frc/geometry/Rotation2d.h>
