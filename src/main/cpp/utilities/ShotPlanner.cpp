@@ -5,6 +5,7 @@
 #include "utilities/ShotPlanner.h"
 
 #include "utilities/FieldConstants.h"
+#include "utilities/ShiftHandler.h"
 
 #include <utilities/ICgeometry.h>
 #include <utilities/Logger.h>
@@ -21,18 +22,21 @@ frc::Translation3d ShotPlanner::CalculateShotTarget(frc::Pose2d robotPos) {
   }
 
   frc::Translation3d target;
+  bool isInBotNeutralZone = false;
+  bool isInBlueAlliance = false;
+  bool isOurHubActive = ShiftHandler::IsActiveShift();
 
-  if (IsWithinZone(fieldpos::BLUE_ALLIANCE_ZONE_TOP_RIGHT, fieldpos::BLUE_ALLIANCE_ZONE_BOTTOM_LEFT,
-        robotPos)) {
+  isInBlueAlliance = IsWithinZone(fieldpos::BLUE_ALLIANCE_ZONE_TOP_RIGHT, fieldpos::BLUE_ALLIANCE_ZONE_BOTTOM_LEFT, robotPos);
+  isInBotNeutralZone = IsWithinZone(fieldpos::BOTTOM_PASSING_ZONE_TOP_RIGHT, fieldpos::BOTTOM_PASSING_ZONE_BOTTOM_LEFT, robotPos);
+  
+  if(isInBlueAlliance && isOurHubActive) {
     target = fieldpos::HUB_POSITION;
-  } else if (IsWithinZone(fieldpos::TOP_PASSING_ZONE_TOP_RIGHT,
-               fieldpos::TOP_PASSING_ZONE_BOTTOM_LEFT, robotPos)) {
-    target = fieldpos::TOP_ALLIANCE_ZONE_POSITION;
-  } else if (IsWithinZone(fieldpos::BOTTOM_PASSING_ZONE_TOP_RIGHT,
-               fieldpos::BOTTOM_PASSING_ZONE_BOTTOM_LEFT, robotPos)) {
-    target = fieldpos::BOTTOM_ALLIANCE_ZONE_POSITION;
-  } else {
-    target = fieldpos::HUB_POSITION;
+  } else { /* Can't score in neutral zone */
+    if(isInBotNeutralZone) { /* bottom neutral zone */
+      target = fieldpos::BOTTOM_ALLIANCE_ZONE_POSITION;
+    } else { /* Top neutral zone */
+      target = fieldpos::TOP_ALLIANCE_ZONE_POSITION;
+    }
   }
 
   if (alliance) {
