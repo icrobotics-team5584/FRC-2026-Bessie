@@ -46,7 +46,7 @@ public:
 
   frc::Pose2d CalculateRelativePose(frc::Pose2d pose, units::meter_t xTransform, units::meter_t yTransform);
 
-  std::optional<frc::Transform3d> CalculateRobotToCamera(photon::PhotonCamera &camera, frc::Transform3d robotToTag);
+  std::optional<frc::Transform3d> CalculateRobotToCamera(photon::PhotonPipelineResult &result, frc::Transform3d robotToTag);
 
   int GetClosestTag(frc::Pose2d currentPose);
 
@@ -74,6 +74,7 @@ public:
   std::string _leftCamName = "ICR_OV9281_L";
 
   photon::PhotonCamera _leftCamera{_leftCamName};
+  std::vector<photon::PhotonPipelineResult> _leftLatestResults;
 
   photon::PhotonCameraSim _leftCamSim{&_leftCamera};
   photon::VisionSystemSim _visionSim{_leftCamName};
@@ -88,6 +89,7 @@ public:
   std::string _rightCamName = "ICR_OV9281_R";
 
   photon::PhotonCamera _rightCamera{_rightCamName};
+  std::vector<photon::PhotonPipelineResult> _rightLatestResults;
 
   photon::PhotonCameraSim _rightCamSim{&_rightCamera};
 
