@@ -13,7 +13,7 @@ class MechanismCircle2d {
         requires std::same_as<T*, frc::MechanismRoot2d*> || std::convertible_to<T*, frc::MechanismObject2d*>
         MechanismCircle2d(T* location, std::string name, double radius,
             units::degree_t angle,
-            int backgroundSpokes=36,
+            int backgroundSpokes=4,
             double spokeWidth=6.0,
             const frc::Color8Bit& indicatorColor={255, 255, 255},
             const frc::Color8Bit& color={235, 137, 52})
