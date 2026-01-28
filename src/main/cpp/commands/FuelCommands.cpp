@@ -21,7 +21,7 @@ frc2::CommandPtr IntakeSequence() {
     .AlongWith(SubIntake::GetInstance().IntakeOn());
 }
 
-frc2::CommandPtr StationaryShootAt(frc::Translation2d target) {
+frc2::CommandPtr StationaryAimAt(frc::Translation2d target) {
   auto distanceToTarget = [target] {
     auto curPose = PoseHandler::GetInstance().GetPose();
     auto turretPose = curPose.TransformBy(SubTurret::ROBOT_TO_TURRET);
@@ -33,13 +33,17 @@ frc2::CommandPtr StationaryShootAt(frc::Translation2d target) {
 
   return frc2::cmd::Parallel(cmd::AimAtSpot(target),
     SubShooter::GetInstance().SetShooterTargetFromDist(distanceToTarget),
-    SubHood::GetInstance().SetHoodPositionTargetFromDist(distanceToTarget))
-    .Until([] {
-      return SubShooter::GetInstance().IsAtSpeed() && SubTurret::GetInstance().TurretIsAtTarget() &&
-             SubHood::GetInstance().HoodIsAtTarget();
+    SubHood::GetInstance().SetHoodPositionTargetFromDist(distanceToTarget));
+}
+
+frc2::CommandPtr StationaryShootWhenReady() {
+  return frc2::cmd::Either(SubFeeder::GetInstance().FeederOn().AlongWith(SubIndexer::GetInstance().Index()),
+    SubFeeder::GetInstance().FeederOff().AlongWith(SubIndexer::GetInstance().StopIndex()),
+    [] {
+      return SubHood::GetInstance().HoodIsAtTarget() && SubShooter::GetInstance().IsAtSpeed() &&
+             SubTurret::GetInstance().TurretIsAtTarget();
     })
-    .AndThen(frc2::cmd::Parallel(SubIntake::GetInstance().IntakeOn(),
-      SubFeeder::GetInstance().FeederOn(), SubIndexer::GetInstance().Index()));
+    .Repeatedly();
 }
 
 }  // namespace cmd
