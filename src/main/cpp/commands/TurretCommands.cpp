@@ -80,8 +80,6 @@ frc::Pose2d CalcFuturePose() {
   units::second_t TOF = SubShooter::GetInstance().GetTimeOfFLightWithDistance(distance);
   Logger::Log("SOTM/ToF", TOF);
 
-  // Account for robot acceleration
-
   units::meter_t offsetX = robotVelX * TOF;
   units::meter_t offsetY = robotVelY * TOF;
   units::degree_t offsetRot = robotVelRot * TOF;
