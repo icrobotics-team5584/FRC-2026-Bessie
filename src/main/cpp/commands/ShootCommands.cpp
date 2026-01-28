@@ -54,13 +54,13 @@ ShootConfig CalShootOnMove(double shooter_h, frc::Translation3d target, frc::Rot
     };
 }
 
+auto conf = std::make_shared<ShootConfig>();
+
 namespace cmd {
 using namespace frc2::cmd;
 
 frc2::CommandPtr AimAndShoot(frc::Translation3d target_pose) {
     Logger::FieldDisplay::GetInstance().DisplayPose("ShootOnMove/target", {target_pose.X(), target_pose.Y(), 0_deg});
-    ShootConfig c {0_deg, 0_deg, 0_mps};
-    static ShootConfig* conf = &c;
     return Run([target_pose] {
         auto curr_pos = PoseHandler::GetInstance().GetPose();
         auto vel = SubDrivebase::GetInstance().GetFieldRelativeVelocity();

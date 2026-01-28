@@ -19,6 +19,7 @@
 #include "commands/FuelCommands.h"
 #include "commands/TurretCommands.h"
 #include "commands/VisionCommands.h"
+#include "commands/ShootCommands.h"
 
 #include "utilities/PoseHandler.h"
 
@@ -41,6 +42,7 @@ RobotContainer::RobotContainer() {
 void RobotContainer::ConfigureBindings() {
   //Triggers
   _driverController.LeftTrigger().WhileTrue(cmd::IntakeSequence());
+  _driverController.RightTrigger().WhileTrue(cmd::AimAndShoot({0_m,0_m,1.83_m}));
 
   //Bumpers
   _driverController.LeftBumper().ToggleOnTrue(SubDeploy::GetInstance().ToggleDeploy());
