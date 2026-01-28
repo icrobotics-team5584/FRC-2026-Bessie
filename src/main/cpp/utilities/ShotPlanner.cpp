@@ -27,10 +27,10 @@ frc::Translation3d ShotPlanner::CalculateShotTarget(frc::Pose2d robotPos) {
   frc::Translation2d bottomPassingZoneTopRight{16.5_m, 4_m};
   frc::Translation2d bottomPassingZoneBottomLeft{4_m, 0_m};
 
-  frc::Translation2d hubPosition{4_m, 4_m};
+  frc::Translation3d hubPosition{4_m, 4_m, 0_m};
 
-  frc::Translation2d topAllianceZonePosition{2.5_m, 5.5_m};
-  frc::Translation2d bottomAllianceZonePosition{2.5_m, 2.75_m};
+  frc::Translation3d topAllianceZonePosition{2.5_m, 5.5_m, 0_m};
+  frc::Translation3d bottomAllianceZonePosition{2.5_m, 2.75_m, 0_m};
 
   frc::Translation3d target;
 
