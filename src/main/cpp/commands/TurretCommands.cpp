@@ -38,7 +38,7 @@ units::meter_t CalcShootOnTheMoveDistance() {
 
   frc::Pose2d futurePose = CalcFuturePose();
 
-  // Find parameters from future pose to target
+  // Find distance from future turret pose to target
   units::meter_t futureDistance = target.Translation().Distance(futurePose.Translation());
   Logger::Log("SOTM/futureDistance", futureDistance);
 
@@ -49,7 +49,7 @@ units::degree_t CalcShootOnTheMoveAngle() {
   auto target = frc::Pose2d{4.65_m, 4_m, 0_deg};;
   frc::Pose2d futurePose = CalcFuturePose();
 
-  // Find angle from future pose to target
+  // Find angle from future turret pose to target
   units::radian_t angleFromFutureToTarget = atan2((target.Y() - futurePose.Y()).value(), (target.X() - futurePose.X()).value()) * 1_rad;
   units::degree_t angleFromFutureToTargetDegrees = angleFromFutureToTarget;
 
@@ -59,13 +59,13 @@ units::degree_t CalcShootOnTheMoveAngle() {
 }
 
 frc::Pose2d CalcFuturePose() {
-  // Calculate distance to target **FROM TURRET**
+  // Calculate distance to target from robot(convert to turret later)
   auto target = frc::Pose2d{4.65_m, 4_m, 0_deg};
-  auto robot = PoseHandler::GetInstance().GetPose(); // add distance turret relative to robot
+  auto robot = PoseHandler::GetInstance().GetPose();
   Logger::FieldDisplay::GetInstance().DisplayPose("SOTM/robotPose", robot);
   units::meter_t distance = target.Translation().Distance(robot.Translation());
 
-  // Calculate field relative turret velocity
+  // Calculate field relative robot velocity
   frc::ChassisSpeeds robotVel = SubDrivebase::GetInstance().GetFieldRelativeVelocity();
   units::meters_per_second_t robotVelX = robotVel.vx;
   units::meters_per_second_t robotVelY = robotVel.vy;
@@ -75,11 +75,11 @@ frc::Pose2d CalcFuturePose() {
   Logger::Log("SOTM/velY", robotVelY);
   Logger::Log("SOTM/velRot", robotVelRot);
 
-  // Account for robot velocity
   // Get future pose
   units::second_t TOF = SubShooter::GetInstance().GetTimeOfFLightWithDistance(distance);
   Logger::Log("SOTM/ToF", TOF);
 
+  // calculate offset due to velocity
   units::meter_t offsetX = robotVelX * TOF;
   units::meter_t offsetY = robotVelY * TOF;
   units::degree_t offsetRot = robotVelRot * TOF;
@@ -95,10 +95,12 @@ frc::Pose2d CalcFuturePose() {
   Logger::Log("SOTM/offsetY", offsetY);
   Logger::Log("SOTM/offsetRot", offsetRot);
   
+  // calculate future pose by adding offsets to current robot position
   frc::Pose2d futurePose = frc::Pose2d(robotX + offsetX, robotY + offsetY, robot.Rotation().Degrees() + offsetRot);
   
   Logger::FieldDisplay::GetInstance().DisplayPose("SOTM/futurePose", futurePose);
 
+  // convert robot to turret pose
   frc::Pose2d turretFuturePose = futurePose.TransformBy(SubTurret::ROBOT_TO_TURRET);
 
   Logger::FieldDisplay::GetInstance().DisplayPose("SOTM/futureTurretPose", turretFuturePose);
