@@ -34,19 +34,19 @@ namespace cmd {
   }
 
 units::meter_t CalcShootOnTheMoveDistance() {
-  auto target = frc::Pose2d{4.65_m, 4_m, 0_deg};;
+  auto target = cmd::TARGETPOSE;
 
   frc::Pose2d futurePose = CalcFuturePose();
 
   // Find distance from future turret pose to target
-  units::meter_t futureDistance = target.Translation().Distance(futurePose.Translation());
+  units::meter_t futureDistance = target.Distance(futurePose.Translation());
   Logger::Log("SOTM/futureDistance", futureDistance);
 
   return futureDistance;
 }
 
 units::degree_t CalcShootOnTheMoveAngle() {
-  auto target = frc::Pose2d{4.65_m, 4_m, 0_deg};;
+  auto target = cmd::TARGETPOSE;
   frc::Pose2d futurePose = CalcFuturePose();
 
   // Find angle from future turret pose to target
@@ -60,10 +60,10 @@ units::degree_t CalcShootOnTheMoveAngle() {
 
 frc::Pose2d CalcFuturePose() {
   // Calculate distance to target from robot(convert to turret later)
-  auto target = frc::Pose2d{4.65_m, 4_m, 0_deg};
+  auto target = cmd::TARGETPOSE;
   auto robot = PoseHandler::GetInstance().GetPose();
   Logger::FieldDisplay::GetInstance().DisplayPose("SOTM/robotPose", robot);
-  units::meter_t distance = target.Translation().Distance(robot.Translation());
+  units::meter_t distance = target.Distance(robot.Translation());
 
   // Calculate field relative robot velocity
   frc::ChassisSpeeds robotVel = SubDrivebase::GetInstance().GetFieldRelativeVelocity();
