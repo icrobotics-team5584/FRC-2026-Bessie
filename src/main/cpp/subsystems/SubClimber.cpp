@@ -107,7 +107,7 @@ frc2::CommandPtr SubClimber::ManualClimberUp() {
     [this] { _climberMotor.SetVoltage(4_V); },
     [this] {
       auto targRot = _climberMotor.GetPosition();
-      _climberMotor.SetMaxMotionTarget(targRot);
+      _climberMotor.SetPositionTarget(targRot);
     });
 }
 
@@ -116,6 +116,6 @@ frc2::CommandPtr SubClimber::ManualClimberDown() {
     [this] { _climberMotor.SetVoltage(-4_V); },
     [this] {
       auto targRot = _climberMotor.GetPosition();
-      _climberMotor.SetMaxMotionTarget(targRot);
+      _climberMotor.SetPositionTarget(targRot);
     });
 }
