@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include <frc/geometry/Translation3d.h>
+#include <frc2/command/Commands.h>
 #include <photon/PhotonCamera.h>
 #include <photon/PhotonPoseEstimator.h>
 #include <photon/simulation/PhotonCameraSim.h>
@@ -25,9 +26,15 @@ public:
   frc::Transform3d GetBotToCam();
   photon::PhotonCameraSim* GetCamSim();
 
+  std::vector<photon::PhotonPipelineResult> GetLatestReading();
+
   TagObservation GetLastTag();
 
   std::optional<photon::EstimatedRobotPose> GetEstPose();
+
+  std::optional<frc::Transform3d> CalculateRobotToCamera(photon::PhotonPipelineResult &result, frc::Transform3d robotToTag);
+
+  void CalibrateRobotToCamera(frc::Transform3d robotToTag);
 
 private:
   std::string _camName;
@@ -42,6 +49,8 @@ private:
 
   photon::PhotonPoseEstimator _poseEstimator;
   std::optional<photon::EstimatedRobotPose> _estPose;
+
+  std::vector<photon::PhotonPipelineResult> _results;
 
   TagObservation _lastTagObservation;
 };

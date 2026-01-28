@@ -125,3 +125,11 @@ int SubVision::GetClosestTag(frc::Pose2d currentPose){
 
   return closestTagID;
 }
+
+frc2::CommandPtr SubVision::CalibrateRobotToCamera(frc::Transform3d robotToTag) {
+  return frc2::cmd::RunOnce([this, robotToTag] {
+    for (auto cam : _camList) {
+      cam->CalibrateRobotToCamera(robotToTag);
+    }
+  });
+}
