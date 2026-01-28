@@ -18,6 +18,13 @@ void Robot::RobotPeriodic() {
   Logger::Log("Rebuilt/Won Auton Shift", ShiftHandler::GetShiftName(ShiftHandler::GetWinningShift()));
   Logger::Log("Rebuilt/Current Shift", ShiftHandler::GetShiftName(ShiftHandler::GetCurrentShift()));
   Logger::Log("Rebuilt/Seconds Left on Shift", ShiftHandler::GetTimeLeft());
+  
+  Logger::Log("Robot/RioBrownOut", frc::RobotController::IsBrownedOut());
+  Logger::Log("Robot/RioInputVoltage", frc::RobotController::GetInputVoltage()*1_V);
+  Logger::Log("Robot/RioInputCurrent", frc::RobotController::GetInputCurrent()*1_A);
+  Logger::Log("Robot/BatteryVoltage", frc::RobotController::GetBatteryVoltage());
+  Logger::Log("Robot/PDHInputVoltage", m_pdh.GetVoltage()*1_V);
+  Logger::Log("Robot/PDHTotalCurrent", m_pdh.GetTotalCurrent()*1_A);
 }
 
 void Robot::DisabledInit() {}

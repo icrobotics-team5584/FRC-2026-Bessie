@@ -16,6 +16,8 @@
 #include <frc/smartdashboard/Mechanism2d.h>
 #include <frc/smartdashboard/MechanismLigament2d.h>
 #include "utilities/MechanismCircle2d.h"
+#include <wpi/interpolating_map.h>
+
 
 class SubShooter : public frc2::SubsystemBase {
  public:
@@ -28,6 +30,7 @@ class SubShooter : public frc2::SubsystemBase {
   void SimulationPeriodic();
 
   frc2::CommandPtr SetShooterTarget(units::turns_per_second_t speed);
+  frc2::CommandPtr SetShooterTargetFromDist(std::function<units::meter_t()> distancetoTarget);
   frc2::CommandPtr StopShooter();
   
   bool IsAtSpeed();
@@ -51,6 +54,9 @@ class SubShooter : public frc2::SubsystemBase {
 
   ctre::phoenix6::configs::TalonFXConfiguration _shooterMotorConfig;
   ctre::phoenix6::controls::VelocityVoltage _flywheelTargetVelocity{0_tps};
+
+  wpi::interpolating_map<units::meter_t, units::turns_per_second_t> _flyWheelSpeedTable;
+  wpi::interpolating_map<units::meter_t, units::second_t> _timeOfFlightTable;
 
   //Sim
   frc::LinearSystem<1,1,1> _leftFlywheelSystem = frc::LinearSystemId::FlywheelSystem(MOTOR_MODEL, MOI, GEAR_RATIO);
