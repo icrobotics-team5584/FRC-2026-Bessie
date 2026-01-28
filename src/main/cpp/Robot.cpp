@@ -14,10 +14,10 @@ Robot::Robot() {}
 void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();
 
-  Logger::Log("Rebuilt/Hub Active", ShiftHandler::IsActiveShift());
-  Logger::Log("Rebuilt/Won Auton Shift", ShiftHandler::GetShiftName(ShiftHandler::GetWinningShift()));
-  Logger::Log("Rebuilt/Current Shift", ShiftHandler::GetShiftName(ShiftHandler::GetCurrentShift()));
-  Logger::Log("Rebuilt/Seconds Left on Shift", ShiftHandler::GetTimeLeft());
+  Logger::Log("RebuiltShift/Hub Active", ShiftHandler::IsActiveShift());
+  Logger::Log("RebuiltShift/Won Auton Shift", ShiftHandler::GetShiftName(ShiftHandler::GetWinningShift()));
+  Logger::Log("RebuiltShift/Current Shift", ShiftHandler::GetShiftName(ShiftHandler::GetCurrentShift()));
+  Logger::Log("RebuiltShift/Seconds Left on Shift", ShiftHandler::GetTimeLeft());
   
   Logger::Log("Robot/RioBrownOut", frc::RobotController::IsBrownedOut());
   Logger::Log("Robot/RioInputVoltage", frc::RobotController::GetInputVoltage()*1_V);
