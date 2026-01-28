@@ -91,11 +91,14 @@ frc2::CommandPtr SubClimber::RunCurrentZeroingSequence() {
     _climberMotor.SetVoltage(-1_V);
   }).AndThen(frc2::cmd::WaitUntil([this] {
     return (GetMotorCurrent() > _ZEROING_CURRENT) || (frc::RobotBase::IsSimulation() == true);
-  })).FinallyDo([this] {
+  })).AndThen([this]{ 
+    /* Set zero seperately from FinallyDo so that it won't set the climber as 
+     * zeroed if the command was cancelled. */
+    _climberMotor.SetPosition(0_deg);
+    _hasZeroed = true;
+  }).FinallyDo([this] { 
       _climberMotor.StopMotor();
-      _climberMotor.SetPosition(0_deg);
       _zeroing = false;
-      _hasZeroed = true;
   });
 }
 
