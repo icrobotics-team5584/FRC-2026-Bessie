@@ -33,8 +33,6 @@ class SubHood : public frc2::SubsystemBase {
 
   bool HoodCurrentCheck(); 
   bool HoodIsAtTarget();
-
-  units::degree_t GetHoodAngle();
   
   units::ampere_t GetHoodMotorCurrent();
 
