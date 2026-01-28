@@ -58,26 +58,6 @@ units::degree_t CalcShootOnTheMoveAngle() {
   return angleFromFutureToTargetDegrees;
 }
 
-frc2::CommandPtr ShootWhenReady() {
-  return frc2::cmd::Either(SubFeeder::GetInstance().FeederOn().AlongWith(SubIndexer::GetInstance().Index()),
-    SubFeeder::GetInstance().FeederOff().AlongWith(SubIndexer::GetInstance().StopIndex()),
-    [] {
-      return SubHood::GetInstance().HoodIsAtTarget() && SubShooter::GetInstance().IsAtSpeed() &&
-             SubTurret::GetInstance().IsAtTarget();
-    })
-    .Repeatedly();
-}
-
-frc2::CommandPtr AimOnTheMove() {
-  return SubShooter::GetInstance().SpinWithDistance( [] {return CalcShootOnTheMoveDistance();})
-  .AlongWith(SubHood::GetInstance().SetHoodPositionTargetFromDist([] {return CalcShootOnTheMoveDistance();}))
-  .AlongWith(AimAtFieldRelative([] {return CalcShootOnTheMoveAngle();}));
-}
-
-frc2::CommandPtr ShootOnTheMove() {
-  return AimOnTheMove().AlongWith(ShootWhenReady()).AlongWith(SubIntake::GetInstance().IntakeOn());
-}
-
 frc::Pose2d CalcFuturePose() {
   // Calculate distance to target **FROM TURRET**
   auto target = frc::Pose2d{4.65_m, 4_m, 0_deg};

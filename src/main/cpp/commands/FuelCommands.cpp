@@ -42,4 +42,24 @@ frc2::CommandPtr StationaryShootAt(frc::Translation2d target) {
       SubFeeder::GetInstance().FeederOn(), SubIndexer::GetInstance().Index()));
 }
 
+frc2::CommandPtr ShootWhenReady() {
+  return frc2::cmd::Either(SubFeeder::GetInstance().FeederOn().AlongWith(SubIndexer::GetInstance().Index()),
+    SubFeeder::GetInstance().FeederOff().AlongWith(SubIndexer::GetInstance().StopIndex()),
+    [] {
+      return SubHood::GetInstance().HoodIsAtTarget() && SubShooter::GetInstance().IsAtSpeed() &&
+             SubTurret::GetInstance().IsAtTarget();
+    })
+    .Repeatedly();
+}
+
+frc2::CommandPtr AimOnTheMove() {
+  return SubShooter::GetInstance().SpinWithDistance( [] {return CalcShootOnTheMoveDistance();})
+  .AlongWith(SubHood::GetInstance().SetHoodPositionTargetFromDist([] {return CalcShootOnTheMoveDistance();}))
+  .AlongWith(AimAtFieldRelative([] {return CalcShootOnTheMoveAngle();}));
+}
+
+frc2::CommandPtr ShootOnTheMove() {
+  return AimOnTheMove().AlongWith(ShootWhenReady()).AlongWith(SubIntake::GetInstance().IntakeOn());
+}
+
 }  // namespace cmd
