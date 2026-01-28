@@ -7,6 +7,8 @@
 #include "utilities/Logger.h"
 #include "utilities/PoseHandler.h"
 #include "utilities/ShotPlanner.h"
+#include <frc2/command/CommandScheduler.h>
+#include "utilities/Logger.h"
 
 #include <frc/geometry/Transform2d.h>
 #include <frc/geometry/Translation3d.h>
@@ -21,6 +23,12 @@ void Robot::RobotPeriodic() {
     ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose());
   Logger::FieldDisplay::GetInstance().DisplayPose(
     "Shot Target", ShotPlanner::ConvertToPose2d(shotTarget));
+  Logger::Log("Robot/RioBrownOut", frc::RobotController::IsBrownedOut());
+  Logger::Log("Robot/RioInputVoltage", frc::RobotController::GetInputVoltage()*1_V);
+  Logger::Log("Robot/RioInputCurrent", frc::RobotController::GetInputCurrent()*1_A);
+  Logger::Log("Robot/BatteryVoltage", frc::RobotController::GetBatteryVoltage());
+  Logger::Log("Robot/PDHInputVoltage", m_pdh.GetVoltage()*1_V);
+  Logger::Log("Robot/PDHTotalCurrent", m_pdh.GetTotalCurrent()*1_A);
 }
 void Robot::DisabledInit() {}
 
