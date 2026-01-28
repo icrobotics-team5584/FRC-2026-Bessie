@@ -1,8 +1,6 @@
 #include <frc2/command/Commands.h>
-#include <frc2/command/Command.h>
 #include <units/angle.h>
 #include <frc/geometry/Pose2d.h>
-#include <frc/geometry/Pose3d.h>
 
 namespace cmd {
     frc2::CommandPtr AimAtFieldRelative(std::function<units::degree_t()> target);
