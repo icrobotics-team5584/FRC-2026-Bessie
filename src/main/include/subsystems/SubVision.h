@@ -27,6 +27,8 @@ public:
 
   void Periodic() override;
 
+  void UpdateVision();
+
   void SimulationPeriodic() override;
 
   enum Side {

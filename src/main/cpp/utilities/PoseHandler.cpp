@@ -32,8 +32,3 @@ void PoseHandler::AddVisionMeasurement(frc::Pose2d pose, units::second_t timeSta
     _poseEstimator.AddVisionMeasurement(pose, timeStamp, dev);
     Logger::FieldDisplay::GetInstance().SetRobotPose(_poseEstimator.GetEstimatedPosition());
 }
-
-frc::Pose2d PoseHandler::CalculateRelativePose(frc::Pose2d pose, units::meter_t xTransform, units::meter_t yTransform) {
-    frc::Translation2d trans {xTransform,yTransform};
-  return frc::Pose2d{pose.Translation() + trans.RotateBy(pose.Rotation()), pose.Rotation()};
-}

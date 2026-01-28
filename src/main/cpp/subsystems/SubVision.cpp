@@ -38,6 +38,10 @@ SubVision::SubVision() {
 }
 
 void SubVision::Periodic() {
+  UpdateVision();
+}
+
+void SubVision::UpdateVision() {
   for (Camera* cam : _camList) {
     auto pose = cam->Update();
     auto camLabel = cam->GetCamLabel();
@@ -67,11 +71,11 @@ void SubVision::SimulationPeriodic() {
 }
 
 std::map<std::string, std::optional<photon::EstimatedRobotPose>> SubVision::GetPose() {
-  std::map<std::string, std::optional<photon::EstimatedRobotPose>> m = {};
+  std::map<std::string, std::optional<photon::EstimatedRobotPose>> poses = {};
   for (Camera* cam : _camList) {
-    m.insert({cam->GetCamLabel(), cam->GetEstPose()});
+    poses.insert({cam->GetCamLabel(), cam->GetEstPose()});
   }
-  return m;
+  return poses;
 }
 
 double SubVision::GetDev(photon::EstimatedRobotPose pose) {
