@@ -35,13 +35,13 @@ frc::Translation3d ShotPlanner::CalculateShotTarget(frc::Pose2d robotPos) {
   frc::Translation3d target;
 
   if (IsWithinZone(blueAllianceZoneTopRight, blueAllianceZoneBottomLeft, robotPos)) {
-    target = frc::Translation3d(hubPosition.X(), hubPosition.Y(), 1.83_m);
+    target = hubPosition;
   } else if (IsWithinZone(topPassingZoneTopRight, topPassingZoneBottomLeft, robotPos)) {
-    target = frc::Translation3d(topAllianceZonePosition);
+    target = topAllianceZonePosition;
   } else if (IsWithinZone(bottomPassingZoneTopRight, bottomPassingZoneBottomLeft, robotPos)) {
-    target = frc::Translation3d(bottomAllianceZonePosition);
+    target = bottomAllianceZonePosition;
   } else {
-    target = frc::Translation3d(hubPosition.X(), hubPosition.Y(), 1.83_m);
+    target = hubPosition;
   }
 
   if (alliance) {
