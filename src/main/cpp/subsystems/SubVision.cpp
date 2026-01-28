@@ -61,7 +61,7 @@ void SubVision::UpdateVision() {
   auto resultCount = _leftLatestResults.size();
   if (resultCount > 0) {
     for (auto result : _leftLatestResults) {
-      _leftEstPose = _leftPoseEstimater.EstimateLowestAmbiguityPose(result);
+      _leftEstPose = _leftPoseEstimater.EstimateCoprocMultiTagPose(result);
       for (const auto& target : result.targets) {
         leftTargets += std::to_string(target.GetFiducialId()) + ", ";
         double targetArea = target.GetArea();
@@ -82,8 +82,7 @@ void SubVision::UpdateVision() {
   resultCount = _rightLatestResults.size();
   if (resultCount > 0) {
     for (auto result : _rightLatestResults) {
-      _rightEstPose = _rightPoseEstimater.EstimateLowestAmbiguityPose(result);
-
+      _rightEstPose = _rightPoseEstimater.EstimateCoprocMultiTagPose(result);
       for (const auto& target : result.targets) {
         rightTargets += std::to_string(target.GetFiducialId()) + ", ";
         double targetArea = target.GetArea();
