@@ -7,6 +7,10 @@ void MechanismCircle2d::SetAngle(units::degree_t angle) {
     }
 }
 
+void MechanismCircle2d::SetIndicatorColor(const frc::Color8Bit& color) {
+    _indicatorLigament->SetColor(color);
+}
+
 void MechanismCircle2d::SetCircleColor(const frc::Color8Bit& color) {
     for (frc::MechanismLigament2d* spoke : _backgroundSpokeLigaments) {
         spoke->SetColor(color);

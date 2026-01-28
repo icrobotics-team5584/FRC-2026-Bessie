@@ -36,6 +36,7 @@ class MechanismCircle2d {
         
         void SetAngle(units::degree_t angle);
         void SetCircleColor(const frc::Color8Bit& color);
+        void SetIndicatorColor(const frc::Color8Bit& color);
 
     private:
         std::vector<frc::MechanismLigament2d*> _backgroundSpokeLigaments;
