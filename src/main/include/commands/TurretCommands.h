@@ -11,7 +11,7 @@ namespace cmd {
     units::meter_t CalcShootOnTheMoveDistance();
     units::degree_t CalcShootOnTheMoveAngle();
 
-    frc::Pose2d CalcFuturePose();
+    frc::Pose2d CalcFutureTurretPose();
 
     static constexpr frc::Translation2d TARGETPOSE = frc::Translation2d{4.65_m, 4_m};
 }

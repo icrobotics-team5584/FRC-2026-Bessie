@@ -36,7 +36,7 @@ namespace cmd {
 units::meter_t CalcShootOnTheMoveDistance() {
   auto target = cmd::TARGETPOSE;
 
-  frc::Pose2d futurePose = CalcFuturePose();
+  frc::Pose2d futurePose = CalcFutureTurretPose();
 
   // Find distance from future turret pose to target
   units::meter_t futureDistance = target.Distance(futurePose.Translation());
@@ -47,7 +47,7 @@ units::meter_t CalcShootOnTheMoveDistance() {
 
 units::degree_t CalcShootOnTheMoveAngle() {
   auto target = cmd::TARGETPOSE;
-  frc::Pose2d futurePose = CalcFuturePose();
+  frc::Pose2d futurePose = CalcFutureTurretPose();
 
   // Find angle from future turret pose to target
   auto futurePoseToTarget = target - futurePose.Translation();
@@ -57,7 +57,7 @@ units::degree_t CalcShootOnTheMoveAngle() {
   return angleFromFutureToTarget;
 }
 
-frc::Pose2d CalcFuturePose() {
+frc::Pose2d CalcFutureTurretPose() {
   // Calculate distance to target from robot(convert to turret later)
   auto target = cmd::TARGETPOSE;
   auto robot = PoseHandler::GetInstance().GetPose();
