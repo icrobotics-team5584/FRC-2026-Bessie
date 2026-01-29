@@ -229,7 +229,6 @@ frc::ChassisSpeeds SubDrivebase::GetFieldRelativeVelocity() {
 units::degrees_per_second_t SubDrivebase::GetAngularVelocity() {
   auto speeds = _kinematics.ToChassisSpeeds(_frontLeft.GetState(), _frontRight.GetState(),
                                             _backLeft.GetState(), _backRight.GetState());
-  namespace m = units::math;
   return speeds.omega;
 }
 
