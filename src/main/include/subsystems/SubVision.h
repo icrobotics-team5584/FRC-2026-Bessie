@@ -66,7 +66,7 @@ public:
   frc::AprilTagFieldLayout _tagMap{_tagMapFilePath};
 
   //Left camera config
-  std::string _leftCamName = "ICR_OV9281_L";
+  std::string _leftCamName = "ICR_OV2981_L";
 
   frc::Transform3d _leftBotToCam{{-350_mm,-470_mm,350_mm},{0_deg,-16_deg,190.54_deg}};
 
