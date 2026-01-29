@@ -5,7 +5,6 @@
 #include "Robot.h"
 
 #include <frc2/command/CommandScheduler.h>
-#include "utilities/ICSparkFlex.h"
 #include "utilities/ShiftHandler.h"
 #include "utilities/Logger.h"
 #include "utilities/PoseHandler.h"
