@@ -37,7 +37,7 @@ void SubHood::Periodic() {
     if (_hasZeroed == false && _zeroing == false) {
         _hoodMotor.Set(0);
     }
-
+    
     Logger::Log("Hood/haszeroed", _hasZeroed);
     Logger::Log("Hood/zeroing", _zeroing);
     Logger::Log("Hood/IsAtTarget", HoodIsAtTarget());
@@ -71,7 +71,7 @@ frc2::CommandPtr SubHood::ZeroHood() {
 
 bool SubHood::HoodCurrentCheck() {
     _hasZeroed = false;
-    if(units::math::abs(GetHoodMotorCurrent()) > zeroingCurrentLimit) {
+    if(units::math::abs(GetHoodMotorCurrent()) > zeroingCurrentLimit || frc::RobotBase::IsSimulation()) {
         _hasZeroed = true;
         return true;
     }
