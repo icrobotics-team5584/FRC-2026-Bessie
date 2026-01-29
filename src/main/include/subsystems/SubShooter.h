@@ -35,8 +35,6 @@ class SubShooter : public frc2::SubsystemBase {
   
   bool IsAtSpeed();
 
-  units::revolutions_per_minute_t GetShooterSpeed();
-
   units::second_t GetTimeOfFLightWithDistance(units::meter_t distance);
 
   /**
