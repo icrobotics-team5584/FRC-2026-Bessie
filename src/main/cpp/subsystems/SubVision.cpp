@@ -36,6 +36,9 @@ SubVision::SubVision() {
 }
 
 void SubVision::Periodic() {
+  _leftLatestResults = _leftCamera.GetAllUnreadResults();
+  _rightLatestResults = _rightCamera.GetAllUnreadResults();
+
   frc::SmartDashboard::PutNumber("Vision/LastSeenTag", _lastTagObservation.tag.GetFiducialId());
   if (_lastTagObservation.cameraSide == Side::Left) {
     frc::SmartDashboard::PutString("Vision/Last Used Camera", "Left");
@@ -55,10 +58,9 @@ void SubVision::UpdateVision() {
   std::string rightTargets = "";
 
   // Left camera
-  std::vector<photon::PhotonPipelineResult> results = _leftCamera.GetAllUnreadResults();
-  auto resultCount = results.size();
+  auto resultCount = _leftLatestResults.size();
   if (resultCount > 0) {
-    for (auto result : results) {
+    for (auto result : _leftLatestResults) {
       _leftEstPose = _leftPoseEstimater.EstimateCoprocMultiTagPose(result);
       for (const auto& target : result.targets) {
         leftTargets += std::to_string(target.GetFiducialId()) + ", ";
@@ -77,12 +79,10 @@ void SubVision::UpdateVision() {
     }
   }
   // Right camera
-  results = _rightCamera.GetAllUnreadResults();
-  resultCount = results.size();
+  resultCount = _rightLatestResults.size();
   if (resultCount > 0) {
-    for (auto result : results) {
+    for (auto result : _rightLatestResults) {
       _rightEstPose = _rightPoseEstimater.EstimateCoprocMultiTagPose(result);
-
       for (const auto& target : result.targets) {
         rightTargets += std::to_string(target.GetFiducialId()) + ", ";
         double targetArea = target.GetArea();
@@ -169,4 +169,65 @@ int SubVision::GetClosestTag(frc::Pose2d currentPose){
   }
 
   return closestTagID;
+}
+
+std::optional<frc::Transform3d> SubVision::CalculateRobotToCamera(
+  photon::PhotonPipelineResult &result, frc::Transform3d robotToTag) {
+  if (result.HasTargets()) {
+    auto target = result.GetBestTarget();
+    frc::Transform3d cameraToTag = target.GetBestCameraToTarget();
+    frc::Transform3d tagToCamera = cameraToTag.Inverse();
+    frc::Transform3d robotToCamera = robotToTag + tagToCamera;
+    
+    return robotToCamera;
+  } else {
+    return std::nullopt;
+  }
+}
+
+frc2::CommandPtr SubVision::CalibrateRobotToCamera(frc::Transform3d robotToTag) {
+  return frc2::cmd::RunOnce([this, robotToTag] {
+    //Left camera
+    if (!_leftLatestResults.empty()) {
+      auto leftCalcResult = CalculateRobotToCamera(_leftLatestResults.back(), robotToTag);
+      Logger::Log("Vision/RobotToCamera/Left/Result received", leftCalcResult.has_value());
+
+      if (leftCalcResult.has_value()) {
+      auto leftRobotToCamera = leftCalcResult.value();
+      Logger::Log("Vision/RobotToCamera/Left/X", leftRobotToCamera.X());
+      Logger::Log("Vision/RobotToCamera/Left/Y", leftRobotToCamera.Y());
+      Logger::Log("Vision/RobotToCamera/Left/Z", leftRobotToCamera.Z());
+      Logger::Log("Vision/RobotToCamera/Left/~X_Roll", leftRobotToCamera.Rotation().X().convert<units::degree>());
+      Logger::Log("Vision/RobotToCamera/Left/~Y_Pitch", leftRobotToCamera.Rotation().Y().convert<units::degree>());
+      Logger::Log("Vision/RobotToCamera/Left/~Z_Yaw", leftRobotToCamera.Rotation().Z().convert<units::degree>());
+
+      auto estimatedLeftCamPose = frc::Pose3d{PoseHandler::GetInstance().GetPose()}.TransformBy(leftRobotToCamera);
+      Logger::FieldDisplay::GetInstance().DisplayPose("EstimatedLeftCamPose", estimatedLeftCamPose.ToPose2d());
+      }
+    } else {
+      Logger::Log("Vision/RobotToCamera/Left/Result received", false);
+    }
+
+
+    //Right camera
+    if (!_rightLatestResults.empty()) {
+      auto rightCalcResult = CalculateRobotToCamera(_rightLatestResults.back(), robotToTag);
+      Logger::Log("Vision/RobotToCamera/Right/Result received", rightCalcResult.has_value());
+
+      if (rightCalcResult.has_value()) {
+      auto rightRobotToCamera = rightCalcResult.value();
+      Logger::Log("Vision/RobotToCamera/Right/X", rightRobotToCamera.X());
+      Logger::Log("Vision/RobotToCamera/Right/Y", rightRobotToCamera.Y());
+      Logger::Log("Vision/RobotToCamera/Right/Z", rightRobotToCamera.Z());
+      Logger::Log("Vision/RobotToCamera/Right/~X_Roll", rightRobotToCamera.Rotation().X().convert<units::degree>());
+      Logger::Log("Vision/RobotToCamera/Right/~Y_Pitch", rightRobotToCamera.Rotation().Y().convert<units::degree>());
+      Logger::Log("Vision/RobotToCamera/Right/~Z_Yaw", rightRobotToCamera.Rotation().Z().convert<units::degree>());
+
+      auto estimatedRightCamPose = frc::Pose3d{PoseHandler::GetInstance().GetPose()}.TransformBy(rightRobotToCamera);
+      Logger::FieldDisplay::GetInstance().DisplayPose("EstimatedRightCamPose", estimatedRightCamPose.ToPose2d());
+      }
+    } else {
+      Logger::Log("Vision/RobotToCamera/Right/Result received", false);
+    }
+  });
 }
