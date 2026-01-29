@@ -12,7 +12,9 @@ SubHood::SubHood() {
     _hoodMotorConfig.encoder.PositionConversionFactor(1/GEAR_RATIO);
     _hoodMotorConfig.encoder.VelocityConversionFactor(1/GEAR_RATIO);
     _hoodMotorConfig.closedLoop.Pid(P, I, D);
+    if (frc::RobotBase::IsReal()){
     _hoodMotorConfig.closedLoop.feedForward.kS(S);
+    }
     _hoodMotorConfig.SmartCurrentLimit(30);
     _hoodMotorConfig.Inverted(true);
     _hoodMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);

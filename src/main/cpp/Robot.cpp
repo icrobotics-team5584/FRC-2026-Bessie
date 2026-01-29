@@ -22,7 +22,7 @@ Robot::Robot() {
 void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();
   _finalRobotComponentsArray[0] = frc::Pose3d(_finalRobotComponentsArray[0].Translation(), frc::Rotation3d{0_deg,0_deg, SubTurret::GetInstance().GetTurretAngle()});
-  _finalRobotComponentsArray[1] = frc::Pose3d(_finalRobotComponentsArray[1].Translation(), frc::Rotation3d{0_deg,SubHood::GetInstance().GetHoodAngle(), 0_deg});
+  _finalRobotComponentsArray[1] = frc::Pose3d(_finalRobotComponentsArray[1].Translation(), frc::Rotation3d{0_deg,-SubHood::GetInstance().GetHoodAngle(), SubTurret::GetInstance().GetTurretAngle()});
   arrayPublisher.Set(_finalRobotComponentsArray);
   Logger::Log("RebuiltShift/Hub Active", ShiftHandler::IsActiveShift());
   Logger::Log("RebuiltShift/Won Auton Shift", ShiftHandler::GetShiftName(ShiftHandler::GetWinningShift()));
