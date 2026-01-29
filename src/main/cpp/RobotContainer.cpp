@@ -47,9 +47,9 @@ void RobotContainer::ConfigureBindings() {
   _driverController.RightBumper().WhileTrue(SubDrivebase::GetInstance().LockWheelsInXShape());
 
   //Letters
-  _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
-  _driverController.Y().OnTrue(SubDrivebase::GetInstance().ResetGyroCmd());
-  _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
+  _driverController.X().OnTrue(SubHood::GetInstance().MoveHoodUp1Degree());
+  _driverController.Y().OnTrue(SubHood::GetInstance().MoveHoodDown1Degree());
+  _driverController.B().OnTrue(SubHood::GetInstance().ZeroHood());
   _driverController.A().OnTrue(frc2::cmd::RunOnce([] {
     SubDrivebase::GetInstance().SetPose(frc::Pose2d{0_m, 0_m, 0_deg});
   }));

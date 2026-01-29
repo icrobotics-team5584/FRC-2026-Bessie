@@ -1,0 +1,24 @@
+{
+    "name": "2026Alpha",
+    "isFTC": false,
+
+    "rotations": [
+    { "axis": "x", "degrees": 90 },
+    { "axis": "z", "degrees": 90}],
+
+    "position": [
+        0,
+        0,
+        0.1
+    ],
+"components": [
+    {
+        "zeroedPosition": [0.15,-0.17,-0.453],
+        "zeroedRotations": [{"axis": "x", "degrees": 90}, {"axis":"y", "degrees": 0}, {"axis": "z", "degrees":40}]
+    },
+    {
+        "zeroedPosition": [0.15,-0.17,-0.453],
+        "zeroedRotations": [{"axis": "x", "degrees": 90}, {"axis":"y", "degrees": 0}, {"axis": "z", "degrees":40}]
+    }
+]
+}

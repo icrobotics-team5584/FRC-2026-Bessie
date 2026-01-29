@@ -6,8 +6,13 @@
 
 #include <frc2/command/CommandScheduler.h>
 #include "utilities/Logger.h"
+#include "subsystems/SubTurret.h"
+#include "subsystems/SubHood.h"
 
-Robot::Robot() {}
+Robot::Robot() {
+  // arrayPublisher = nt::NetworkTableInstance::GetDefault().GetStructArrayTopic<frc::Pose3d>(std::string_view{"ZeroedComponentPoses"}).Publish();
+  arrayPublisher = nt::NetworkTableInstance::GetDefault().GetStructArrayTopic<frc::Pose3d>(std::string_view{"FinalComponentPoses"}).Publish();
+}
 
 void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();
@@ -17,6 +22,10 @@ void Robot::RobotPeriodic() {
   Logger::Log("Robot/BatteryVoltage", frc::RobotController::GetBatteryVoltage());
   Logger::Log("Robot/PDHInputVoltage", m_pdh.GetVoltage()*1_V);
   Logger::Log("Robot/PDHTotalCurrent", m_pdh.GetTotalCurrent()*1_A);
+
+  _finalRobotComponentsArray[0] = frc::Pose3d(_finalRobotComponentsArray[0].Translation(), frc::Rotation3d{0_deg,0_deg, SubTurret::GetInstance().GetTurretAngle()});
+  _finalRobotComponentsArray[1] = frc::Pose3d(_finalRobotComponentsArray[1].Translation(), frc::Rotation3d{0_deg,SubHood::GetInstance().GetHoodAngle(), 0_deg});
+  arrayPublisher.Set(_finalRobotComponentsArray);
 }
 
 void Robot::DisabledInit() {}

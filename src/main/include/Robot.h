@@ -12,6 +12,10 @@
 
 #include "RobotContainer.h"
 #include "Constants.h"
+#include <frc/geometry/Pose3d.h>
+#include <networktables/StructArrayTopic.h>
+
+
 
 class Robot : public frc::TimedRobot {
  public:
@@ -32,6 +36,14 @@ class Robot : public frc::TimedRobot {
 
  private:
   std::shared_ptr<frc2::CommandPtr> m_autonomousCommand;
+
+
+  frc::Pose3d zeroPose = frc::Pose3d{0_m, 0_m, 0_m, frc::Rotation3d{0_deg, 0_deg, 0_deg}};
+  frc::Pose3d turretPose = frc::Pose3d{-0.315_m, 0.001_m, 0.553_m, frc::Rotation3d{0_deg, 0_deg, 0_deg}};
+  frc::Pose3d hoodPose = frc::Pose3d{-0.315_m, 0.001_m, 0.553_m, frc::Rotation3d{0_deg, 0_deg, 0_deg}};
+  // wpi::array<frc::Pose3d, 2> _zeroedRobotComponentsArray = {zeroPose, zeroPose};
+  wpi::array<frc::Pose3d, 2> _finalRobotComponentsArray = {turretPose, hoodPose};
+  nt::StructArrayPublisher<frc::Pose3d> arrayPublisher;
 
   RobotContainer m_container;
 
