@@ -53,7 +53,7 @@ class SubShooter : public frc2::SubsystemBase {
   double D = 0;
   double V = 0.12;
 
-  units::meter_t WHEEL_RADIUS = 0.1_m;
+  units::meter_t WHEEL_DIAMETER = 2 * 0.05_m * 3.14;
 
   ctre::phoenix6::configs::TalonFXConfiguration _shooterMotorConfig;
   ctre::phoenix6::controls::VelocityVoltage _flywheelTargetVelocity{0_tps};
@@ -61,6 +61,8 @@ class SubShooter : public frc2::SubsystemBase {
   wpi::interpolating_map<units::meter_t, units::turns_per_second_t> _flyWheelSpeedTable;
   wpi::interpolating_map<units::meter_t, units::second_t> _timeOfFlightTable;
 
+
+  wpi::interpolating_map<units::meters_per_second_t, double> _mpsTorps;
   //Sim
   frc::LinearSystem<1,1,1> _leftFlywheelSystem = frc::LinearSystemId::FlywheelSystem(MOTOR_MODEL, MOI, GEAR_RATIO);
   frc::sim::FlywheelSim _leftFlywheelSim{_leftFlywheelSystem, MOTOR_MODEL};

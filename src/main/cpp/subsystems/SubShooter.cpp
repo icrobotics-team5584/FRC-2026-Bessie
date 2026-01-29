@@ -49,6 +49,10 @@ SubShooter::SubShooter() {
     _flyWheelSpeedTable.insert(4.3575_m, 38.5_tps);
     _flyWheelSpeedTable.insert(4.6875_m, 41_tps);
     _flyWheelSpeedTable.insert(5.1875_m, 44_tps);
+
+    _mpsTorps.insert(6.568_mps, 1.25);
+    _mpsTorps.insert(7.091_mps, 1.4);
+    _mpsTorps.insert(7.807_mps, 1.55);
 }
 
 // This method will be called once per scheduler run
@@ -91,7 +95,7 @@ frc2::CommandPtr SubShooter::SetShooterTarget(units::turns_per_second_t speed) {
 }
 
 frc2::CommandPtr SubShooter::SetShooterTarget(std::function<units::meters_per_second_t()> speed) {
-    return RunOnce([this, speed] {_shooterMotor1.SetControl(_flywheelTargetVelocity.WithVelocity(speed().value() / WHEEL_RADIUS.value() * 2_tps));});
+    return RunOnce([this, speed] {_shooterMotor1.SetControl(_flywheelTargetVelocity.WithVelocity(speed().value() / WHEEL_DIAMETER.value() * Logger::Tune("ShootOnMove/Shoot add", 1_tps)));});
 }
 
 frc2::CommandPtr SubShooter::SetShooterTargetFromDist(std::function<units::meter_t()> distanceToTarget){

@@ -22,6 +22,7 @@
 #include "commands/ShootCommands.h"
 
 #include "utilities/PoseHandler.h"
+#include "utilities/ShotPlanner.h"
 
 #include <frc2/command/Commands.h>
 
@@ -42,7 +43,8 @@ RobotContainer::RobotContainer() {
 void RobotContainer::ConfigureBindings() {
   //Triggers
   _driverController.LeftTrigger().WhileTrue(cmd::IntakeSequence());
-  _driverController.RightTrigger().WhileTrue(cmd::AimAndShoot({0_m,0_m,1.83_m}));
+  _driverController.RightTrigger().WhileTrue(cmd::AimAndShoot(ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose())));
+  _driverController.RightTrigger().OnFalse(SubShooter::GetInstance().StopShooter());
 
   //Bumpers
   _driverController.LeftBumper().ToggleOnTrue(SubDeploy::GetInstance().ToggleDeploy());

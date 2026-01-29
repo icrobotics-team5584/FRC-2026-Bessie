@@ -7,6 +7,8 @@
 #include "subsystems/SubHood.h"
 #include "subsystems/SubShooter.h"
 #include "subsystems/SubDrivebase.h"
+#include "subsystems/SubFeeder.h"
+#include "subsystems/SubIndexer.h"
 #include "utilities/PoseHandler.h"
 #include "utilities/Logger.h"
 #include <frc2/command/Commands.h>
@@ -84,12 +86,15 @@ frc2::CommandPtr AimAndShoot(frc::Translation3d target_pose) {
     }).AlongWith(
         SubHood::GetInstance().SetHoodPositionTarget([]{return 90_deg - conf->PivotAngle.Degrees();})
     ).AlongWith(
-        SubTurret::GetInstance().SetTurretTargetAngle([]{return conf->Yaw.Degrees() - SubTurret::GetInstance().GetTurretAngle();})
+        SubTurret::GetInstance().SetTurretTargetAngle([]{return conf->Yaw.Degrees() - PoseHandler::GetInstance().GetPose().Rotation().Degrees();})
     ).AlongWith(
         SubShooter::GetInstance().SetShooterTarget(
             std::function<units::meters_per_second_t()>{[] {return conf->Velocity;}})
+    ).AlongWith(
+        SubFeeder::GetInstance().FeederOn()
+    ).AlongWith(
+        SubIndexer::GetInstance().Index()
     )
-    // .FinallyDo(SubShooter::GetInstance().StopShooter())
     ;
 }
 
