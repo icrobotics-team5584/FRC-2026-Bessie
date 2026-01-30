@@ -393,7 +393,10 @@ bool SubDrivebase::IsAtPose(
 frc2::CommandPtr SubDrivebase::DriveToPose(std::function<frc::Pose2d()> pose,
   double speedScaling = 1, units::meter_t positionErrorTolerance,
   units::degree_t rotationErrorTolerance) {
-  return Drive([this, pose, speedScaling] { return CalcDriveToPoseSpeeds(pose()) * speedScaling; }, true)
+  return Drive([this, pose, speedScaling] { 
+    Logger::FieldDisplay::GetInstance().DisplayPose("Drivebase/P2P/TargetPose", pose());
+    return CalcDriveToPoseSpeeds(pose()) * speedScaling;
+    }, true)
     .Until([this, pose, positionErrorTolerance, rotationErrorTolerance] {
       return IsAtPose(pose(), positionErrorTolerance, rotationErrorTolerance);
     });
