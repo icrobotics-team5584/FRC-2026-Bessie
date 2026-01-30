@@ -20,7 +20,7 @@ namespace cmd {
     return SubTurret::GetInstance().SetTurretTargetAngle([target] {     
       auto robotPose = PoseHandler::GetInstance().GetPose();
       Logger::Log("Turret/AimAtFieldRelative/robotPose/Rotation", robotPose.Rotation().Degrees());
-      units::degree_t targetAngle = target() - robotPose.Rotation().Degrees() - 180_deg;
+      units::degree_t targetAngle = target() - robotPose.Rotation().Degrees();
       return targetAngle;});
   }
 

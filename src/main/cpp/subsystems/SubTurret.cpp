@@ -112,7 +112,8 @@ units::degree_t SubTurret::GetTurretAngleCRT() {
         turretAngle -= period;
     }
 
-    return turretAngle * 1_deg;
+    // Move the zero angle to point at the robot's front (Intake) 
+    return (turretAngle*1_deg) - turretZeroOffset;
 }
 
 units::degree_t SubTurret::GetTurretAngle() {
