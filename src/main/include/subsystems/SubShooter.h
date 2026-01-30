@@ -9,6 +9,7 @@
 #include "Constants.h"
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/Commands.h>
+#include <wpi/interpolating_map.h>
 
 #include <frc/simulation/FlywheelSim.h>
 #include <frc/system/plant/DCMotor.h>
@@ -16,7 +17,6 @@
 #include <frc/smartdashboard/Mechanism2d.h>
 #include <frc/smartdashboard/MechanismLigament2d.h>
 #include "utilities/MechanismCircle2d.h"
-#include <wpi/interpolating_map.h>
 
 
 class SubShooter : public frc2::SubsystemBase {
@@ -29,11 +29,13 @@ class SubShooter : public frc2::SubsystemBase {
 
   void SimulationPeriodic();
 
-  frc2::CommandPtr SetShooterTarget(units::turns_per_second_t speed);
-  frc2::CommandPtr SetShooterTargetFromDist(std::function<units::meter_t()> distancetoTarget);
+  frc2::CommandPtr SetShooterTarget(std::function<units::turns_per_second_t()> speed);
   frc2::CommandPtr StopShooter();
+  frc2::CommandPtr SpinWithDistance(std::function<units::meter_t()> distance);
   
   bool IsAtSpeed();
+
+  units::second_t GetTimeOfFLightWithDistance(units::meter_t distance);
 
   /**
    * Will be called periodically whenever the CommandScheduler runs.
@@ -75,3 +77,4 @@ class SubShooter : public frc2::SubsystemBase {
     _shooterMechRoot->Append<frc::MechanismLigament2d>("shooterLowerConnector", 0.05, -90_deg, 0);
   MechanismCircle2d _shooterMechBottomRoller{_shooterMechLowerConnector, "shooterBottomRoller", 0.025, 0_deg};
 };
+
