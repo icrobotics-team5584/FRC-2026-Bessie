@@ -32,7 +32,6 @@ class SubHood : public frc2::SubsystemBase {
   void SimulationPeriodic();
 
   bool HoodCurrentCheck(); 
-
   bool HoodIsAtTarget();
   
   units::ampere_t GetHoodMotorCurrent();
@@ -67,6 +66,7 @@ class SubHood : public frc2::SubsystemBase {
   static constexpr units::degree_t STOW_ANGLE = 16.5_deg;
   static constexpr double GEAR_RATIO = (56.0/8.0) * (370.0/34.0);
   static constexpr units::centimeter_t ARM_LENGTH = 20_cm;
+  static constexpr units::degree_t TOLARANCE = 0.5_deg;
 
   bool _zeroing = false;
   bool _hasZeroed = false;
