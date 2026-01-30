@@ -41,6 +41,7 @@ RobotContainer::RobotContainer() {
 void RobotContainer::ConfigureBindings() {
   //Triggers
   _driverController.LeftTrigger().WhileTrue(cmd::IntakeSequence());
+  _driverController.RightTrigger().WhileTrue(cmd::StationaryShootAt({4.65_m, 4_m}));
 
   //Bumpers
   _driverController.LeftBumper().ToggleOnTrue(SubDeploy::GetInstance().ToggleDeploy());
@@ -57,8 +58,9 @@ void RobotContainer::ConfigureBindings() {
   //POVs
   _driverController.POVUp().OnTrue(cmd::AimAtFieldRelative([] { return 0_deg; }));
   _driverController.POVDown().OnTrue(
-    SubTurret::GetInstance().SetTurretTargetAngle([] { return 0_deg; }));
+    SubTurret::GetInstance().SetTurretTargetAngle([] { return 180_deg; }));
   _driverController.POVRight().OnTrue(cmd::AimAtSpot(frc::Translation2d{0_m, 0_m}));
+  _driverController.POVLeft().WhileTrue(SubHood::GetInstance().ZeroHood());
 
   //Sticks
 
