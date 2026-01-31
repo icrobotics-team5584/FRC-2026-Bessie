@@ -3,6 +3,7 @@
 #include "subsystems/SubDrivebase.h"
 #include "subsystems/SubIntake.h"
 #include "subsystems/SubShooter.h"
+#include "subsystems/SubHood.h"
 
 namespace cmd {
     frc2::CommandPtr DefaultAuton() {
@@ -30,16 +31,17 @@ namespace cmd {
     frc2::CommandPtr NeutralScoreAndClimb_LeftBump() {
         return frc2::cmd::Sequence(
             // STARTING POSITION: left bump (X 3.58m, Y 5.80m, heading 0 degrees)
-            cmd::StationaryShootAt(frc::Translation2d{4.625_m, 4.03_m}).WithTimeout(2_s),
+            SubHood::GetInstance().ZeroHood(),
+            cmd::ShootOnTheMove().WithTimeout(2_s),
 
-            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.3_m, 7.0_m, -90_deg}; }, 1.0),
+            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.3_m, 7.0_m, -90_deg}; }, 1.0, 5_cm, 5_deg),
             //REPLACE ABOVE WITH: SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.8_m, 7.0_m, -90_deg}; }, 1.0), //entry to neutral zone (NeutralInLeft)
  
-            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.3_m, 5.5_m, -90_deg}; }, 1.0, 20_cm)
+            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.3_m, 5.5_m, -90_deg}; }, 0.5, 20_cm, 5_deg)
                 .DeadlineFor(SubIntake::GetInstance().IntakeOn()),
             //REPLACE ABOVE WITH: SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.8_m, 4.75_m, -90_deg}; }, 1.0, 20_cm).AlongWith(SubIntake::GetInstance().IntakeOn()), //intake until exit from neutral zone (NeutralEndLeft)
             
-            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.58_m, 5.7_m, 180_deg}; }, 1.0, 20_cm), //re-entry to alliance zone (after bump)
+            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.58_m, 5.7_m, 0_deg}; }, 1.0, 20_cm, 5_deg), //re-entry to alliance zone (after bump)
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{1.65_m, 3.75_m, 0_deg}; }, 1.0)
                 .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s))//, //shoot until tower (Tower)
             //REPLACE ABOVE STATIONARYSHOOTAT WITH SHOOT ON THE MOVE WHEN READY

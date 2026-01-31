@@ -341,7 +341,7 @@ frc::ChassisSpeeds SubDrivebase::CalcDriveToPoseSpeeds(frc::Pose2d targetPose) {
   frc::Pose2d currentPosition = PoseHandler::GetInstance().GetPose();
   units::meter_t currentXMeters = currentPosition.X();
   units::meter_t currentYMeters = currentPosition.Y();
-  units::turn_t currentRotation = GetGyroAngle(true).Degrees();
+  units::turn_t currentRotation = frc::InputModulus(GetGyroAngle(true).Degrees(), 0_deg, 360_deg);
 
   //Create a vector between current position and target position
   frc::Translation2d translationVector = frc::Translation2d(targetXMeters - currentXMeters, targetYMeters - currentYMeters);
@@ -374,6 +374,7 @@ frc::ChassisSpeeds SubDrivebase::CalcDriveToPoseSpeeds(frc::Pose2d targetPose) {
   Logger::Log("CalcDriveLogs/rotationSpeed", rotationCalcSpeed);
   Logger::Log("CalcDriveLogs/targetYMeters", targetYMeters);
   Logger::Log("CalcDriveLogs/targetXMeters", targetXMeters);
+  Logger::Log("CalcDriveLogs/targetRotation", targetRotation);
   Logger::Log("CalcDriveLogs/currentXMeters", currentXMeters);
   Logger::Log("CalcDriveLogs/currentYMeters", currentYMeters);
   Logger::Log("CalcDriveLogs/currentRotation", currentRotation);
@@ -407,10 +408,10 @@ bool SubDrivebase::IsAtPose(
 frc2::CommandPtr SubDrivebase::DriveToPose(std::function<frc::Pose2d()> pose,
   double speedScaling = 1, units::meter_t positionErrorTolerance,
   units::degree_t rotationErrorTolerance) {
-  return Drive([this, pose, speedScaling] { 
+  return RunOnce([this] {_rotationController.Reset( GetGyroAngle(true).Degrees()); }).AndThen(Drive([this, pose, speedScaling] { 
     Logger::FieldDisplay::GetInstance().DisplayPose("Drivebase/P2P/TargetPose", pose());
     return CalcDriveToPoseSpeeds(pose()) * speedScaling;
-    }, true)
+    }, true))
     .Until([this, pose, positionErrorTolerance, rotationErrorTolerance] {
       return IsAtPose(pose(), positionErrorTolerance, rotationErrorTolerance);
     });

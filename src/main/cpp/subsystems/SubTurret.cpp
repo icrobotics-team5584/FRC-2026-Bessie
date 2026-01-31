@@ -148,20 +148,12 @@ units::degree_t SubTurret::CalcOptimisedTurretAngle(units::degree_t angle) {
     units::degree_t newTarget = currentAngle + closestOffset;
 
     // clamp target to limits
-    // if(newTarget > POS_LIMIT) {
-    //     newTarget -= 360_deg;
-    // }
-
-    // if(newTarget < NEG_LIMIT) {
-    //     newTarget += 360_deg;
-    // }
-
     if(newTarget > POS_LIMIT) {
-        newTarget = POS_LIMIT;
+        newTarget -= 360_deg;
     }
 
     if(newTarget < NEG_LIMIT) {
-        newTarget = NEG_LIMIT;
+        newTarget += 360_deg;
     }
 
     Logger::Log("Turret/CalcOptimisedTurretAngle/newTarget(final output)", newTarget);
