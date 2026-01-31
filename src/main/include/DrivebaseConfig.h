@@ -38,7 +38,7 @@ namespace DrivebaseConfig {
   const frc::ProfiledPIDController<units::meters> TRANSLATION_PID{
     2.5, 0, 0, {MAX_VELOCITY, MAX_ACCEL}};
   const frc::ProfiledPIDController<units::radian> ROTATION_PID{
-    2.5, 0, 0, {MAX_ANGULAR_VELOCITY, MAX_ANGULAR_ACCEL}};
+    3.5, 0, 0, {MAX_ANGULAR_VELOCITY, MAX_ANGULAR_ACCEL}};
 
   // pathplanner PID constants (for pathplanner autos only)
   const pathplanner::PIDConstants PP_TRANSLATION_PID{3.2, 0.0, 0.3};
