@@ -75,8 +75,8 @@ class SubTurret : public frc2::SubsystemBase {
 
   bool _hasZeroed = false;
 
-  double P = 6.0;
-  double I = 0.01;
+  double P = 4.0;
+  double I = 0;
   double D = 0;
   
   static constexpr double E1_TEETH = 21;

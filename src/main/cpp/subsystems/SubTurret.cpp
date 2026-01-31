@@ -11,8 +11,8 @@ SubTurret::SubTurret() {
     _turretMotorConfig.encoder.PositionConversionFactor(1/GEAR_RATIO);
     _turretMotorConfig.encoder.VelocityConversionFactor(1/GEAR_RATIO);
     _turretMotorConfig.closedLoop.Pid(P, I, D);
-    _turretMotorConfig.closedLoop.MaxOutput(0.5);
-    _turretMotorConfig.closedLoop.MinOutput(-0.5);
+    _turretMotorConfig.closedLoop.MaxOutput(1.0);
+    _turretMotorConfig.closedLoop.MinOutput(-1.0);
     _turretMotorConfig.closedLoop.IMaxAccum(0.05);
     _turretMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kCoast);
     _turretMotorConfig.SmartCurrentLimit(30);
