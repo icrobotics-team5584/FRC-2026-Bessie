@@ -16,20 +16,21 @@ class MechanismCircle2d {
             int spokes=3,
             double spokeWidth=6.0,
             const frc::Color8Bit& indicatorColor={51, 149, 234}, /* #3395ea */
-            const frc::Color8Bit& color={255, 255, 255} /* #ffffff */
+            const frc::Color8Bit& spokeColor={255, 255, 255} /* #ffffff */
         ) {
             //Create circle background spokes
             for (int i = 0; i < spokes; i++) {
-                frc::MechanismLigament2d* spoke = location->template Append<frc::MechanismLigament2d>(
+                /* If it's the first spoke, set its color to indicatorColor */
+                const frc::Color8Bit& color = i == 0 ? indicatorColor : spokeColor;
+                frc::MechanismLigament2d* spoke = location->template 
+                    Append<frc::MechanismLigament2d>(
                         name+"_spoke"+std::to_string(i),
                         radius,
                         angle+(360_deg/spokes)*i,
                         spokeWidth,
                         color); //append spoke ligament to chosen location
-                _backgroundSpokeLigaments.push_back(spoke); //add to list of spokes
+                _spokeLigaments.push_back(spoke);
             }
-
-            _indicatorLigament = location->template Append<frc::MechanismLigament2d>(name+"~indicator", radius, angle, spokeWidth/3, indicatorColor);
         }
         
         void SetAngle(units::degree_t angle);
@@ -37,6 +38,5 @@ class MechanismCircle2d {
         void SetIndicatorColor(const frc::Color8Bit& color);
 
     private:
-        std::vector<frc::MechanismLigament2d*> _backgroundSpokeLigaments;
-        frc::MechanismLigament2d* _indicatorLigament;
+        std::vector<frc::MechanismLigament2d*> _spokeLigaments;
 };
