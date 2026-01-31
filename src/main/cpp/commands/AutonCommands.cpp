@@ -11,11 +11,11 @@ namespace cmd {
 
     frc2::CommandPtr TESTDriveInASquare() {
         return frc2::cmd::Sequence(
-            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{0_m, 0_m, 0_deg}; }, 1.0, 5_cm, 2_deg),
-            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{1_m, 0_m, 90_deg}; }, 1.0, 5_cm, 2_deg),
-            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{1_m, 1_m, 180_deg}; }, 1.0, 5_cm, 2_deg),
-            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{0_m, 1_m, 270_deg}; }, 1.0, 5_cm, 2_deg),
-            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{0_m, 0_m, 0_deg}; }, 1.0, 5_cm, 2_deg)
+            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{0_m, 0_m, 0_deg}; }, 1.0),
+            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{1_m, 0_m, 90_deg}; }, 1.0),
+            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{1_m, 1_m, 180_deg}; }, 1.0),
+            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{0_m, 1_m, 270_deg}; }, 1.0),
+            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{0_m, 0_m, 0_deg}; }, 1.0)
         );
     }
 
@@ -35,7 +35,7 @@ namespace cmd {
             //REPLACE ABOVE WITH: SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.8_m, 7.0_m, -90_deg}; }, 1.0), //entry to neutral zone (NeutralInLeft)
 
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.3_m, 4.75_m, -90_deg}; }, 1.0, 20_cm)
-                .DeadlineWith(SubIntake::GetInstance().IntakeOn()),
+                .DeadlineFor(SubIntake::GetInstance().IntakeOn()),
             //REPLACE ABOVE WITH: SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.8_m, 4.75_m, -90_deg}; }, 1.0, 20_cm).AlongWith(SubIntake::GetInstance().IntakeOn()), //intake until exit from neutral zone (NeutralEndLeft)
             
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.58_m, 5.2_m, 180_deg}; }, 1.0, 20_cm), //re-entry to alliance zone (after bump)
