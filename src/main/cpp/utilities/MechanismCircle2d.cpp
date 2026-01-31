@@ -1,7 +1,7 @@
 #include "utilities/MechanismCircle2d.h"
 
 void MechanismCircle2d::SetAngle(units::degree_t angle) {
-    int spokes = _spokeLigaments.size();
+    size_t spokes = _spokeLigaments.size();
     for (unsigned int i = 0; i < spokes; i++) {
         _spokeLigaments[i]->SetAngle(angle + (360_deg/spokes) * i);
     }
