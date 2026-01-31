@@ -23,7 +23,7 @@ class MechanismCircle2d {
                 frc::MechanismLigament2d* spoke = location->template Append<frc::MechanismLigament2d>(
                         name+"_spoke"+std::to_string(i),
                         radius,
-                        angle+(360_deg/_spokes)*i,
+                        angle+(360_deg/spokes)*i,
                         spokeWidth,
                         color); //append spoke ligament to chosen location
                 _backgroundSpokeLigaments.push_back(spoke); //add to list of spokes
