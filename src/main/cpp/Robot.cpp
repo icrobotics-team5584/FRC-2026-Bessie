@@ -6,8 +6,12 @@
 
 #include <frc2/command/CommandScheduler.h>
 #include "utilities/Logger.h"
+#include <frc/DataLogManager.h>
 
-Robot::Robot() {}
+Robot::Robot() {
+  frc::DataLogManager::Start();
+  frc::DriverStation::StartDataLog(frc::DataLogManager::GetLog());
+}
 
 void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();
