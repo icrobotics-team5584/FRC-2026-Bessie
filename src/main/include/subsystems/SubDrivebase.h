@@ -47,9 +47,9 @@ class SubDrivebase : public frc2::SubsystemBase {
   units::degree_t GetPitch();
   units::degree_t GetRoll();
 
-  frc::ChassisSpeeds GetRobotRelativeSpeeds();
-
+  units::degrees_per_second_t GetAngularVelocity();
   units::meters_per_second_t GetVelocity();
+  frc::ChassisSpeeds GetFieldRelativeVelocity();
   frc2::Trigger CheckCoastButton();
 
   units::turns_per_second_t CalcRotateSpeed(units::turn_t rotationError);
