@@ -18,10 +18,8 @@ class MechanismCircle2d {
             const frc::Color8Bit& indicatorColor={51, 149, 234}, /* #3395ea */
             const frc::Color8Bit& color={255, 255, 255} /* #ffffff */
         ) {
-            _spokes = spokes;
-
             //Create circle background spokes
-            for (int i = 0; i < _spokes; i++) {
+            for (int i = 0; i < spokes; i++) {
                 frc::MechanismLigament2d* spoke = location->template Append<frc::MechanismLigament2d>(
                         name+"_spoke"+std::to_string(i),
                         radius,
@@ -41,5 +39,4 @@ class MechanismCircle2d {
     private:
         std::vector<frc::MechanismLigament2d*> _backgroundSpokeLigaments;
         frc::MechanismLigament2d* _indicatorLigament;
-        int _spokes;
 };
