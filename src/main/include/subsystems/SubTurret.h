@@ -13,6 +13,7 @@
 #include <units/angle.h>
 #include <frc2/command/button/CommandXboxController.h>
 #include <frc/geometry/Transform2d.h>
+#include <frc/controller/SimpleMotorFeedforward.h>
 
 #include <frc/simulation/DCMotorSim.h>
 #include <frc/system/plant/DCMotor.h>
@@ -78,6 +79,10 @@ class SubTurret : public frc2::SubsystemBase {
   double P = 4.0;
   double I = 0;
   double D = 0;
+
+  double kS = 0;
+  double kV = 0;
+  double kA = 0;
   
   static constexpr double E1_TEETH = 21;
   static constexpr double E2_TEETH = 20;
