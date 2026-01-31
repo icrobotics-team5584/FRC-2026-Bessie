@@ -6,10 +6,10 @@
 #include <pathplanner/lib/config/RobotConfig.h>
 
 SubDrivebase::SubDrivebase() {
-  Logger::Log("Drivebase/PID/Rotation Controller", &_teleopRotationController);
-  Logger::Log("Drivebase/PID/Translation Controller", &_teleopTranslationController);
+  Logger::Log("Drivebase/PID/Rotation Controller", &_rotationController);
+  Logger::Log("Drivebase/PID/Translation Controller", &_translationController);
 
-  _teleopRotationController.EnableContinuousInput(0_deg, 360_deg);
+  _rotationController.EnableContinuousInput(0_deg, 360_deg);
 
   ctre::phoenix6::configs::Pigeon2Configuration gyroConfig;
   gyroConfig.MountPose.MountPosePitch = 0_deg;
@@ -17,66 +17,66 @@ SubDrivebase::SubDrivebase() {
   gyroConfig.MountPose.MountPoseYaw = 0_deg;
   _gyro.GetConfigurator().Apply(gyroConfig);
 
-  using namespace pathplanner;
-  AutoBuilder::configure(
-      // Robot pose supplier
-      [this]() { 
-        return PoseHandler::GetInstance().GetPose();
-      },
+  // using namespace pathplanner;
+  // AutoBuilder::configure(
+  //     // Robot pose supplier
+  //     [this]() { 
+  //       return PoseHandler::GetInstance().GetPose();
+  //     },
 
-      // Method to reset odometry (will be called if your auto has a starting pose)
-      [this](frc::Pose2d pose) { 
-        Logger::Tune("Drivebase/ResetAutoStartingPose", true); 
-            SetPose(pose);
-      }, 
+  //     // Method to reset odometry (will be called if your auto has a starting pose)
+  //     [this](frc::Pose2d pose) { 
+  //       Logger::Tune("Drivebase/ResetAutoStartingPose", true); 
+  //           SetPose(pose);
+  //     }, 
 
-      // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-      [this]() { return GetRobotRelativeSpeeds(); },
+  //     // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+  //     [this]() { return GetRobotRelativeSpeeds(); },
 
-      // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally
-      // outputs individual module feedforwards
-      [this](auto speeds, auto feedforwards) {
-        double _voltageFFscaler = 2.0;  // Logger::Tune("drivebase/volatageFFscaler", 1.0); // this
-                                        // a scaler for the voltageFF
-        if (feedforwards.robotRelativeForcesX.size() == 4 &&
-            feedforwards.robotRelativeForcesY.size() == 4) {
-          std::array<units::newton_t, 4> xForces = {
-              (feedforwards.robotRelativeForcesX[0] / _voltageFFscaler),
-              (feedforwards.robotRelativeForcesX[1] / _voltageFFscaler),
-              (feedforwards.robotRelativeForcesX[2] / _voltageFFscaler),
-              (feedforwards.robotRelativeForcesX[3] / _voltageFFscaler)};
-          std::array<units::newton_t, 4> yForces = {
-              (feedforwards.robotRelativeForcesY[0] / _voltageFFscaler),
-              (feedforwards.robotRelativeForcesY[1] / _voltageFFscaler),
-              (feedforwards.robotRelativeForcesY[2] / _voltageFFscaler),
-              (feedforwards.robotRelativeForcesY[3] / _voltageFFscaler)};
-          Drive(speeds.vx, speeds.vy, speeds.omega, false, xForces, yForces);
-        } else {
-            Drive(speeds.vx, speeds.vy, speeds.omega, false);
-        }
-      },
-      // PID Feedback controller for translation and rotation
-      _pathplannerController,
+  //     // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally
+  //     // outputs individual module feedforwards
+  //     [this](auto speeds, auto feedforwards) {
+  //       double _voltageFFscaler = 2.0;  // Logger::Tune("drivebase/volatageFFscaler", 1.0); // this
+  //                                       // a scaler for the voltageFF
+  //       if (feedforwards.robotRelativeForcesX.size() == 4 &&
+  //           feedforwards.robotRelativeForcesY.size() == 4) {
+  //         std::array<units::newton_t, 4> xForces = {
+  //             (feedforwards.robotRelativeForcesX[0] / _voltageFFscaler),
+  //             (feedforwards.robotRelativeForcesX[1] / _voltageFFscaler),
+  //             (feedforwards.robotRelativeForcesX[2] / _voltageFFscaler),
+  //             (feedforwards.robotRelativeForcesX[3] / _voltageFFscaler)};
+  //         std::array<units::newton_t, 4> yForces = {
+  //             (feedforwards.robotRelativeForcesY[0] / _voltageFFscaler),
+  //             (feedforwards.robotRelativeForcesY[1] / _voltageFFscaler),
+  //             (feedforwards.robotRelativeForcesY[2] / _voltageFFscaler),
+  //             (feedforwards.robotRelativeForcesY[3] / _voltageFFscaler)};
+  //         Drive(speeds.vx, speeds.vy, speeds.omega, false, xForces, yForces);
+  //       } else {
+  //           Drive(speeds.vx, speeds.vy, speeds.omega, false);
+  //       }
+  //     },
+  //     // PID Feedback controller for translation and rotation
+  //     _pathplannerController,
 
-      // robot mass, MOT, wheel locations, etc
-      RobotConfig::fromGUISettings(),
+  //     // robot mass, MOT, wheel locations, etc
+  //     RobotConfig::fromGUISettings(),
 
-      // Boolean supplier that controls when the path will be mirrored for the red alliance
-      // This will flip the path being followed to the red side of the field.
-      // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-      []() {
-        auto alliance = frc::DriverStation::GetAlliance();
-        if (alliance) {
-          Logger::Log("Drivebase/Pathplanner flipped to alliance", alliance.value());
-          return alliance.value() == frc::DriverStation::Alliance::kRed;
-        }
-        Logger::Log("Drivebase/Pathplanner flipped to alliance",
-                    "Failed to detect alliance, assuming blue");
-        return false;
-      },
+  //     // Boolean supplier that controls when the path will be mirrored for the red alliance
+  //     // This will flip the path being followed to the red side of the field.
+  //     // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+  //     []() {
+  //       auto alliance = frc::DriverStation::GetAlliance();
+  //       if (alliance) {
+  //         Logger::Log("Drivebase/Pathplanner flipped to alliance", alliance.value());
+  //         return alliance.value() == frc::DriverStation::Alliance::kRed;
+  //       }
+  //       Logger::Log("Drivebase/Pathplanner flipped to alliance",
+  //                   "Failed to detect alliance, assuming blue");
+  //       return false;
+  //     },
 
-      // Reference to this subsystem to set requirements
-      this);
+  //     // Reference to this subsystem to set requirements
+  //     this);
 }
 
 void SubDrivebase::Periodic() {
@@ -117,6 +117,9 @@ void SubDrivebase::LogDrivebaseStates() {
   Logger::Log("Drivebase/Coast Button", CheckCoastButton().Get());
 
   Logger::Log("Drivebase/velocity", GetVelocity());
+  Logger::Log("Drivebase/velocity/field relative vx", GetFieldRelativeVelocity().vx);
+  Logger::Log("Drivebase/velocity/field relative vy", GetFieldRelativeVelocity().vy);
+
   Logger::Log("Drivebase/Internal Encoder Swerve States",
               wpi::array{_frontLeft.GetState(), _frontRight.GetState(), _backLeft.GetState(),
                          _backRight.GetState()});
@@ -151,13 +154,13 @@ void SubDrivebase::LogDrivebaseStates() {
   _backRight.SendSensorsToDash();
 }
 
-frc::ChassisSpeeds SubDrivebase::GetRobotRelativeSpeeds() {
-  auto fl = _frontLeft.GetState();
-  auto fr = _frontRight.GetState();
-  auto bl = _backLeft.GetState();
-  auto br = _backRight.GetState();
-  return _kinematics.ToChassisSpeeds(fl, fr, bl, br);
-}
+// frc::ChassisSpeeds SubDrivebase::GetRobotRelativeSpeeds() {
+//   auto fl = _frontLeft.GetState();
+//   auto fr = _frontRight.GetState();
+//   auto bl = _backLeft.GetState();
+//   auto br = _backRight.GetState();
+//   return _kinematics.ToChassisSpeeds(fl, fr, bl, br);
+// }
 
 wpi::array<frc::SwerveModulePosition, 4U> SubDrivebase::GetSwerveStates() {
   return {
@@ -213,9 +216,8 @@ void SubDrivebase::SetBrakeMode(bool mode) {
 void SubDrivebase::Drive(units::meters_per_second_t xSpeed, units::meters_per_second_t ySpeed,
                          units::turns_per_second_t rot, bool fieldRelative,
                          std::optional<std::array<units::newton_t, 4>> xForceFeedforwards,
-                         std::optional<std::array<units::newton_t, 4>> yForceFeedforwards)
-{
-    // Optionally convert speeds to field relative
+                         std::optional<std::array<units::newton_t, 4>> yForceFeedforwards) {
+  // Optionally convert speeds to field relative
   auto speeds = fieldRelative
                     ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(xSpeed, ySpeed, rot, GetGyroAngle())
                     : frc::ChassisSpeeds{xSpeed, ySpeed, rot};
@@ -229,8 +231,7 @@ void SubDrivebase::Drive(units::meters_per_second_t xSpeed, units::meters_per_se
   // Set speed limit and apply speed limit to all modules
   _kinematics.DesaturateWheelSpeeds(
       &states,
-      frc::SmartDashboard::GetNumber("Drivebase/Config/Max Velocity", DrivebaseConfig::MAX_VELOCITY.value()) *
-          1_mps);
+      frc::SmartDashboard::GetNumber("Drivebase/Config/Max Velocity", DrivebaseConfig::MAX_VELOCITY.value()) * 1_mps);
 
   // Extract force feedforwards
   std::array<units::newton_t, 4> defaults{0_N, 0_N, 0_N, 0_N};
@@ -246,16 +247,28 @@ void SubDrivebase::Drive(units::meters_per_second_t xSpeed, units::meters_per_se
   _backRight.SetDesiredState(br, brXForce, brYForce);
 }
 
-frc2::CommandPtr SubDrivebase::Drive(std::function<frc::ChassisSpeeds()> speeds, bool fieldOriented)
-{
+frc2::CommandPtr SubDrivebase::Drive(std::function<frc::ChassisSpeeds()> speeds, bool fieldOriented) {
     return Run([this, speeds, fieldOriented] {
         auto speedVal = speeds();
         Drive(speedVal.vx, speedVal.vy, speedVal.omega, fieldOriented);
     }).FinallyDo([this] { Drive(0_mps,0_mps,0_deg_per_s, false); });
 }
 
-// Getters & calculations
+frc2::CommandPtr SubDrivebase::LockWheelsInXShape() {
+  return Run([this] {
+    auto fl = frc::SwerveModuleState{0_mps, frc::Rotation2d{45_deg}};
+    auto fr = frc::SwerveModuleState{0_mps, frc::Rotation2d{135_deg}};
+    auto bl = frc::SwerveModuleState{0_mps, frc::Rotation2d{135_deg}};
+    auto br = frc::SwerveModuleState{0_mps, frc::Rotation2d{45_deg}};
 
+    _frontLeft.SetDesiredState(fl);
+    _frontRight.SetDesiredState(fr);
+    _backLeft.SetDesiredState(bl);
+    _backRight.SetDesiredState(br);
+  });
+}
+
+// Getters & calculations
 frc::Rotation2d SubDrivebase::GetGyroAngle(bool allianceRelative) { 
   auto alliance = frc::DriverStation::GetAlliance();
   if (!allianceRelative ||
@@ -279,9 +292,20 @@ units::meters_per_second_t SubDrivebase::GetVelocity() {
   auto speeds = _kinematics.ToChassisSpeeds(_frontLeft.GetState(), _frontRight.GetState(),
                                             _backLeft.GetState(), _backRight.GetState());
   namespace m = units::math;
-  Logger::Log("Drivebase/velocity/vx", speeds.vx);
-  Logger::Log("Drivebase/velocity/vy", speeds.vy);
   return m::sqrt(m::pow<2>(speeds.vx) + m::pow<2>(speeds.vy));
+}
+
+frc::ChassisSpeeds SubDrivebase::GetFieldRelativeVelocity() {
+  auto speeds = _kinematics.ToChassisSpeeds(_frontLeft.GetState(), _frontRight.GetState(),
+                                            _backLeft.GetState(), _backRight.GetState());
+  speeds = frc::ChassisSpeeds::FromRobotRelativeSpeeds(speeds, GetGyroAngle(false).Degrees());
+  return speeds;
+}
+
+units::degrees_per_second_t SubDrivebase::GetAngularVelocity() {
+  auto speeds = _kinematics.ToChassisSpeeds(_frontLeft.GetState(), _frontRight.GetState(),
+                                            _backLeft.GetState(), _backRight.GetState());
+  return speeds.omega;
 }
 
 frc2::Trigger SubDrivebase::CheckCoastButton() {
@@ -289,7 +313,7 @@ frc2::Trigger SubDrivebase::CheckCoastButton() {
 }
 
 units::turns_per_second_t SubDrivebase::CalcRotateSpeed(units::turn_t rotationError) {
-  auto omega = _teleopRotationController.Calculate(rotationError, 0_deg) * 1_rad_per_s;
+  auto omega = _rotationController.Calculate(rotationError, 0_deg) * 1_rad_per_s;
   return omega;
 }
 
@@ -323,16 +347,16 @@ frc::ChassisSpeeds SubDrivebase::CalcDriveToPoseSpeeds(frc::Pose2d targetPose) {
   frc::Translation2d translationVector = frc::Translation2d(targetXMeters - currentXMeters, targetYMeters - currentYMeters);
 
   // Use PID controllers to calculate speeds
-  auto rawTranslationSpeed = _teleopTranslationController.Calculate(0_m, translationVector.Norm()) * 1_mps;
-  auto rawRotationSpeed = _teleopRotationController.Calculate(currentRotation, targetRotation) * 1_rad_per_s;
+  auto rawTranslationSpeed = _translationController.Calculate(0_m, translationVector.Norm()) * 1_mps;
+  auto rawRotationSpeed = _rotationController.Calculate(currentRotation, targetRotation) * 1_rad_per_s;
 
   // Apply acceleration limits
   auto translationCalcSpeed = _p2pTranslationLimiter.Calculate(rawTranslationSpeed);
   auto rotationCalcSpeed = _p2pRotationLimiter.Calculate(rawRotationSpeed);
 
   // Clamp translation speed to max velocity
-  translationCalcSpeed = units::math::min(translationCalcSpeed, DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
-  translationCalcSpeed = units::math::max(translationCalcSpeed, -DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
+  translationCalcSpeed = units::math::min(translationCalcSpeed, DrivebaseConfig::MAX_P2P_VELOCITY);
+  translationCalcSpeed = units::math::max(translationCalcSpeed, -DrivebaseConfig::MAX_P2P_VELOCITY);
 
   //Convert Polar back into Cartesian X and Y
   frc::Translation2d translationSpeedVector = frc::Translation2d((translationCalcSpeed.value()*1_m), translationVector.Angle());
@@ -383,7 +407,10 @@ bool SubDrivebase::IsAtPose(
 frc2::CommandPtr SubDrivebase::DriveToPose(std::function<frc::Pose2d()> pose,
   double speedScaling = 1, units::meter_t positionErrorTolerance,
   units::degree_t rotationErrorTolerance) {
-  return Drive([this, pose, speedScaling] { return CalcDriveToPoseSpeeds(pose()) * speedScaling; }, true)
+  return Drive([this, pose, speedScaling] { 
+    Logger::FieldDisplay::GetInstance().DisplayPose("Drivebase/P2P/TargetPose", pose());
+    return CalcDriveToPoseSpeeds(pose()) * speedScaling;
+    }, true)
     .Until([this, pose, positionErrorTolerance, rotationErrorTolerance] {
       return IsAtPose(pose(), positionErrorTolerance, rotationErrorTolerance);
     });
@@ -426,11 +453,10 @@ frc::ChassisSpeeds SubDrivebase::CalcJoystickSpeeds(frc2::CommandXboxController&
   double scaledTranslationY = scaledTranslationR * sin(translationTheta);
   double scaledTranslationX = scaledTranslationR * cos(translationTheta);
 
-  double scaledRotation;
-  if (rawRotation >= 0) {
-    scaledRotation = pow(rawRotation, rotationScaling);
-  } else {
-    scaledRotation = std::copysign(pow(abs(rawRotation), rotationScaling), rawRotation);
+  double scaledRotation = pow(rawRotation, rotationScaling);
+  // Bring back any negatives that may have been lost by applying the exponent
+  if (rawRotation < 0 && scaledRotation > 0){
+    scaledRotation *= 1;
   }
 
   // Apply joystick rate limits and calculate speed

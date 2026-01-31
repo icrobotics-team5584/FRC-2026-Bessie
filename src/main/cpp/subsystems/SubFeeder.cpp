@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "subsystems/SubFeeder.h"
+
 #include <units/current.h>
 #include <utilities/Logger.h>
 
@@ -12,13 +13,17 @@ SubFeeder::SubFeeder() {
   Logger::Log("Feeder/Feeder Motor", &_feederMotor);
 }
 
+frc2::CommandPtr SubFeeder::Feed() {
+  return StartEnd([this] { _feederMotor.Set(1.0); }, [this] { _feederMotor.Set(0); });
+};
+
 frc2::CommandPtr SubFeeder::FeederOn() {
-  return StartEnd([this] { _feederMotor.Set(1); }, [this] { _feederMotor.Set(0); });
+  return RunOnce([this] { _feederMotor.Set(1.0); });
 };
 
 frc2::CommandPtr SubFeeder::FeederOff() {
   return RunOnce([this] { _feederMotor.Set(0); });
-};
+}
 
 bool SubFeeder::FeederIsFull() {
   return _feederFullSensor.Get();
@@ -32,9 +37,9 @@ void SubFeeder::CurrentHighTimer() {
   _feederHighCurrentTimer.Start();
 
   if (_feederHighCurrentTimer.Get() > 3_s) {
-    feederCurrentAlert.Set(true);
+    _feederCurrentAlert.Set(true);
   }
-};
+}
 
 // This method will be called once per scheduler run
 void SubFeeder::Periodic() {
@@ -45,16 +50,16 @@ void SubFeeder::Periodic() {
   if (current > 20_A) {
     SubFeeder::CurrentHighTimer();
   } else {
-    feederCurrentAlert.Set(false);
+    _feederCurrentAlert.Set(false);
     _feederHighCurrentTimer.Reset();
   }
 
   units::celsius_t temperature = _feederMotor.GetTemperature();
   Logger::Log("Feeder/Feeder Motor Temperature", temperature);
   if (temperature > 60_degC) {
-    highTemperatureAlert.Set(true);
+    _feederHighTemperatureAlert.Set(true);
   } else {
-    highTemperatureAlert.Set(false);
+    _feederHighTemperatureAlert.Set(false);
   }
 }
 

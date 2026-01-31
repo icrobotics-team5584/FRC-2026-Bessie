@@ -46,6 +46,8 @@ public:
 
   frc::Pose2d CalculateRelativePose(frc::Pose2d pose, units::meter_t xTransform, units::meter_t yTransform);
 
+  std::optional<frc::Transform3d> CalculateRobotToCamera(photon::PhotonPipelineResult &result, frc::Transform3d robotToTag);
+
   int GetClosestTag(frc::Pose2d currentPose);
 
   bool IsEstimateUsable(photon::EstimatedRobotPose pose);
@@ -54,8 +56,9 @@ public:
 
   double GetDev(photon::EstimatedRobotPose pose);
 
- private:
+  frc2::CommandPtr CalibrateRobotToCamera(frc::Transform3d robotToTag);
 
+ private:
   struct TagObservation {
     photon::PhotonTrackedTarget tag;
     Side cameraSide;
@@ -68,20 +71,17 @@ public:
   frc::AprilTagFieldLayout _tagMap{_tagMapFilePath};
 
   //Left camera config
-  std::string _leftCamName = "ICR_OV2981_L";
+  std::string _leftCamName = "ICR_OV9281_L";
 
   photon::PhotonCamera _leftCamera{_leftCamName};
+  std::vector<photon::PhotonPipelineResult> _leftLatestResults;
 
   photon::PhotonCameraSim _leftCamSim{&_leftCamera};
   photon::VisionSystemSim _visionSim{_leftCamName};
 
-  //frc::Transform3d _leftBotToCam{{270_mm,270_mm,190_mm},{0_deg,300_deg,30_deg}};
-  frc::Transform3d _leftBotToCam{{-320_mm,310_mm,220_mm},{0_deg,-35_deg,60_deg}};
+  frc::Transform3d _leftBotToCam{{-350_mm,-470_mm,350_mm},{0_deg,-16_deg,190.54_deg}};
 
-  photon::PhotonPoseEstimator _leftPoseEstimater{
-    _tagMap,
-    _leftBotToCam
-  };
+  photon::PhotonPoseEstimator _leftPoseEstimater{_tagMap, _leftBotToCam};
 
   std::optional<photon::EstimatedRobotPose> _leftEstPose;
 
@@ -89,16 +89,13 @@ public:
   std::string _rightCamName = "ICR_OV9281_R";
 
   photon::PhotonCamera _rightCamera{_rightCamName};
+  std::vector<photon::PhotonPipelineResult> _rightLatestResults;
 
   photon::PhotonCameraSim _rightCamSim{&_rightCamera};
 
-  //frc::Transform3d _rightBotToCam{{270_mm,-270_mm,190_mm},{0_deg,300_deg,330_deg}};
-  frc::Transform3d _rightBotToCam{{320_mm,310_mm,220_mm},{0_deg,-35_deg,60_deg}};
-
-  photon::PhotonPoseEstimator _rightPoseEstimater{
-    _tagMap,
-    _rightBotToCam
-  };
+  frc::Transform3d _rightBotToCam{{-350_mm,470_mm,350_mm},{0_deg,-16_deg,-190.54_deg}};
+  
+  photon::PhotonPoseEstimator _rightPoseEstimater{_tagMap, _rightBotToCam};
 
   std::optional<photon::EstimatedRobotPose> _rightEstPose;
 

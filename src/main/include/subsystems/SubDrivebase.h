@@ -47,9 +47,9 @@ class SubDrivebase : public frc2::SubsystemBase {
   units::degree_t GetPitch();
   units::degree_t GetRoll();
 
-  frc::ChassisSpeeds GetRobotRelativeSpeeds();
-
+  units::degrees_per_second_t GetAngularVelocity();
   units::meters_per_second_t GetVelocity();
+  frc::ChassisSpeeds GetFieldRelativeVelocity();
   frc2::Trigger CheckCoastButton();
 
   units::turns_per_second_t CalcRotateSpeed(units::turn_t rotationError);
@@ -57,7 +57,7 @@ class SubDrivebase : public frc2::SubsystemBase {
   frc::ChassisSpeeds CalcJoystickSpeeds(frc2::CommandXboxController& controller);
 
   frc2::CommandPtr DriveToPose(std::function<frc::Pose2d()> pose, double speedScaling,
-    units::meter_t positionErrorTolerance = 2_cm, units::degree_t rotationErrorTolerance = 1_deg);
+    units::meter_t positionErrorTolerance = 1_cm, units::degree_t rotationErrorTolerance = 1_deg);
   void SetPose(frc::Pose2d pose);
   bool IsAtPose(frc::Pose2d pose, units::meter_t positionErrorTolerance = 2_cm,
     units::degree_t rotationErrorTolerance = 2_deg);
@@ -67,8 +67,8 @@ class SubDrivebase : public frc2::SubsystemBase {
   /* Commands */
 
   // Joystick Drive
-  frc2::CommandPtr JoystickDrive(
-    frc2::CommandXboxController& controller, bool fieldOriented = true, double speedScale = 1);
+  frc2::CommandPtr JoystickDrive(frc2::CommandXboxController& controller, bool fieldOriented = true, double speedScale = 1);\
+  frc2::CommandPtr LockWheelsInXShape();
 
   // Pose drive
   frc2::CommandPtr Drive(std::function<frc::ChassisSpeeds()> speeds, bool fieldOriented);
@@ -119,8 +119,8 @@ class SubDrivebase : public frc2::SubsystemBase {
       DrivebaseConfig::BR_POSITION
   };
 
-  frc::ProfiledPIDController<units::meters> _teleopTranslationController = DrivebaseConfig::TELE_TRANSLATION_PID;
-  frc::ProfiledPIDController<units::radian> _teleopRotationController = DrivebaseConfig::TELE_ROTATION_PID;
+  frc::ProfiledPIDController<units::meters> _translationController = DrivebaseConfig::TRANSLATION_PID;
+  frc::ProfiledPIDController<units::radian> _rotationController = DrivebaseConfig::ROTATION_PID;
 
   // P2P
   units::meters_per_second_squared_t _tunedMaxP2pAccel = DrivebaseConfig::MAX_P2P_ACCEL;
@@ -130,8 +130,8 @@ class SubDrivebase : public frc2::SubsystemBase {
 
   std::shared_ptr<pathplanner::PPHolonomicDriveController> _pathplannerController =
     std::make_shared<pathplanner::PPHolonomicDriveController>(
-      DrivebaseConfig::AUTO_TRANSLATION_PID,
-      DrivebaseConfig::AUTO_ROTATION_PID
+      DrivebaseConfig::PP_TRANSLATION_PID,
+      DrivebaseConfig::PP_ROTATION_PID
     );
 
   // Joystick controller rate limiters

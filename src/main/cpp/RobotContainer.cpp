@@ -4,20 +4,25 @@
 
 #include "RobotContainer.h"
 
-#include <frc2/command/Commands.h>
+#include "subsystems/SubDeploy.h"
 #include "subsystems/SubDrivebase.h"
-#include "commands/DriveCommands.h"
-#include "subsystems/SubIntake.h"
 #include "subsystems/SubFeeder.h"
-#include "subsystems/SubIndexer.h"
-#include "commands/AutonCommands.h"
-#include "Subsystems/SubVision.h"
-#include "subsystems/SubTurret.h"
 #include "subsystems/SubHood.h"
+#include "subsystems/SubIndexer.h"
+#include "subsystems/SubIntake.h"
 #include "subsystems/SubShooter.h"
+#include "subsystems/SubTurret.h"
+#include "subsystems/SubVision.h"
+
+#include "commands/AutonCommands.h"
+#include "commands/DriveCommands.h"
+#include "commands/FuelCommands.h"
+#include "commands/TurretCommands.h"
 #include "commands/VisionCommands.h"
 
 #include "utilities/PoseHandler.h"
+
+#include <frc2/command/Commands.h>
 
 RobotContainer::RobotContainer() {
   SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
@@ -25,9 +30,11 @@ RobotContainer::RobotContainer() {
   SubVision::GetInstance().SetDefaultCommand(cmd::AddVisionMeasurement());
 
   _autoManager.AddDefaultAuton("default", AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton()));
-  _autoManager.AddAuton("driveInASquare", AutonHelper::MakeCommandPtrAuto(cmd::DriveInASquare()));
-  _autoManager.AddAuton("forward 250cm", AutonHelper::MakeCommandPtrAuto(cmd::Forward250cm()));
-  _autoManager.AddAuton("forward 250cm while turning", AutonHelper::MakeCommandPtrAuto(cmd::Forward250cmWhileTurning()));
+  
+  _autoManager.AddAuton("DriveInASquare", AutonHelper::MakeCommandPtrAuto(cmd::TESTDriveInASquare()));
+  _autoManager.AddAuton("Forward250cm", AutonHelper::MakeCommandPtrAuto(cmd::TESTForward250cm()));
+  _autoManager.AddAuton("Forward250cmWhileTurning", AutonHelper::MakeCommandPtrAuto(cmd::TESTForward250cmWhileTurning()));
+
   _autoManager.AddAuton("NeutralScoreAndClimb_LeftBump", AutonHelper::MakeCommandPtrAuto(cmd::NeutralScoreAndClimb_LeftBump()));
   //_autoManager.AddAuton("NeutralScoreAndClimb_RightBump", AutonHelper::MakeCommandPtrAuto(cmd::NeutralScoreAndClimb_RightBump()));
   //_autoManager.AddAuton("Hoard_LeftBump", AutonHelper::MakeCommandPtrAuto(cmd::Hoard_LeftBump()));
@@ -42,22 +49,37 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureBindings() {
+  //Triggers
+  _driverController.LeftTrigger().WhileTrue(cmd::IntakeSequence());
+  _driverController.RightTrigger().WhileTrue(cmd::ShootOnTheMove());
+  _driverController.RightTrigger().OnFalse(SubFeeder::GetInstance().FeederOff());
+
+  //Bumpers
+  _driverController.LeftBumper().ToggleOnTrue(SubDeploy::GetInstance().ToggleDeploy());
+  _driverController.RightBumper().WhileTrue(SubDrivebase::GetInstance().LockWheelsInXShape());
+
+  //Letters
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
   _driverController.Y().OnTrue(SubDrivebase::GetInstance().ResetGyroCmd());
   _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
-  _driverController.A().OnTrue(frc2::cmd::RunOnce([]{
-    SubDrivebase::GetInstance().SetPose(frc::Pose2d{7.4_m,5.4_m,0_deg});
+  _driverController.A().OnTrue(frc2::cmd::RunOnce([] {
+    SubDrivebase::GetInstance().SetPose(frc::Pose2d{0_m, 0_m, 0_deg});
   }));
-  _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
-  // _driverController.LeftTrigger().OnTrue(frc2::cmd::RunOnce([]{
-  //   SubDrivebase::GetInstance().DriveToPose([]{return frc::Pose2d{3.3_m,5.4_m,0_deg};}, 1, 2_cm);
-  // }));
-  _driverController.LeftTrigger().OnTrue(
-    SubDrivebase::GetInstance().DriveToPose([]{return frc::Pose2d{3.3_m,5.4_m,0_deg};}, 1, 2_cm)
-  );
+
+  //POVs
+  _driverController.POVUp().OnTrue(cmd::AimAtFieldRelative([] { return 0_deg; }));
+  _driverController.POVDown().OnTrue(
+    SubTurret::GetInstance().SetTurretTargetAngle([] { return 180_deg; }));
+  _driverController.POVRight().OnTrue(cmd::AimAtSpot(frc::Translation2d{0_m, 0_m}));
+  _driverController.POVLeft().WhileTrue(SubHood::GetInstance().ZeroHood());
+
+  //Sticks
+
+  //Other
+
 }
 
 std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {
   AutonHelper::AutonPtr chosen = _autoManager.GetChosenAuton();
-  return chosen; 
+  return chosen;
 }

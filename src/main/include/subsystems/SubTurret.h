@@ -12,6 +12,7 @@
 #include <frc/DutyCycleEncoder.h>
 #include <units/angle.h>
 #include <frc2/command/button/CommandXboxController.h>
+#include <frc/geometry/Transform2d.h>
 
 #include <frc/simulation/DCMotorSim.h>
 #include <frc/system/plant/DCMotor.h>
@@ -35,12 +36,17 @@ class SubTurret : public frc2::SubsystemBase {
   units::degree_t GetTurretAngleCRT();
   units::degree_t GetTurretAngle();
   units::degree_t CalcOptimisedTurretAngle(units::degree_t angle);
-  
+  units::degree_t GetFieldRelativeTurretAngle();
+    
   void SetTurretAngle(units::degree_t angle);
   void ZeroTurret();
 
+  bool IsAtTarget();
+
   frc2::CommandPtr SetTurretTargetAngle(std::function<units::degree_t()> angle);
   frc2::CommandPtr ZeroTurretCmd();
+
+  static constexpr frc::Transform2d ROBOT_TO_TURRET = frc::Transform2d{-235_mm, 0_mm, 0_deg};
 
   /**
    * Will be called periodically whenever the CommandScheduler runs.
@@ -60,16 +66,17 @@ class SubTurret : public frc2::SubsystemBase {
   static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::NEO();
   static constexpr units::kilogram_square_meter_t MOI = 0.0001_kg_sq_m;
 
-  const double encoder1ZeroOffset = 0.998531;
-  const double encoder2ZeroOffset = 0.339566;
+  const double encoder1ZeroOffset = 0.696408;
+  const double encoder2ZeroOffset = 0.120609;
+  const units::turn_t turretZeroOffset = -0.5_tr;
 
   units::degree_t POS_LIMIT = 270_deg;
-  units::degree_t NEG_LIMIT = -270_deg;
+  units::degree_t NEG_LIMIT = 90_deg;
 
   bool _hasZeroed = false;
 
-  double P = 2.0;
-  double I = 0;
+  double P = 6.0;
+  double I = 0.01;
   double D = 0;
   
   static constexpr double E1_TEETH = 21;
@@ -78,8 +85,9 @@ class SubTurret : public frc2::SubsystemBase {
   static constexpr double ENCODER1_RATIO = E1_TEETH/BIG_TEETH;
   static constexpr double ENCODER2_RATIO = E2_TEETH/BIG_TEETH;
   static constexpr double GEAR_RATIO = (48.0/12.0) * (94.0/10.0);
+  
 
-
+  static constexpr units::degree_t TOLARANCE = 0.5_deg;
   static constexpr units::hertz_t ENCODER_FREQUENCY = 975.6_Hz; 
   //force set encoder frequency to avoid 1sec startup time
 
