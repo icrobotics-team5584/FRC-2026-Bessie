@@ -27,7 +27,8 @@
 RobotContainer::RobotContainer() {
   SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
   ConfigureBindings();
-  SubVision::GetInstance().SetDefaultCommand(cmd::AddVisionMeasurement());
+  // SubVision::GetInstance().SetDefaultCommand(cmd::AddVisionMeasurement());
+  SubVision::GetInstance();
 
   _autoManager.AddDefaultAuton("default", AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton()));
 
@@ -60,7 +61,7 @@ void RobotContainer::ConfigureBindings() {
   _driverController.POVUp().OnTrue(cmd::AimAtFieldRelative([] { return 0_deg; }));
   _driverController.POVDown().OnTrue(
     SubTurret::GetInstance().SetTurretTargetAngle([] { return 180_deg; }));
-  _driverController.POVRight().OnTrue(cmd::AimAtSpot(frc::Translation2d{0_m, 0_m}));
+  _driverController.POVRight().OnTrue(frc2::cmd::RunOnce([]{SubTurret::GetInstance().SetTurretAngle(180_deg);}));
   _driverController.POVLeft().WhileTrue(SubHood::GetInstance().ZeroHood());
 
   //Sticks

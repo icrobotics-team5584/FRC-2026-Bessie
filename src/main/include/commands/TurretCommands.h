@@ -11,7 +11,7 @@ namespace cmd {
 
     frc::Pose2d CalcFutureTurretPose();
 
-    static constexpr frc::Translation2d TARGETPOSE = frc::Translation2d{4.65_m, 4_m};
+    static constexpr frc::Translation2d TARGETPOSE = frc::Translation2d{12_m, 4_m};
 }
 
 

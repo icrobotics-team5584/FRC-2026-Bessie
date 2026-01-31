@@ -13,12 +13,12 @@
     ],
 "components": [
     {
-        "zeroedPosition": [0.15,-0.17,-0.453],
-        "zeroedRotations": [{"axis": "x", "degrees": 90}, {"axis":"y", "degrees": 0}, {"axis": "z", "degrees":40}]
+        "zeroedPosition": [0.178,0.17,-1],
+        "zeroedRotations": [{"axis": "x", "degrees": 90}, {"axis":"y", "degrees": 0}, {"axis": "z", "degrees":220}]
     },
     {
-        "zeroedPosition": [0.15,-0.17,-0.453],
-        "zeroedRotations": [{"axis": "x", "degrees": 90}, {"axis":"y", "degrees": 0}, {"axis": "z", "degrees":40}]
+        "zeroedPosition": [-0.005,0.167,-1.13],
+        "zeroedRotations": [{"axis": "x", "degrees": 90}, {"axis":"y", "degrees": 0}, {"axis": "z", "degrees":220}]
     }
 ]
 }

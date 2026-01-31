@@ -64,7 +64,7 @@ class SubTurret : public frc2::SubsystemBase {
   units::degree_t getEncoder2Degrees();
 
   static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::NEO();
-  static constexpr units::kilogram_square_meter_t MOI = 0.0001_kg_sq_m;
+  static constexpr units::kilogram_square_meter_t MOI = 0.000000001_kg_sq_m;
 
   const double encoder1ZeroOffset = 0.696408;
   const double encoder2ZeroOffset = 0.120609;
@@ -75,7 +75,7 @@ class SubTurret : public frc2::SubsystemBase {
 
   bool _hasZeroed = false;
 
-  double P = 6.0;
+  double P = 40.0; //6.0
   double I = 0.01;
   double D = 0;
   
