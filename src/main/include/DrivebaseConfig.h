@@ -7,7 +7,7 @@
 
 namespace DrivebaseConfig {
   // Drive controls
-  constexpr units::meters_per_second_t MAX_VELOCITY = 2_mps;
+  constexpr units::meters_per_second_t MAX_VELOCITY = 3_mps;
   constexpr units::meters_per_second_squared_t MAX_ACCEL = 5_mps_sq;
   constexpr units::turns_per_second_t MAX_ANGULAR_VELOCITY = 300_deg_per_s;
 

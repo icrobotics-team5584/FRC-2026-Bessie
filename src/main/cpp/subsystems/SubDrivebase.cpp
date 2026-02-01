@@ -390,31 +390,25 @@ bool SubDrivebase::IsAtPose(
   Logger::FieldDisplay::GetInstance().DisplayPose("current pose", currentPose);
   Logger::FieldDisplay::GetInstance().DisplayPose("target pose", pose);
 
-  frc::SmartDashboard::PutNumber("Drivebase/rotError", rotError.Degrees().value());
-  frc::SmartDashboard::PutNumber("Drivebase/posError", posError.value());
+  Logger::Log("Drivebase/rotError", rotError.Degrees());
+  Logger::Log("Drivebase/posError", posError);
 
-  frc::SmartDashboard::PutBoolean(
-    "Drivebase/IsAtPose", units::math::abs(rotError.Degrees()) < rotationErrorTolerance &&
-                            posError < positionErrorTolerance);
-
-  if (units::math::abs(rotError.Degrees()) < rotationErrorTolerance &&
-      posError < positionErrorTolerance) {
-    return true;
-  } else {
-    return false;
-  }
+  bool atPose = (units::math::abs(rotError.Degrees()) < rotationErrorTolerance) && (posError < positionErrorTolerance);
+  Logger::Log("Drivebase/IsAtPose", atPose);
+  return atPose;
 }
 
 frc2::CommandPtr SubDrivebase::DriveToPose(std::function<frc::Pose2d()> pose,
   double speedScaling = 1, units::meter_t positionErrorTolerance,
   units::degree_t rotationErrorTolerance) {
-  return RunOnce([this] {_rotationController.Reset( GetGyroAngle(true).Degrees()); }).AndThen(Drive([this, pose, speedScaling] { 
+  return RunOnce([this] {
+    _rotationController.Reset(GetGyroAngle(true).Degrees());
+  }).AndThen(Drive([this, pose, speedScaling] { 
     Logger::FieldDisplay::GetInstance().DisplayPose("Drivebase/P2P/TargetPose", pose());
     return CalcDriveToPoseSpeeds(pose()) * speedScaling;
-    }, true))
-    .Until([this, pose, positionErrorTolerance, rotationErrorTolerance] {
-      return IsAtPose(pose(), positionErrorTolerance, rotationErrorTolerance);
-    });
+  }, true)).Until([this, pose, positionErrorTolerance, rotationErrorTolerance] {
+    return IsAtPose(pose(), positionErrorTolerance, rotationErrorTolerance);
+  });
 }
 
 frc::ChassisSpeeds SubDrivebase::CalcJoystickSpeeds(frc2::CommandXboxController& controller) {
