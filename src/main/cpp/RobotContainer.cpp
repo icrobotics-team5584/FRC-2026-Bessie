@@ -20,6 +20,7 @@
 #include "commands/TurretCommands.h"
 #include "commands/VisionCommands.h"
 
+#include "utilities/Logger.h"
 #include "utilities/PoseHandler.h"
 #include "utilities/ShiftHandler.h"
 #include <frc2/command/Commands.h>
@@ -67,7 +68,14 @@ void RobotContainer::ConfigureBindings() {
 
   //Other
 
-  frc2::Trigger([]{return (ShiftHandler::GetTimeLeft() < 3_s) ? true : false;}).OnTrue(Rumble(1, 0.5_s));
+  frc2::Trigger([]{return (ShiftHandler::GetTimeLeft() < 3_s) ? true : false;}).OnTrue(Rumble(1, 0.5_s)
+  .AlongWith(frc2::cmd::RunOnce([]{Logger::Log("Drivebase/Rumble", true);
+     }
+    )
+   ).FinallyDo([]{Logger::Log("Drivebase/Rumble", false);
+     }
+    )
+  );
 }
 
 std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {
