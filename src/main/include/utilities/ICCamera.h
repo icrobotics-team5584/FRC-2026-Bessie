@@ -10,9 +10,9 @@
 
 #pragma once
 
-class Camera {
+class ICCamera {
 public:
-  Camera(std::string name, frc::Transform3d botToCam, frc::AprilTagFieldLayout tagMap, std::string label = "");
+  ICCamera(std::string name, frc::Transform3d botToCam, frc::AprilTagFieldLayout tagMap, std::string label = "");
 
   std::optional<photon::EstimatedRobotPose> Update();
 
@@ -26,9 +26,9 @@ public:
   frc::Transform3d GetBotToCam();
   photon::PhotonCameraSim* GetCamSim();
 
-  std::vector<photon::PhotonPipelineResult> GetLatestReading();
+  std::vector<photon::PhotonPipelineResult> GetLatestResult();
 
-  TagObservation GetLastTag();
+  TagObservation GetLastTagObservation();
 
   std::optional<photon::EstimatedRobotPose> GetEstPose();
 

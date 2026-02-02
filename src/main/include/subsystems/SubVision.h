@@ -15,7 +15,7 @@
 #include <photon/PhotonPoseEstimator.h>
 #include <frc/Filesystem.h>
 #include <wpi/interpolating_map.h>
-#include "utilities/Camera.h"
+#include "utilities/ICCamera.h"
 
 class SubVision : public frc2::SubsystemBase {
 public:
@@ -28,6 +28,10 @@ public:
   void Periodic() override;
 
   void UpdateVision();
+
+  void StableCameraProcess();
+
+  void TurretCameraProcess();
 
   void SimulationPeriodic() override;
 
@@ -50,14 +54,9 @@ public:
 
   double GetDev(photon::EstimatedRobotPose pose);
 
- private:
+  static constexpr frc::Transform2d TURRET_TO_CAM = frc::Transform2d{0_m, 0.1_m, 0_deg};
 
-  struct TagObservation {
-    photon::PhotonTrackedTarget tag;
-    Side cameraSide;
-    units::time::second_t timestamp;
-  };
-  struct TagObservation _lastTagObservation;
+ private:
 
   //Create field layout
   std::string _tagMapFilePath = frc::filesystem::GetDeployDirectory() + "/2026-rebuilt.json";
@@ -68,7 +67,7 @@ public:
 
   frc::Transform3d _leftBotToCam{{-350_mm,-470_mm,350_mm},{0_deg,-16_deg,190.54_deg}};
 
-  Camera _leftCam {
+  ICCamera _leftCam {
     _leftCamName,
     _leftBotToCam,
     _tagMap,
@@ -80,14 +79,14 @@ public:
 
   frc::Transform3d _rightBotToCam{{-350_mm,470_mm,350_mm},{0_deg,-16_deg,-190.54_deg}};
 
-  Camera _rightCam {
+  ICCamera _rightCam {
     _rightCamName,
     _rightBotToCam,
     _tagMap,
     "right"
   };
 
-  std::vector<Camera*> _camList {
+  std::vector<ICCamera*> _camList {
     &_leftCam,
     &_rightCam
   };

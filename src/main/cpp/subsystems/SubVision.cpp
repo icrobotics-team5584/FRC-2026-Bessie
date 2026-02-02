@@ -26,7 +26,7 @@ SubVision::SubVision() {
   // Sim set up
   _visionSim.AddAprilTags(_tagMap);
 
-  for (Camera* cam : _camList) {
+  for (ICCamera* cam : _camList) {
     _visionSim.AddCamera(cam->GetCamSim(), cam->GetBotToCam());
   }
 
@@ -42,7 +42,7 @@ void SubVision::Periodic() {
 }
 
 void SubVision::UpdateVision() {
-  for (Camera* cam : _camList) {
+  for (ICCamera* cam : _camList) {
     auto pose = cam->Update();
     auto camLabel = cam->GetCamLabel();
     
@@ -72,7 +72,7 @@ void SubVision::SimulationPeriodic() {
 
 std::map<std::string, std::optional<photon::EstimatedRobotPose>> SubVision::GetPose() {
   std::map<std::string, std::optional<photon::EstimatedRobotPose>> poses = {};
-  for (Camera* cam : _camList) {
+  for (ICCamera* cam : _camList) {
     poses.insert({cam->GetCamLabel(), cam->GetEstPose()});
   }
   return poses;

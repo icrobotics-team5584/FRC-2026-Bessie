@@ -2,12 +2,12 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-#include "utilities/Camera.h"
+#include "utilities/ICCamera.h"
 #include "utilities/PoseHandler.h"
 #include "utilities/Logger.h"
 #include <frc/smartdashboard/SmartDashboard.h>
 
-Camera::Camera(std::string name, frc::Transform3d botToCam, frc::AprilTagFieldLayout tagMap, std::string label)
+ICCamera::ICCamera(std::string name, frc::Transform3d botToCam, frc::AprilTagFieldLayout tagMap, std::string label)
  : _camName(name), _botToCam(botToCam), _tagMap(tagMap), _cam(name),
  _camSim(&_cam), _poseEstimator(_tagMap, _botToCam)
  {
@@ -18,9 +18,10 @@ Camera::Camera(std::string name, frc::Transform3d botToCam, frc::AprilTagFieldLa
     }
  }
 
-std::optional<photon::EstimatedRobotPose> Camera::Update() {
+std::optional<photon::EstimatedRobotPose> ICCamera::Update() {
     double largestArea = 0;
     std::string targets = "";
+    _estPose.reset();
 
      _results = _cam.GetAllUnreadResults();
     if (_results.size() > 0) {
@@ -45,35 +46,35 @@ std::optional<photon::EstimatedRobotPose> Camera::Update() {
     return _estPose;
 }
 
-std::string Camera::GetCamName() {
+std::string ICCamera::GetCamName() {
     return _camName;
 }
 
-std::string Camera::GetCamLabel() {
+std::string ICCamera::GetCamLabel() {
     return _label;
 }
 
-frc::Transform3d Camera::GetBotToCam() {
+frc::Transform3d ICCamera::GetBotToCam() {
     return _botToCam;
 }
 
-photon::PhotonCameraSim* Camera::GetCamSim() {
+photon::PhotonCameraSim* ICCamera::GetCamSim() {
     return &_camSim;
 }
 
-std::vector<photon::PhotonPipelineResult> Camera::GetLatestReading() {
+std::vector<photon::PhotonPipelineResult> ICCamera::GetLatestResult() {
     return _results;
 }
 
-Camera::TagObservation Camera::GetLastTag() {
+ICCamera::TagObservation ICCamera::GetLastTagObservation() {
     return _lastTagObservation;
 }
 
-std::optional<photon::EstimatedRobotPose> Camera::GetEstPose() {
+std::optional<photon::EstimatedRobotPose> ICCamera::GetEstPose() {
     return _estPose;
 }
 
-std::optional<frc::Transform3d> Camera::CalculateRobotToCamera(
+std::optional<frc::Transform3d> ICCamera::CalculateRobotToCamera(
   photon::PhotonPipelineResult &result, frc::Transform3d robotToTag) {
   if (result.HasTargets()) {
     auto target = result.GetBestTarget();
@@ -87,8 +88,7 @@ std::optional<frc::Transform3d> Camera::CalculateRobotToCamera(
   }
 }
 
-void Camera::CalibrateRobotToCamera(frc::Transform3d robotToTag) {
-    //Left camera
+void ICCamera::CalibrateRobotToCamera(frc::Transform3d robotToTag) {
     if (!_results.empty()) {
         auto calcResult = CalculateRobotToCamera(_results.back(), robotToTag);
         Logger::Log("Vision/RobotToCamera/"+_label+"/Result received", calcResult.has_value());
