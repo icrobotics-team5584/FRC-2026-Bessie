@@ -21,7 +21,7 @@
 #include "commands/VisionCommands.h"
 
 #include "utilities/PoseHandler.h"
-
+#include "utilities/ShiftHandler.h"
 #include <frc2/command/Commands.h>
 
 RobotContainer::RobotContainer() {
@@ -67,9 +67,17 @@ void RobotContainer::ConfigureBindings() {
 
   //Other
 
+  frc2::Trigger([]{return (ShiftHandler::GetTimeLeft() < 3_s) ? true : false;}).OnTrue(Rumble(1, 0.5_s));
 }
 
 std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {
   AutonHelper::AutonPtr chosen = _autoManager.GetChosenAuton();
   return chosen;
+}
+
+frc2::CommandPtr RobotContainer::Rumble(double force, units::second_t duration) {
+return frc2::cmd::Run([this, force, duration]{  
+    _driverController.SetRumble(frc::XboxController::RumbleType::kBothRumble, force);}).WithTimeout(duration)
+    .FinallyDo([this]{
+    _driverController.SetRumble(frc::XboxController::RumbleType::kBothRumble, 0);});
 }
