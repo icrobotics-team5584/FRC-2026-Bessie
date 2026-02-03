@@ -3,19 +3,18 @@
 #include <frc/geometry/Translation2d.h>
 #include <frc/controller/ProfiledPIDController.h>
 #include <units/velocity.h>
-#include <pathplanner/lib/config/PIDConstants.h>
 
 namespace DrivebaseConfig {
   // Drive controls
-  constexpr units::meters_per_second_t MAX_VELOCITY = 3_mps;
-  constexpr units::meters_per_second_squared_t MAX_ACCEL = 5_mps_sq;
+  constexpr units::meters_per_second_t MAX_VELOCITY = 4_mps;
+  constexpr units::meters_per_second_squared_t MAX_ACCEL = 20_mps_sq;
   constexpr units::turns_per_second_t MAX_ANGULAR_VELOCITY = 300_deg_per_s;
+  static constexpr units::turns_per_second_squared_t MAX_ANGULAR_ACCEL{std::numbers::pi};
 
   constexpr units::meters_per_second_t MAX_P2P_VELOCITY = 2_mps;
   static constexpr units::meters_per_second_squared_t MAX_P2P_ACCEL = 5_mps_sq;
   static constexpr units::turns_per_second_squared_t MAX_P2P_ANGULAR_ACCEL = 3_tr_per_s_sq;
 
-  static constexpr units::turns_per_second_squared_t MAX_ANGULAR_ACCEL{std::numbers::pi};
 
   static constexpr double MAX_JOYSTICK_ACCEL = 5;
   static constexpr double MAX_ANGULAR_JOYSTICK_ACCEL = 3;
@@ -39,8 +38,4 @@ namespace DrivebaseConfig {
     3, 0, 0, {MAX_VELOCITY, MAX_ACCEL}};
   const frc::ProfiledPIDController<units::radian> ROTATION_PID{
     3.5, 0, 0, {MAX_ANGULAR_VELOCITY, MAX_ANGULAR_ACCEL}};
-
-  // pathplanner PID constants (for pathplanner autos only)
-  const pathplanner::PIDConstants PP_TRANSLATION_PID{3.2, 0.0, 0.3};
-  const pathplanner::PIDConstants PP_ROTATION_PID{1.5, 0.0, 0.0};
 }
