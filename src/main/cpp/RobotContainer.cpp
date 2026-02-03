@@ -68,24 +68,20 @@ void RobotContainer::ConfigureBindings() {
 
   //Other
 
-  frc2::Trigger([]{return (ShiftHandler::GetTimeLeft() < 3_s) ? true : false;}).OnTrue(Rumble(1, 0.5_s)
-  .AlongWith(frc2::cmd::RunOnce([]{Logger::Log("Drivebase/Rumble", true);
-     }
-    )
-   ).FinallyDo([]{Logger::Log("Drivebase/Rumble", false);
-     }
-    )
-  );
+  frc2::Trigger([]{return ShiftHandler::GetTimeLeft() < 3_s;}).OnTrue(Rumble(1, 0.5_s));
 }
 
 std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {
   AutonHelper::AutonPtr chosen = _autoManager.GetChosenAuton();
   return chosen;
 }
-
 frc2::CommandPtr RobotContainer::Rumble(double force, units::second_t duration) {
 return frc2::cmd::Run([this, force, duration]{  
-    _driverController.SetRumble(frc::XboxController::RumbleType::kBothRumble, force);}).WithTimeout(duration)
+    _driverController.SetRumble(frc::XboxController::RumbleType::kBothRumble, force);
+    Logger::Log("DriverStation/Rumble", true);
+  }).WithTimeout(duration)
     .FinallyDo([this]{
-    _driverController.SetRumble(frc::XboxController::RumbleType::kBothRumble, 0);});
+    _driverController.SetRumble(frc::XboxController::RumbleType::kBothRumble, 0);
+    Logger::Log("DriverStation/Rumble", false);
+  });
 }
