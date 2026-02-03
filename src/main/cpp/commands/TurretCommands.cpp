@@ -10,6 +10,8 @@
 
 #include "utilities/Logger.h"
 #include "utilities/PoseHandler.h"
+#include "utilities/FieldConstants.h"
+#include "utilities/ShotPlanner.h"
 
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/Commands.h>
@@ -34,7 +36,7 @@ namespace cmd {
   }
 
 units::meter_t CalcShootOnTheMoveDistance() {
-  auto target = cmd::TARGETPOSE;
+  auto target = GetShotTarget();
 
   frc::Pose2d futurePose = CalcFutureTurretPose();
 
@@ -46,7 +48,7 @@ units::meter_t CalcShootOnTheMoveDistance() {
 }
 
 units::degree_t CalcShootOnTheMoveAngle() {
-  auto target = cmd::TARGETPOSE;
+  auto target = GetShotTarget();
   frc::Pose2d futurePose = CalcFutureTurretPose();
 
   // Find angle from future turret pose to target
@@ -59,7 +61,7 @@ units::degree_t CalcShootOnTheMoveAngle() {
 
 frc::Pose2d CalcFutureTurretPose() {
   // Calculate distance to target from robot(convert to turret later)
-  auto target = cmd::TARGETPOSE;
+  auto target = GetShotTarget();
   auto robot = PoseHandler::GetInstance().GetPose();
   Logger::FieldDisplay::GetInstance().DisplayPose("SOTM/robotPose", robot);
   units::meter_t distance = target.Distance(robot.Translation());
@@ -104,6 +106,11 @@ frc::Pose2d CalcFutureTurretPose() {
 
   Logger::FieldDisplay::GetInstance().DisplayPose("SOTM/futureTurretPose", turretFuturePose);
   return turretFuturePose;
+}
+
+frc::Translation2d GetShotTarget(){
+  auto curPose = PoseHandler::GetInstance().GetPose();
+  return ShotPlanner::CalculateShotTarget(curPose).ToTranslation2d();
 }
 
 }  // namespace cmd
