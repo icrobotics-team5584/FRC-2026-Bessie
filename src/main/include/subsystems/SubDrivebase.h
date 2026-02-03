@@ -16,7 +16,6 @@
 #include <numbers>
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/Commands.h>
-#include <pathplanner/lib/controllers/PPHolonomicDriveController.h>
 
 class SubDrivebase : public frc2::SubsystemBase {
  public:
@@ -127,12 +126,6 @@ class SubDrivebase : public frc2::SubsystemBase {
   units::turns_per_second_squared_t _tunedMaxP2pAngAccel = DrivebaseConfig::MAX_P2P_ANGULAR_ACCEL;
   frc::SlewRateLimiter<units::meters_per_second> _p2pTranslationLimiter{_tunedMaxP2pAccel};
   frc::SlewRateLimiter<units::turns_per_second> _p2pRotationLimiter{_tunedMaxP2pAngAccel};
-
-  std::shared_ptr<pathplanner::PPHolonomicDriveController> _pathplannerController =
-    std::make_shared<pathplanner::PPHolonomicDriveController>(
-      DrivebaseConfig::PP_TRANSLATION_PID,
-      DrivebaseConfig::PP_ROTATION_PID
-    );
 
   // Joystick controller rate limiters
   double _tunedMaxJoystickAccel = DrivebaseConfig::MAX_JOYSTICK_ACCEL;
