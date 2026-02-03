@@ -75,6 +75,7 @@ std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {
   AutonHelper::AutonPtr chosen = _autoManager.GetChosenAuton();
   return chosen;
 }
+
 frc2::CommandPtr RobotContainer::Rumble(double force, units::second_t duration) {
 return frc2::cmd::Run([this, force, duration]{  
     _driverController.SetRumble(frc::XboxController::RumbleType::kBothRumble, force);
