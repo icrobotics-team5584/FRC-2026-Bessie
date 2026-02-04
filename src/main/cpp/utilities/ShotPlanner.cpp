@@ -12,7 +12,7 @@
 
 ShotPlanner::ShotPlanner() = default;
 
-frc::Translation3d ShotPlanner::CalculateShotTarget(frc::Pose2d robotPos) {
+ShotPlanner::ShotPlannerResults ShotPlanner::CalculateShotTarget(frc::Pose2d robotPos) {
   auto alliance = frc::DriverStation::GetAlliance();
   if (alliance) {
     if (alliance.value() == frc::DriverStation::kRed) {
@@ -22,17 +22,25 @@ frc::Translation3d ShotPlanner::CalculateShotTarget(frc::Pose2d robotPos) {
   }
 
   frc::Translation3d target;
+  bool shouldShoot;
   bool isInBotNeutralZone = false;
   bool isInBlueAlliance = false;
   bool isOurHubActive = ShiftHandler::IsActiveShift();
 
-  isInBlueAlliance = IsWithinZone(fieldpos::BLUE_ALLIANCE_ZONE_TOP_RIGHT, fieldpos::BLUE_ALLIANCE_ZONE_BOTTOM_LEFT, robotPos);
-  isInBotNeutralZone = IsWithinZone(fieldpos::BOTTOM_PASSING_ZONE_TOP_RIGHT, fieldpos::BOTTOM_PASSING_ZONE_BOTTOM_LEFT, robotPos);
-  
-  if(isInBlueAlliance && isOurHubActive) {
+  isInBlueAlliance = IsWithinZone(
+    fieldpos::BLUE_ALLIANCE_ZONE_TOP_RIGHT, fieldpos::BLUE_ALLIANCE_ZONE_BOTTOM_LEFT, robotPos);
+  isInBotNeutralZone = IsWithinZone(
+    fieldpos::BOTTOM_PASSING_ZONE_TOP_RIGHT, fieldpos::BOTTOM_PASSING_ZONE_BOTTOM_LEFT, robotPos);
+
+  if (isInBlueAlliance && !isOurHubActive) {
+    shouldShoot = false;
+  }
+
+  if (isInBlueAlliance && isOurHubActive) {
     target = fieldpos::HUB_POSITION;
-  } else { /* Can't score in neutral zone */
-    if(isInBotNeutralZone) { /* bottom neutral zone */
+    shouldShoot = true;
+  } else {                    /* Can't score in neutral zone */
+    if (isInBotNeutralZone) { /* bottom neutral zone */
       target = fieldpos::BOTTOM_ALLIANCE_ZONE_POSITION;
     } else { /* Top neutral zone */
       target = fieldpos::TOP_ALLIANCE_ZONE_POSITION;
@@ -45,7 +53,7 @@ frc::Translation3d ShotPlanner::CalculateShotTarget(frc::Pose2d robotPos) {
     }
   }
 
-  return target;
+  return {target, shouldShoot};
 }
 
 bool ShotPlanner::IsWithinZone(
