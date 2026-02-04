@@ -67,6 +67,8 @@ class SubTurret : public frc2::SubsystemBase {
   static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::NEO();
   static constexpr units::kilogram_square_meter_t MOI = 0.0001_kg_sq_m;
 
+  frc::SimpleMotorFeedforward<units::turn> _robotRotVelFF{kS, kV * (1_s / 1_tr), kA * ((1_s * 1_s) / 1_tr)};
+
   const double encoder1ZeroOffset = 0.696408;
   const double encoder2ZeroOffset = 0.120609;
   const units::turn_t turretZeroOffset = -0.5_tr;
@@ -80,9 +82,9 @@ class SubTurret : public frc2::SubsystemBase {
   double I = 0;
   double D = 0;
 
-  double kS = 0;
-  double kV = 0;
-  double kA = 0;
+  units::volt_t kS = 0_V;
+  units::volt_t kV = 0_V;
+  units::volt_t kA = 0_V;
   
   static constexpr double E1_TEETH = 21;
   static constexpr double E2_TEETH = 20;

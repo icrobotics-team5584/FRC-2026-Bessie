@@ -121,7 +121,14 @@ units::degree_t SubTurret::GetTurretAngle() {
 }
 
 frc2::CommandPtr SubTurret::SetTurretTargetAngle(std::function<units::degree_t()> angle) {
-    return Run([this, angle] {_turretMotor.SetPositionTarget(CalcOptimisedTurretAngle(angle()));});
+    return Run([this, angle] {
+        units::turns_per_second_t currentVel = _turretMotor.GetVelocity();
+        units::turns_per_second_t nextVel = SubDrivebase::GetInstance().GetAngularVelocity();
+
+        units::volt_t rotationFeedforward = _robotRotVelFF.Calculate(currentVel, nextVel);
+
+        _turretMotor.SetPositionTarget(CalcOptimisedTurretAngle(angle()), rotationFeedforward);
+    });
 }
 
 units::degree_t SubTurret::CalcOptimisedTurretAngle(units::degree_t angle) {
