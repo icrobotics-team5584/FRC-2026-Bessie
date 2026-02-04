@@ -120,10 +120,12 @@ units::degree_t SubTurret::GetTurretAngle() {
     return _turretMotor.GetPosition();
 }
 
-frc2::CommandPtr SubTurret::SetTurretTargetAngle(std::function<units::degree_t()> angle) {
-    return Run([this, angle] {
+frc2::CommandPtr SubTurret::SetTurretTargetAngle(std::function<units::degree_t()> angle, std::function<units::turns_per_second_t()> robotAngVel){
+    return Run([this, angle, robotAngVel] {
         units::turns_per_second_t currentVel = _turretMotor.GetVelocity();
-        units::turns_per_second_t nextVel = SubDrivebase::GetInstance().GetAngularVelocity();
+
+        units::turns_per_second_t nextVel = -robotAngVel(); 
+        // we want the turret to negate the robot rotation, hence the negative
 
         units::volt_t rotationFeedforward = _robotRotVelFF.Calculate(currentVel, nextVel);
 

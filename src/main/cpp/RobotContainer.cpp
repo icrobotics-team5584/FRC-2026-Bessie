@@ -57,9 +57,9 @@ void RobotContainer::ConfigureBindings() {
   }));
 
   //POVs
-  _driverController.POVUp().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle([] { return 0_deg; }));
+  _driverController.POVUp().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle([] { return 0_deg; }, [] { return 0_deg_per_s; }));
   _driverController.POVDown().OnTrue(
-    SubTurret::GetInstance().SetTurretTargetAngle([] { return 180_deg; }));
+    SubTurret::GetInstance().SetTurretTargetAngle([] { return 180_deg; }, [] { return 0_deg_per_s; }));
   _driverController.POVRight().OnTrue(cmd::AimAtSpot(frc::Translation2d{0_m, 0_m}));
   _driverController.POVLeft().WhileTrue(SubHood::GetInstance().ZeroHood());
 
