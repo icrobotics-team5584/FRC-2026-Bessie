@@ -10,6 +10,7 @@
 
 SubIntake::SubIntake() {
   _intakeMotorConfig.SmartCurrentLimit(60);
+  _intakeMotorConfig.Inverted(true);
   _intakeMotor.OverwriteConfig(_intakeMotorConfig);
 
   Logger::Log("Intake/Intake Motor", &_intakeMotor);

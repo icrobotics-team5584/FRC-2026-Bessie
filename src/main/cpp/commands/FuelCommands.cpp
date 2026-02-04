@@ -32,14 +32,34 @@ frc2::CommandPtr StationaryShootAt(frc::Translation2d target) {
     return target.Distance(turretPose.Translation());};
 
   return frc2::cmd::Parallel(cmd::AimAtSpot(target),
-    SubShooter::GetInstance().SetShooterTargetFromDist(distanceToTarget),
+    SubShooter::GetInstance().SpinWithDistance(distanceToTarget),
     SubHood::GetInstance().SetHoodPositionTargetFromDist(distanceToTarget))
     .Until([] {
-      return SubShooter::GetInstance().IsAtSpeed() && SubTurret::GetInstance().TurretIsAtTarget() &&
+      return SubShooter::GetInstance().IsAtSpeed() && SubTurret::GetInstance().IsAtTarget() &&
              SubHood::GetInstance().HoodIsAtTarget();
     })
     .AndThen(frc2::cmd::Parallel(SubIntake::GetInstance().IntakeOn(),
       SubFeeder::GetInstance().FeederOn(), SubIndexer::GetInstance().Index()));
+}
+
+frc2::CommandPtr ShootWhenReady() {
+  return frc2::cmd::Either(SubFeeder::GetInstance().FeederOn().AlongWith(SubIndexer::GetInstance().Index()),
+    SubFeeder::GetInstance().FeederOff().AlongWith(SubIndexer::GetInstance().StopIndex()),
+    [] {
+      return SubHood::GetInstance().HoodIsAtTarget() && SubShooter::GetInstance().IsAtSpeed() &&
+             SubTurret::GetInstance().IsAtTarget();
+    })
+    .Repeatedly();
+}
+
+frc2::CommandPtr AimOnTheMove() {
+  return SubShooter::GetInstance().SpinWithDistance( [] {return CalcShootOnTheMoveDistance();})
+  .AlongWith(SubHood::GetInstance().SetHoodPositionTargetFromDist([] {return CalcShootOnTheMoveDistance();}))
+  .AlongWith(AimAtFieldRelative([] {return CalcShootOnTheMoveAngle();}));
+}
+
+frc2::CommandPtr ShootOnTheMove() {
+  return AimOnTheMove().AlongWith(ShootWhenReady()).AlongWith(SubIntake::GetInstance().IntakeOn());
 }
 
 }  // namespace cmd
