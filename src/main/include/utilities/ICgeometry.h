@@ -2,8 +2,8 @@
 #include <frc/geometry/Translation3d.h>
 
 namespace ICgeometry {
-const units::meter_t FIELD_WIDTH = 8.05_m;
-const units::meter_t FIELD_LENGTH = 17.55_m;
+const units::meter_t FIELD_WIDTH = 8.036_m;
+const units::meter_t FIELD_LENGTH = 16.541_m;
 
 frc::Pose2d xPoseFlip(frc::Pose2d pose);
 frc::Translation3d xTranslationFlip(frc::Translation3d translation3d);
