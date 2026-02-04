@@ -74,8 +74,13 @@ frc::Pose2d CalcFutureTurretPose() {
   Logger::Log("SOTM/velY", robotVelY);
   Logger::Log("SOTM/velRot", robotVelRot);
 
+  units::second_t TOF;
+  frc::Pose2d futurePose;
+
+  for (int i = 0; i < 20; i++) {
+
   // Get future pose
-  units::second_t TOF = SubShooter::GetInstance().GetTimeOfFLightWithDistance(distance);
+  TOF = SubShooter::GetInstance().GetTimeOfFLightWithDistance(distance);
   Logger::Log("SOTM/ToF", TOF);
 
   // calculate offset due to velocity
@@ -95,8 +100,11 @@ frc::Pose2d CalcFutureTurretPose() {
   Logger::Log("SOTM/offsetRot", offsetRot);
   
   // calculate future pose by adding offsets to current robot position
-  frc::Pose2d futurePose = frc::Pose2d(robotX + offsetX, robotY + offsetY, robot.Rotation().Degrees() + offsetRot);
-  
+  futurePose = frc::Pose2d(robotX - offsetX, robotY - offsetY, robot.Rotation().Degrees() + offsetRot);
+  distance = target.Distance(futurePose.Translation());
+
+  } 
+
   Logger::FieldDisplay::GetInstance().DisplayPose("SOTM/futurePose", futurePose);
 
   // convert robot to turret pose
@@ -104,6 +112,21 @@ frc::Pose2d CalcFutureTurretPose() {
 
   Logger::FieldDisplay::GetInstance().DisplayPose("SOTM/futureTurretPose", turretFuturePose);
   return turretFuturePose;
+
+    // // Account for imparted velocity by robot (turret) to offset
+    // double timeOfFlight;
+    // Pose2d lookaheadPose = turretPosition;
+    // double lookaheadTurretToTargetDistance = turretToTargetDistance;
+    // for (int i = 0; i < 20; i++) {
+    //   timeOfFlight = timeOfFlightMap.get(lookaheadTurretToTargetDistance);
+    //   double offsetX = turretVelocityX * timeOfFlight;
+    //   double offsetY = turretVelocityY * timeOfFlight;
+    //   lookaheadPose =
+    //       new Pose2d(
+    //           turretPosition.getTranslation().plus(new Translation2d(offsetX, offsetY)),
+    //           turretPosition.getRotation());
+    //   lookaheadTurretToTargetDistance = target.getDistance(lookaheadPose.getTranslation());
+    // }
 }
 
 }  // namespace cmd
