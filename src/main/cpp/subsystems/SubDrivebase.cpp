@@ -205,6 +205,14 @@ frc2::CommandPtr SubDrivebase::LockWheelsInXShape() {
   });
 }
 
+frc2::CommandPtr SubDrivebase::DriveOverBump() {
+  return Drive([this] {
+    return frc::ChassisSpeeds{2_mps, 0_mps, 0_tps};
+  }, true).Until([this] {
+    return _gyro.GetPitch().GetValue() < 1_deg;
+  });
+}
+
 // Getters & calculations
 frc::Rotation2d SubDrivebase::GetGyroAngle(bool allianceRelative) { 
   auto alliance = frc::DriverStation::GetAlliance();

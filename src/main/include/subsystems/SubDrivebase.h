@@ -71,6 +71,7 @@ class SubDrivebase : public frc2::SubsystemBase {
 
   // Pose drive
   frc2::CommandPtr Drive(std::function<frc::ChassisSpeeds()> speeds, bool fieldOriented);
+  frc2::CommandPtr DriveOverBump();
 
   // Gyro and sensor
   frc2::CommandPtr SyncSensor();
