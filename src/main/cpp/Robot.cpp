@@ -4,15 +4,23 @@
 
 #include "Robot.h"
 
-#include <frc2/command/CommandScheduler.h>
 #include "utilities/ShiftHandler.h"
 #include "utilities/Logger.h"
 #include "utilities/PoseHandler.h"
 #include "utilities/ShotPlanner.h"
 
+#include <frc2/command/CommandScheduler.h>
+#include <frc/DataLogManager.h>
+
 #include <frc/geometry/Transform2d.h>
 
-Robot::Robot() {}
+Robot::Robot() {
+  //USB logging
+  frc::DataLogManager::Start();
+  frc::SmartDashboard::PutData(&frc2::CommandScheduler::GetInstance());
+  frc::DriverStation::StartDataLog(frc::DataLogManager::GetLog());
+  
+}
 
 void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();
