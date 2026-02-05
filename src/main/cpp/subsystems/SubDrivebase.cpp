@@ -258,10 +258,8 @@ frc::ChassisSpeeds SubDrivebase::CalcDriveToPoseSpeeds(frc::Pose2d targetPose) {
   auto rSpeed = CalcRotateSpeed(currentRotation - targetRotation);
 
   // Clamp to max velocity
-  xSpeed = units::math::min(xSpeed, DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
-  xSpeed = units::math::max(xSpeed, -DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
-  ySpeed = units::math::min(ySpeed, DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
-  ySpeed = units::math::max(ySpeed, -DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
+  xSpeed = std::clamp(xSpeed, -DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY, DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
+  ySpeed = std::clamp(ySpeed, -DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY, DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
 
   if (frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kRed) {
     xSpeed *= -1;
@@ -350,8 +348,8 @@ frc::ChassisSpeeds SubDrivebase::CalcJoystickSpeeds(frc2::CommandXboxController&
 frc2::CommandPtr SubDrivebase::JoystickDrive(frc2::CommandXboxController& controller, bool fieldOriented, double speedScale) {
   return Drive([this, speedScale, &controller] {
     auto speeds = CalcJoystickSpeeds(controller);
-    speeds.vx = std::clamp(speeds.vx * speedScale, -DrivebaseConfig::MAX_VELOCITY, DrivebaseConfig::MAX_VELOCITY);
-    speeds.vy = std::clamp(speeds.vy * speedScale, -DrivebaseConfig::MAX_VELOCITY, DrivebaseConfig::MAX_VELOCITY);
+    speeds.vx = speeds.vx * speedScale;
+    speeds.vy = speeds.vy * speedScale;
     return frc::ChassisSpeeds{speeds.vx, speeds.vy, speeds.omega};
   }, fieldOriented);
 }
