@@ -4,5 +4,14 @@
 
 namespace cmd {
     frc2::CommandPtr AimAtFieldRelative(std::function<units::degree_t()> target);
-    frc2::CommandPtr AimAtPose(frc::Pose2d pose);
+    frc2::CommandPtr AimAtSpot(frc::Translation2d target);
+
+    units::meter_t CalcShootOnTheMoveDistance();
+    units::degree_t CalcShootOnTheMoveAngle();
+
+    frc::Pose2d CalcFutureTurretPose();
+
+    static constexpr frc::Translation2d TARGETPOSE = frc::Translation2d{4.65_m, 4_m};
 }
+
+

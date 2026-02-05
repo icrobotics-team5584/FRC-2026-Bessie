@@ -5,11 +5,15 @@
 #include "subsystems/SubTurret.h"
 #include <frc/smartdashboard/SmartDashboard.h>
 #include "utilities/Logger.h"
+#include "utilities/PoseHandler.h"
 
 SubTurret::SubTurret() {
     _turretMotorConfig.encoder.PositionConversionFactor(1/GEAR_RATIO);
     _turretMotorConfig.encoder.VelocityConversionFactor(1/GEAR_RATIO);
     _turretMotorConfig.closedLoop.Pid(P, I, D);
+    _turretMotorConfig.closedLoop.MaxOutput(1.0);
+    _turretMotorConfig.closedLoop.MinOutput(-1.0);
+    _turretMotorConfig.closedLoop.IMaxAccum(0.05);
     _turretMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kCoast);
     _turretMotorConfig.SmartCurrentLimit(30);
     _turretMotor.OverwriteConfig(_turretMotorConfig);
@@ -44,6 +48,7 @@ void SubTurret::Periodic() {
 
     _turretMechCircle.SetAngle(_turretMotor.GetPosition());
 
+    Logger::Log("Turret/Field Relative Turret Angle", GetFieldRelativeTurretAngle());
     Logger::Log("Turret/CRT Positiion", GetTurretAngleCRT());
     Logger::Log("Turret/Encoder/Encoder1", _turretEncoder1.Get());
     Logger::Log("Turret/Encoder/Encoder2", _turretEncoder2.Get());
@@ -52,11 +57,14 @@ void SubTurret::Periodic() {
     Logger::Log("Turret/Encoder/e1init", encoder1ZeroOffset);
     Logger::Log("Turret/Encoder/e2init", encoder2ZeroOffset);
     Logger::Log("Turret/hasReset", _hasZeroed);
+    Logger::Log("Turret/IsAtTarget", IsAtTarget());
 
     Logger::Log("Turret/Encoder/Encoder1IsConnected", _turretEncoder1.IsConnected());
     Logger::Log("Turret/Encoder/Encoder2IsConnected", _turretEncoder2.IsConnected());
     Logger::Log("Turret/Encoder/Encoder1Frequency", _turretEncoder1.GetFrequency());
     Logger::Log("Turret/Encoder/Encoder2Frequency", _turretEncoder2.GetFrequency());
+
+
 }
 
 void SubTurret::SimulationPeriodic() {
@@ -104,7 +112,8 @@ units::degree_t SubTurret::GetTurretAngleCRT() {
         turretAngle -= period;
     }
 
-    return turretAngle * 1_deg;
+    // Move the zero angle to point at the robot's front (Intake) 
+    return (turretAngle*1_deg) - turretZeroOffset;
 }
 
 units::degree_t SubTurret::GetTurretAngle() {
@@ -139,12 +148,20 @@ units::degree_t SubTurret::CalcOptimisedTurretAngle(units::degree_t angle) {
     units::degree_t newTarget = currentAngle + closestOffset;
 
     // clamp target to limits
+    // if(newTarget > POS_LIMIT) {
+    //     newTarget -= 360_deg;
+    // }
+
+    // if(newTarget < NEG_LIMIT) {
+    //     newTarget += 360_deg;
+    // }
+
     if(newTarget > POS_LIMIT) {
-        newTarget -= 360_deg;
+        newTarget = POS_LIMIT;
     }
 
     if(newTarget < NEG_LIMIT) {
-        newTarget += 360_deg;
+        newTarget = NEG_LIMIT;
     }
 
     Logger::Log("Turret/CalcOptimisedTurretAngle/newTarget(final output)", newTarget);
@@ -172,4 +189,13 @@ units::degree_t SubTurret::getEncoder1Degrees() {
 
 units::degree_t SubTurret::getEncoder2Degrees() {
     return (_turretEncoder2.Get()-encoder2ZeroOffset)*360_deg;
+}
+
+bool SubTurret::IsAtTarget() {
+    return units::math::abs(_turretMotor.GetPosError()) < TOLARANCE;
+}
+
+units::degree_t SubTurret::GetFieldRelativeTurretAngle() {
+    auto robot = PoseHandler::GetInstance().GetPose();
+    return robot.Rotation().Degrees() + GetTurretAngle();
 }

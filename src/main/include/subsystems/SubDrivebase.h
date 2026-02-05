@@ -48,7 +48,9 @@ class SubDrivebase : public frc2::SubsystemBase {
   units::degree_t GetPitch();
   units::degree_t GetRoll();
 
+  units::degrees_per_second_t GetAngularVelocity();
   units::meters_per_second_t GetVelocity();
+  frc::ChassisSpeeds GetFieldRelativeVelocity();
   frc2::Trigger CheckCoastButton();
 
   units::turns_per_second_t CalcRotateSpeed(units::turn_t rotationError);
@@ -62,6 +64,7 @@ class SubDrivebase : public frc2::SubsystemBase {
 
   // Joystick Drive
   frc2::CommandPtr JoystickDrive(frc2::CommandXboxController& controller, bool fieldOriented = true, double speedScale = 1);\
+  frc2::CommandPtr LockWheelsInXShape();
 
   // Pose drive
   frc2::CommandPtr Drive(std::function<frc::ChassisSpeeds()> speeds, bool fieldOriented);

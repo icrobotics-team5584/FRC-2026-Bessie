@@ -53,16 +53,21 @@ void SubDrivebase::LogDrivebaseStates() {
   Logger::Log("Drivebase/Coast Button", CheckCoastButton().Get());
 
   Logger::Log("Drivebase/velocity", GetVelocity());
-  Logger::Log("Drivebase/Internal Encoder Swerve States", wpi::array{
-      _frontLeft.GetState(),
-      _frontRight.GetState(),
-      _backLeft.GetState(),
-      _backRight.GetState()});
+  Logger::Log("Drivebase/velocity/field relative vx", GetFieldRelativeVelocity().vx);
+  Logger::Log("Drivebase/velocity/field relative vy", GetFieldRelativeVelocity().vy);
+
+  Logger::Log("Drivebase/Internal Encoder Swerve States",wpi::array{
+    _frontLeft.GetState(),
+    _frontRight.GetState(),
+    _backLeft.GetState(),
+    _backRight.GetState()
+  });
   Logger::Log("Drivebase/CANCoder Swerve States", wpi::array{
     _frontLeft.GetCANCoderState(),
     _frontRight.GetCANCoderState(),
     _backLeft.GetCANCoderState(),
-    _backRight.GetCANCoderState()});
+    _backRight.GetCANCoderState()
+  });
   Logger::Log("Drivebase/Pigeon raw angle", _gyro.GetYaw().GetValue().value());
   Logger::Log("Drivebase/Pigeon raw Rotation2d", _gyro.GetRotation2d().Degrees());
 
@@ -141,10 +146,12 @@ void SubDrivebase::SetBrakeMode(bool mode) {
   _backRight.SetBreakMode(mode);
 }
 
-void SubDrivebase::Drive(units::meters_per_second_t xSpeed, units::meters_per_second_t ySpeed,
+void SubDrivebase::Drive(
+  units::meters_per_second_t xSpeed, units::meters_per_second_t ySpeed,
   units::turns_per_second_t rot, bool fieldRelative,
   std::optional<std::array<units::newton_t, 4>> xForceFeedforwards,
-  std::optional<std::array<units::newton_t, 4>> yForceFeedforwards) {
+  std::optional<std::array<units::newton_t, 4>> yForceFeedforwards
+) {
   // Optionally convert speeds to field relative
   auto speeds = fieldRelative
                   ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(xSpeed, ySpeed, rot, GetGyroAngle())
@@ -158,9 +165,8 @@ void SubDrivebase::Drive(units::meters_per_second_t xSpeed, units::meters_per_se
 
   // Set speed limit and apply speed limit to all modules
   _kinematics.DesaturateWheelSpeeds(
-    &states, 
-    frc::SmartDashboard::GetNumber("Drivebase/Config/Max Velocity", DrivebaseConfig::MAX_VELOCITY.value()) *
-      1_mps);
+      &states,
+      frc::SmartDashboard::GetNumber("Drivebase/Config/Max Velocity", DrivebaseConfig::MAX_VELOCITY.value()) * 1_mps);
 
   // Extract force feedforwards
   std::array<units::newton_t, 4> defaults{0_N, 0_N, 0_N, 0_N};
@@ -176,33 +182,29 @@ void SubDrivebase::Drive(units::meters_per_second_t xSpeed, units::meters_per_se
   _backRight.SetDesiredState(br, brXForce, brYForce);
 }
 
-frc2::CommandPtr SubDrivebase::Drive(
-  std::function<frc::ChassisSpeeds()> speeds, bool fieldOriented) {
-  return Run([this, speeds, fieldOriented] {
-    auto speedVal = speeds();
-    Drive(speedVal.vx, speedVal.vy, speedVal.omega, fieldOriented);
-  }).FinallyDo([this] { Drive(0_mps, 0_mps, 0_deg_per_s, false); });
+frc2::CommandPtr SubDrivebase::Drive(std::function<frc::ChassisSpeeds()> speeds, bool fieldOriented) {
+    return Run([this, speeds, fieldOriented] {
+        auto speedVal = speeds();
+        Drive(speedVal.vx, speedVal.vy, speedVal.omega, fieldOriented);
+    }).FinallyDo([this] { Drive(0_mps,0_mps,0_deg_per_s, false); });
 }
 
-/* aligns to an a arbitrary while allowing joystick driving */
-frc2::CommandPtr SubDrivebase::AlignToAngle(
-  frc2::CommandXboxController& controller, units::angle::degree_t target) {
-  return SubDrivebase::GetInstance().Drive(
-    [&controller, target] {
-      units::angle::degree_t currentAngle =
-        SubDrivebase::GetInstance().GetGyroAngle(true).Degrees();
-      units::turns_per_second_t rotationSpeeds =
-        SubDrivebase::GetInstance().CalcRotateSpeed(currentAngle - target);
-      frc::ChassisSpeeds joystickSpeeds =
-        SubDrivebase::GetInstance().CalcJoystickSpeeds(controller);
-      return frc::ChassisSpeeds(joystickSpeeds.vx, joystickSpeeds.vy, rotationSpeeds);
-    },
-    true);
+frc2::CommandPtr SubDrivebase::LockWheelsInXShape() {
+  return Run([this] {
+    auto fl = frc::SwerveModuleState{0_mps, frc::Rotation2d{45_deg}};
+    auto fr = frc::SwerveModuleState{0_mps, frc::Rotation2d{135_deg}};
+    auto bl = frc::SwerveModuleState{0_mps, frc::Rotation2d{135_deg}};
+    auto br = frc::SwerveModuleState{0_mps, frc::Rotation2d{45_deg}};
+
+    _frontLeft.SetDesiredState(fl);
+    _frontRight.SetDesiredState(fr);
+    _backLeft.SetDesiredState(bl);
+    _backRight.SetDesiredState(br);
+  });
 }
 
 // Getters & calculations
-
-frc::Rotation2d SubDrivebase::GetGyroAngle(bool allianceRelated) {
+frc::Rotation2d SubDrivebase::GetGyroAngle(bool allianceRelated) { 
   auto alliance = frc::DriverStation::GetAlliance();
   if (!allianceRelated || 
     alliance.value_or(frc::DriverStation::Alliance::kBlue) == frc::DriverStation::Alliance::kBlue) {
@@ -225,9 +227,20 @@ units::meters_per_second_t SubDrivebase::GetVelocity() {
   auto speeds = _kinematics.ToChassisSpeeds(
     _frontLeft.GetState(), _frontRight.GetState(), _backLeft.GetState(), _backRight.GetState());
   namespace m = units::math;
-  Logger::Log("Drivebase/velocity/vx", speeds.vx);
-  Logger::Log("Drivebase/velocity/vy", speeds.vy);
   return m::sqrt(m::pow<2>(speeds.vx) + m::pow<2>(speeds.vy));
+}
+
+frc::ChassisSpeeds SubDrivebase::GetFieldRelativeVelocity() {
+  auto speeds = _kinematics.ToChassisSpeeds(_frontLeft.GetState(), _frontRight.GetState(),
+                                            _backLeft.GetState(), _backRight.GetState());
+  speeds = frc::ChassisSpeeds::FromRobotRelativeSpeeds(speeds, GetGyroAngle(false).Degrees());
+  return speeds;
+}
+
+units::degrees_per_second_t SubDrivebase::GetAngularVelocity() {
+  auto speeds = _kinematics.ToChassisSpeeds(_frontLeft.GetState(), _frontRight.GetState(),
+                                            _backLeft.GetState(), _backRight.GetState());
+  return speeds.omega;
 }
 
 frc2::Trigger SubDrivebase::CheckCoastButton() {
@@ -315,11 +328,10 @@ frc::ChassisSpeeds SubDrivebase::CalcJoystickSpeeds(frc2::CommandXboxController&
   double scaledTranslationY = scaledTranslationR * sin(translationTheta);
   double scaledTranslationX = scaledTranslationR * cos(translationTheta);
 
-  double scaledRotation;
-  if (rawRotation >= 0) {
-    scaledRotation = pow(rawRotation, rotationScaling);
-  } else {
-    scaledRotation = std::copysign(pow(abs(rawRotation), rotationScaling), rawRotation);
+  double scaledRotation = pow(rawRotation, rotationScaling);
+  // Bring back any negatives that may have been lost by applying the exponent
+  if (rawRotation < 0 && scaledRotation > 0){
+    scaledRotation *= 1;
   }
 
   // Apply joystick rate limits and calculate speed
