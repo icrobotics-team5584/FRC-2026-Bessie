@@ -110,7 +110,7 @@ frc::Pose2d CalcFutureTurretPose() {
 
 frc::Translation2d GetShotTarget(){
   auto curPose = PoseHandler::GetInstance().GetPose();
-  return ShotPlanner::CalculateShotTarget(curPose).ToTranslation2d();
+  return ShotPlanner::CalculateShotTarget(curPose).targetPosition.ToTranslation2d();
 }
 
 }  // namespace cmd
