@@ -27,7 +27,7 @@
 RobotContainer::RobotContainer() {
   SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
   ConfigureBindings();
-  //SubVision::GetInstance().SetDefaultCommand(cmd::AddVisionMeasurement());
+  SubVision::GetInstance().SetDefaultCommand(cmd::AddVisionMeasurement());
 
   _autoManager.AddDefaultAuton("default", AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton()));
 
