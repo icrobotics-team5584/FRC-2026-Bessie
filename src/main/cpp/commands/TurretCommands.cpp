@@ -100,7 +100,8 @@ frc::Pose2d CalcFutureTurretPose() {
   Logger::Log("SOTM/offsetRot", offsetRot);
   
   // calculate future pose by adding offsets to current robot position
-  futurePose = frc::Pose2d(robotX - offsetX, robotY - offsetY, robot.Rotation().Degrees() + offsetRot);
+  futurePose = frc::Pose2d(robotX + offsetX, robotY + offsetY, robot.Rotation().Degrees() + offsetRot);
+
   distance = target.Distance(futurePose.Translation());
 
   } 
