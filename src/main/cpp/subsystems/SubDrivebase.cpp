@@ -100,7 +100,8 @@ wpi::array<frc::SwerveModulePosition, 4U> SubDrivebase::GetSwerveStates() {
     _frontLeft.GetPosition(),
     _frontRight.GetPosition(),
     _backLeft.GetPosition(),
-    _backRight.GetPosition()};
+    _backRight.GetPosition()
+  };
 }
 
 void SubDrivebase::UpdateOdometry() {
@@ -127,7 +128,7 @@ void SubDrivebase::SyncSensors() {
 }
 
 frc2::CommandPtr SubDrivebase::SyncSensor() {
-  return RunOnce([this] { SyncSensors(); });
+  return RunOnce([this] {SyncSensors();});
 }
 
 void SubDrivebase::ResetGyroHeading(units::degree_t startingAngle) {
@@ -153,8 +154,8 @@ void SubDrivebase::Drive(
 ) {
   // Optionally convert speeds to field relative
   auto speeds = fieldRelative
-                  ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(xSpeed, ySpeed, rot, GetGyroAngle())
-                  : frc::ChassisSpeeds{xSpeed, ySpeed, rot};
+                    ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(xSpeed, ySpeed, rot, GetGyroAngle())
+                    : frc::ChassisSpeeds{xSpeed, ySpeed, rot};
 
   // Discretize to get rid of translational drift while rotating
   speeds = frc::ChassisSpeeds::Discretize(speeds, 60_ms);
@@ -221,7 +222,7 @@ frc2::CommandPtr SubDrivebase::LockWheelsInXShape() {
 // Getters & calculations
 frc::Rotation2d SubDrivebase::GetGyroAngle(bool allianceRelated) { 
   auto alliance = frc::DriverStation::GetAlliance();
-  if (!allianceRelated || 
+  if (!allianceRelated ||
     alliance.value_or(frc::DriverStation::Alliance::kBlue) == frc::DriverStation::Alliance::kBlue) {
     return _gyro.GetRotation2d();
   } else {
@@ -370,8 +371,8 @@ frc::ChassisSpeeds SubDrivebase::CalcJoystickSpeeds(frc2::CommandXboxController&
   return frc::ChassisSpeeds{forwardSpeed, sidewaysSpeed, rotationSpeed};
 }
 
-frc2::CommandPtr SubDrivebase::JoystickDrive(
-  frc2::CommandXboxController& controller, bool fieldOriented, double speedScale) {
+frc2::CommandPtr SubDrivebase::JoystickDrive(frc2::CommandXboxController& controller, bool fieldOriented, 
+  double speedScale) {
   return Drive([this, speedScale, &controller] {
       auto speeds = CalcJoystickSpeeds(controller);
       speeds.vx = std::clamp(speeds.vx * speedScale, -DrivebaseConfig::MAX_VELOCITY, DrivebaseConfig::MAX_VELOCITY);
@@ -407,7 +408,6 @@ frc2::CommandPtr SubDrivebase::CharacteriseWheels() {
       return frc::ChassisSpeeds{0_mps, 0_mps, speed};
     }, false))
     .AlongWith(frc2::cmd::Wait(1_s).AndThen(frc2::cmd::Run([this] {
-      // units::radian_t curGyroAngle = GetHeading().Radians(); using GetGyroAngle() instead
       units::radian_t curGyroAngle = GetGyroAngle().Radians();
       gyroAccumulator = gyroAccumulator + frc::AngleModulus((prevGyroAngle - curGyroAngle));
       prevGyroAngle = curGyroAngle;
@@ -456,8 +456,7 @@ void SubDrivebase::SetPose(frc::Pose2d pose) {
   auto states = GetSwerveStates();
 
   auto alliance = frc::DriverStation::GetAlliance();
-  if (alliance.value_or(frc::DriverStation::Alliance::kBlue) ==
-      frc::DriverStation::Alliance::kBlue) {
+  if (alliance.value_or(frc::DriverStation::Alliance::kBlue) == frc::DriverStation::Alliance::kBlue) {
     ResetGyroHeading(pose.Rotation().Degrees());
   } else {
     ResetGyroHeading(pose.Rotation().Degrees() - 180_deg);
