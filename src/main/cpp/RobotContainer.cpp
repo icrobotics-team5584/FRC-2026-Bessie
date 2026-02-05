@@ -77,12 +77,13 @@ std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {
 }
 
 frc2::CommandPtr RobotContainer::Rumble(double force, units::second_t duration) {
-return frc2::cmd::Run([this, force, duration]{  
+  return frc2::cmd::Run([this, force, duration] {
     _driverController.SetRumble(frc::XboxController::RumbleType::kBothRumble, force);
     Logger::Log("DriverStation/Rumble", true);
-  }).WithTimeout(duration)
-    .FinallyDo([this]{
-    _driverController.SetRumble(frc::XboxController::RumbleType::kBothRumble, 0);
-    Logger::Log("DriverStation/Rumble", false);
-  });
+  })
+    .WithTimeout(duration)
+    .FinallyDo([this] {
+      _driverController.SetRumble(frc::XboxController::RumbleType::kBothRumble, 0);
+      Logger::Log("DriverStation/Rumble", false);
+    });
 }
