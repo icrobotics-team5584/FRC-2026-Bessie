@@ -58,9 +58,9 @@ frc2::CommandPtr AddVisionMeasurement() {
                         {estPose.estimatedPose.ToPose2d()});
                 }
             }
-
         }
-    });
+    }, {&SubVision::GetInstance()}
+);
 }
 
 }

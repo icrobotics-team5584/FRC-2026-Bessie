@@ -18,13 +18,16 @@
 #include "commands/DriveCommands.h"
 #include "commands/FuelCommands.h"
 #include "commands/TurretCommands.h"
+#include "commands/VisionCommands.h"
 
 #include "utilities/PoseHandler.h"
+#include "utilities/FieldConstants.h"
 
 #include <frc2/command/Commands.h>
 
 RobotContainer::RobotContainer() {
   SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
+  SubVision::GetInstance().SetDefaultCommand(cmd::AddVisionMeasurement());
   ConfigureBindings();
 
   _autoManager.AddDefaultAuton("default", AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton()));
@@ -57,7 +60,7 @@ void RobotContainer::ConfigureBindings() {
   _driverController.POVUp().OnTrue(cmd::AimAtFieldRelative([] { return 0_deg; }));
   _driverController.POVDown().OnTrue(
     SubTurret::GetInstance().SetTurretTargetAngle([] { return 0_deg; }));
-  _driverController.POVRight().OnTrue(cmd::AimAtSpot(frc::Translation2d{0_m, 0_m}));
+  _driverController.POVRight().OnTrue(cmd::AimAtSpot(fieldpos::HUB_POSITION.ToTranslation2d()));
 
   //Sticks
 
