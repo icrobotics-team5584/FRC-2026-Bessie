@@ -41,9 +41,8 @@ RobotContainer::RobotContainer() {
 void RobotContainer::ConfigureBindings() {
   //Triggers
   _driverController.LeftTrigger().WhileTrue(cmd::IntakeSequence());
-  //_driverController.RightTrigger().WhileTrue(cmd::ShootOnTheMove());
-  //_driverController.RightTrigger().OnFalse(SubFeeder::GetInstance().FeederOff());
-  _driverController.RightTrigger().WhileTrue(SubDrivebase::GetInstance().AlignToAngle(_driverController, 0_deg));
+  _driverController.RightTrigger().WhileTrue(cmd::ShootOnTheMove());
+  _driverController.RightTrigger().OnFalse(SubFeeder::GetInstance().FeederOff());
 
   //Bumpers
   _driverController.LeftBumper().ToggleOnTrue(SubDeploy::GetInstance().ToggleDeploy());
@@ -52,7 +51,7 @@ void RobotContainer::ConfigureBindings() {
   //Letters
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
   _driverController.Y().OnTrue(SubDrivebase::GetInstance().ResetGyroCmd());
-  _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
+  _driverController.RightTrigger().WhileTrue(SubDrivebase::GetInstance().AlignToAngle(_driverController, 0_deg));
   _driverController.A().OnTrue(frc2::cmd::RunOnce([] {
     SubDrivebase::GetInstance().SetPose(frc::Pose2d{0_m, 0_m, 0_deg});
   }));
