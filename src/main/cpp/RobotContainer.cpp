@@ -51,15 +51,14 @@ void RobotContainer::ConfigureBindings() {
   //Letters
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
   _driverController.Y().OnTrue(SubDrivebase::GetInstance().ResetGyroCmd());
-  _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
+  _driverController.B().WhileTrue(SubDrivebase::GetInstance().AlignToAngle(_driverController, 0_deg));
   _driverController.A().OnTrue(frc2::cmd::RunOnce([] {
     SubDrivebase::GetInstance().SetPose(frc::Pose2d{0_m, 0_m, 0_deg});
   }));
 
   //POVs
   _driverController.POVUp().OnTrue(SubTurret::GetInstance().SetTurretTargetAngle([] { return 0_deg; }));
-  _driverController.POVDown().OnTrue(
-    SubTurret::GetInstance().SetTurretTargetAngle([] { return 180_deg; }));
+  _driverController.POVDown().OnTrue(SubDrivebase::GetInstance().SyncSensor());
   _driverController.POVRight().OnTrue(cmd::AimAtSpot(frc::Translation2d{0_m, 0_m}));
   _driverController.POVLeft().WhileTrue(SubHood::GetInstance().ZeroHood());
 
