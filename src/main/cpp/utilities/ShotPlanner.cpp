@@ -22,7 +22,7 @@ ShotPlanner::ShotPlannerResults ShotPlanner::CalculateShotTarget(frc::Pose2d rob
   }
 
   frc::Translation3d target;
-  bool shouldShoot;
+  bool shouldShoot = true;
   bool isInBotNeutralZone = false;
   bool isInBlueAlliance = false;
   bool isOurHubActive = ShiftHandler::IsActiveShift();
@@ -38,7 +38,6 @@ ShotPlanner::ShotPlannerResults ShotPlanner::CalculateShotTarget(frc::Pose2d rob
 
   if (isInBlueAlliance && isOurHubActive) {
     target = fieldpos::HUB_POSITION;
-    shouldShoot = true;
   } else {                    /* Can't score in neutral zone */
     if (isInBotNeutralZone) { /* bottom neutral zone */
       target = fieldpos::BOTTOM_ALLIANCE_ZONE_POSITION;
