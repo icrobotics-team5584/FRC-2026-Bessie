@@ -3,8 +3,6 @@
 #include "utilities/PoseHandler.h"
 #include "utilities/Logger.h"
 
-
-
 SubDrivebase::SubDrivebase() {
   ctre::phoenix6::configs::Pigeon2Configuration gyroConfig;
   gyroConfig.MountPose.MountPosePitch = 0_deg;
@@ -39,7 +37,8 @@ void SubDrivebase::SimulationPeriodic() {
     _frontLeft.GetPosition(),
     _frontRight.GetPosition(),
     _backLeft.GetPosition(),
-    _backRight.GetPosition()};
+    _backRight.GetPosition()
+  };
 
   PoseHandler::GetInstance().UpdateSim(GetGyroAngle(), states, true, 
     PoseHandler::GetInstance().GetPose().Rotation());
