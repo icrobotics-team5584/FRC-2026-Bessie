@@ -189,6 +189,22 @@ frc2::CommandPtr SubDrivebase::Drive(std::function<frc::ChassisSpeeds()> speeds,
     }).FinallyDo([this] { Drive(0_mps,0_mps,0_deg_per_s, false); });
 }
 
+/* aligns to an a arbitrary while allowing joystick driving */
+frc2::CommandPtr SubDrivebase::AlignToAngle(
+  frc2::CommandXboxController& controller, units::angle::degree_t target) {
+  return SubDrivebase::GetInstance().Drive(
+    [&controller, target] {
+      units::angle::degree_t currentAngle =
+        SubDrivebase::GetInstance().GetGyroAngle(true).Degrees();
+      units::turns_per_second_t rotationSpeeds =
+        SubDrivebase::GetInstance().CalcRotateSpeed(currentAngle - target);
+      frc::ChassisSpeeds joystickSpeeds =
+        SubDrivebase::GetInstance().CalcJoystickSpeeds(controller);
+      return frc::ChassisSpeeds(joystickSpeeds.vx, joystickSpeeds.vy, rotationSpeeds);
+    },
+    true);
+}
+
 frc2::CommandPtr SubDrivebase::LockWheelsInXShape() {
   return Run([this] {
     auto fl = frc::SwerveModuleState{0_mps, frc::Rotation2d{45_deg}};
