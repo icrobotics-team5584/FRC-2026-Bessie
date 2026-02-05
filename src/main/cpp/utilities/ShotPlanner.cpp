@@ -32,25 +32,45 @@ ShotPlanner::ShotPlannerResults ShotPlanner::CalculateShotTarget(frc::Pose2d rob
   isInBotNeutralZone = IsWithinZone(
     fieldpos::BOTTOM_PASSING_ZONE_TOP_RIGHT, fieldpos::BOTTOM_PASSING_ZONE_BOTTOM_LEFT, robotPos);
 
-  if (isInBlueAlliance && !isOurHubActive) {
+  if (!isInBotNeutralZone && !isInBlueAlliance && !isOurHubActive) {
+    target = fieldpos::TOP_ALLIANCE_ZONE_POSITION;
+    shouldShoot = true;
+  }
+  if (isInBotNeutralZone && !isInBlueAlliance && !isOurHubActive) {
+    target = fieldpos::BOTTOM_ALLIANCE_ZONE_POSITION;
+    shouldShoot = true;
+  }
+  if (!isInBotNeutralZone && isInBlueAlliance && !isOurHubActive) {
+    target = fieldpos::HUB_POSITION;
     shouldShoot = false;
   }
-
-  if (isInBlueAlliance && isOurHubActive) {
+  if (isInBotNeutralZone && isInBlueAlliance && !isOurHubActive) {
     target = fieldpos::HUB_POSITION;
-  } else {                    /* Can't score in neutral zone */
-    if (isInBotNeutralZone) { /* bottom neutral zone */
-      target = fieldpos::BOTTOM_ALLIANCE_ZONE_POSITION;
-    } else { /* Top neutral zone */
-      target = fieldpos::TOP_ALLIANCE_ZONE_POSITION;
-    }
+    shouldShoot = false;
   }
+  if (!isInBotNeutralZone && !isInBlueAlliance && isOurHubActive) {
+    target = fieldpos::TOP_ALLIANCE_ZONE_POSITION;
+    shouldShoot = true;
+  }
+  if (isInBotNeutralZone && !isInBlueAlliance && isOurHubActive) {
+    target = fieldpos::BOTTOM_ALLIANCE_ZONE_POSITION;
+    shouldShoot = true;
+  }
+  if (!isInBotNeutralZone && isInBlueAlliance && isOurHubActive) {
+    target = fieldpos::HUB_POSITION;
+    shouldShoot = true;
+  }
+  if (isInBotNeutralZone && isInBlueAlliance && isOurHubActive) {
+    target = fieldpos::HUB_POSITION;
+    shouldShoot = false;
+  }
+  
 
-  if (alliance) {
-    if (alliance.value() == frc::DriverStation::Alliance::kRed) {
-      target = ICgeometry::xTranslationFlip(target);
+    if (alliance) {
+      if (alliance.value() == frc::DriverStation::Alliance::kRed) {
+        target = ICgeometry::xTranslationFlip(target);
+      }
     }
-  }
 
   return {target, shouldShoot};
 }
