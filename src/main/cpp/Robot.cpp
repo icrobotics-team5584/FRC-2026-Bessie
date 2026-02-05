@@ -8,7 +8,6 @@
 #include "utilities/Logger.h"
 #include "utilities/PoseHandler.h"
 #include "utilities/ShotPlanner.h"
-#include "Constants.h"
 
 #include <frc2/command/CommandScheduler.h>
 #include <frc/DataLogManager.h>
