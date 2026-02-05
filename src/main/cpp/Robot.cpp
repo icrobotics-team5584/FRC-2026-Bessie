@@ -15,11 +15,16 @@
 
 #include <frc/geometry/Transform2d.h>
 
-Robot::Robot() {}
+Robot::Robot() {
+  //USB logging
+  frc::DataLogManager::Start();
+  frc::SmartDashboard::PutData(&frc2::CommandScheduler::GetInstance());
+  frc::DriverStation::StartDataLog(frc::DataLogManager::GetLog());
+  
+}
 
 void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();
-  frc::DataLogManager::Start();
 
   Logger::Log("RebuiltShift/Hub Active", ShiftHandler::IsActiveShift());
   Logger::Log("RebuiltShift/Won Auton Shift", ShiftHandler::GetShiftName(ShiftHandler::GetWinningShift()));
@@ -38,9 +43,6 @@ void Robot::RobotPeriodic() {
   Logger::Log("Robot/PDHInputVoltage", m_pdh.GetVoltage() * 1_V);
   Logger::Log("Robot/PDHTotalCurrent", m_pdh.GetTotalCurrent() * 1_A);
 
-  //USB logging
-  frc::SmartDashboard::PutData(&frc2::CommandScheduler::GetInstance());
-  frc::DriverStation::StartDataLog(frc::DataLogManager::GetLog());
 }
 void Robot::DisabledInit() {}
 
