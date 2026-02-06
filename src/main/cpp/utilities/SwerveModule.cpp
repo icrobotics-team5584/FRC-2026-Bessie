@@ -113,7 +113,7 @@ frc::SwerveModuleState SwerveModule::GetState() {
 }
 
 frc::SwerveModuleState SwerveModule::GetDesiredState() {
-  return {GetDesiredSpeed(), GetDesiredAngle()};
+  return _io->GetDesiredState();
 }
 
 frc::SwerveModuleState SwerveModule::GetCANCoderState() {

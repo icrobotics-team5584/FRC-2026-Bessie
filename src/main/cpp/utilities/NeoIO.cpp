@@ -130,6 +130,10 @@ frc::SwerveModuleState NeoIO::GetState() {
   return {GetSpeed(), GetAngle()};
 }
 
+frc::SwerveModuleState NeoIO::GetDesiredState() {
+  return {GetDesiredSpeed(), GetDesiredAngle()};
+}
+
 units::radian_t NeoIO::GetDrivenRotations() {
   return _canDriveMotor.GetPosition();
 }

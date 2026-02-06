@@ -23,6 +23,7 @@ class NeoIO : public SwerveIO{
     units::meters_per_second_t GetDesiredSpeed() override;
     units::volt_t GetDriveVoltage() override;
     frc::SwerveModuleState GetState() override;
+    frc::SwerveModuleState GetDesiredState() override;
     units::radian_t GetDrivenRotations() override;
 
     const double TURNING_GEAR_RATIO = 150.0 / 7.0;

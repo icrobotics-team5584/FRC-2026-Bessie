@@ -36,5 +36,6 @@ class SwerveIO {
     virtual units::meters_per_second_t GetDesiredSpeed() = 0;
     virtual units::volt_t GetDriveVoltage() = 0;
     virtual frc::SwerveModuleState GetState() = 0;
+    virtual frc::SwerveModuleState GetDesiredState() = 0;
     virtual units::radian_t GetDrivenRotations() = 0;
 };

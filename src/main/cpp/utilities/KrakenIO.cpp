@@ -137,6 +137,10 @@ frc::SwerveModuleState KrakenIO::GetState() {
     return {GetSpeed(), GetAngle()};
 }
 
+frc::SwerveModuleState KrakenIO::GetDesiredState() {
+    return {GetDesiredSpeed(), GetDesiredAngle()};
+}
+
 units::radian_t KrakenIO::GetDrivenRotations() {
     return _canDriveMotor.GetPosition().GetValue();
 }
