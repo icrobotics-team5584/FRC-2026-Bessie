@@ -69,14 +69,15 @@ frc2::CommandPtr ScoreOnTheMove() {
 }
 
 frc2::CommandPtr ShootOnTheMove(){
+  auto shotTargetGetter = []{
   auto currentPose = PoseHandler::GetInstance().GetPose();
   auto shotTarget = ShotPlanner::CalculateShotTarget(currentPose).targetPosition;
-  if (shotTarget == fieldpos::HUB_POSITION || shotTarget == ICgeometry::xTranslationFlip(fieldpos::HUB_POSITION)){
-    return ScoreOnTheMove();
-  }
-  else {
-    return PassOnTheMove();
-  }
+  return shotTarget;};
+
+  return frc2::cmd::Either(ScoreOnTheMove(), PassOnTheMove(), [shotTargetGetter] {
+    return shotTargetGetter() == fieldpos::HUB_POSITION ||
+           shotTargetGetter() == ICgeometry::xTranslationFlip(fieldpos::HUB_POSITION);
+  });
 }
 
 frc2::CommandPtr AimAtPassingPoint(){
