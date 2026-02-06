@@ -48,11 +48,10 @@ frc2::CommandPtr ShootWhenReady() {
     SubFeeder::GetInstance().FeederOff().AlongWith(SubIndexer::GetInstance().StopIndex()),
     [] {
        auto currentPose = PoseHandler::GetInstance().GetPose();
-       if (SubHood::GetInstance().HoodIsAtTarget() && SubShooter::GetInstance().IsAtSpeed() && SubTurret::GetInstance().IsAtTarget()){
-              if (ShotPlanner::CalculateShotTarget(currentPose).shouldShoot){
-              return true;
-             }
-       else {return false;}};
+       return SubHood::GetInstance().HoodIsAtTarget() && SubShooter::GetInstance().IsAtSpeed() &&
+              SubTurret::GetInstance().IsAtTarget() &&
+              ShotPlanner::CalculateShotTarget(currentPose).shouldShoot;
+
     })
     .Repeatedly();
 }
