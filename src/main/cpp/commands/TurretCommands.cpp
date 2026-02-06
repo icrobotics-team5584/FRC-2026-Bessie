@@ -113,21 +113,6 @@ frc::Pose2d CalcFutureTurretPose() {
 
   Logger::FieldDisplay::GetInstance().DisplayPose("SOTM/futureTurretPose", turretFuturePose);
   return turretFuturePose;
-
-    // // Account for imparted velocity by robot (turret) to offset
-    // double timeOfFlight;
-    // Pose2d lookaheadPose = turretPosition;
-    // double lookaheadTurretToTargetDistance = turretToTargetDistance;
-    // for (int i = 0; i < 20; i++) {
-    //   timeOfFlight = timeOfFlightMap.get(lookaheadTurretToTargetDistance);
-    //   double offsetX = turretVelocityX * timeOfFlight;
-    //   double offsetY = turretVelocityY * timeOfFlight;
-    //   lookaheadPose =
-    //       new Pose2d(
-    //           turretPosition.getTranslation().plus(new Translation2d(offsetX, offsetY)),
-    //           turretPosition.getRotation());
-    //   lookaheadTurretToTargetDistance = target.getDistance(lookaheadPose.getTranslation());
-    // }
 }
 
 }  // namespace cmd
