@@ -37,11 +37,12 @@ class SubTurret : public frc2::SubsystemBase {
   units::degree_t GetTurretAngle();
   units::degree_t GetTurretAngleAtTime(units::second_t time);
   units::degree_t CalcOptimisedTurretAngle(units::degree_t angle);
-  
+  units::degree_t GetFieldRelativeTurretAngle();
+    
   void SetTurretAngle(units::degree_t angle);
   void ZeroTurret();
 
-  bool TurretIsAtTarget();
+  bool IsAtTarget();
 
   frc2::CommandPtr SetTurretTargetAngle(std::function<units::degree_t()> angle);
   frc2::CommandPtr ZeroTurretCmd();
@@ -68,14 +69,15 @@ class SubTurret : public frc2::SubsystemBase {
 
   const double encoder1ZeroOffset = 0.696408;
   const double encoder2ZeroOffset = 0.120609;
+  const units::turn_t turretZeroOffset = -0.5_tr;
 
-  units::degree_t POS_LIMIT = 90_deg;
-  units::degree_t NEG_LIMIT = -90_deg;
+  units::degree_t POS_LIMIT = 360_deg;
+  units::degree_t NEG_LIMIT = 0_deg;
 
   bool _hasZeroed = false;
 
-  double P = 6.0;
-  double I = 0.01;
+  double P = 4.0;
+  double I = 0;
   double D = 0;
   
   static constexpr double E1_TEETH = 21;
@@ -84,7 +86,9 @@ class SubTurret : public frc2::SubsystemBase {
   static constexpr double ENCODER1_RATIO = E1_TEETH/BIG_TEETH;
   static constexpr double ENCODER2_RATIO = E2_TEETH/BIG_TEETH;
   static constexpr double GEAR_RATIO = (48.0/12.0) * (94.0/10.0);
+  
 
+  static constexpr units::degree_t TOLARANCE = 0.5_deg;
   static constexpr units::hertz_t ENCODER_FREQUENCY = 975.6_Hz; 
   //force set encoder frequency to avoid 1sec startup time
 

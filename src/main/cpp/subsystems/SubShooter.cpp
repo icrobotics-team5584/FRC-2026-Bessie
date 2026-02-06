@@ -39,6 +39,15 @@ SubShooter::SubShooter() {
 
     _shooterMotor1.GetClosedLoopReference().SetUpdateFrequency(100_Hz);
 
+    _timeOfFlightTable.insert(1270_mm, 0.8_s);
+    _timeOfFlightTable.insert(1770_mm, 0.5_s);
+    _timeOfFlightTable.insert(2270_mm, 0.93_s);
+    _timeOfFlightTable.insert(2770_mm, 1.1_s);
+    _timeOfFlightTable.insert(3770_mm, 1.18_s);
+    _timeOfFlightTable.insert(3770_mm, 1.18_s);
+    _timeOfFlightTable.insert(4270_mm, 1.28_s);
+    _timeOfFlightTable.insert(4770_mm, 1.28_s);
+
     frc::SmartDashboard::PutData("Shooter/mech2dDisplay", &_shooterMech);
 
     _flyWheelSpeedTable.insert(1.8575_m, 26_tps);
@@ -86,12 +95,8 @@ void SubShooter::SimulationPeriodic() {
     rightState.AddRotorPosition(_rightFlywheelSim.GetAngularVelocity()*20_ms);
 }
 
-frc2::CommandPtr SubShooter::SetShooterTarget(units::turns_per_second_t speed) {
-    return RunOnce([this, speed] {_shooterMotor1.SetControl(_flywheelTargetVelocity.WithVelocity(speed));});
-}
-
-frc2::CommandPtr SubShooter::SetShooterTargetFromDist(std::function<units::meter_t()> distanceToTarget){
-    return RunOnce([this, distanceToTarget] {_shooterMotor1.SetControl(_flywheelTargetVelocity.WithVelocity(_flyWheelSpeedTable[distanceToTarget()]));});
+frc2::CommandPtr SubShooter::SetShooterTarget(std::function<units::turns_per_second_t()> speed) {
+    return Run([this, speed] {_shooterMotor1.SetControl(_flywheelTargetVelocity.WithVelocity(speed()));});
 }
 
 frc2::CommandPtr SubShooter::StopShooter() {
@@ -101,4 +106,12 @@ frc2::CommandPtr SubShooter::StopShooter() {
 bool SubShooter::IsAtSpeed() {
     return units::math::abs(_shooterMotor1.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 1.0_tps &&
     units::math::abs(_shooterMotor2.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 1.0_tps;
+}
+
+frc2::CommandPtr SubShooter::SpinWithDistance(std::function<units::meter_t()> distance) {
+    return SetShooterTarget([this, distance] { return _flyWheelSpeedTable[distance()]; });
+}
+
+units::second_t SubShooter::GetTimeOfFLightWithDistance(units::meter_t distance) {
+    return _timeOfFlightTable[distance];
 }
