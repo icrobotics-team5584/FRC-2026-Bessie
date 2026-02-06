@@ -113,16 +113,10 @@ bool SubShooter::IsAtSpeed() {
     units::math::abs(_shooterMotor2.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 1.0_tps;
 }
 
-frc2::CommandPtr SubShooter::ScoreWithDistance(std::function<units::meter_t()> distance, ShootingState scoringState) {
-    if (scoringState == ShootingState::Passing){
-    return SetShooterTarget([this, distance] { return _flyWheelSpeedTablePassing[distance()]; });
-    }
-    if (scoringState == ShootingState::Scoring){
-    return SetShooterTarget([this, distance] { return _flyWheelSpeedTableScoring[distance()]; });
-    }
-    else {
-        return SetShooterTarget([this] {return 0_tps;});
-    }
+frc2::CommandPtr SubShooter::ScoreWithDistance(std::function<units::meter_t()> distance, std::function<bool()> isPassing) {
+    return SetShooterTarget([this, distance, isPassing]{return isPassing()
+        ? _flyWheelSpeedTablePassing[distance()]
+         :_flyWheelSpeedTableScoring[distance()];});
 }
 
 units::second_t SubShooter::GetTimeOfFLightWithDistance(units::meter_t distance) {

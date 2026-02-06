@@ -12,6 +12,7 @@ class ShotPlanner {
   struct ShotPlannerResults {
     frc::Translation3d targetPosition;
     bool shouldShoot;
+    bool isPassing;
   };
 
   ShotPlanner();

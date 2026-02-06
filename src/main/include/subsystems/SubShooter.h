@@ -29,14 +29,9 @@ class SubShooter : public frc2::SubsystemBase {
 
   void SimulationPeriodic();
 
-  enum ShootingState {
-    Scoring = 0,
-    Passing = 1 
-  };
-
   frc2::CommandPtr SetShooterTarget(std::function<units::turns_per_second_t()> speed);
   frc2::CommandPtr StopShooter();
-  frc2::CommandPtr ScoreWithDistance(std::function<units::meter_t()> distance, ShootingState scoringState);
+  frc2::CommandPtr ScoreWithDistance(std::function<units::meter_t()> distance, std::function<bool()> isPassing);
   
   bool IsAtSpeed();
 

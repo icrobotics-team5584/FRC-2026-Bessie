@@ -35,7 +35,7 @@ frc2::CommandPtr StationaryShootAt(frc::Translation2d target) {
     return target.Distance(turretPose.Translation());};
 
   return frc2::cmd::Parallel(cmd::AimAtSpot(target),
-    SubShooter::GetInstance().ScoreWithDistance(distanceToTarget, SubShooter::ShootingState::Scoring),
+    SubShooter::GetInstance().ScoreWithDistance(distanceToTarget, []{return ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose()).isPassing;}),
     SubHood::GetInstance().SetHoodPositionTargetFromDist(distanceToTarget))
     .Until([] {
       return SubShooter::GetInstance().IsAtSpeed() && SubTurret::GetInstance().IsAtTarget() &&
@@ -59,34 +59,20 @@ frc2::CommandPtr ShootWhenReady() {
 }
 
 frc2::CommandPtr AimOnTheMove() {
-  return SubShooter::GetInstance().ScoreWithDistance( [] {return CalcShootOnTheMoveDistance();}, SubShooter::ShootingState::Scoring)
-  .AlongWith(SubHood::GetInstance().SetHoodPositionTargetFromDist([] {return CalcShootOnTheMoveDistance();}))
-  .AlongWith(AimAtFieldRelative([] {return CalcShootOnTheMoveAngle();}));
-}
-
-frc2::CommandPtr ScoreOnTheMove() {
-  return AimOnTheMove().AlongWith(ShootWhenReady()).AlongWith(SubIntake::GetInstance().IntakeOn());
+  return SubShooter::GetInstance()
+    .ScoreWithDistance([] { return CalcShootOnTheMoveDistance(); },
+      [] {
+        return ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose()).isPassing;
+      })
+    .AlongWith(frc2::cmd::Either(
+      SubHood::GetInstance().SetHoodPositionTarget([] { return SubHood::PASSING_ANGLE; }),
+      SubHood::GetInstance().SetHoodPositionTargetFromDist(
+        [] { return CalcShootOnTheMoveDistance();}),
+      []{return ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose()).isPassing;}))
+    .AlongWith(AimAtFieldRelative([] { return CalcShootOnTheMoveAngle(); }));
 }
 
 frc2::CommandPtr ShootOnTheMove(){
-  auto shotTargetGetter = []{
-  auto currentPose = PoseHandler::GetInstance().GetPose();
-  auto shotTarget = ShotPlanner::CalculateShotTarget(currentPose).targetPosition;
-  return shotTarget;};
-
-  return frc2::cmd::Either(ScoreOnTheMove(), PassOnTheMove(), [shotTargetGetter] {
-    return shotTargetGetter() == fieldpos::HUB_POSITION ||
-           shotTargetGetter() == ICgeometry::xTranslationFlip(fieldpos::HUB_POSITION);
-  });
-}
-
-frc2::CommandPtr AimAtPassingPoint(){
-  return SubShooter::GetInstance().ScoreWithDistance( [] {return CalcShootOnTheMoveDistance();}, SubShooter::ShootingState::Passing)
-  .AlongWith(SubHood::GetInstance().SetHoodPositionTarget([]{return 37_deg;}))
-  .AlongWith(AimAtFieldRelative([] {return CalcShootOnTheMoveAngle();}));
-}
-
-frc2::CommandPtr PassOnTheMove(){
-  return AimAtPassingPoint().AlongWith(ShootWhenReady()).AlongWith(SubIntake::GetInstance().IntakeOn());
+  return AimOnTheMove().AlongWith(ShootWhenReady()).AlongWith(SubIntake::GetInstance().IntakeOn());
 }
 }  // namespace cmd
