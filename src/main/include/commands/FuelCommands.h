@@ -4,10 +4,13 @@
 
 namespace cmd {
 frc2::CommandPtr IntakeSequence();
+frc2::CommandPtr OuttakeSequence();
 
 frc2::CommandPtr StationaryShootAt(frc::Translation2d target);
 
 frc2::CommandPtr ShootWhenReady();
 frc2::CommandPtr AimOnTheMove();
 frc2::CommandPtr ShootOnTheMove();
+
+frc2::CommandPtr EjectFuel();
 }

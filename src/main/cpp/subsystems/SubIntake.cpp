@@ -24,6 +24,10 @@ frc2::CommandPtr SubIntake::IntakeOff() {
   return RunOnce([this] { _intakeMotor.Set(0); });
 }
 
+frc2::CommandPtr SubIntake::IntakeReverseOn() {
+  return StartEnd([this] { _intakeMotor.Set(-1.0); }, [this] { _intakeMotor.Set(0); });
+}
+
 void SubIntake::IntakeCurrentHighTimer() {
   _intakeHighCurrentTimer.Start();
 

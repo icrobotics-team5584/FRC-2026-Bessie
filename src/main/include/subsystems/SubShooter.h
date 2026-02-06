@@ -32,6 +32,7 @@ class SubShooter : public frc2::SubsystemBase {
   frc2::CommandPtr SetShooterTarget(std::function<units::turns_per_second_t()> speed);
   frc2::CommandPtr StopShooter();
   frc2::CommandPtr SpinWithDistance(std::function<units::meter_t()> distance);
+  frc2::CommandPtr ReverseSpinShooterSlowly();
   
   bool IsAtSpeed();
 
