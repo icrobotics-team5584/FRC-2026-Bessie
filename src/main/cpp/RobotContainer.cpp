@@ -32,6 +32,16 @@ RobotContainer::RobotContainer() {
   SubTurret::GetInstance().SetDefaultCommand(cmd::AimAtFieldRelative([]{return cmd::CalcShootOnTheMoveAngle();}));
 
   _autoManager.AddDefaultAuton("default", AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton()));
+  
+  _autoManager.AddAuton("DriveInASquare", AutonHelper::MakeCommandPtrAuto(cmd::TESTDriveInASquare()));
+  _autoManager.AddAuton("Forward250cm", AutonHelper::MakeCommandPtrAuto(cmd::TESTForward250cm()));
+  _autoManager.AddAuton("Forward250cmWhileTurning", AutonHelper::MakeCommandPtrAuto(cmd::TESTForward250cmWhileTurning()));
+
+  _autoManager.AddAuton("NeutralScoreAndClimb_LeftBump", AutonHelper::MakeCommandPtrAuto(cmd::NeutralScoreAndClimb_LeftBump()));
+  //_autoManager.AddAuton("NeutralScoreAndClimb_RightBump", AutonHelper::MakeCommandPtrAuto(cmd::NeutralScoreAndClimb_RightBump()));
+  //_autoManager.AddAuton("Hoard_LeftBump", AutonHelper::MakeCommandPtrAuto(cmd::Hoard_LeftBump()));
+  //_autoManager.AddAuton("Hoard_RightBump", AutonHelper::MakeCommandPtrAuto(cmd::Hoard_RightBump()));
+  //_autoManager.AddAuton("OutpostDepotClimb", AutonHelper::MakeCommandPtrAuto(cmd::OutpostDepotClimb()));
 
   frc::SmartDashboard::PutData("CHOSEN AUTON", &_autoManager.GetAutonChooser());
 
@@ -66,6 +76,7 @@ void RobotContainer::ConfigureBindings() {
   //Sticks
 
   //Other
+  _driverController.Back().WhileTrue(SubDrivebase::GetInstance().DriveOverBump());
 
   frc2::Trigger([]{return ShiftHandler::GetTimeLeft() < 3_s;}).OnTrue(Rumble(1, 0.5_s));
 }

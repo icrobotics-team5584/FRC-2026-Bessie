@@ -6,6 +6,7 @@
 
 #include "utilities/ShiftHandler.h"
 #include "utilities/Logger.h"
+#include <frc/DataLogManager.h>
 #include "utilities/PoseHandler.h"
 #include "utilities/ShotPlanner.h"
 
