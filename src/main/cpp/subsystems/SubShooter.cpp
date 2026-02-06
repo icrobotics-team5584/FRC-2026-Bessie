@@ -113,7 +113,7 @@ bool SubShooter::IsAtSpeed() {
     units::math::abs(_shooterMotor2.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 1.0_tps;
 }
 
-frc2::CommandPtr SubShooter::ScoreWithDistance(std::function<units::meter_t()> distance, std::function<bool()> isPassing) {
+frc2::CommandPtr SubShooter::SpinWithDistance(std::function<units::meter_t()> distance, std::function<bool()> isPassing) {
     return SetShooterTarget([this, distance, isPassing]{return isPassing()
         ? _flyWheelSpeedTablePassing[distance()]
          :_flyWheelSpeedTableScoring[distance()];});

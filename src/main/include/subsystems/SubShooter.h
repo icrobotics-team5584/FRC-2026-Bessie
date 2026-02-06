@@ -31,7 +31,7 @@ class SubShooter : public frc2::SubsystemBase {
 
   frc2::CommandPtr SetShooterTarget(std::function<units::turns_per_second_t()> speed);
   frc2::CommandPtr StopShooter();
-  frc2::CommandPtr ScoreWithDistance(std::function<units::meter_t()> distance, std::function<bool()> isPassing);
+  frc2::CommandPtr SpinWithDistance(std::function<units::meter_t()> distance, std::function<bool()> isPassing);
   
   bool IsAtSpeed();
 
