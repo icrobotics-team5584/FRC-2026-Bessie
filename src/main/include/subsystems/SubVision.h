@@ -86,9 +86,21 @@ public:
     "right"
   };
 
+  std::string _turrretCamName = "Turret";
+
+  frc::Transform3d _turretBotToCam {{0_m, 0_m, 0.5_m}, {0_deg, 0_deg, 12.3_deg}};
+
+  ICCamera _turretCam {
+    _turrretCamName,    
+    _turretBotToCam,
+    _tagMap,
+    "turret"
+  };
+
   std::vector<ICCamera*> _camList {
     &_leftCam,
-    &_rightCam
+    &_rightCam,
+    &_turretCam
   };
 
   photon::VisionSystemSim _visionSim{"VisionSim"};

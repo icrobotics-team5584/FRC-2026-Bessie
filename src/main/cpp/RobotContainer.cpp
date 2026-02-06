@@ -37,7 +37,7 @@ RobotContainer::RobotContainer() {
   SubTurret::GetInstance();
   SubHood::GetInstance();
   SubShooter::GetInstance();
-  SubVision::GetInstance();
+  // SubVision::GetInstance();
 }
 
 void RobotContainer::ConfigureBindings() {

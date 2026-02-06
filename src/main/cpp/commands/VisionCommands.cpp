@@ -7,6 +7,7 @@
 #include "subsystems/SubVision.h"
 #include "utilities/Logger.h"
 #include "utilities/PoseHandler.h"
+#include <frc/RobotBase.h>
 
 void StableCameraProcess(std::string label, photon::EstimatedRobotPose pose) {
     double d = SubVision::GetInstance().GetDev(pose);
@@ -40,22 +41,24 @@ using namespace frc2::cmd;
 
 frc2::CommandPtr AddVisionMeasurement() {
     return Run([] {
-        auto poses = SubVision::GetInstance().GetPose();
-        for (auto [label,pose] : poses) {
-            Logger::FieldDisplay::GetInstance().DisplayPose("Vision/"+label+"/Est pose" , {});
-            Logger::FieldDisplay::GetInstance().DisplayPose("Vision/"+label+"/Discarded est pose" , {});
-            
-            if (pose.has_value()) {
-                auto estPose = pose.value();
-                if (SubVision::GetInstance().IsEstimateUsable(estPose)) {
-                    if (label == "turret") {
-                        TurretCameraProcess(label, estPose);
+        if (Logger::Tune("Vision/Add pose measurement", !frc::RobotBase::IsSimulation())){
+            auto poses = SubVision::GetInstance().GetPose();
+            for (auto [label,pose] : poses) {
+                Logger::FieldDisplay::GetInstance().DisplayPose("Vision/"+label+"/Est pose" , {});
+                Logger::FieldDisplay::GetInstance().DisplayPose("Vision/"+label+"/Discarded est pose" , {});
+                
+                if (pose.has_value()) {
+                    auto estPose = pose.value();
+                    if (SubVision::GetInstance().IsEstimateUsable(estPose)) {
+                        if (label == "Turret") {
+                            TurretCameraProcess(label, estPose);
+                        } else {
+                            StableCameraProcess(label, estPose);
+                        }
                     } else {
-                        StableCameraProcess(label, estPose);
+                        Logger::FieldDisplay::GetInstance().DisplayPose("Vision/"+label+"/Discarded est pose",
+                            {estPose.estimatedPose.ToPose2d()});
                     }
-                } else {
-                    Logger::FieldDisplay::GetInstance().DisplayPose("Vision/"+label+"/Discarded est pose",
-                        {estPose.estimatedPose.ToPose2d()});
                 }
             }
         }

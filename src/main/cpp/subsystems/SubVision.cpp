@@ -44,25 +44,6 @@ void SubVision::Periodic() {
 void SubVision::UpdateVision() {
   for (ICCamera* cam : _camList) {
     auto pose = cam->Update();
-    auto camLabel = cam->GetCamLabel();
-    
-    Logger::FieldDisplay::GetInstance().DisplayPose("Vision/"+camLabel+"/Est pose" , {});
-    Logger::FieldDisplay::GetInstance().DisplayPose("Vision/"+camLabel+"/Discarded est pose" , {});
-
-    if (pose.has_value()) {
-      auto estPose = pose.value();
-      if (IsEstimateUsable(estPose)) {
-        double d = SubVision::GetInstance().GetDev(estPose);
-        wpi::array<double,3> dev = {d, d, 0.9};
-        PoseHandler::GetInstance().AddVisionMeasurement(
-          estPose.estimatedPose.ToPose2d(), estPose.timestamp, dev);
-        Logger::FieldDisplay::GetInstance().DisplayPose("Vision/"+camLabel+"/Est pose",
-          estPose.estimatedPose.ToPose2d());
-      } else {
-        Logger::FieldDisplay::GetInstance().DisplayPose("Vision/"+camLabel+"/Discarded est pose",
-          {estPose.estimatedPose.ToPose2d()});
-      }
-    }
   }
 }
 
