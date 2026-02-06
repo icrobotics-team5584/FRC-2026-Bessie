@@ -120,15 +120,16 @@ units::degree_t SubTurret::GetTurretAngle() {
     return _turretMotor.GetPosition();
 }
 
-frc2::CommandPtr SubTurret::SetTurretTargetAngle(std::function<units::degree_t()> angle, std::function<units::turns_per_second_t()> robotAngVel){
+frc2::CommandPtr SubTurret::SetTurretTargetAngle(std::function<units::degree_t()> angle, std::function<units::degrees_per_second_t()> robotAngVel){
     return Run([this, angle, robotAngVel] {
         units::turns_per_second_t currentVel = _turretMotor.GetVelocity();
 
-        units::turns_per_second_t nextVel = -robotAngVel(); 
+        units::degrees_per_second_t nextVel = -robotAngVel(); 
         // we want the turret to negate the robot rotation, hence the negative
 
         units::volt_t rotationFeedforward = _robotRotVelFF.Calculate(currentVel, nextVel);
 
+        Logger::Log("Turret/RobotRotFF/ffVolts", rotationFeedforward);
         _turretMotor.SetPositionTarget(CalcOptimisedTurretAngle(angle()), rotationFeedforward);
     });
 }
@@ -157,20 +158,12 @@ units::degree_t SubTurret::CalcOptimisedTurretAngle(units::degree_t angle) {
     units::degree_t newTarget = currentAngle + closestOffset;
 
     // clamp target to limits
-    // if(newTarget > POS_LIMIT) {
-    //     newTarget -= 360_deg;
-    // }
-
-    // if(newTarget < NEG_LIMIT) {
-    //     newTarget += 360_deg;
-    // }
-
     if(newTarget > POS_LIMIT) {
-        newTarget = POS_LIMIT;
+        newTarget -= 360_deg;
     }
 
     if(newTarget < NEG_LIMIT) {
-        newTarget = NEG_LIMIT;
+        newTarget += 360_deg;
     }
 
     Logger::Log("Turret/CalcOptimisedTurretAngle/newTarget(final output)", newTarget);

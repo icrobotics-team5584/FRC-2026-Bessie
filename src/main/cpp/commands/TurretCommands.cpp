@@ -21,7 +21,7 @@ namespace cmd {
       auto robotPose = PoseHandler::GetInstance().GetPose();
       Logger::Log("Turret/AimAtFieldRelative/robotPose/Rotation", robotPose.Rotation().Degrees());
       units::degree_t targetAngle = target() - robotPose.Rotation().Degrees();
-      return targetAngle;});
+      return targetAngle;}, [] { return SubDrivebase::GetInstance().GetAngularVelocity(); });
   }
 
   frc2::CommandPtr AimAtSpot(frc::Translation2d target) {

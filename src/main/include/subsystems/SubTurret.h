@@ -44,7 +44,7 @@ class SubTurret : public frc2::SubsystemBase {
 
   bool IsAtTarget();
 
-  frc2::CommandPtr SetTurretTargetAngle(std::function<units::degree_t()> angle, std::function<units::turns_per_second_t()> robotAngVel);
+  frc2::CommandPtr SetTurretTargetAngle(std::function<units::degree_t()> angle, std::function<units::degrees_per_second_t()> robotAngVel);
   frc2::CommandPtr ZeroTurretCmd();
 
   static constexpr frc::Transform2d ROBOT_TO_TURRET = frc::Transform2d{-235_mm, 0_mm, 0_deg};
@@ -82,8 +82,8 @@ class SubTurret : public frc2::SubsystemBase {
   double I = 0;
   double D = 0;
 
-  static constexpr units::volt_t kS = 0.01_V;
-  static constexpr auto kV = 0_V * (1_s / 1_tr);
+  static constexpr units::volt_t kS = 0.2_V; 
+  static constexpr auto kV = 4_V * (1_s / 1_tr);
   static constexpr auto kA = 0_V * ((1_s * 1_s) / 1_tr);
   
   static constexpr double E1_TEETH = 21;
