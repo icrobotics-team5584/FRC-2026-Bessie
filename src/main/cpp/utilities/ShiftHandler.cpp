@@ -101,13 +101,13 @@ bool ShiftHandler::IsActiveShift() {
   if (frc::DriverStation::GetMatchType() == frc::DriverStation::MatchType::kNone) {
     return true;
   }
-    RebuiltShift currentShift = GetCurrentShift();
-    RebuiltShift myShift = (RebuiltShift)frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kBlue);
+  RebuiltShift currentShift = GetCurrentShift();
+  RebuiltShift myShift = (RebuiltShift)frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kBlue);
 
-    if (currentShift == RebuiltShift::AUTON || currentShift == RebuiltShift::TRANS ||
-        currentShift == RebuiltShift::ENDGAME || myShift == currentShift) {
-      return true;
-    }
+  if (currentShift == RebuiltShift::AUTON || currentShift == RebuiltShift::TRANS ||
+      currentShift == RebuiltShift::ENDGAME || myShift == currentShift) {
+    return true;
+  }
 
-    return false;
+  return false;
 }
