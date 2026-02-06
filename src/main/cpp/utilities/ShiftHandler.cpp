@@ -101,7 +101,6 @@ bool ShiftHandler::IsActiveShift() {
   if (frc::DriverStation::GetMatchType() == frc::DriverStation::MatchType::kNone) {
     return true;
   }
-  else{
     RebuiltShift currentShift = GetCurrentShift();
     RebuiltShift myShift = (RebuiltShift)frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kBlue);
 
@@ -111,5 +110,4 @@ bool ShiftHandler::IsActiveShift() {
     }
 
     return false;
-  };
 }
