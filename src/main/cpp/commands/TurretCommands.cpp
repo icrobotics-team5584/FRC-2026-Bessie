@@ -21,7 +21,7 @@ namespace cmd {
       auto robotPose = PoseHandler::GetInstance().GetPose();
       Logger::Log("Turret/AimAtFieldRelative/robotPose/Rotation", robotPose.Rotation().Degrees());
       units::degree_t targetAngle = target() - robotPose.Rotation().Degrees();
-      return targetAngle;}, [] { return SubDrivebase::GetInstance().GetAngularVelocity(); });
+      return targetAngle;}, [] { return SubDrivebase::GetInstance().GetDesiredAngularVelocity(); });
   }
 
   frc2::CommandPtr AimAtSpot(frc::Translation2d target) {
@@ -65,10 +65,10 @@ frc::Pose2d CalcFutureTurretPose() {
   units::meter_t distance = target.Distance(robot.Translation());
 
   // Calculate field relative robot velocity
-  frc::ChassisSpeeds robotVel = SubDrivebase::GetInstance().GetFieldRelativeVelocity();
+  frc::ChassisSpeeds robotVel = SubDrivebase::GetInstance().GetDesiredFieldRelativeVelocity();
   units::meters_per_second_t robotVelX = robotVel.vx;
   units::meters_per_second_t robotVelY = robotVel.vy;
-  units::degrees_per_second_t robotVelRot = SubDrivebase::GetInstance().GetAngularVelocity();
+  units::degrees_per_second_t robotVelRot = SubDrivebase::GetInstance().GetDesiredAngularVelocity();
   
   Logger::Log("SOTM/velX", robotVelX);
   Logger::Log("SOTM/velY", robotVelY);

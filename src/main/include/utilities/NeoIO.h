@@ -18,7 +18,9 @@ class NeoIO : public SwerveIO{
     void ConfigDriveMotor() override;
     frc::SwerveModulePosition GetPosition() override;
     frc::Rotation2d GetAngle() override;
+    frc::Rotation2d GetDesiredAngle() override;
     units::meters_per_second_t GetSpeed() override;
+    units::meters_per_second_t GetDesiredSpeed() override;
     units::volt_t GetDriveVoltage() override;
     frc::SwerveModuleState GetState() override;
     units::radian_t GetDrivenRotations() override;
@@ -36,6 +38,8 @@ class NeoIO : public SwerveIO{
     const double DRIVE_D = 0.0;
     const double DRIVE_FF = 0.0141; 
   private:
+    units::degree_t _desiredAngle;
+    units::meters_per_second_t _desiredSpeed;
 
     ICSparkMax _canTurnMotor;
     ICSparkMax _canDriveMotor;

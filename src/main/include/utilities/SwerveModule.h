@@ -39,10 +39,13 @@ class SwerveModule {
   void ConfigDriveMotor();
   frc::SwerveModulePosition GetPosition();
   frc::Rotation2d GetAngle();
+  frc::Rotation2d GetDesiredAngle();
   frc::Rotation2d GetCanCoderAngle();
   units::meters_per_second_t GetSpeed();
+  units::meters_per_second_t GetDesiredSpeed();
   units::volt_t GetDriveVoltage();
   frc::SwerveModuleState GetState();
+  frc::SwerveModuleState GetDesiredState();
   frc::SwerveModuleState GetCANCoderState();
   units::radian_t GetDrivenRotations();
 

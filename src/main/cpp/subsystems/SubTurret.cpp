@@ -130,6 +130,7 @@ frc2::CommandPtr SubTurret::SetTurretTargetAngle(std::function<units::degree_t()
         units::volt_t rotationFeedforward = _robotRotVelFF.Calculate(currentVel, nextVel);
 
         Logger::Log("Turret/RobotRotFF/ffVolts", rotationFeedforward);
+        Logger::Log("Turret/RobotRotFF/DrivebaseRotVel", nextVel);
         _turretMotor.SetPositionTarget(CalcOptimisedTurretAngle(angle()), rotationFeedforward);
     });
 }

@@ -107,11 +107,19 @@ frc::Rotation2d NeoIO::GetAngle() {
   return turnAngle;
 }
 
+frc::Rotation2d NeoIO::GetDesiredAngle() {
+  return _desiredAngle;
+}
+
 units::meters_per_second_t NeoIO::GetSpeed() {
   return (
     _canDriveMotor.GetVelocity().convert<units::turns_per_second>().value() 
     * WHEEL_CIRCUMFERENCE.value()
   ) * 1_mps;
+}
+
+units::meters_per_second_t NeoIO::GetDesiredSpeed() {
+  return _desiredSpeed;
 }
 
 units::volt_t NeoIO::GetDriveVoltage() {
