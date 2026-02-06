@@ -8,6 +8,7 @@
 #include "subsystems/SubShooter.h"
 #include "subsystems/SubTurret.h"
 #include "utilities/Logger.h"
+#include "utilities/ShotPlanner.h"
 
 #include "commands/TurretCommands.h"
 
@@ -46,8 +47,11 @@ frc2::CommandPtr ShootWhenReady() {
   return frc2::cmd::Either(SubFeeder::GetInstance().FeederOn().AlongWith(SubIndexer::GetInstance().Index()),
     SubFeeder::GetInstance().FeederOff().AlongWith(SubIndexer::GetInstance().StopIndex()),
     [] {
-      return SubHood::GetInstance().HoodIsAtTarget() && SubShooter::GetInstance().IsAtSpeed() &&
-             SubTurret::GetInstance().IsAtTarget();
+       auto currentPose = PoseHandler::GetInstance().GetPose();
+       return SubHood::GetInstance().HoodIsAtTarget() && SubShooter::GetInstance().IsAtSpeed() &&
+              SubTurret::GetInstance().IsAtTarget() &&
+              ShotPlanner::CalculateShotTarget(currentPose).shouldShoot;
+
     })
     .Repeatedly();
 }
