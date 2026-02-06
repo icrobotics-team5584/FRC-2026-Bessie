@@ -16,6 +16,8 @@ ICCamera::ICCamera(std::string name, frc::Transform3d botToCam, frc::AprilTagFie
     } else {
         _label = label;
     }
+
+    Logger::Log("Vision/" + _label + "/Is Connected", _cam.IsConnected());
  }
 
 std::optional<photon::EstimatedRobotPose> ICCamera::Update() {
@@ -42,7 +44,6 @@ std::optional<photon::EstimatedRobotPose> ICCamera::Update() {
     }
 
     frc::SmartDashboard::PutString("Vision/" + _label + "/targets", targets);
-
     return _estPose;
 }
 

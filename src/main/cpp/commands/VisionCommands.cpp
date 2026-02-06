@@ -21,10 +21,13 @@ void StableCameraProcess(std::string label, photon::EstimatedRobotPose pose) {
 void TurretCameraProcess(std::string label, photon::EstimatedRobotPose pose) {
     frc::Transform2d t_bot_to_turret = SubTurret::ROBOT_TO_TURRET;
 
-    frc::Pose2d turret_to_cam = {SubVision::TURRET_TO_CAM.X(),SubVision::TURRET_TO_CAM.Y(),SubVision::TURRET_TO_CAM.Rotation()};
+    frc::Translation2d turret_to_cam = {SubVision::TURRET_TO_CAM.X(),SubVision::TURRET_TO_CAM.Y()};
     frc::Rotation2d turr_ang = SubTurret::GetInstance().GetTurretAngleAtTime(pose.timestamp);
-    frc::Pose2d r_turret_to_cam = turret_to_cam.RotateBy(turr_ang);
-    frc::Transform2d t_turret_to_cam {r_turret_to_cam.X(), r_turret_to_cam.Y(), r_turret_to_cam.Rotation()};
+
+    Logger::Log("Vision/turret/turr angle", turr_ang.Degrees());
+
+    frc::Translation2d r_turret_to_cam = turret_to_cam.RotateBy(turr_ang);
+    frc::Transform2d t_turret_to_cam {r_turret_to_cam.X(), r_turret_to_cam.Y(), turr_ang};
 
     frc::Pose2d orig_bot_pose = pose.estimatedPose.ToPose2d()
                                 .TransformBy(t_turret_to_cam.Inverse())
@@ -46,11 +49,13 @@ frc2::CommandPtr AddVisionMeasurement() {
             for (auto [label,pose] : poses) {
                 Logger::FieldDisplay::GetInstance().DisplayPose("Vision/"+label+"/Est pose" , {});
                 Logger::FieldDisplay::GetInstance().DisplayPose("Vision/"+label+"/Discarded est pose" , {});
+                Logger::Log("Vision/"+label+"/Have value" , false);
                 
                 if (pose.has_value()) {
+                    Logger::Log("Vision/"+label+"/Have value" , true);
                     auto estPose = pose.value();
                     if (SubVision::GetInstance().IsEstimateUsable(estPose)) {
-                        if (label == "Turret") {
+                        if (label == "turret") {
                             TurretCameraProcess(label, estPose);
                         } else {
                             StableCameraProcess(label, estPose);

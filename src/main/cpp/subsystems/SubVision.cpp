@@ -43,7 +43,7 @@ void SubVision::Periodic() {
 
 void SubVision::UpdateVision() {
   for (ICCamera* cam : _camList) {
-    auto pose = cam->Update();
+    cam->Update();
   }
 }
 

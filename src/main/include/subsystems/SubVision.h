@@ -54,7 +54,7 @@ public:
 
   double GetDev(photon::EstimatedRobotPose pose);
 
-  static constexpr frc::Transform2d TURRET_TO_CAM = frc::Transform2d{0_m, 0.1_m, 0_deg};
+  static constexpr frc::Transform2d TURRET_TO_CAM = frc::Transform2d{0.075_m, -0.145_m, 0_deg};
 
  private:
 
@@ -88,7 +88,7 @@ public:
 
   std::string _turrretCamName = "Turret";
 
-  frc::Transform3d _turretBotToCam {{0_m, 0_m, 0.5_m}, {0_deg, 0_deg, 12.3_deg}};
+  frc::Transform3d _turretBotToCam {{0_m, 0_m, 0.63_m}, {0_deg, 12.3_deg, 0_deg}};
 
   ICCamera _turretCam {
     _turrretCamName,    

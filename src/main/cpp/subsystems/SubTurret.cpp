@@ -62,7 +62,7 @@ void SubTurret::Periodic() {
     Logger::Log("Turret/Encoder/Encoder1Frequency", _turretEncoder1.GetFrequency());
     Logger::Log("Turret/Encoder/Encoder2Frequency", _turretEncoder2.GetFrequency());
 
-    _turretPos.AddSample(frc::Timer::GetFPGATimestamp(), _turretMotor.GetPosition());
+    _turretPos.AddSample(frc::Timer::GetFPGATimestamp(), CalcOptimisedTurretAngle(_turretMotor.GetPosition()));
 }
 
 void SubTurret::SimulationPeriodic() {
