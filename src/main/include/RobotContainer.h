@@ -14,6 +14,7 @@ class RobotContainer {
   RobotContainer();
 
   std::shared_ptr<frc2::CommandPtr> GetAutonomousCommand();
+  frc2::CommandPtr Rumble(double force, units::second_t duration);
 
  private:
   

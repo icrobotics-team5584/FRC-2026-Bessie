@@ -31,7 +31,7 @@ class SubShooter : public frc2::SubsystemBase {
 
   frc2::CommandPtr SetShooterTarget(std::function<units::turns_per_second_t()> speed);
   frc2::CommandPtr StopShooter();
-  frc2::CommandPtr SpinWithDistance(std::function<units::meter_t()> distance);
+  frc2::CommandPtr SpinWithDistance(std::function<units::meter_t()> distance, std::function<bool()> isPassing);
   
   bool IsAtSpeed();
 
@@ -57,7 +57,8 @@ class SubShooter : public frc2::SubsystemBase {
   ctre::phoenix6::configs::TalonFXConfiguration _shooterMotorConfig;
   ctre::phoenix6::controls::VelocityVoltage _flywheelTargetVelocity{0_tps};
 
-  wpi::interpolating_map<units::meter_t, units::turns_per_second_t> _flyWheelSpeedTable;
+  wpi::interpolating_map<units::meter_t, units::turns_per_second_t> _flyWheelSpeedTableScoring;
+  wpi::interpolating_map<units::meter_t, units::turns_per_second_t> _flyWheelSpeedTablePassing;
   wpi::interpolating_map<units::meter_t, units::second_t> _timeOfFlightTable;
 
   //Sim

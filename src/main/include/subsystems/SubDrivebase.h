@@ -69,6 +69,9 @@ class SubDrivebase : public frc2::SubsystemBase {
   // Pose drive
   frc2::CommandPtr Drive(std::function<frc::ChassisSpeeds()> speeds, bool fieldOriented);
 
+  // Rotations
+  frc2::CommandPtr AlignToAngle(frc2::CommandXboxController& controller, units::angle::degree_t angle);
+
   // Gyro and sensor
   frc2::CommandPtr SyncSensor();
   frc2::CommandPtr ResetGyroCmd();
