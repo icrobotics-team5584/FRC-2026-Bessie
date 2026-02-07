@@ -18,12 +18,17 @@ class ShiftHandler {
     return inst;
   }
 
+  /* Getters */
   RebuiltShift GetCurrentShift();
   RebuiltShift GetWinningShift();
   units::second_t GetTimeLeft();
   std::string GetShiftName(RebuiltShift shift);
+  bool GetOverrideActive();
   bool IsShift(RebuiltShift shift);
-  bool IsActiveShift(bool overrideActive=false);
+  bool IsActiveShift();
+
+  /* Setters */
+  void SetOverrideActive(bool isActive);
 
   /*Delete assignment and copy so people don't accidently create copies*/
   ShiftHandler(ShiftHandler const&) = delete;

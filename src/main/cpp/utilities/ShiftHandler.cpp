@@ -93,13 +93,15 @@ std::string ShiftHandler::GetShiftName(RebuiltShift shift) {
   }
 }
 
+bool ShiftHandler::GetOverrideActive() {
+  return _overrideActive;
+}
+
 bool ShiftHandler::IsShift(RebuiltShift shift) {
   return GetCurrentShift() == shift ? true : false; /* check if matching */
 }
 
-
-bool ShiftHandler::IsActiveShift(bool overrideActive = false) {
-  _overrideActive = overrideActive;
+bool ShiftHandler::IsActiveShift() {
   if (_overrideActive) {
     return true;
   }
@@ -115,4 +117,8 @@ bool ShiftHandler::IsActiveShift(bool overrideActive = false) {
   }
 
   return false;
+}
+
+void ShiftHandler::SetOverrideActive(bool isActive) {
+  _overrideActive = isActive;
 }
