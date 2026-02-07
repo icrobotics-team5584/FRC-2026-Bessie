@@ -20,20 +20,21 @@
 #include "commands/TurretCommands.h"
 #include "commands/VisionCommands.h"
 
+#include "utilities/Logger.h"
 #include "utilities/PoseHandler.h"
-
+#include "utilities/ShiftHandler.h"
 #include <frc2/command/Commands.h>
 
 RobotContainer::RobotContainer() {
-  SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
   ConfigureBindings();
+  SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
   SubVision::GetInstance().SetDefaultCommand(cmd::AddVisionMeasurement());
+  SubTurret::GetInstance().SetDefaultCommand(cmd::AimAtFieldRelative([]{return cmd::CalcShootOnTheMoveAngle();}));
 
   _autoManager.AddDefaultAuton("default", AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton()));
 
   frc::SmartDashboard::PutData("CHOSEN AUTON", &_autoManager.GetAutonChooser());
 
-  SubTurret::GetInstance();
   SubHood::GetInstance();
   SubShooter::GetInstance();
 }
@@ -51,7 +52,7 @@ void RobotContainer::ConfigureBindings() {
   //Letters
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
   _driverController.Y().OnTrue(SubDrivebase::GetInstance().ResetGyroCmd());
-  _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
+  _driverController.B().WhileTrue(SubDrivebase::GetInstance().AlignToAngle(_driverController, 0_deg));
   _driverController.A().OnTrue(frc2::cmd::RunOnce([] {
     SubDrivebase::GetInstance().SetPose(frc::Pose2d{0_m, 0_m, 0_deg});
   }));
@@ -67,9 +68,22 @@ void RobotContainer::ConfigureBindings() {
 
   //Other
 
+  frc2::Trigger([]{return ShiftHandler::GetTimeLeft() < 3_s;}).OnTrue(Rumble(1, 0.5_s));
 }
 
 std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {
   AutonHelper::AutonPtr chosen = _autoManager.GetChosenAuton();
   return chosen;
+}
+
+frc2::CommandPtr RobotContainer::Rumble(double force, units::second_t duration) {
+  return frc2::cmd::Run([this, force, duration] {
+    _driverController.SetRumble(frc::XboxController::RumbleType::kBothRumble, force);
+    Logger::Log("DriverStation/Rumble", true);
+  })
+    .WithTimeout(duration)
+    .FinallyDo([this] {
+      _driverController.SetRumble(frc::XboxController::RumbleType::kBothRumble, 0);
+      Logger::Log("DriverStation/Rumble", false);
+    });
 }

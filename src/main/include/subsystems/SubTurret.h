@@ -78,9 +78,9 @@ class SubTurret : public frc2::SubsystemBase {
 
   bool _hasZeroed = false;
 
-  double P = 0; // 4.0
-  double I = 0;
-  double D = 0;
+  double P = 8.0;
+  double I = 0.01;
+  double D = 4;
 
   static constexpr units::volt_t kS = 0.15_V; 
   static constexpr auto kV = 3.4_V * (1_s / 1_tr);
@@ -94,7 +94,7 @@ class SubTurret : public frc2::SubsystemBase {
   static constexpr double GEAR_RATIO = (48.0/12.0) * (94.0/10.0);
   
 
-  static constexpr units::degree_t TOLARANCE = 0.5_deg;
+  static constexpr units::degree_t TOLARANCE = 2_deg;
   static constexpr units::hertz_t ENCODER_FREQUENCY = 975.6_Hz; 
   //force set encoder frequency to avoid 1sec startup time
 

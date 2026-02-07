@@ -14,7 +14,7 @@ SubTurret::SubTurret() {
     _turretMotorConfig.closedLoop.MaxOutput(1.0);
     _turretMotorConfig.closedLoop.MinOutput(-1.0);
     _turretMotorConfig.closedLoop.IMaxAccum(0.05);
-    _turretMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kCoast);
+    _turretMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
     _turretMotorConfig.SmartCurrentLimit(30);
     _turretMotorConfig.softLimit.ForwardSoftLimit(POS_LIMIT.convert<units::turns>().value());
     _turretMotorConfig.softLimit.ForwardSoftLimitEnabled(true);
@@ -67,8 +67,6 @@ void SubTurret::Periodic() {
     Logger::Log("Turret/Encoder/Encoder2IsConnected", _turretEncoder2.IsConnected());
     Logger::Log("Turret/Encoder/Encoder1Frequency", _turretEncoder1.GetFrequency());
     Logger::Log("Turret/Encoder/Encoder2Frequency", _turretEncoder2.GetFrequency());
-
-
 }
 
 void SubTurret::SimulationPeriodic() {

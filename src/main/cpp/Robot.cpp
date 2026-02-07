@@ -4,15 +4,23 @@
 
 #include "Robot.h"
 
-#include <frc2/command/CommandScheduler.h>
 #include "utilities/ShiftHandler.h"
 #include "utilities/Logger.h"
 #include "utilities/PoseHandler.h"
 #include "utilities/ShotPlanner.h"
 
+#include <frc2/command/CommandScheduler.h>
+#include <frc/DataLogManager.h>
+
 #include <frc/geometry/Transform2d.h>
 
-Robot::Robot() {}
+Robot::Robot() {
+  //USB logging
+  frc::DataLogManager::Start();
+  frc::SmartDashboard::PutData(&frc2::CommandScheduler::GetInstance());
+  frc::DriverStation::StartDataLog(frc::DataLogManager::GetLog());
+  
+}
 
 void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();
@@ -22,10 +30,10 @@ void Robot::RobotPeriodic() {
   Logger::Log("RebuiltShift/Current Shift", ShiftHandler::GetShiftName(ShiftHandler::GetCurrentShift()));
   Logger::Log("RebuiltShift/Seconds Left on Shift", ShiftHandler::GetTimeLeft());
 
-  frc::Translation3d shotTarget =
+  ShotPlanner::ShotPlannerResults shotTarget =
     ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose());
   Logger::FieldDisplay::GetInstance().DisplayPose(
-    "Shot Target", ShotPlanner::ConvertToPose2d(shotTarget));
+    "Shot Target", ShotPlanner::ConvertToPose2d(shotTarget.targetPosition));
 
   Logger::Log("Robot/RioBrownOut", frc::RobotController::IsBrownedOut());
   Logger::Log("Robot/RioInputVoltage", frc::RobotController::GetInputVoltage() * 1_V);
@@ -33,6 +41,8 @@ void Robot::RobotPeriodic() {
   Logger::Log("Robot/BatteryVoltage", frc::RobotController::GetBatteryVoltage());
   Logger::Log("Robot/PDHInputVoltage", m_pdh.GetVoltage() * 1_V);
   Logger::Log("Robot/PDHTotalCurrent", m_pdh.GetTotalCurrent() * 1_A);
+
+   Logger::Log("Shot Planner/Should Shoot", shotTarget.shouldShoot);
 }
 void Robot::DisabledInit() {}
 
