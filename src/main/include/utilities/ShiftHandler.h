@@ -39,10 +39,4 @@ class ShiftHandler {
 
   /*Private constructor to prevent creating multiple instances*/
   ShiftHandler() {}
-
-  /*Delete assignment and copy privately to prevent any double ups inside*/
-  ShiftHandler(ShiftHandler const&) = delete;
-  void operator=(ShiftHandler const&) = delete;
-  
-
 };
