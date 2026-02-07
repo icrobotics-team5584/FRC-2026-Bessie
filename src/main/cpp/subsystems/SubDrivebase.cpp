@@ -285,8 +285,10 @@ frc::ChassisSpeeds SubDrivebase::CalcDriveToPoseSpeeds(frc::Pose2d targetPose) {
   auto rSpeed = CalcRotateSpeed(currentRotation - targetRotation);
 
   // Clamp to max velocity
-  xSpeed = std::clamp(xSpeed, -DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY, DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
-  ySpeed = std::clamp(ySpeed, -DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY, DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
+  xSpeed = units::math::min(xSpeed, DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
+  xSpeed = units::math::max(xSpeed, -DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
+  ySpeed = units::math::min(ySpeed, DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
+  ySpeed = units::math::max(ySpeed, -DrivebaseConfig::MAX_DRIVE_TO_POSE_VELOCITY);
 
   if (frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kRed) {
     xSpeed *= -1;
