@@ -33,7 +33,7 @@ RobotContainer::RobotContainer() {
 
   _autoManager.AddDefaultAuton("default", AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton()));
   
-  _autoManager.AddAuton("DriveInASquare", AutonHelper::MakeCommandPtrAuto(cmd::TESTDriveInASquare()));
+  _autoManager.AddAuton("DriveInASquare", AutonHelper::MakeCommandPtrAuto(cmd::SOTMTest()));
   _autoManager.AddAuton("Forward250cm", AutonHelper::MakeCommandPtrAuto(cmd::TESTForward250cm()));
   _autoManager.AddAuton("Forward250cmWhileTurning", AutonHelper::MakeCommandPtrAuto(cmd::TESTForward250cmWhileTurning()));
 
