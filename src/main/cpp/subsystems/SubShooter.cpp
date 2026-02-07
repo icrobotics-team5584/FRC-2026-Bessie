@@ -50,14 +50,19 @@ SubShooter::SubShooter() {
 
     frc::SmartDashboard::PutData("Shooter/mech2dDisplay", &_shooterMech);
 
-    _flyWheelSpeedTable.insert(1.8575_m, 26_tps);
-    _flyWheelSpeedTable.insert(2.3575_m, 27_tps);
-    _flyWheelSpeedTable.insert(2.8575_m, 29_tps);
-    _flyWheelSpeedTable.insert(3.3575_m, 33_tps);
-    _flyWheelSpeedTable.insert(3.8575_m, 35_tps);
-    _flyWheelSpeedTable.insert(4.3575_m, 38.5_tps);
-    _flyWheelSpeedTable.insert(4.6875_m, 41_tps);
-    _flyWheelSpeedTable.insert(5.1875_m, 44_tps);
+    _flyWheelSpeedTableScoring.insert(1.8575_m, 26_tps);
+    _flyWheelSpeedTableScoring.insert(2.3575_m, 27_tps);
+    _flyWheelSpeedTableScoring.insert(2.8575_m, 29_tps);
+    _flyWheelSpeedTableScoring.insert(3.3575_m, 33_tps);
+    _flyWheelSpeedTableScoring.insert(3.8575_m, 35_tps);
+    _flyWheelSpeedTableScoring.insert(4.3575_m, 38.5_tps);
+    _flyWheelSpeedTableScoring.insert(4.6875_m, 41_tps);
+    _flyWheelSpeedTableScoring.insert(5.1875_m, 44_tps);
+
+    _flyWheelSpeedTablePassing.insert(5_m, 40_tps);
+    _flyWheelSpeedTablePassing.insert(6_m, 45_tps);
+    _flyWheelSpeedTablePassing.insert(7_m, 50_tps);
+    _flyWheelSpeedTablePassing.insert(8_m, 55_tps);
 }
 
 // This method will be called once per scheduler run
@@ -112,8 +117,10 @@ bool SubShooter::IsAtSpeed() {
     units::math::abs(_shooterMotor2.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 1.0_tps;
 }
 
-frc2::CommandPtr SubShooter::SpinWithDistance(std::function<units::meter_t()> distance) {
-    return SetShooterTarget([this, distance] { return _flyWheelSpeedTable[distance()]; });
+frc2::CommandPtr SubShooter::SpinWithDistance(std::function<units::meter_t()> distance, std::function<bool()> isPassing) {
+    return SetShooterTarget([this, distance, isPassing]{return isPassing()
+        ? _flyWheelSpeedTablePassing[distance()]
+         :_flyWheelSpeedTableScoring[distance()];});
 }
 
 units::second_t SubShooter::GetTimeOfFLightWithDistance(units::meter_t distance) {
