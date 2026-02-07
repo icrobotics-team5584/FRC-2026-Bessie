@@ -52,8 +52,9 @@ void SubDrivebase::LogDrivebaseStates() {
   Logger::Log("Drivebase/Coast Button", CheckCoastButton().Get());
 
   Logger::Log("Drivebase/velocity", GetVelocity());
-  Logger::Log("Drivebase/velocity/field relative vx", GetFieldRelativeVelocity().vx);
-  Logger::Log("Drivebase/velocity/field relative vy", GetFieldRelativeVelocity().vy);
+  Logger::Log("Drivebase/velocity/desired field relative vx", GetDesiredFieldRelativeVelocity().vx);
+  Logger::Log("Drivebase/velocity/desired field relative vy", GetDesiredFieldRelativeVelocity().vy);
+  Logger::Log("Drivebase/velocity/desired angular velocity", GetDesiredAngularVelocity());
 
   Logger::Log("Drivebase/Internal Encoder Swerve States",wpi::array{
     _frontLeft.GetState(),
@@ -246,16 +247,16 @@ units::meters_per_second_t SubDrivebase::GetVelocity() {
   return m::sqrt(m::pow<2>(speeds.vx) + m::pow<2>(speeds.vy));
 }
 
-frc::ChassisSpeeds SubDrivebase::GetFieldRelativeVelocity() {
-  auto speeds = _kinematics.ToChassisSpeeds(_frontLeft.GetState(), _frontRight.GetState(),
-                                            _backLeft.GetState(), _backRight.GetState());
+frc::ChassisSpeeds SubDrivebase::GetDesiredFieldRelativeVelocity() {
+  auto speeds = _kinematics.ToChassisSpeeds(_frontLeft.GetDesiredState(), _frontRight.GetDesiredState(),
+                                            _backLeft.GetDesiredState(), _backRight.GetDesiredState());
   speeds = frc::ChassisSpeeds::FromRobotRelativeSpeeds(speeds, GetGyroAngle(false).Degrees());
   return speeds;
 }
 
-units::degrees_per_second_t SubDrivebase::GetAngularVelocity() {
-  auto speeds = _kinematics.ToChassisSpeeds(_frontLeft.GetState(), _frontRight.GetState(),
-                                            _backLeft.GetState(), _backRight.GetState());
+units::degrees_per_second_t SubDrivebase::GetDesiredAngularVelocity() {
+  auto speeds = _kinematics.ToChassisSpeeds(_frontLeft.GetDesiredState(), _frontRight.GetDesiredState(),
+                                            _backLeft.GetDesiredState(), _backRight.GetDesiredState());
   return speeds.omega;
 }
 
