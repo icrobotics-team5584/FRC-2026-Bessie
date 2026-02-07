@@ -13,10 +13,31 @@ enum RebuiltShift {
 
 class ShiftHandler {
  public:
-  static RebuiltShift GetCurrentShift();
-  static RebuiltShift GetWinningShift();
-  static units::second_t GetTimeLeft();
-  static std::string GetShiftName(RebuiltShift shift);
-  static bool IsShift(RebuiltShift shift);
-  static bool IsActiveShift(bool overrideActive);
+  static ShiftHandler& GetInstance() {
+    static ShiftHandler inst;
+    return inst;
+  }
+
+  RebuiltShift GetCurrentShift();
+  RebuiltShift GetWinningShift();
+  units::second_t GetTimeLeft();
+  std::string GetShiftName(RebuiltShift shift);
+  bool IsShift(RebuiltShift shift);
+  bool IsActiveShift(bool overrideActive=false);
+
+  /*Delete assignment and copy so people don't accidently create copies*/
+  ShiftHandler(ShiftHandler const&) = delete;
+  void operator=(ShiftHandler const&) = delete;
+
+ private:
+  bool _overrideActive = false;
+
+  /*Private constructor to prevent creating multiple instances*/
+  ShiftHandler() {}
+
+  /*Delete assignment and copy privately to prevent any double ups inside*/
+  ShiftHandler(ShiftHandler const&) = delete;
+  void operator=(ShiftHandler const&) = delete;
+  
+
 };
