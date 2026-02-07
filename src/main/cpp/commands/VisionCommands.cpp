@@ -68,7 +68,7 @@ frc2::CommandPtr AddVisionMeasurement() {
             }
         }
     }, {&SubVision::GetInstance()}
-);
+).IgnoringDisable(true);
 }
 
 }
