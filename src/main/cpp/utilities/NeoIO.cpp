@@ -27,6 +27,7 @@ void NeoIO::ConfigTurnMotor() {
 
 void NeoIO::SetDesiredAngle(units::degree_t angle) {
   _canTurnMotor.SetPositionTarget(angle);
+  _desiredAngle = angle;
 }
 
 void NeoIO::SetAngle(units::turn_t angle) {
@@ -54,6 +55,7 @@ void NeoIO::SendSensorsToDash() {
 void NeoIO::SetDesiredVelocity(units::meters_per_second_t velocity, units::newton_t forceFF) {
   units::turns_per_second_t TurnsPerSec = (velocity.value() / WHEEL_CIRCUMFERENCE.value()) * 1_tps;
   _canDriveMotor.SetVelocityTarget(TurnsPerSec);
+  _desiredSpeed = velocity;
 }
 
 void NeoIO::DriveStraightVolts(units::volt_t volts) {

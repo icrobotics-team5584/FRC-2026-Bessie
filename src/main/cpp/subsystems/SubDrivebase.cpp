@@ -49,9 +49,9 @@ void SubDrivebase::LogDrivebaseStates() {
   Logger::Log("Drivebase/Coast Button", CheckCoastButton().Get());
 
   Logger::Log("Drivebase/velocity", GetVelocity());
-  Logger::Log("Drivebase/velocity/field relative vx", GetDesiredFieldRelativeVelocity().vx);
-  Logger::Log("Drivebase/velocity/field relative vy", GetDesiredFieldRelativeVelocity().vy);
-  Logger::Log("Drivebase/velocity/angular velocity", GetDesiredAngularVelocity());
+  Logger::Log("Drivebase/velocity/desired field relative vx", GetDesiredFieldRelativeVelocity().vx);
+  Logger::Log("Drivebase/velocity/desired field relative vy", GetDesiredFieldRelativeVelocity().vy);
+  Logger::Log("Drivebase/velocity/desired angular velocity", GetDesiredAngularVelocity());
 
   Logger::Log("Drivebase/Internal Encoder Swerve States",
               wpi::array{_frontLeft.GetState(), _frontRight.GetState(), _backLeft.GetState(),

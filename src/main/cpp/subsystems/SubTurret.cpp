@@ -16,6 +16,10 @@ SubTurret::SubTurret() {
     _turretMotorConfig.closedLoop.IMaxAccum(0.05);
     _turretMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kCoast);
     _turretMotorConfig.SmartCurrentLimit(30);
+    _turretMotorConfig.softLimit.ForwardSoftLimit(POS_LIMIT.convert<units::turns>().value());
+    _turretMotorConfig.softLimit.ForwardSoftLimitEnabled(true);
+    _turretMotorConfig.softLimit.ReverseSoftLimit(NEG_LIMIT.convert<units::turns>().value());
+    _turretMotorConfig.softLimit.ReverseSoftLimitEnabled(true);
     _turretMotor.OverwriteConfig(_turretMotorConfig);
 
     _turretEncoder1.SetAssumedFrequency(ENCODER_FREQUENCY);

@@ -83,7 +83,7 @@ class SubTurret : public frc2::SubsystemBase {
   double D = 0;
 
   static constexpr units::volt_t kS = 0.15_V; 
-  static constexpr auto kV = 6_V * (1_s / 1_tr);
+  static constexpr auto kV = 3.4_V * (1_s / 1_tr);
   static constexpr auto kA = 0_V * ((1_s * 1_s) / 1_tr);
   
   static constexpr double E1_TEETH = 21;
