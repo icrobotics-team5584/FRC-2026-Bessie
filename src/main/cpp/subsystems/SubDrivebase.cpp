@@ -51,6 +51,7 @@ void SubDrivebase::SimulationPeriodic() {
 void SubDrivebase::LogDrivebaseStates() {
   Logger::Log("Drivebase/GyroAngle/Roll", SubDrivebase::GetInstance().GetRoll());
   Logger::Log("Drivebase/GyroAngle/Pitch", SubDrivebase::GetInstance().GetPitch());
+  Logger::Log("Drivebase/GyroAngle/ApproxTiltMagnitude", GetApproxTiltMagnitude());
   Logger::Log("Drivebase/Coast Button", CheckCoastButton().Get());
 
   Logger::Log("Drivebase/velocity", GetVelocity());
@@ -205,19 +206,30 @@ frc2::CommandPtr SubDrivebase::LockWheelsInXShape() {
   });
 }
 
-frc2::CommandPtr SubDrivebase::DriveOverBump() {
+frc2::CommandPtr SubDrivebase::DriveOverBump(frc::ChassisSpeeds speeds) {
   return Drive([this] {
-    return frc::ChassisSpeeds{3_mps, 0_mps, 0_tps};
-  }, true).WithDeadline(frc2::cmd::WaitUntil([this] {
-    return (units::math::abs(GetPitch()) > 2_deg || units::math::abs(GetRoll()) > 2_deg); //ascending bump
-  }).AndThen(frc2::cmd::WaitUntil([this] {
-    return (units::math::abs(GetPitch()) < 2_deg && units::math::abs(GetRoll()) < 2_deg); //top of bump
-  })).AndThen(frc2::cmd::WaitUntil([this] {
-    return (units::math::abs(GetPitch()) > 2_deg || units::math::abs(GetRoll()) > 2_deg); //descending bump
-  })).AndThen(frc2::cmd::WaitUntil([this] {
-    return (units::math::abs(GetPitch()) < 1.5_deg && units::math::abs(GetRoll()) < 1.5_deg);
-  })));
+    return frc::ChassisSpeeds{2.5_mps, 0_mps, 0_tps};
+  }, true).WithDeadline(frc2::cmd::Sequence(
+    frc2::cmd::RunOnce([this] { Logger::Log("Drivebase/DriveOverBump/State", "Start"); }),
+    frc2::cmd::WaitUntil([this] {
+      return (GetApproxTiltMagnitude() > 3_deg); //ascending
+    }),
+    frc2::cmd::RunOnce([this] { Logger::Log("Drivebase/DriveOverBump/State", "Ascending"); }),
+    frc2::cmd::WaitUntil([this] {
+      return (GetApproxTiltMagnitude() < 5_deg); //peak
+    }),
+    frc2::cmd::RunOnce([this] { Logger::Log("Drivebase/DriveOverBump/State", "Peak"); }),
+    frc2::cmd::WaitUntil([this] {
+      return (GetApproxTiltMagnitude() > 5_deg); //descending. note that tilt magnitude is always positive
+    }),
+    frc2::cmd::RunOnce([this] { Logger::Log("Drivebase/DriveOverBump/State", "Descending"); }),
+    frc2::cmd::WaitUntil([this] {
+      return (GetApproxTiltMagnitude() < 2_deg); //done
+    }),
+    frc2::cmd::RunOnce([this] { Logger::Log("Drivebase/DriveOverBump/State", "End"); })
+  ));
 }
+
 
 // Getters & calculations
 frc::Rotation2d SubDrivebase::GetGyroAngle(bool allianceRelative) { 
@@ -238,12 +250,15 @@ units::degree_t SubDrivebase::GetRoll() {
   return (_gyro.GetRoll().GetValue());
 }
 
+units::degree_t SubDrivebase::GetApproxTiltMagnitude() {
+  // This is only accurate for small pitch and roll angles
+  return units::math::hypot(GetPitch(), GetRoll());
+}
+
 units::meters_per_second_t SubDrivebase::GetVelocity() {
-  // Use pythag to find velocity from x and y components
   auto speeds = _kinematics.ToChassisSpeeds(_frontLeft.GetState(), _frontRight.GetState(),
                                             _backLeft.GetState(), _backRight.GetState());
-  namespace m = units::math;
-  return m::sqrt(m::pow<2>(speeds.vx) + m::pow<2>(speeds.vy));
+  return units::math::hypot(speeds.vx, speeds.vy);
 }
 
 frc::ChassisSpeeds SubDrivebase::GetFieldRelativeVelocity() {
