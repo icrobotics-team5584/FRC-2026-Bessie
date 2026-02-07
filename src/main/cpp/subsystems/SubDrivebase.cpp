@@ -303,6 +303,7 @@ frc::ChassisSpeeds SubDrivebase::CalcDriveToPoseSpeeds(frc::Pose2d targetPose) {
   Logger::Log("CalcDriveLogs/currentXMeters", currentXMeters);
   Logger::Log("CalcDriveLogs/currentYMeters", currentYMeters);
   Logger::Log("CalcDriveLogs/currentRotation", currentRotation.value());
+  Logger::FieldDisplay::GetInstance().DisplayPose("CalcDriveLogs/TargetPose", targetPose);
   return frc::ChassisSpeeds{xSpeed, ySpeed, rSpeed};
 }
 
