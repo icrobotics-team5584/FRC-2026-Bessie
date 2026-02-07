@@ -18,5 +18,5 @@ class ShiftHandler {
   static units::second_t GetTimeLeft();
   static std::string GetShiftName(RebuiltShift shift);
   static bool IsShift(RebuiltShift shift);
-  static bool IsActiveShift();
+  static bool IsActiveShift(bool overrideActive);
 };

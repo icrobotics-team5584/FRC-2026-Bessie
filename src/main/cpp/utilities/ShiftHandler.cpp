@@ -97,7 +97,11 @@ bool ShiftHandler::IsShift(RebuiltShift shift) {
   return GetCurrentShift() == shift ? true : false; /* check if matching */
 }
 
-bool ShiftHandler::IsActiveShift() {
+
+bool ShiftHandler::IsActiveShift(bool overrideActive = false) {
+  if (overrideActive) {
+    return true;
+  }
   if (frc::DriverStation::GetMatchType() == frc::DriverStation::MatchType::kNone) {
     return true;
   }
