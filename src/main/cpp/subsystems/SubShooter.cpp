@@ -103,7 +103,7 @@ frc2::CommandPtr SubShooter::StopShooter() {
     return RunOnce([this] {_shooterMotor1.SetControl(_flywheelTargetVelocity.WithVelocity(0_tps));});
 }
 
-frc2::CommandPtr SubShooter::ReverseSpinShooterSlowly() {
+frc2::CommandPtr SubShooter::SpinShooterSlowly() {
     return Run([this] {_shooterMotor1.SetControl(_flywheelTargetVelocity.WithVelocity(10_tps));});
 }
 

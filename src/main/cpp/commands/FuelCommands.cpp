@@ -73,7 +73,7 @@ frc2::CommandPtr ShootOnTheMove() {
 }
 
 frc2::CommandPtr EjectFuel() {
-  return SubShooter::GetInstance().ReverseSpinShooterSlowly()
+  return SubShooter::GetInstance().SpinShooterSlowly()
   .AlongWith(SubIntake::GetInstance().IntakeReverseOn())
   .AlongWith(SubIndexer::GetInstance().Index())
   .AlongWith(SubFeeder::GetInstance().Feed())
