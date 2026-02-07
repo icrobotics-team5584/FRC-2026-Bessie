@@ -31,8 +31,11 @@ class SwerveIO {
     virtual void ConfigDriveMotor() = 0;
     virtual frc::SwerveModulePosition GetPosition() = 0;
     virtual frc::Rotation2d GetAngle() = 0;
+    virtual frc::Rotation2d GetDesiredAngle() = 0;
     virtual units::meters_per_second_t GetSpeed() = 0;
+    virtual units::meters_per_second_t GetDesiredSpeed() = 0;
     virtual units::volt_t GetDriveVoltage() = 0;
     virtual frc::SwerveModuleState GetState() = 0;
+    virtual frc::SwerveModuleState GetDesiredState() = 0;
     virtual units::radian_t GetDrivenRotations() = 0;
 };

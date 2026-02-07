@@ -16,16 +16,15 @@
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/Commands.h>
 
-namespace cmd {
-
-frc2::CommandPtr AimAtFieldRelative(std::function<units::degree_t()> target) {
-  return SubTurret::GetInstance().SetTurretTargetAngle([target] {
-    auto robotPose = PoseHandler::GetInstance().GetPose();
-    Logger::Log("Turret/AimAtFieldRelative/robotPose/Rotation", robotPose.Rotation().Degrees());
-    units::degree_t targetAngle = target() - robotPose.Rotation().Degrees();
-    return targetAngle;
-  });
-}
+namespace cmd {  
+   
+  frc2::CommandPtr AimAtFieldRelative(std::function<units::degree_t()> target) {
+    return SubTurret::GetInstance().SetTurretTargetAngle([target] {     
+      auto robotPose = PoseHandler::GetInstance().GetPose();
+      Logger::Log("Turret/AimAtFieldRelative/robotPose/Rotation", robotPose.Rotation().Degrees());
+      units::degree_t targetAngle = target() - robotPose.Rotation().Degrees();
+      return targetAngle;}, [] { return SubDrivebase::GetInstance().GetDesiredAngularVelocity(); });
+  }
 
 frc2::CommandPtr AimAtSpot(frc::Translation2d target) {
   return cmd::AimAtFieldRelative([target] {
@@ -69,11 +68,11 @@ frc::Pose2d CalcFutureTurretPose() {
   units::meter_t distance = target.Distance(robot.Translation());
 
   // Calculate field relative robot velocity
-  frc::ChassisSpeeds robotVel = SubDrivebase::GetInstance().GetFieldRelativeVelocity();
+  frc::ChassisSpeeds robotVel = SubDrivebase::GetInstance().GetDesiredFieldRelativeVelocity();
   units::meters_per_second_t robotVelX = robotVel.vx;
   units::meters_per_second_t robotVelY = robotVel.vy;
-  units::degrees_per_second_t robotVelRot = SubDrivebase::GetInstance().GetAngularVelocity();
-
+  units::degrees_per_second_t robotVelRot = SubDrivebase::GetInstance().GetDesiredAngularVelocity();
+  
   Logger::Log("SOTM/velX", robotVelX);
   Logger::Log("SOTM/velY", robotVelY);
   Logger::Log("SOTM/velRot", robotVelRot);

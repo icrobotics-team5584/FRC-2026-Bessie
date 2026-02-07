@@ -91,6 +91,10 @@ frc::Rotation2d SwerveModule::GetAngle() {
   return _io->GetAngle();
 }
 
+frc::Rotation2d SwerveModule::GetDesiredAngle() {
+  return _io->GetDesiredAngle();
+}
+
 frc::Rotation2d SwerveModule::GetCanCoderAngle() {
   units::radian_t angle = _cancoder.GetAbsolutePosition().GetValue();
   return angle;
@@ -100,8 +104,16 @@ units::meters_per_second_t SwerveModule::GetSpeed() {
   return _io->GetSpeed();
 }
 
+units::meters_per_second_t SwerveModule::GetDesiredSpeed() {
+  return _io->GetDesiredSpeed();
+}
+
 frc::SwerveModuleState SwerveModule::GetState() {
   return {GetSpeed(), GetAngle()};
+}
+
+frc::SwerveModuleState SwerveModule::GetDesiredState() {
+  return _io->GetDesiredState();
 }
 
 frc::SwerveModuleState SwerveModule::GetCANCoderState() {
