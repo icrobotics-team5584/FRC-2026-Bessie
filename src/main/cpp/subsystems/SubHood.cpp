@@ -33,6 +33,8 @@ SubHood::SubHood() {
 
 // This method will be called once per scheduler run
 void SubHood::Periodic() {
+    auto loopStart = frc::GetTime();
+
     _hoodMechCircle.SetAngle(_hoodMotor.GetPosition());
     if (_hasZeroed == false && _zeroing == false) {
         _hoodMotor.Set(0);
@@ -41,6 +43,8 @@ void SubHood::Periodic() {
     Logger::Log("Hood/haszeroed", _hasZeroed);
     Logger::Log("Hood/zeroing", _zeroing);
     Logger::Log("Hood/IsAtTarget", HoodIsAtTarget());
+    
+    Logger::Log("Hood/Loop Time", (frc::GetTime() - loopStart));
 }
 
 void SubHood::SimulationPeriodic() {

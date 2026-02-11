@@ -36,6 +36,8 @@ SubVision::SubVision() {
 }
 
 void SubVision::Periodic() {
+  auto loopStart = frc::GetTime();
+
   _leftLatestResults = _leftCamera.GetAllUnreadResults();
   _rightLatestResults = _rightCamera.GetAllUnreadResults();
 
@@ -46,6 +48,8 @@ void SubVision::Periodic() {
     frc::SmartDashboard::PutString("Vision/Last Used Camera", "Right");
   }
   UpdateVision();
+
+  Logger::Log("Vision/Loop Time", (frc::GetTime() - loopStart));
 }
 
 void SubVision::SimulationPeriodic() {

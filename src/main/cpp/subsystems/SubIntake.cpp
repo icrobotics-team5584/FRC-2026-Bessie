@@ -34,6 +34,8 @@ void SubIntake::IntakeCurrentHighTimer() {
 
 // This method will be called once per scheduler run
 void SubIntake::Periodic() {
+  auto loopStart = frc::GetTime();
+
   units::ampere_t intakeCurrent = _intakeMotor.GetStatorCurrent();
 
   Logger::Log("Intake/Intake Motor Current", intakeCurrent);
@@ -55,6 +57,8 @@ void SubIntake::Periodic() {
     _intakeHighTemperatureAlert.Set(false);
   }
   RobotVisualisation::GetInstance()._intakeWheel.SetAngle(_intakeMotor.GetPosition());
+
+  Logger::Log("Intake/Loop Time", (frc::GetTime() - loopStart));
 }
 
 void SubIntake::SimulationPeriodic() {

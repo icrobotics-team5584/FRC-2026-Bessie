@@ -31,6 +31,7 @@ SubTurret::SubTurret() {
 
 // This method will be called once per scheduler run
 void SubTurret::Periodic() {
+    auto loopStart = frc::GetTime();
 
     if(_hasZeroed == false && _turretEncoder1.IsConnected() && _turretEncoder2.IsConnected()) {
         units::degree_t motorPosition = _turretMotor.GetPosition();
@@ -67,6 +68,8 @@ void SubTurret::Periodic() {
     Logger::Log("Turret/Encoder/Encoder2IsConnected", _turretEncoder2.IsConnected());
     Logger::Log("Turret/Encoder/Encoder1Frequency", _turretEncoder1.GetFrequency());
     Logger::Log("Turret/Encoder/Encoder2Frequency", _turretEncoder2.GetFrequency());
+
+    Logger::Log("Turret/Loop Time", (frc::GetTime() - loopStart));
 }
 
 void SubTurret::SimulationPeriodic() {
