@@ -234,9 +234,9 @@ frc2::CommandPtr SubDrivebase::LockWheelsInXShape() {
   });
 }
 
-frc2::CommandPtr SubDrivebase::DriveOverBump(frc::ChassisSpeeds speeds) {
-  return Drive([this, speeds] {
-    return speeds;
+frc2::CommandPtr SubDrivebase::DriveOverBump(frc::ChassisSpeeds fieldRelativeSpeeds) {
+  return Drive([this, fieldRelativeSpeeds] {
+    return fieldRelativeSpeeds;
   }, true).WithDeadline(frc2::cmd::Sequence(
     frc2::cmd::RunOnce([this] { Logger::Log("Drivebase/DriveOverBump/State", 1); }),
     frc2::cmd::WaitUntil([this] {

@@ -37,22 +37,22 @@ namespace cmd {
             SubHood::GetInstance().ZeroHood(),
             cmd::ShootOnTheMove().WithTimeout(2_s)
         ).AndThen(frc2::cmd::Sequence(
-            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{2.5_mps, 0_mps, 0_tps}),
+            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{3_mps, 0_mps, 0_tps}),
             frc2::cmd::RunOnce([] {
                 SubDrivebase::GetInstance().SetPose(frc::Pose2d{5.7_m, 5.8_m, SubDrivebase::GetInstance().GetGyroAngle()});
-            }), //reset position
+            }), //reset position after traversing the bump
 
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.5_m, 5.5_m, -90_deg}; }, 1.0, 5_cm, 5_deg), //TEMP drive to intake pos
             //REPLACE ABOVE WITH: SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.8_m, 7.0_m, -90_deg}; }, 1.0), //entry to neutral zone (NeutralInLeft)
  
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.5_m, 3.5_m, -90_deg}; }, 0.5, 20_cm, 5_deg) //TEMP drive to end intake pos
                 .DeadlineFor(SubIntake::GetInstance().IntakeOn()),
-            //REPLACE ABOVE WITH: SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.8_m, 4.75_m, -90_deg}; }, 1.0, 20_cm).AlongWith(SubIntake::GetInstance().IntakeOn()), //intake until exit from neutral zone (NeutralEndLeft)
+            //REPLACE ABOVE WITH: SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.8_m, 4.75_m, -90_deg}; }, 1.0, 20_cm), //intake until exit from neutral zone (NeutralEndLeft)
 
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.9_m, 5.3_m, 180_deg}; }, 1.0, 20_cm, 5_deg)
                 .DeadlineFor(SubIntake::GetInstance().IntakeOn()), //return to bump (continue intaking)
             
-            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{-2.5_mps, 0_mps, 0_tps}),
+            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{-3_mps, 0_mps, 0_tps}),
             frc2::cmd::RunOnce([] {
                 SubDrivebase::GetInstance().SetPose(frc::Pose2d{3.5_m, 5.3_m, SubDrivebase::GetInstance().GetGyroAngle()});
             }) //reset position again
