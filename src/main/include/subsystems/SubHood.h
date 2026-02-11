@@ -44,6 +44,8 @@ class SubHood : public frc2::SubsystemBase {
   frc2::CommandPtr MoveHoodUp1Degree();
   frc2::CommandPtr MoveHoodDown1Degree();
   
+  static constexpr units::degree_t PASSING_ANGLE = 37_deg;
+  
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */

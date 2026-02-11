@@ -27,6 +27,7 @@ void NeoIO::ConfigTurnMotor() {
 
 void NeoIO::SetDesiredAngle(units::degree_t angle) {
   _canTurnMotor.SetPositionTarget(angle);
+  _desiredAngle = angle;
 }
 
 void NeoIO::SetAngle(units::turn_t angle) {
@@ -54,6 +55,7 @@ void NeoIO::SendSensorsToDash() {
 void NeoIO::SetDesiredVelocity(units::meters_per_second_t velocity, units::newton_t forceFF) {
   units::turns_per_second_t TurnsPerSec = (velocity.value() / WHEEL_CIRCUMFERENCE.value()) * 1_tps;
   _canDriveMotor.SetVelocityTarget(TurnsPerSec);
+  _desiredSpeed = velocity;
 }
 
 void NeoIO::DriveStraightVolts(units::volt_t volts) {
@@ -107,11 +109,19 @@ frc::Rotation2d NeoIO::GetAngle() {
   return turnAngle;
 }
 
+frc::Rotation2d NeoIO::GetDesiredAngle() {
+  return _desiredAngle;
+}
+
 units::meters_per_second_t NeoIO::GetSpeed() {
   return (
     _canDriveMotor.GetVelocity().convert<units::turns_per_second>().value() 
     * WHEEL_CIRCUMFERENCE.value()
   ) * 1_mps;
+}
+
+units::meters_per_second_t NeoIO::GetDesiredSpeed() {
+  return _desiredSpeed;
 }
 
 units::volt_t NeoIO::GetDriveVoltage() {
@@ -120,6 +130,10 @@ units::volt_t NeoIO::GetDriveVoltage() {
 
 frc::SwerveModuleState NeoIO::GetState() {
   return {GetSpeed(), GetAngle()};
+}
+
+frc::SwerveModuleState NeoIO::GetDesiredState() {
+  return {GetDesiredSpeed(), GetDesiredAngle()};
 }
 
 units::radian_t NeoIO::GetDrivenRotations() {

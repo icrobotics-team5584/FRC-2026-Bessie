@@ -47,9 +47,9 @@ class SubDrivebase : public frc2::SubsystemBase {
   units::degree_t GetRoll();
   units::degree_t GetApproxTiltMagnitude();
 
-  units::degrees_per_second_t GetAngularVelocity();
+  units::degrees_per_second_t GetDesiredAngularVelocity();
   units::meters_per_second_t GetVelocity();
-  frc::ChassisSpeeds GetFieldRelativeVelocity();
+  frc::ChassisSpeeds GetDesiredFieldRelativeVelocity();
   frc2::Trigger CheckCoastButton();
 
   units::turns_per_second_t CalcRotateSpeed(units::turn_t rotationError);
@@ -73,6 +73,9 @@ class SubDrivebase : public frc2::SubsystemBase {
   // Pose drive
   frc2::CommandPtr Drive(std::function<frc::ChassisSpeeds()> speeds, bool fieldOriented);
   frc2::CommandPtr DriveOverBump(frc::ChassisSpeeds speeds);
+
+  // Rotations
+  frc2::CommandPtr AlignToAngle(frc2::CommandXboxController& controller, units::angle::degree_t angle);
 
   // Gyro and sensor
   frc2::CommandPtr SyncSensor();

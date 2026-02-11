@@ -5,13 +5,14 @@
 #include "utilities/ShotPlanner.h"
 
 #include "utilities/FieldConstants.h"
+#include "utilities/ShiftHandler.h"
 
 #include <utilities/ICgeometry.h>
 #include <utilities/Logger.h>
 
 ShotPlanner::ShotPlanner() = default;
 
-frc::Translation3d ShotPlanner::CalculateShotTarget(frc::Pose2d robotPos) {
+ShotPlanner::ShotPlannerResults ShotPlanner::CalculateShotTarget(frc::Pose2d robotPos) {
   auto alliance = frc::DriverStation::GetAlliance();
   if (alliance) {
     if (alliance.value() == frc::DriverStation::kRed) {
@@ -21,27 +22,66 @@ frc::Translation3d ShotPlanner::CalculateShotTarget(frc::Pose2d robotPos) {
   }
 
   frc::Translation3d target;
+  bool isPassing = false;
+  bool shouldShoot = true;
+  bool isInBotNeutralZone = false;
+  bool isInBlueAlliance = false;
+  bool isOurHubActive = ShiftHandler::IsActiveShift();
 
-  if (IsWithinZone(fieldpos::BLUE_ALLIANCE_ZONE_TOP_RIGHT, fieldpos::BLUE_ALLIANCE_ZONE_BOTTOM_LEFT,
-        robotPos)) {
-    target = fieldpos::HUB_POSITION;
-  } else if (IsWithinZone(fieldpos::TOP_PASSING_ZONE_TOP_RIGHT,
-               fieldpos::TOP_PASSING_ZONE_BOTTOM_LEFT, robotPos)) {
+  isInBlueAlliance = IsWithinZone(
+    fieldpos::BLUE_ALLIANCE_ZONE_TOP_RIGHT, fieldpos::BLUE_ALLIANCE_ZONE_BOTTOM_LEFT, robotPos);
+  isInBotNeutralZone = IsWithinZone(
+    fieldpos::BOTTOM_PASSING_ZONE_TOP_RIGHT, fieldpos::BOTTOM_PASSING_ZONE_BOTTOM_LEFT, robotPos);
+
+  if (!isInBotNeutralZone && !isInBlueAlliance && !isOurHubActive) {
     target = fieldpos::TOP_ALLIANCE_ZONE_POSITION;
-  } else if (IsWithinZone(fieldpos::BOTTOM_PASSING_ZONE_TOP_RIGHT,
-               fieldpos::BOTTOM_PASSING_ZONE_BOTTOM_LEFT, robotPos)) {
+    shouldShoot = true;
+    isPassing = true;
+  }
+  if (isInBotNeutralZone && !isInBlueAlliance && !isOurHubActive) {
     target = fieldpos::BOTTOM_ALLIANCE_ZONE_POSITION;
-  } else {
+    shouldShoot = true;
+    isPassing = true;
+  }
+  if (!isInBotNeutralZone && isInBlueAlliance && !isOurHubActive) {
     target = fieldpos::HUB_POSITION;
+    shouldShoot = false;
+    isPassing = false;
   }
+  if (isInBotNeutralZone && isInBlueAlliance && !isOurHubActive) {
+    target = fieldpos::HUB_POSITION;
+    shouldShoot = false;
+    isPassing = false;
+  }
+  if (!isInBotNeutralZone && !isInBlueAlliance && isOurHubActive) {
+    target = fieldpos::TOP_ALLIANCE_ZONE_POSITION;
+    shouldShoot = true;
+    isPassing = true;
+  }
+  if (isInBotNeutralZone && !isInBlueAlliance && isOurHubActive) {
+    target = fieldpos::BOTTOM_ALLIANCE_ZONE_POSITION;
+    shouldShoot = true;
+    isPassing = true;
+  }
+  if (!isInBotNeutralZone && isInBlueAlliance && isOurHubActive) {
+    target = fieldpos::HUB_POSITION;
+    shouldShoot = true;
+    isPassing = false;
+  }
+  if (isInBotNeutralZone && isInBlueAlliance && isOurHubActive) {
+    target = fieldpos::HUB_POSITION;
+    shouldShoot = false;
+    isPassing = false;
+  }
+  
 
-  if (alliance) {
-    if (alliance.value() == frc::DriverStation::Alliance::kRed) {
-      target = ICgeometry::xTranslationFlip(target);
+    if (alliance) {
+      if (alliance.value() == frc::DriverStation::Alliance::kRed) {
+        target = ICgeometry::xTranslationFlip(target);
+      }
     }
-  }
 
-  return target;
+  return {target, shouldShoot, isPassing};
 }
 
 bool ShotPlanner::IsWithinZone(

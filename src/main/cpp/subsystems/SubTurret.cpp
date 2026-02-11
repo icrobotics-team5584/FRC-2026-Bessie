@@ -14,8 +14,12 @@ SubTurret::SubTurret() {
     _turretMotorConfig.closedLoop.MaxOutput(1.0);
     _turretMotorConfig.closedLoop.MinOutput(-1.0);
     _turretMotorConfig.closedLoop.IMaxAccum(0.05);
-    _turretMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kCoast);
+    _turretMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
     _turretMotorConfig.SmartCurrentLimit(30);
+    _turretMotorConfig.softLimit.ForwardSoftLimit(POS_LIMIT.convert<units::turns>().value());
+    _turretMotorConfig.softLimit.ForwardSoftLimitEnabled(true);
+    _turretMotorConfig.softLimit.ReverseSoftLimit(NEG_LIMIT.convert<units::turns>().value());
+    _turretMotorConfig.softLimit.ReverseSoftLimitEnabled(true);
     _turretMotor.OverwriteConfig(_turretMotorConfig);
 
     _turretEncoder1.SetAssumedFrequency(ENCODER_FREQUENCY);
@@ -63,8 +67,6 @@ void SubTurret::Periodic() {
     Logger::Log("Turret/Encoder/Encoder2IsConnected", _turretEncoder2.IsConnected());
     Logger::Log("Turret/Encoder/Encoder1Frequency", _turretEncoder1.GetFrequency());
     Logger::Log("Turret/Encoder/Encoder2Frequency", _turretEncoder2.GetFrequency());
-
-
 }
 
 void SubTurret::SimulationPeriodic() {
@@ -120,8 +122,17 @@ units::degree_t SubTurret::GetTurretAngle() {
     return _turretMotor.GetPosition();
 }
 
-frc2::CommandPtr SubTurret::SetTurretTargetAngle(std::function<units::degree_t()> angle) {
-    return Run([this, angle] {_turretMotor.SetPositionTarget(CalcOptimisedTurretAngle(angle()));});
+frc2::CommandPtr SubTurret::SetTurretTargetAngle(std::function<units::degree_t()> angle, std::function<units::degrees_per_second_t()> robotAngVel){
+    return Run([this, angle, robotAngVel] {
+        units::degrees_per_second_t nextVel = -robotAngVel(); 
+        // we want the turret to negate the robot rotation, hence the negative
+
+        units::volt_t rotationFeedforward = _robotRotVelFF.Calculate(nextVel);
+
+        Logger::Log("Turret/RobotRotFF/ffVolts", rotationFeedforward);
+        Logger::Log("Turret/RobotRotFF/DrivebaseRotVel", nextVel);
+        _turretMotor.SetPositionTarget(CalcOptimisedTurretAngle(angle()), rotationFeedforward);
+    });
 }
 
 units::degree_t SubTurret::CalcOptimisedTurretAngle(units::degree_t angle) {
