@@ -6,7 +6,7 @@
 
 namespace DrivebaseConfig {
   // Drive controls
-  constexpr units::meters_per_second_t MAX_VELOCITY = 4_mps;
+  constexpr units::meters_per_second_t MAX_VELOCITY = 2.5_mps;
   constexpr units::turns_per_second_t MAX_ANGULAR_VELOCITY = 300_deg_per_s;
 
   constexpr units::meters_per_second_t MAX_P2P_VELOCITY = 2_mps;

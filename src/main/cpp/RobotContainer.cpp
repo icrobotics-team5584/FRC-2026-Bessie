@@ -76,7 +76,7 @@ void RobotContainer::ConfigureBindings() {
   //Sticks
 
   //Other
-  _driverController.Back().WhileTrue(SubDrivebase::GetInstance().DriveOverBump());
+  _driverController.Back().WhileTrue(SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{2.5_mps, 0_mps, 0_tps}));
 
   frc2::Trigger([]{return ShiftHandler::GetTimeLeft() < 3_s;}).OnTrue(Rumble(1, 0.5_s));
 }

@@ -42,14 +42,14 @@ namespace cmd {
                 SubDrivebase::GetInstance().SetPose(frc::Pose2d{5.7_m, 5.8_m, SubDrivebase::GetInstance().GetGyroAngle()});
             }), //reset position
 
-            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.3_m, 5.5_m, -90_deg}; }, 1.0, 5_cm, 5_deg), //TEMP drive to intake pos
+            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.5_m, 5.5_m, -90_deg}; }, 1.0, 5_cm, 5_deg), //TEMP drive to intake pos
             //REPLACE ABOVE WITH: SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.8_m, 7.0_m, -90_deg}; }, 1.0), //entry to neutral zone (NeutralInLeft)
  
-            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.3_m, 3.5_m, -90_deg}; }, 0.5, 20_cm, 5_deg) //TEMP drive to end intake pos
+            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.5_m, 3.5_m, -90_deg}; }, 0.5, 20_cm, 5_deg) //TEMP drive to end intake pos
                 .DeadlineFor(SubIntake::GetInstance().IntakeOn()),
             //REPLACE ABOVE WITH: SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.8_m, 4.75_m, -90_deg}; }, 1.0, 20_cm).AlongWith(SubIntake::GetInstance().IntakeOn()), //intake until exit from neutral zone (NeutralEndLeft)
 
-            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.7_m, 5.3_m, 180_deg}; }, 1.0, 20_cm, 5_deg)
+            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.9_m, 5.3_m, 180_deg}; }, 1.0, 20_cm, 5_deg)
                 .DeadlineFor(SubIntake::GetInstance().IntakeOn()), //return to bump (continue intaking)
             
             SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{-2.5_mps, 0_mps, 0_tps}),
