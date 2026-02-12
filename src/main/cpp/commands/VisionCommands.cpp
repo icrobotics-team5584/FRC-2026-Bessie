@@ -33,7 +33,8 @@ void TurretCameraProcess(std::string name, photon::EstimatedRobotPose pose) {
                                 .TransformBy(t_turret_to_cam.Inverse())
                                 .TransformBy(t_bot_to_turret.Inverse());
 
-    wpi::array<double,3> dev = {0.5, 0.5, 0.5};
+    double d = SubVision::GetInstance().GetDev(pose);
+    wpi::array<double,3> dev = {d, d, 0.9};
     PoseHandler::GetInstance().AddVisionMeasurement(
         orig_bot_pose, pose.timestamp, dev);
     Logger::FieldDisplay::GetInstance().DisplayPose("Vision/"+name+"/Est pose",orig_bot_pose);
