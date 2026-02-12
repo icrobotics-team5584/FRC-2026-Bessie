@@ -48,7 +48,6 @@ class SubTurret : public frc2::SubsystemBase {
   frc2::CommandPtr SetTurretTargetAngle(std::function<units::degree_t()> angle, std::function<units::degrees_per_second_t()> robotAngVel);
   frc2::CommandPtr ZeroTurretCmd();
 
-  // static constexpr frc::Transform2d ROBOT_TO_TURRET = frc::Transform2d{-235_mm, 0_mm, 0_deg};
   static constexpr frc::Transform2d ROBOT_TO_TURRET = frc::Transform2d{-345_mm, 0_mm, 0_deg};
 
   /**
