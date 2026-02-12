@@ -56,7 +56,7 @@ frc2::CommandPtr AddVisionMeasurement() {
                     Logger::Log("Vision/"+name+"/Have value" , true);
                     auto estPose = pose.value();
                     if (SubVision::GetInstance().IsEstimateUsable(estPose)) {
-                        if (name == "Turret") {
+                        if (name == SubVision::GetInstance().TURRET_CAM_NAME) {
                             TurretCameraProcess(name, estPose);
                         } else {
                             StableCameraProcess(name, estPose);

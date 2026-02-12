@@ -52,40 +52,38 @@ public:
 
   static constexpr frc::Transform2d TURRET_TO_CAM = frc::Transform2d{0.083_m, -0.147_m, 0_deg};
 
+  const std::string TURRET_CAM_NAME = "Turret";
+  const std::string LEFT_CAM_NAME = "Left";
+  const std::string RIGHT_CAM_NAME = "Right";
+
  private:
 
   //Create field layout
   std::string _tagMapFilePath = frc::filesystem::GetDeployDirectory() + "/2026-rebuilt.json";
   frc::AprilTagFieldLayout _tagMap{_tagMapFilePath};
 
-  //Left camera config
-  std::string _leftCamName = "Left";
-
   frc::Transform3d _leftBotToCam{{-350_mm,-470_mm,350_mm},{0_deg,-16_deg,190.54_deg}};
 
   ICCamera _leftCam {
-    _leftCamName,
+    LEFT_CAM_NAME,
     _leftBotToCam,
     _tagMap
   };
 
-  //Right camera config
-  std::string _rightCamName = "Right";
-
   frc::Transform3d _rightBotToCam{{-350_mm,470_mm,350_mm},{0_deg,-16_deg,-190.54_deg}};
 
   ICCamera _rightCam {
-    _rightCamName,
+    RIGHT_CAM_NAME,
     _rightBotToCam,
     _tagMap
   };
 
-  std::string _turrretCamName = "Turret";
+  
 
   frc::Transform3d _turretBotToCam {{0_m, 0_m, 0.63_m}, {0_deg, 12.3_deg, 0_deg}};
 
   ICCamera _turretCam {
-    _turrretCamName,    
+    TURRET_CAM_NAME,    
     _turretBotToCam,
     _tagMap
   };
