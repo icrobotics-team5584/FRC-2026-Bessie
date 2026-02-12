@@ -112,8 +112,7 @@ bool ShiftHandler::IsActiveShift() {
   /* IsFMSAttached() checks if we're at comp, and if we're not we don't respect
    * shifts. However, in practise mode at home there isn't an FMS, so we check 
    * if match time is simulated properly (as it is in practise mode), to see if
-   * we are in practise mode.
-   */
+   * we are in practise mode. */
   if (frc::DriverStation::IsFMSAttached() == false && frc::DriverStation::GetMatchTime() == -1_s) {
     return true;
   }
