@@ -20,7 +20,6 @@
 #include "commands/TurretCommands.h"
 #include "commands/VisionCommands.h"
 
-#include "utilities/FieldConstants.h"
 #include "utilities/Logger.h"
 #include "utilities/PoseHandler.h"
 #include "utilities/ShiftHandler.h"
