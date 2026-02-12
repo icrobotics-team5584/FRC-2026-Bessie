@@ -3,14 +3,17 @@
 #include "utilities/Logger.h"
 
 RebuiltShift ShiftHandler::GetCurrentShift() {
+  if (frc::DriverStation::IsDisabled()) {
+    return RebuiltShift::NONE;
+  }
+  units::second_t secondsPassed = frc::DriverStation::GetMatchTime();
+  if (secondsPassed == -1_s) { /* Isn't in home practise mode */
+    return static_cast<RebuiltShift>(frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kBlue));
+  }
+  
   if (frc::DriverStation::IsAutonomousEnabled()) {
     return RebuiltShift::AUTON;
   }
-  units::second_t secondsPassed = frc::DriverStation::GetMatchTime();
-  if (secondsPassed == -1_s) {
-    return RebuiltShift::NONE;
-  }
-
   if (secondsPassed > 130_s) {
     return RebuiltShift::TRANS;
   }
@@ -109,14 +112,14 @@ bool ShiftHandler::IsActiveShift() {
   if (_overrideActive == true) {
     return true;
   }
-  /* IsFMSAttached() checks if we're at comp, and if we're not we don't respect
-   * shifts. However, in practise mode at home there isn't an FMS, so we check 
-   * if match time is simulated properly (as it is in practise mode), to see if
-   * we are in practise mode. */
-  if (frc::DriverStation::IsFMSAttached() == false && frc::DriverStation::GetMatchTime() == -1_s) {
-    return true;
-  }
   RebuiltShift currentShift = GetCurrentShift();
+  if (
+    frc::DriverStation::IsFMSAttached() == false && /* Is at comp? */
+    frc::DriverStation::GetMatchTime() == -1_s && /* Isn't home practise mode */
+    currentShift != RebuiltShift::NONE /* Isn't NONE shift */
+  ) {
+    return true; /* Don't respect shifts */
+  }
   RebuiltShift myShift = static_cast<RebuiltShift>(
     frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kBlue));
 
