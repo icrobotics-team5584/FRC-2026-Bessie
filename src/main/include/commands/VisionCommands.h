@@ -4,11 +4,13 @@
 
 #pragma once
 
-#include <frc2/command/Command.h>
+#include <frc2/command/Commands.h>
+#include <photon/PhotonPoseEstimator.h>
+
+void StableCameraProcess(std::string name, photon::EstimatedRobotPose pose);
+
+void TurretCameraProcess(std::string name, photon::EstimatedRobotPose pose);
 
 namespace cmd {
-  /**
-   * Take current measurement from the camera, then add the analyzed result as a estimated 2d pose of the robot to drivebase
-   */
-  frc2::CommandPtr AddVisionMeasurement();
+frc2::CommandPtr AddVisionMeasurement();
 }

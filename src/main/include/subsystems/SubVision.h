@@ -15,6 +15,7 @@
 #include <photon/PhotonPoseEstimator.h>
 #include <frc/Filesystem.h>
 #include <wpi/interpolating_map.h>
+#include "utilities/ICCamera.h"
 
 class SubVision : public frc2::SubsystemBase {
 public:
@@ -26,6 +27,12 @@ public:
 
   void Periodic() override;
 
+  void UpdateVision();
+
+  void StableCameraProcess();
+
+  void TurretCameraProcess();
+
   void SimulationPeriodic() override;
 
   enum Side {
@@ -33,71 +40,61 @@ public:
     Right = 2
   };
 
-  /**
-   * Update pose estimater with vision, should be called every frame
-   */
-  void UpdateVision();
-
-  Side GetLastCameraUsed();
-
   std::optional<frc::Pose2d> GetAprilTagPose(int id);
 
-  std::map<Side, std::optional<photon::EstimatedRobotPose>> GetPose();
-
-  frc::Pose2d CalculateRelativePose(frc::Pose2d pose, units::meter_t xTransform, units::meter_t yTransform);
-
-  std::optional<frc::Transform3d> CalculateRobotToCamera(photon::PhotonPipelineResult &result, frc::Transform3d robotToTag);
+  std::map<std::string, std::optional<photon::EstimatedRobotPose>> GetPose();
 
   int GetClosestTag(frc::Pose2d currentPose);
 
   bool IsEstimateUsable(photon::EstimatedRobotPose pose);
 
-  int GetLastSeenTagID();
-
   double GetDev(photon::EstimatedRobotPose pose);
 
-  frc2::CommandPtr CalibrateRobotToCamera(frc::Transform3d robotToTag);
+  static constexpr frc::Transform2d TURRET_TO_CAM = frc::Transform2d{0.083_m, -0.147_m, 0_deg};
+
+  const std::string TURRET_CAM_NAME = "Turret";
+  const std::string LEFT_CAM_NAME = "Left";
+  const std::string RIGHT_CAM_NAME = "Right";
 
  private:
-  struct TagObservation {
-    photon::PhotonTrackedTarget tag;
-    Side cameraSide;
-    units::time::second_t timestamp;
-  };
-  struct TagObservation _lastTagObservation;
 
   //Create field layout
   std::string _tagMapFilePath = frc::filesystem::GetDeployDirectory() + "/2026-rebuilt.json";
   frc::AprilTagFieldLayout _tagMap{_tagMapFilePath};
 
-  //Left camera config
-  std::string _leftCamName = "ICR_OV9281_L";
-
-  photon::PhotonCamera _leftCamera{_leftCamName};
-  std::vector<photon::PhotonPipelineResult> _leftLatestResults;
-
-  photon::PhotonCameraSim _leftCamSim{&_leftCamera};
-  photon::VisionSystemSim _visionSim{_leftCamName};
-
   frc::Transform3d _leftBotToCam{{-350_mm,-470_mm,350_mm},{0_deg,-16_deg,190.54_deg}};
 
-  photon::PhotonPoseEstimator _leftPoseEstimater{_tagMap, _leftBotToCam};
-
-  std::optional<photon::EstimatedRobotPose> _leftEstPose;
-
-  //Right camera config
-  std::string _rightCamName = "ICR_OV9281_R";
-
-  photon::PhotonCamera _rightCamera{_rightCamName};
-  std::vector<photon::PhotonPipelineResult> _rightLatestResults;
-
-  photon::PhotonCameraSim _rightCamSim{&_rightCamera};
+  ICCamera _leftCam {
+    LEFT_CAM_NAME,
+    _leftBotToCam,
+    _tagMap
+  };
 
   frc::Transform3d _rightBotToCam{{-350_mm,470_mm,350_mm},{0_deg,-16_deg,-190.54_deg}};
-  
-  photon::PhotonPoseEstimator _rightPoseEstimater{_tagMap, _rightBotToCam};
 
-  std::optional<photon::EstimatedRobotPose> _rightEstPose;
+  ICCamera _rightCam {
+    RIGHT_CAM_NAME,
+    _rightBotToCam,
+    _tagMap
+  };
+
+  
+
+  frc::Transform3d _turretBotToCam {{0_m, 0_m, 0.63_m}, {0_deg, 12.3_deg, 0_deg}};
+
+  ICCamera _turretCam {
+    TURRET_CAM_NAME,    
+    _turretBotToCam,
+    _tagMap
+  };
+
+  std::vector<ICCamera*> _camList {
+    &_leftCam,
+    &_rightCam,
+    &_turretCam
+  };
+
+  photon::VisionSystemSim _visionSim{"VisionSim"};
 
   //Deviation table for further distances from tag
   wpi::interpolating_map<units::meter_t, double> _devTable;
