@@ -109,8 +109,9 @@ frc2::CommandPtr SubShooter::StopShooter() {
 }
 
 bool SubShooter::IsAtSpeed() {
-    return units::math::abs(_shooterMotor1.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 1.0_tps &&
-    units::math::abs(_shooterMotor2.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 1.0_tps;
+    return units::math::abs(_shooterMotor1.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 1.0_tps; 
+    // &&
+    // units::math::abs(_shooterMotor2.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 1.0_tps;
 }
 
 frc2::CommandPtr SubShooter::SpinWithDistance(std::function<units::meter_t()> distance, std::function<bool()> isPassing) {
