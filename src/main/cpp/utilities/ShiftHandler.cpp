@@ -37,6 +37,10 @@ RebuiltShift ShiftHandler::GetCurrentShift() {
 }
 
 RebuiltShift ShiftHandler::GetWinningShift() {
+  if(_overrideActive == true) {
+    return static_cast<RebuiltShift>(frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kBlue));
+  }
+
   std::string data = frc::DriverStation::GetGameSpecificMessage();
   if (data.length() == 0) { /* No winning shift message recieved */
     return RebuiltShift::NONE;
@@ -109,7 +113,8 @@ bool ShiftHandler::IsActiveShift() {
     return true;
   }
   RebuiltShift currentShift = GetCurrentShift();
-  RebuiltShift myShift = (RebuiltShift)frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kBlue);
+  RebuiltShift myShift = static_cast<RebuiltShift>(
+    frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kBlue));
 
   if (currentShift == RebuiltShift::AUTON || currentShift == RebuiltShift::TRANS ||
       currentShift == RebuiltShift::ENDGAME || myShift == currentShift) {
