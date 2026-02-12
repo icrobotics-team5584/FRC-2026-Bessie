@@ -40,8 +40,6 @@ public:
     Right = 2
   };
 
-  // Side GetLastCameraUsed();
-
   std::optional<frc::Pose2d> GetAprilTagPose(int id);
 
   std::map<std::string, std::optional<photon::EstimatedRobotPose>> GetPose();
@@ -49,8 +47,6 @@ public:
   int GetClosestTag(frc::Pose2d currentPose);
 
   bool IsEstimateUsable(photon::EstimatedRobotPose pose);
-
-  // int GetLastSeenTagID();
 
   double GetDev(photon::EstimatedRobotPose pose);
 
