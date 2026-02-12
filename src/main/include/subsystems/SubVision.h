@@ -54,7 +54,7 @@ public:
 
   double GetDev(photon::EstimatedRobotPose pose);
 
-  static constexpr frc::Transform2d TURRET_TO_CAM = frc::Transform2d{0.075_m, -0.145_m, 0_deg};
+  static constexpr frc::Transform2d TURRET_TO_CAM = frc::Transform2d{0.083_m, -0.147_m, 0_deg};
 
  private:
 
@@ -63,27 +63,25 @@ public:
   frc::AprilTagFieldLayout _tagMap{_tagMapFilePath};
 
   //Left camera config
-  std::string _leftCamName = "ICR_OV9281_L";
+  std::string _leftCamName = "Left";
 
   frc::Transform3d _leftBotToCam{{-350_mm,-470_mm,350_mm},{0_deg,-16_deg,190.54_deg}};
 
   ICCamera _leftCam {
     _leftCamName,
     _leftBotToCam,
-    _tagMap,
-    "left"
+    _tagMap
   };
 
   //Right camera config
-  std::string _rightCamName = "ICR_OV9281_R";
+  std::string _rightCamName = "Right";
 
   frc::Transform3d _rightBotToCam{{-350_mm,470_mm,350_mm},{0_deg,-16_deg,-190.54_deg}};
 
   ICCamera _rightCam {
     _rightCamName,
     _rightBotToCam,
-    _tagMap,
-    "right"
+    _tagMap
   };
 
   std::string _turrretCamName = "Turret";
@@ -93,8 +91,7 @@ public:
   ICCamera _turretCam {
     _turrretCamName,    
     _turretBotToCam,
-    _tagMap,
-    "turret"
+    _tagMap
   };
 
   std::vector<ICCamera*> _camList {

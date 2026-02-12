@@ -9,16 +9,16 @@
 #include "utilities/PoseHandler.h"
 #include <frc/RobotBase.h>
 
-void StableCameraProcess(std::string label, photon::EstimatedRobotPose pose) {
+void StableCameraProcess(std::string name, photon::EstimatedRobotPose pose) {
     double d = SubVision::GetInstance().GetDev(pose);
     wpi::array<double,3> dev = {d, d, 0.9};
     PoseHandler::GetInstance().AddVisionMeasurement(
         pose.estimatedPose.ToPose2d(), pose.timestamp, dev);
-    Logger::FieldDisplay::GetInstance().DisplayPose("Vision/"+label+"/Est pose",
+    Logger::FieldDisplay::GetInstance().DisplayPose("Vision/"+name+"/Est pose",
         pose.estimatedPose.ToPose2d());
 }
 
-void TurretCameraProcess(std::string label, photon::EstimatedRobotPose pose) {
+void TurretCameraProcess(std::string name, photon::EstimatedRobotPose pose) {
     frc::Transform2d t_bot_to_turret = SubTurret::ROBOT_TO_TURRET;
 
     frc::Translation2d turret_to_cam = {SubVision::TURRET_TO_CAM.X(),SubVision::TURRET_TO_CAM.Y()};
@@ -36,7 +36,7 @@ void TurretCameraProcess(std::string label, photon::EstimatedRobotPose pose) {
     wpi::array<double,3> dev = {0.5, 0.5, 0.5};
     PoseHandler::GetInstance().AddVisionMeasurement(
         orig_bot_pose, pose.timestamp, dev);
-    Logger::FieldDisplay::GetInstance().DisplayPose("Vision/"+label+"/Est pose",orig_bot_pose);
+    Logger::FieldDisplay::GetInstance().DisplayPose("Vision/"+name+"/Est pose",orig_bot_pose);
 }
 
 namespace cmd {
@@ -46,22 +46,22 @@ frc2::CommandPtr AddVisionMeasurement() {
     return Run([] {
         if (Logger::Tune("Vision/Add pose measurement", !frc::RobotBase::IsSimulation())){
             auto poses = SubVision::GetInstance().GetPose();
-            for (auto [label,pose] : poses) {
-                Logger::FieldDisplay::GetInstance().DisplayPose("Vision/"+label+"/Est pose" , {});
-                Logger::FieldDisplay::GetInstance().DisplayPose("Vision/"+label+"/Discarded est pose" , {});
-                Logger::Log("Vision/"+label+"/Have value" , false);
+            for (auto [name,pose] : poses) {
+                Logger::FieldDisplay::GetInstance().DisplayPose("Vision/"+name+"/Est pose" , {});
+                Logger::FieldDisplay::GetInstance().DisplayPose("Vision/"+name+"/Discarded est pose" , {});
+                Logger::Log("Vision/"+name+"/Have value" , false);
                 
                 if (pose.has_value()) {
-                    Logger::Log("Vision/"+label+"/Have value" , true);
+                    Logger::Log("Vision/"+name+"/Have value" , true);
                     auto estPose = pose.value();
                     if (SubVision::GetInstance().IsEstimateUsable(estPose)) {
-                        if (label == "turret") {
-                            TurretCameraProcess(label, estPose);
+                        if (name == "Turret") {
+                            TurretCameraProcess(name, estPose);
                         } else {
-                            StableCameraProcess(label, estPose);
+                            StableCameraProcess(name, estPose);
                         }
                     } else {
-                        Logger::FieldDisplay::GetInstance().DisplayPose("Vision/"+label+"/Discarded est pose",
+                        Logger::FieldDisplay::GetInstance().DisplayPose("Vision/"+name+"/Discarded est pose",
                             {estPose.estimatedPose.ToPose2d()});
                     }
                 }

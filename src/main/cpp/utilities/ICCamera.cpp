@@ -7,17 +7,11 @@
 #include "utilities/Logger.h"
 #include <frc/smartdashboard/SmartDashboard.h>
 
-ICCamera::ICCamera(std::string name, frc::Transform3d botToCam, frc::AprilTagFieldLayout tagMap, std::string label)
+ICCamera::ICCamera(std::string name, frc::Transform3d botToCam, frc::AprilTagFieldLayout tagMap)
  : _camName(name), _botToCam(botToCam), _tagMap(tagMap), _cam(name),
  _camSim(&_cam), _poseEstimator(_tagMap, _botToCam)
  {
-    if (label == "") {
-        _label = _camName;
-    } else {
-        _label = label;
-    }
-
-    Logger::Log("Vision/" + _label + "/Is Connected", _cam.IsConnected());
+    Logger::Log("Vision/" + _camName + "/Is Connected", _cam.IsConnected());
  }
 
 std::optional<photon::EstimatedRobotPose> ICCamera::Update() {
@@ -43,16 +37,12 @@ std::optional<photon::EstimatedRobotPose> ICCamera::Update() {
         }
     }
 
-    frc::SmartDashboard::PutString("Vision/" + _label + "/targets", targets);
+    frc::SmartDashboard::PutString("Vision/" + _camName + "/targets", targets);
     return _estPose;
 }
 
 std::string ICCamera::GetCamName() {
     return _camName;
-}
-
-std::string ICCamera::GetCamLabel() {
-    return _label;
 }
 
 frc::Transform3d ICCamera::GetBotToCam() {
@@ -92,21 +82,21 @@ std::optional<frc::Transform3d> ICCamera::CalculateRobotToCamera(
 void ICCamera::CalibrateRobotToCamera(frc::Transform3d robotToTag) {
     if (!_results.empty()) {
         auto calcResult = CalculateRobotToCamera(_results.back(), robotToTag);
-        Logger::Log("Vision/RobotToCamera/"+_label+"/Result received", calcResult.has_value());
+        Logger::Log("Vision/RobotToCamera/"+_camName+"/Result received", calcResult.has_value());
 
         if (calcResult.has_value()) {
             auto robotToCamera = calcResult.value();
-            Logger::Log("Vision/RobotToCamera/"+_label+"/X", robotToCamera.X());
-            Logger::Log("Vision/RobotToCamera/"+_label+"/Y", robotToCamera.Y());
-            Logger::Log("Vision/RobotToCamera/"+_label+"/Z", robotToCamera.Z());
-            Logger::Log("Vision/RobotToCamera/"+_label+"/~X_Roll", robotToCamera.Rotation().X().convert<units::degree>());
-            Logger::Log("Vision/RobotToCamera/"+_label+"/~Y_Pitch", robotToCamera.Rotation().Y().convert<units::degree>());
-            Logger::Log("Vision/RobotToCamera/"+_label+"/~Z_Yaw", robotToCamera.Rotation().Z().convert<units::degree>());
+            Logger::Log("Vision/RobotToCamera/"+_camName+"/X", robotToCamera.X());
+            Logger::Log("Vision/RobotToCamera/"+_camName+"/Y", robotToCamera.Y());
+            Logger::Log("Vision/RobotToCamera/"+_camName+"/Z", robotToCamera.Z());
+            Logger::Log("Vision/RobotToCamera/"+_camName+"/~X_Roll", robotToCamera.Rotation().X().convert<units::degree>());
+            Logger::Log("Vision/RobotToCamera/"+_camName+"/~Y_Pitch", robotToCamera.Rotation().Y().convert<units::degree>());
+            Logger::Log("Vision/RobotToCamera/"+_camName+"/~Z_Yaw", robotToCamera.Rotation().Z().convert<units::degree>());
 
             auto estimatedLeftCamPose = frc::Pose3d{PoseHandler::GetInstance().GetPose()}.TransformBy(robotToCamera);
-            Logger::FieldDisplay::GetInstance().DisplayPose("Estimated-"+_label+"-Pose", estimatedLeftCamPose.ToPose2d());
+            Logger::FieldDisplay::GetInstance().DisplayPose("Estimated-"+_camName+"-Pose", estimatedLeftCamPose.ToPose2d());
         }
     } else {
-        Logger::Log("Vision/RobotToCamera/"+_label+"/Result received", false);
+        Logger::Log("Vision/RobotToCamera/"+_camName+"/Result received", false);
     }
 }

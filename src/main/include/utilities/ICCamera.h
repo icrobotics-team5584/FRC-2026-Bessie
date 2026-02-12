@@ -12,7 +12,7 @@
 
 class ICCamera {
 public:
-  ICCamera(std::string name, frc::Transform3d botToCam, frc::AprilTagFieldLayout tagMap, std::string label = "");
+  ICCamera(std::string name, frc::Transform3d botToCam, frc::AprilTagFieldLayout tagMap);
 
   std::optional<photon::EstimatedRobotPose> Update();
 
@@ -22,7 +22,6 @@ public:
   };
 
   std::string GetCamName();
-  std::string GetCamLabel();
   frc::Transform3d GetBotToCam();
   photon::PhotonCameraSim* GetCamSim();
 
@@ -38,7 +37,6 @@ public:
 
 private:
   std::string _camName;
-  std::string _label;
 
   frc::Transform3d _botToCam;
 
