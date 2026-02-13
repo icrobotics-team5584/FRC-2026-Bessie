@@ -7,10 +7,6 @@
 #include <frc2/command/Commands.h>
 #include <photon/PhotonPoseEstimator.h>
 
-void StableCameraProcess(std::string name, photon::EstimatedRobotPose pose);
-
-void TurretCameraProcess(std::string name, photon::EstimatedRobotPose pose);
-
 namespace cmd {
 frc2::CommandPtr AddVisionMeasurement();
 }

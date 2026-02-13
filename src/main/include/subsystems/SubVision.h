@@ -46,9 +46,11 @@ public:
 
   int GetClosestTag(frc::Pose2d currentPose);
 
-  bool IsEstimateUsable(photon::EstimatedRobotPose pose);
+  units::length::meter_t GetAvgDistanceFromCamera(photon::EstimatedRobotPose est);
 
-  double GetDev(photon::EstimatedRobotPose pose);
+  bool IsEstimateUsable(photon::EstimatedRobotPose est);
+
+  double GetDev(units::length::meter_t distance);
 
   static constexpr frc::Transform2d TURRET_TO_CAM = frc::Transform2d{0.083_m, -0.147_m, 0_deg};
 
