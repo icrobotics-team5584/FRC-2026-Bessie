@@ -67,6 +67,8 @@ void SubTurret::Periodic() {
     Logger::Log("Turret/Encoder/Encoder2IsConnected", _turretEncoder2.IsConnected());
     Logger::Log("Turret/Encoder/Encoder1Frequency", _turretEncoder1.GetFrequency());
     Logger::Log("Turret/Encoder/Encoder2Frequency", _turretEncoder2.GetFrequency());
+
+    _turretPos.AddSample(frc::Timer::GetFPGATimestamp(), CalcOptimisedTurretAngle(_turretMotor.GetPosition()));
 }
 
 void SubTurret::SimulationPeriodic() {
@@ -120,6 +122,15 @@ units::degree_t SubTurret::GetTurretAngleCRT() {
 
 units::degree_t SubTurret::GetTurretAngle() {
     return _turretMotor.GetPosition();
+}
+
+units::degree_t SubTurret::GetTurretAngleAtTime(units::second_t time) {
+    auto sample = _turretPos.Sample(time);
+    if (sample.has_value()) {
+        return sample.value();
+    } else {
+        return GetTurretAngle();
+    }
 }
 
 frc2::CommandPtr SubTurret::SetTurretTargetAngle(std::function<units::degree_t()> angle, std::function<units::degrees_per_second_t()> robotAngVel){
