@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "utilities/AlertController.h"
 #include "utilities/ICSparkFlex.h"
 #include "utilities/MechanismCircle2d.h"
 
@@ -33,12 +34,6 @@ class SubDeploy : public frc2::SubsystemBase {
   frc2::CommandPtr ZeroDeploy();
   frc2::CommandPtr DeployAutoZero();
 
-  void DeployCurrentHighTimer();
-
-  frc::Alert _deployCurrentAlert{"Deploy Motor Overcurrent!", frc::Alert::AlertType::kWarning};
-  frc::Alert _deployHighTemperatureAlert{
-    "Deploy Motor High Temperature!", frc::Alert::AlertType::kWarning};
-
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */
@@ -49,7 +44,14 @@ class SubDeploy : public frc2::SubsystemBase {
   ICSparkFlex _deployMotor{canid::DEPLOY};
   rev::spark::SparkFlexConfig _deployMotorConfig;
 
+  frc::Alert _deployHighTemperatureAlert{
+    "Deploy Motor High Temperature!", frc::Alert::AlertType::kWarning};
+  frc::Alert _deployCurrentAlert{"Deploy Motor Overcurrent!", frc::Alert::AlertType::kWarning};
+
   frc::Timer _deployHighCurrentTimer;
+
+  motorAlertConfig DeployAlertConfig = AlertController::Config(
+    _deployHighTemperatureAlert, _deployCurrentAlert, _deployHighCurrentTimer, 60_degC, 20_A);
 
   bool _hasZeroed = false;
   bool _currentlyZeroing = false;

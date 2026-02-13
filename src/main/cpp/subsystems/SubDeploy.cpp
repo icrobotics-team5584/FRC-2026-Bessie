@@ -71,40 +71,21 @@ void SubDeploy::EnableSoftLimit(bool enabled) {
   }
 }
 
-void SubDeploy::DeployCurrentHighTimer() {
-  _deployHighCurrentTimer.Start();
-
-  if (_deployHighCurrentTimer.Get() > 3_s) {
-    _deployCurrentAlert.Set(true);
-  }
-}
-
 // This method will be called once per scheduler run
 void SubDeploy::Periodic() {
   units::ampere_t deployCurrent = _deployMotor.GetStatorCurrent();
-  Logger::Log("Deploy/Deploy Motor Current", deployCurrent);
-
-  if (deployCurrent > 20_A) {
-    DeployCurrentHighTimer();
-  } else {
-    _deployCurrentAlert.Set(false);
-    _deployHighCurrentTimer.Reset();
-  }
 
   units::celsius_t deployTemperature = _deployMotor.GetTemperature();
-  Logger::Log("Deploy/Deploy Motor Temperature", deployTemperature);
 
-  if (deployTemperature > 60_degC) {
-    _deployHighTemperatureAlert.Set(true);
-  } else {
-    _deployHighTemperatureAlert.Set(false);
-  }
-   RobotVisualisation::GetInstance()._deployLigament->SetAngle(_deployMotor.GetPosition());
+  AlertController::UpdateTemperatureAlert(DeployAlertConfig, deployTemperature);
+  AlertController::UpdateCurrentAlert(DeployAlertConfig, deployCurrent);
+
+
+  RobotVisualisation::GetInstance()._deployLigament->SetAngle(_deployMotor.GetPosition());
 }
 
 void SubDeploy::SimulationPeriodic() {
   _deploySim.SetInputVoltage(_deployMotor.CalcSimVoltage());
   _deploySim.Update(20_ms);
   _deployMotor.IterateSim(_deploySim.GetVelocity(), _deploySim.GetAngle());
- 
 }
