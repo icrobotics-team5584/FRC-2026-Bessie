@@ -42,7 +42,7 @@ RobotContainer::RobotContainer() {
 void RobotContainer::ConfigureBindings() {
   //Triggers
   _driverController.LeftTrigger().WhileTrue(cmd::IntakeSequence());
-  _driverController.RightTrigger().WhileTrue(cmd::ShootOnTheMove());
+  _driverController.RightTrigger().WhileTrue(cmd::ShootOnTheMove().AlongWith(SubDrivebase::GetInstance().Drive([] {return frc::ChassisSpeeds{0_mps, -1_mps, 0_tps}; }, true)));
   _driverController.RightTrigger().OnFalse(SubFeeder::GetInstance().FeederOff());
 
   //Bumpers
