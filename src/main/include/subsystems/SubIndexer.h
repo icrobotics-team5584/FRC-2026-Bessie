@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "utilities/AlertController.h"
 #include "utilities/ICSparkFlex.h"
 
 #include <frc/Alert.h>
@@ -35,16 +36,6 @@ class SubIndexer : public frc2::SubsystemBase {
   frc2::CommandPtr Index();
   frc2::CommandPtr StopIndex();
 
-  void IndexerCurrentHighTimer();
-  void IndexerOutCurrentHighTimer();
-
-  frc::Alert _indexerCurrentAlert{"Indexer Motor Overcurrent!", frc::Alert::AlertType::kWarning};
-  frc::Alert _indexerHighTemperatureAlert{
-    "Indexer Motor High Temperature!", frc::Alert::AlertType::kWarning};
-
-  frc::Alert _outdexerCurrentAlert{"IndexerOut Motor Overcurrent!", frc::Alert::AlertType::kWarning};
-  frc::Alert _outdexerHighTemperatureAlert{
-    "IndexerOut Motor High Temperature!", frc::Alert::AlertType::kWarning};
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */
@@ -55,14 +46,27 @@ class SubIndexer : public frc2::SubsystemBase {
   ICSparkFlex _indexerMotor{canid::INDEXER};
   rev::spark::SparkFlexConfig _indexerMotorConfig;
 
+  frc::Alert _indexerHighTemperatureAlert{
+    "Indexer Motor High Temperature!", frc::Alert::AlertType::kWarning};
+  frc::Alert _indexerCurrentAlert{"Indexer Motor Overcurrent!", frc::Alert::AlertType::kWarning};
+
   frc::Timer _indexerHighCurrentTimer;
+  motorAlertConfig _indexerAlertConfig = AlertController::Config(
+    _indexerHighTemperatureAlert, _indexerCurrentAlert, _indexerHighCurrentTimer, 60_degC, 20_A);
 
   ICSparkFlex _outdexerMotor{canid::OUTDEXER};
   rev::spark::SparkFlexConfig _outdexerMotorConfig;
 
+  frc::Alert _outdexerHighTemperatureAlert{
+    "IndexerOut Motor High Temperature!", frc::Alert::AlertType::kWarning};
+  frc::Alert _outdexerCurrentAlert{
+    "IndexerOut Motor Overcurrent!", frc::Alert::AlertType::kWarning};
+
   frc::Timer _outdexerHighCurrentTimer;
 
-   
+  motorAlertConfig _outdexerAlertConfig = AlertController::Config(
+    _outdexerHighTemperatureAlert, _outdexerCurrentAlert, _outdexerHighCurrentTimer, 60_degC, 20_A);
+
   // Simulation components
   static constexpr double GEARING = 1.0;
   static constexpr units::kilogram_square_meter_t MOI = 0.0000001_kg_sq_m;
