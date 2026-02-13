@@ -61,6 +61,7 @@ units::degree_t CalcShootOnTheMoveAngle() {
 }
 
 frc::Pose2d CalcFutureTurretPose() {
+  units::millisecond_t Offset = Logger::Tune("SOTM/LatencyOffset", _latencyOffset);
   // Calculate distance to target from robot(convert to turret later)
   auto target = GetShotTarget();
   auto robot = PoseHandler::GetInstance().GetPose();
@@ -82,8 +83,9 @@ frc::Pose2d CalcFutureTurretPose() {
 
   for (int i = 0; i < 20; i++) {
     // Get future pose
-    TOF = SubShooter::GetInstance().GetTimeOfFLightWithDistance(distance);
-    Logger::Log("SOTM/ToF", TOF);
+    TOF = SubShooter::GetInstance().GetTimeOfFLightWithDistance(distance) + _latencyOffset;
+    Logger::Log("SOTM/ToFWithOffset", TOF);
+    Logger::Log("SOTM/ToFWithOutOffset", SubShooter::GetInstance().GetTimeOfFLightWithDistance(distance));
 
     // calculate offset due to velocity
     units::meter_t offsetX = robotVelX * TOF;
