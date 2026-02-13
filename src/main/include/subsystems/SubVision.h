@@ -62,7 +62,7 @@ public:
   std::string _tagMapFilePath = frc::filesystem::GetDeployDirectory() + "/2026-rebuilt.json";
   frc::AprilTagFieldLayout _tagMap{_tagMapFilePath};
 
-  frc::Transform3d _leftBotToCam{{-350_mm,-470_mm,350_mm},{0_deg,-16_deg,190.54_deg}};
+  frc::Transform3d _leftBotToCam{{-350_mm,-350_mm,470_mm},{0_deg,-16_deg,190.54_deg}};
 
   ICCamera _leftCam {
     LEFT_CAM_NAME,
@@ -70,7 +70,7 @@ public:
     _tagMap
   };
 
-  frc::Transform3d _rightBotToCam{{-350_mm,470_mm,350_mm},{0_deg,-16_deg,-190.54_deg}};
+  frc::Transform3d _rightBotToCam{{-350_mm,350_mm,470_mm},{0_deg,-16_deg,-190.54_deg}};
 
   ICCamera _rightCam {
     RIGHT_CAM_NAME,
@@ -80,7 +80,7 @@ public:
 
   
 
-  frc::Transform3d _turretBotToCam {{0_m, 0_m, 0.63_m}, {0_deg, 12.3_deg, 0_deg}};
+  frc::Transform3d _turretBotToCam {{0_m, 0_m, 0.605_m}, {0_deg, -14.3_deg, 0_deg}};
 
   ICCamera _turretCam {
     TURRET_CAM_NAME,    

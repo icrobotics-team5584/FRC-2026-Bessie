@@ -53,7 +53,7 @@ class SubTurret : public frc2::SubsystemBase {
     std::function<units::degrees_per_second_t()> robotAngVel);
   frc2::CommandPtr ZeroTurretCmd();
 
-  static constexpr frc::Transform2d ROBOT_TO_TURRET = frc::Transform2d{-345_mm, 0_mm, 0_deg};
+  static constexpr frc::Transform2d ROBOT_TO_TURRET = frc::Transform2d{-235_mm, 0_mm, 0_deg};
 
   /**
    * Will be called periodically whenever the CommandScheduler runs.
