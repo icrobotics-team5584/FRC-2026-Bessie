@@ -27,7 +27,7 @@ frc2::CommandPtr IntakeSequence() {
 frc2::CommandPtr OuttakeSequence() {
   return SubDeploy::GetInstance()
     .DeployIntake()
-    .AlongWith(SubIntake::GetInstance().IntakeReverseOn());
+    .AlongWith(SubIntake::GetInstance().ReverseIntake());
 }
 
 frc2::CommandPtr StationaryShootAt(frc::Translation2d target) {
@@ -84,11 +84,11 @@ frc2::CommandPtr ShootOnTheMove(){
 
 frc2::CommandPtr EjectFuel() {
   return SubShooter::GetInstance().SpinShooterSlowly()
-  .AlongWith(SubIntake::GetInstance().IntakeReverseOn())
+  .AlongWith(SubIntake::GetInstance().ReverseIntake())
   .AlongWith(SubIndexer::GetInstance().Index())
   .AlongWith(SubFeeder::GetInstance().Feed())
   .AlongWith(SubTurret::GetInstance().SetTurretTargetAngle([] { return 180_deg; })) // point turret out of robot
-  .AlongWith(SubHood::GetInstance().SetHoodPositionTarget([] { return 0_deg; })); 
+  .AlongWith(SubHood::GetInstance().HoodToEjectAngle()); 
   // this is past the limit but the hood will always go to its lower limit(if lower limit changes it'll go there)
 }
 
