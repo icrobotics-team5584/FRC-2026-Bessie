@@ -3,7 +3,7 @@
 namespace AlertController {
 
 // creates an alert config from the alerts and a timer and is used in updating alerts
-motorAlertConfig AlertController::Config(frc::Alert temperatureAlert, frc::Alert currentAlert,
+motorAlertConfig Config(frc::Alert temperatureAlert, frc::Alert currentAlert,
   frc::Timer highCurrentTimer, units::celsius_t maxDegrees, units::ampere_t maxCurrent) {
   return {temperatureAlert, currentAlert, highCurrentTimer, maxDegrees, maxCurrent};
 }
@@ -16,7 +16,7 @@ void UpdateTemperatureAlert(motorAlertConfig& config, units::celsius_t motorTemp
   }
 }
 // updates the alert for the current. automatically updates to true if has been over 3s or false.
-void AlertController::UpdateCurrentAlert(motorAlertConfig& config, units::ampere_t motorCurrent) {
+void UpdateCurrentAlert(motorAlertConfig& config, units::ampere_t motorCurrent) {
   if (motorCurrent > config.maxCurrent) {
     config.highCurrentTimer.Start();
     if (config.highCurrentTimer.Get() > 3_s) {
