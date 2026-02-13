@@ -3,17 +3,15 @@
 #include "utilities/Logger.h"
 
 RebuiltShift ShiftHandler::GetCurrentShift() {
-  if (frc::DriverStation::IsDisabled()) {
-    return RebuiltShift::NONE;
-  }
-  units::second_t secondsPassed = frc::DriverStation::GetMatchTime();
-  if (secondsPassed == -1_s) { /* Isn't in home practise mode */
-    return static_cast<RebuiltShift>(frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kBlue));
-  }
-  
   if (frc::DriverStation::IsAutonomousEnabled()) {
     return RebuiltShift::AUTON;
   }
+
+  units::second_t secondsPassed = frc::DriverStation::GetMatchTime();
+  if (secondsPassed == -1_s) { /* Isn't in home practise mode */
+    return RebuiltShift::NONE;
+  }
+
   if (secondsPassed > 130_s) {
     return RebuiltShift::TRANS;
   }
@@ -112,14 +110,14 @@ bool ShiftHandler::IsActiveShift() {
   if (_overrideActive == true) {
     return true;
   }
-  RebuiltShift currentShift = GetCurrentShift();
   if (
-    frc::DriverStation::IsFMSAttached() == false && /* Is at comp? */
+    frc::DriverStation::IsFMSAttached() == false && /* Isn't at comp? */
     frc::DriverStation::GetMatchTime() == -1_s && /* Isn't home practise mode */
-    currentShift != RebuiltShift::NONE /* Isn't NONE shift */
+    frc::DriverStation::IsDisabled() == false /* Isn't disabled */
   ) {
     return true; /* Don't respect shifts */
   }
+  RebuiltShift currentShift = GetCurrentShift();
   RebuiltShift myShift = static_cast<RebuiltShift>(
     frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kBlue));
 
