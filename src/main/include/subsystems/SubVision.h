@@ -101,3 +101,8 @@ public:
   //Deviation table for further distances from tag
   wpi::interpolating_map<units::meter_t, double> _devTable;
 };
+
+
+// Link to photon vision
+// http://static-camera-pi.local:5800/ for left and right camera
+// http://turret-camera-pi.local:5800/ for turret camera
