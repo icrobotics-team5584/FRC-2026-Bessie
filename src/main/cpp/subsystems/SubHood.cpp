@@ -54,7 +54,7 @@ void SubHood::SimulationPeriodic() {
 }
 
 frc2::CommandPtr SubHood::SetHoodPositionTarget(std::function<units::degree_t()> angle) {
-    return RunOnce([this, angle] {
+    return Run([this, angle] {
         units::degree_t target = angle();
         if(target > UPPER_LIMIT) {target = UPPER_LIMIT;}
         if(target < LOWER_LIMIT) {target = LOWER_LIMIT;}

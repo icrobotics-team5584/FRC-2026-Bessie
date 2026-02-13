@@ -22,7 +22,7 @@
 #include <frc/smartdashboard/MechanismLigament2d.h>
 #include "utilities/MechanismCircle2d.h"
 #include <frc/simulation/EncoderSim.h>
-
+#include <frc/interpolation/TimeInterpolatableBuffer.h>
 
 class SubTurret : public frc2::SubsystemBase {
  public:
@@ -36,6 +36,7 @@ class SubTurret : public frc2::SubsystemBase {
 
   units::degree_t GetTurretAngleCRT();
   units::degree_t GetTurretAngle();
+  units::degree_t GetTurretAngleAtTime(units::second_t time);
   units::degree_t CalcOptimisedTurretAngle(units::degree_t angle);
   units::degree_t GetFieldRelativeTurretAngle();
     
@@ -97,6 +98,8 @@ class SubTurret : public frc2::SubsystemBase {
   static constexpr units::degree_t TOLARANCE = 2_deg;
   static constexpr units::hertz_t ENCODER_FREQUENCY = 975.6_Hz; 
   //force set encoder frequency to avoid 1sec startup time
+
+  frc::TimeInterpolatableBuffer<units::degree_t> _turretPos{1_s};
 
   //Sim
   frc::LinearSystem<2,1,2> _turretSystem = frc::LinearSystemId::DCMotorSystem(MOTOR_MODEL, MOI, GEAR_RATIO);
