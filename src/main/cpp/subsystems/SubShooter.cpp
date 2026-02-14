@@ -71,11 +71,11 @@ SubShooter::SubShooter() {
 
 // This method will be called once per scheduler run
 void SubShooter::Periodic() {
-    auto loopStart = frc::GetTime();
+  auto loopStart = frc::GetTime();
 
-    Logger::LogFalcon("Shooter/Motor1", _shooterMotor1);
-    Logger::LogFalcon("Shooter/Motor2", _shooterMotor2);
-    Logger::Log("Shooter/IsAtSpeed", IsAtSpeed());
+  Logger::LogFalcon("Shooter/Motor1", _shooterMotor1);
+  Logger::LogFalcon("Shooter/Motor2", _shooterMotor2);
+  Logger::Log("Shooter/IsAtSpeed", IsAtSpeed());
 
   units::angle::degree_t motor1Position = _shooterMotor1.GetPosition().GetValue();
   _shooterMechTopRoller.SetAngle(motor1Position);
@@ -94,10 +94,8 @@ void SubShooter::Periodic() {
 
   AlertController::UpdateTemperatureAlert(_shooter2AlertConfig, shooter2Temperature);
   AlertController::UpdateCurrentAlert(_shooter2AlertConfig, shooter2Current);
-    units::angle::degree_t motor2Position = _shooterMotor2.GetPosition().GetValue();
-    _shooterMechBottomRoller.SetAngle(motor2Position);
 
-    Logger::Log("Shooter/Loop Time", (frc::GetTime() - loopStart));
+  Logger::Log("Shooter/Loop Time", (frc::GetTime() - loopStart));
 }
 
 void SubShooter::SimulationPeriodic() {
