@@ -115,12 +115,10 @@ frc::Pose2d CalcFutureTurretPose() {
   // convert robot to turret pose
   frc::Pose2d turretFuturePose = futurePose.TransformBy(SubTurret::ROBOT_TO_TURRET);
 
-  // Account for Turret Angular Velocity (Turret Whip)
-  units::degree_t turretVelocityDirection = robot.Rotation().Degrees() - 90_deg; 
+  // Account for Robot Angular Velocity (Turret Whip)
   units::meter_t turretVelocityMagnitude = ( robotVelRot.value()/360 * 2 * 3.14159 * SubTurret::ROBOT_TO_TURRET.Translation().Norm() / 1_s ) * TOF;
-  units::degree_t robotHeading = robot.Rotation().Degrees();
-
-  frc::Translation2d turretVelocity = frc::Translation2d{ turretVelocityMagnitude, turretVelocityDirection-robotHeading };
+  units::degree_t turretVelocityDirection = -90_deg; 
+  frc::Translation2d turretVelocity = frc::Translation2d{ turretVelocityMagnitude, turretVelocityDirection };
   frc::Transform2d turretVelocityTransform = frc::Transform2d{ turretVelocity, 0_deg};
 
   turretFuturePose = turretFuturePose.TransformBy(turretVelocityTransform);
