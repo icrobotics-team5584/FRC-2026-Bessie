@@ -47,7 +47,7 @@ class SubDeploy : public frc2::SubsystemBase {
     "Deploy Motor High Temperature!", frc::Alert::AlertType::kWarning};
   frc::Alert _deployCurrentAlert{"Deploy Motor Overcurrent!", frc::Alert::AlertType::kWarning};
 
-  motorAlertConfig DeployAlertConfig{
+  AlertController::MotorAlertConfig DeployAlertConfig{
     _deployHighTemperatureAlert, _deployCurrentAlert, 60_degC, 20_A};
 
   bool _hasZeroed = false;

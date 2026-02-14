@@ -49,7 +49,7 @@ class SubIndexer : public frc2::SubsystemBase {
     "Indexer Motor High Temperature!", frc::Alert::AlertType::kWarning};
   frc::Alert _indexerCurrentAlert{"Indexer Motor Overcurrent!", frc::Alert::AlertType::kWarning};
 
-  motorAlertConfig _indexerAlertConfig{
+  AlertController::MotorAlertConfig _indexerAlertConfig{
     _indexerHighTemperatureAlert, _indexerCurrentAlert, 60_degC, 20_A};
 
   ICSparkFlex _outdexerMotor{canid::OUTDEXER};
@@ -60,7 +60,7 @@ class SubIndexer : public frc2::SubsystemBase {
   frc::Alert _outdexerCurrentAlert{
     "IndexerOut Motor Overcurrent!", frc::Alert::AlertType::kWarning};
 
-  motorAlertConfig _outdexerAlertConfig{
+  AlertController::MotorAlertConfig _outdexerAlertConfig{
     _outdexerHighTemperatureAlert, _outdexerCurrentAlert, 60_degC, 20_A};
 
   // Simulation components

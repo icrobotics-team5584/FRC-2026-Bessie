@@ -5,7 +5,8 @@
 #include <units/current.h>
 #include <units/temperature.h>
 
-struct motorAlertConfig {
+namespace AlertController {
+struct MotorAlertConfig {
   frc::Alert temperatureAlert;
   frc::Alert currentAlert;
   units::celsius_t maxDegrees;
@@ -13,11 +14,9 @@ struct motorAlertConfig {
   frc::Timer highCurrentTimer = frc::Timer();
 };
 
-namespace AlertController {
-
 // updates the alert for the temperature. automatically updates to true or false
-void UpdateTemperatureAlert(motorAlertConfig& config, units::celsius_t motorTemperature);
+void UpdateTemperatureAlert(MotorAlertConfig& config, units::celsius_t motorTemperature);
 
 // updates the alert for the current. automatically updates to true if has been over 3s or false.
-void UpdateCurrentAlert(motorAlertConfig& config, units::ampere_t motorCurrent);
+void UpdateCurrentAlert(MotorAlertConfig& config, units::ampere_t motorCurrent);
 };  // namespace AlertController

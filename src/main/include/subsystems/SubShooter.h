@@ -65,14 +65,14 @@ class SubShooter : public frc2::SubsystemBase {
     "Shooter Motor 1 High Temperature!", frc::Alert::AlertType::kWarning};
   frc::Alert _shooter1CurrentAlert{"Shooter Motor 1 Overcurrent!", frc::Alert::AlertType::kWarning};
 
-  motorAlertConfig _shooter1AlertConfig{
+  AlertController::MotorAlertConfig _shooter1AlertConfig{
     _shooter1highTemperatureAlert, _shooter1CurrentAlert, 60_degC, 20_A};
 
   frc::Alert _shooter2highTemperatureAlert{
     "Shooter Motor 2 High Temperature!", frc::Alert::AlertType::kWarning};
   frc::Alert _shooter2CurrentAlert{"Shooter Motor 2 Overcurrent!", frc::Alert::AlertType::kWarning};
 
-  motorAlertConfig _shooter2AlertConfig{
+  AlertController::MotorAlertConfig _shooter2AlertConfig{
     _shooter2highTemperatureAlert, _shooter2CurrentAlert, 60_degC, 20_A};
 
   wpi::interpolating_map<units::meter_t, units::turns_per_second_t> _flyWheelSpeedTableScoring;

@@ -4,7 +4,7 @@ namespace AlertController {
 
 
 // updates the alert for the temperature. automatically updates to true or false
-void UpdateTemperatureAlert(motorAlertConfig& config, units::celsius_t motorTemperature) {
+void UpdateTemperatureAlert(MotorAlertConfig& config, units::celsius_t motorTemperature) {
   if (motorTemperature > config.maxDegrees) {
     config.temperatureAlert.Set(true);
   } else {
@@ -12,7 +12,7 @@ void UpdateTemperatureAlert(motorAlertConfig& config, units::celsius_t motorTemp
   }
 }
 // updates the alert for the current. automatically updates to true if has been over 3s or false.
-void UpdateCurrentAlert(motorAlertConfig& config, units::ampere_t motorCurrent) {
+void UpdateCurrentAlert(MotorAlertConfig& config, units::ampere_t motorCurrent) {
   if (motorCurrent > config.maxCurrent) {
     config.highCurrentTimer.Start();
     if (config.highCurrentTimer.Get() > 3_s) {

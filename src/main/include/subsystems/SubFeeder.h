@@ -50,7 +50,7 @@ class SubFeeder : public frc2::SubsystemBase {
 
   frc::Alert _feederCurrentAlert{"Feeder Motor Overcurrent!", frc::Alert::AlertType::kWarning};
 
-  motorAlertConfig _feederAlertConfig{
+  AlertController::MotorAlertConfig _feederAlertConfig{
     _feederHighTemperatureAlert, _feederCurrentAlert, 60_degC, 20_A};
 
   // Simulation components
