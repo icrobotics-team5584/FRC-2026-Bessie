@@ -26,7 +26,7 @@ ShotPlanner::ShotPlannerResults ShotPlanner::CalculateShotTarget(frc::Pose2d rob
   bool shouldShoot = true;
   bool isInBotNeutralZone = false;
   bool isInBlueAlliance = false;
-  bool isOurHubActive = ShiftHandler::GetInstance().GetCurrentShift();
+  bool isOurHubActive = ShiftHandler::GetInstance().IsActiveShift();
 
   isInBlueAlliance = IsWithinZone(
     fieldpos::BLUE_ALLIANCE_ZONE_TOP_RIGHT, fieldpos::BLUE_ALLIANCE_ZONE_BOTTOM_LEFT, robotPos);
