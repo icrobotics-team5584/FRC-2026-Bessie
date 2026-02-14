@@ -13,7 +13,7 @@ namespace cmd {
 
     frc::Translation2d GetShotTarget();
 
-    units::millisecond_t _latencyOffset = 100_ms;
+    static constexpr units::millisecond_t LATENCYOFFSET = 100_ms;
 }
 
 

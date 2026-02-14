@@ -52,8 +52,8 @@ frc2::CommandPtr ShootWhenReady() {
        auto currentPose = PoseHandler::GetInstance().GetPose();
        return SubHood::GetInstance().HoodIsAtTarget() && SubShooter::GetInstance().IsAtSpeed() &&
               SubTurret::GetInstance().IsAtTarget() &&
-              ShotPlanner::CalculateShotTarget(currentPose).shouldShoot;
-
+              ShotPlanner::CalculateShotTarget(currentPose).shouldShoot &&
+              !SubTurret::GetInstance().IsApproachingMax([] { return LATENCYOFFSET; });
     })
     .Repeatedly();
 }

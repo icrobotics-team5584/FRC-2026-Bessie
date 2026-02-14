@@ -211,6 +211,13 @@ bool SubTurret::IsAtTarget() {
     return units::math::abs(_turretMotor.GetPosError()) < TOLARANCE;
 }
 
+bool SubTurret::IsApproachingMax(std::function<units::millisecond_t()> time) {
+units::degree_t futureTurretAngle = GetTurretAngle() + _turretMotor.GetVelocity() * time();
+Logger::Log("SOTM/FutureTurretAngle", futureTurretAngle);
+Logger::Log("SOTM/TurretApproachingMax", futureTurretAngle > POS_LIMIT && futureTurretAngle < NEG_LIMIT);
+return (futureTurretAngle > POS_LIMIT || futureTurretAngle < NEG_LIMIT);
+}
+
 units::degree_t SubTurret::GetFieldRelativeTurretAngle() {
     auto robot = PoseHandler::GetInstance().GetPose();
     return robot.Rotation().Degrees() + GetTurretAngle();

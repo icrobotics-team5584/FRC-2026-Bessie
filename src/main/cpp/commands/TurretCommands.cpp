@@ -63,7 +63,7 @@ units::degree_t CalcShootOnTheMoveAngle() {
 }
 
 frc::Pose2d CalcFutureTurretPose() {
-  units::millisecond_t Offset = Logger::Tune("SOTM/LatencyOffset", _latencyOffset);
+  units::millisecond_t offset = Logger::Tune("SOTM/LatencyOffset", LATENCYOFFSET);
   // Calculate distance to target from robot(convert to turret later)
   auto target = GetShotTarget();
   auto robot = PoseHandler::GetInstance().GetPose();
@@ -75,6 +75,10 @@ frc::Pose2d CalcFutureTurretPose() {
   units::meters_per_second_t robotVelX = robotVel.vx;
   units::meters_per_second_t robotVelY = robotVel.vy;
   units::degrees_per_second_t robotVelRot = SubDrivebase::GetInstance().GetDesiredAngularVelocity();
+
+  // Account for latency
+  frc::Transform2d latencyTransform = frc::Transform2d(robotVelX * LATENCYOFFSET, robotVelY * LATENCYOFFSET, robotVelRot * LATENCYOFFSET);
+  robot = robot.TransformBy(latencyTransform);
   
   Logger::Log("SOTM/velX", robotVelX);
   Logger::Log("SOTM/velY", robotVelY);
@@ -85,14 +89,13 @@ frc::Pose2d CalcFutureTurretPose() {
 
   for (int i = 0; i < 20; i++) {
     // Get future pose
-    TOF = SubShooter::GetInstance().GetTimeOfFLightWithDistance(distance) + _latencyOffset;
+    TOF = SubShooter::GetInstance().GetTimeOfFLightWithDistance(distance);
     Logger::Log("SOTM/ToFWithOffset", TOF);
     Logger::Log("SOTM/ToFWithOutOffset", SubShooter::GetInstance().GetTimeOfFLightWithDistance(distance));
 
     // calculate offset due to velocity
     units::meter_t offsetX = robotVelX * TOF;
     units::meter_t offsetY = robotVelY * TOF;
-    units::degree_t offsetRot = robotVelRot * TOF;
     units::degree_t robotRotation = robot.Rotation().Degrees();
     units::meter_t robotX = robot.X();
     units::meter_t robotY = robot.Y();
@@ -103,11 +106,10 @@ frc::Pose2d CalcFutureTurretPose() {
 
     Logger::Log("SOTM/offsetX", offsetX);
     Logger::Log("SOTM/offsetY", offsetY);
-    Logger::Log("SOTM/offsetRot", offsetRot);
 
     // calculate future pose by adding offsets to current robot position
     futurePose =
-      frc::Pose2d(robotX + offsetX, robotY + offsetY, robot.Rotation());
+      frc::Pose2d(robotX + offsetX, robotY + offsetY, robot.Rotation().Degrees());
 
     distance = target.Distance(futurePose.Translation());
   }
