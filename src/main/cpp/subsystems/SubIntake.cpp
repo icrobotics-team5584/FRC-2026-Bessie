@@ -28,12 +28,16 @@ frc2::CommandPtr SubIntake::IntakeOff() {
 // This method will be called once per scheduler run
 void SubIntake::Periodic() {
   units::celsius_t intakeTemperature = _intakeMotor.GetTemperature();
+  auto loopStart = frc::GetTime();
+
   units::ampere_t intakeCurrent = _intakeMotor.GetStatorCurrent();
 
   AlertController::UpdateTemperatureAlert(_intakeAlertConfig, intakeTemperature);
   AlertController::UpdateCurrentAlert(_intakeAlertConfig, intakeCurrent);
 
   RobotVisualisation::GetInstance()._intakeWheel.SetAngle(_intakeMotor.GetPosition());
+
+  Logger::Log("Intake/Loop Time", (frc::GetTime() - loopStart));
 }
 
 void SubIntake::SimulationPeriodic() {

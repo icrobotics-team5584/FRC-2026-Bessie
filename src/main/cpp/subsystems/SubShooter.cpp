@@ -43,6 +43,7 @@ SubShooter::SubShooter() {
 
   _shooterMotor1.GetClosedLoopReference().SetUpdateFrequency(100_Hz);
 
+<<<<<<< HEAD
   _timeOfFlightTable.insert(1270_mm, 0.8_s);
   _timeOfFlightTable.insert(1770_mm, 0.5_s);
   _timeOfFlightTable.insert(2270_mm, 0.93_s);
@@ -51,6 +52,16 @@ SubShooter::SubShooter() {
   _timeOfFlightTable.insert(3770_mm, 1.18_s);
   _timeOfFlightTable.insert(4270_mm, 1.28_s);
   _timeOfFlightTable.insert(4770_mm, 1.28_s);
+=======
+    _timeOfFlightTable.insert(1.8575_m, 0.8_s);
+    _timeOfFlightTable.insert(2.3575_m, 0.5_s);
+    _timeOfFlightTable.insert(2.8575_m, 0.93_s);
+    _timeOfFlightTable.insert(3.3575_m, 1.1_s);
+    _timeOfFlightTable.insert(3.8575_m, 1.18_s);
+    _timeOfFlightTable.insert(4.3575_m, 1.18_s);
+    _timeOfFlightTable.insert(4.6875_m, 1.28_s);
+    _timeOfFlightTable.insert(5.1875_m, 1.28_s);
+>>>>>>> main
 
   frc::SmartDashboard::PutData("Shooter/mech2dDisplay", &_shooterMech);
 
@@ -71,9 +82,11 @@ SubShooter::SubShooter() {
 
 // This method will be called once per scheduler run
 void SubShooter::Periodic() {
-  Logger::LogFalcon("Shooter/Motor1", _shooterMotor1);
-  Logger::LogFalcon("Shooter/Motor2", _shooterMotor2);
-  Logger::Log("Shooter/IsAtSpeed", IsAtSpeed());
+    auto loopStart = frc::GetTime();
+
+    Logger::LogFalcon("Shooter/Motor1", _shooterMotor1);
+    Logger::LogFalcon("Shooter/Motor2", _shooterMotor2);
+    Logger::Log("Shooter/IsAtSpeed", IsAtSpeed());
 
   units::angle::degree_t motor1Position = _shooterMotor1.GetPosition().GetValue();
   _shooterMechTopRoller.SetAngle(motor1Position);
@@ -92,6 +105,10 @@ void SubShooter::Periodic() {
 
   AlertController::UpdateTemperatureAlert(_shooter2AlertConfig, shooter2Temperature);
   AlertController::UpdateCurrentAlert(_shooter2AlertConfig, shooter2Current);
+    units::angle::degree_t motor2Position = _shooterMotor2.GetPosition().GetValue();
+    _shooterMechBottomRoller.SetAngle(motor2Position);
+
+    Logger::Log("Shooter/Loop Time", (frc::GetTime() - loopStart));
 }
 
 void SubShooter::SimulationPeriodic() {

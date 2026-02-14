@@ -38,6 +38,8 @@ frc2::CommandPtr SubIndexer::IndexerOutOff() {
 
 // This method will be called once per scheduler run
 void SubIndexer::Periodic() {
+  auto loopStart = frc::GetTime();
+
   units::ampere_t IndexerCurrent = _indexerMotor.GetOutputCurrent() * 1_A;
   Logger::Log("Indexer/Indexer Motor Current", IndexerCurrent);
 
@@ -54,6 +56,8 @@ void SubIndexer::Periodic() {
   AlertController::UpdateCurrentAlert(_indexerAlertConfig, IndexerCurrent);
   AlertController::UpdateTemperatureAlert(_outdexerAlertConfig, IndexerOutTemp);
   AlertController::UpdateCurrentAlert(_outdexerAlertConfig, IndexerOutcurrent);
+  
+  Logger::Log("Indexer/Loop Time", (frc::GetTime() - loopStart));
 }
 
 void SubIndexer::SimulationPeriodic() {
