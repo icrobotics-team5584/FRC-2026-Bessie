@@ -6,8 +6,9 @@ RebuiltShift ShiftHandler::GetCurrentShift() {
   if (frc::DriverStation::IsAutonomousEnabled()) {
     return RebuiltShift::AUTON;
   }
+
   units::second_t secondsPassed = frc::DriverStation::GetMatchTime();
-  if (secondsPassed == -1_s) {
+  if (secondsPassed == -1_s) { /* Isn't in home practise mode */
     return RebuiltShift::NONE;
   }
 
@@ -37,6 +38,10 @@ RebuiltShift ShiftHandler::GetCurrentShift() {
 }
 
 RebuiltShift ShiftHandler::GetWinningShift() {
+  if(_overrideActive == true) {
+    return static_cast<RebuiltShift>(frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kBlue));
+  }
+
   std::string data = frc::DriverStation::GetGameSpecificMessage();
   if (data.length() == 0) { /* No winning shift message recieved */
     return RebuiltShift::NONE;
@@ -93,16 +98,28 @@ std::string ShiftHandler::GetShiftName(RebuiltShift shift) {
   }
 }
 
+bool ShiftHandler::GetOverrideActive() {
+  return _overrideActive;
+}
+
 bool ShiftHandler::IsShift(RebuiltShift shift) {
   return GetCurrentShift() == shift ? true : false; /* check if matching */
 }
 
 bool ShiftHandler::IsActiveShift() {
-  if (frc::DriverStation::GetMatchType() == frc::DriverStation::MatchType::kNone) {
+  if (_overrideActive == true) {
     return true;
   }
+  if (
+    frc::DriverStation::IsFMSAttached() == false && /* Isn't at comp? */
+    frc::DriverStation::GetMatchTime() == -1_s && /* Isn't home practise mode */
+    frc::DriverStation::IsDisabled() == false /* Isn't disabled */
+  ) {
+    return true; /* Don't respect shifts */
+  }
   RebuiltShift currentShift = GetCurrentShift();
-  RebuiltShift myShift = (RebuiltShift)frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kBlue);
+  RebuiltShift myShift = static_cast<RebuiltShift>(
+    frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kBlue));
 
   if (currentShift == RebuiltShift::AUTON || currentShift == RebuiltShift::TRANS ||
       currentShift == RebuiltShift::ENDGAME || myShift == currentShift) {
@@ -110,4 +127,8 @@ bool ShiftHandler::IsActiveShift() {
   }
 
   return false;
+}
+
+void ShiftHandler::SetOverrideActive(bool isActive) {
+  _overrideActive = isActive;
 }
