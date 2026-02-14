@@ -255,7 +255,9 @@ frc2::CommandPtr SubDrivebase::DriveOverBump(frc::ChassisSpeeds fieldRelativeSpe
       return (GetApproxTiltMagnitude() < 2_deg); //done
     }),
     frc2::cmd::RunOnce([this] { Logger::Log("Drivebase/DriveOverBump/State", 5); })
-  ));
+  )).Unless([this] {
+    return frc::RobotBase::IsSimulation();
+  });
 }
 
 
