@@ -8,6 +8,7 @@ namespace cmd {
     frc2::CommandPtr TESTForward250cmWhileTurning();
 
     frc2::CommandPtr NeutralScoreAndClimb_LeftBump();
+    frc2::CommandPtr NeutralScoreAndClimb_LeftTrench();
     frc2::CommandPtr NeutralScoreAndClimb_RightBump();
 
     frc2::CommandPtr Hoard_LeftBump();

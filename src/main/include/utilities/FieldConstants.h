@@ -26,9 +26,9 @@ constexpr frc::Pose2d NEUTRAL_IN_RIGHT{7.80_m, 1.07_m, 90_deg};
 constexpr frc::Pose2d NEUTRAL_END_RIGHT{7.80_m, 3.32_m, 90_deg};
 
 constexpr frc::Pose2d START_BUMP_LEFT{3.58_m, 5.80_m, 0_deg};
-constexpr frc::Pose2d START_TRENCH_LEFT{3.58_m, 7.40_m, 0_deg};
+constexpr frc::Pose2d START_TRENCH_LEFT{3.58_m, 7.50_m, 0_deg};
 constexpr frc::Pose2d START_BUMP_RIGHT{3.58_m, 2.27_m, 0_deg};
-constexpr frc::Pose2d START_TRENCH_RIGHT{3.58_m, 0.67_m, 0_deg};
+constexpr frc::Pose2d START_TRENCH_RIGHT{3.58_m, 0.57_m, 0_deg};
 
 constexpr frc::Pose2d DEPOT_IN{1.33_m, 5.96_m, 180_deg};
 constexpr frc::Pose2d DEPOT_END{0.75_m, 5.96_m, 180_deg};
