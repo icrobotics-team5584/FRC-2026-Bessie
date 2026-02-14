@@ -31,6 +31,7 @@ SubTurret::SubTurret() {
 
 // This method will be called once per scheduler run
 void SubTurret::Periodic() {
+    auto loopStart = frc::GetTime();
     units::celsius_t turretTemperature = _turretMotor.GetTemperature();
     units::ampere_t turretCurrent = _turretMotor.GetStatorCurrent();
 
@@ -73,6 +74,7 @@ void SubTurret::Periodic() {
     Logger::Log("Turret/Encoder/Encoder1Frequency", _turretEncoder1.GetFrequency());
     Logger::Log("Turret/Encoder/Encoder2Frequency", _turretEncoder2.GetFrequency());
 
+    Logger::Log("Turret/Loop Time", (frc::GetTime() - loopStart));
     _turretPos.AddSample(frc::Timer::GetFPGATimestamp(), CalcOptimisedTurretAngle(_turretMotor.GetPosition()));
 }
 

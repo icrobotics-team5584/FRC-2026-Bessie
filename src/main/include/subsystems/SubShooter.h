@@ -7,7 +7,7 @@
 #include "utilities/AlertController.h"
 #include "utilities/MechanismCircle2d.h"
 
-#include <frc/Timer.h>
+#include <frc/Alert.h>
 #include <frc/simulation/FlywheelSim.h>
 #include <frc/smartdashboard/Mechanism2d.h>
 #include <frc/smartdashboard/MechanismLigament2d.h>
@@ -21,7 +21,6 @@
 #include <wpi/interpolating_map.h>
 
 #include "Constants.h"
-#include "frc/Alert.h"
 
 class SubShooter : public frc2::SubsystemBase {
  public:
@@ -66,33 +65,15 @@ class SubShooter : public frc2::SubsystemBase {
     "Shooter Motor 1 High Temperature!", frc::Alert::AlertType::kWarning};
   frc::Alert _shooter1CurrentAlert{"Shooter Motor 1 Overcurrent!", frc::Alert::AlertType::kWarning};
 
-  frc::Alert _shooter1RecordedTemperatureAlert{
-    "Shooter Motor 1 max Temperature was reached !", frc::Alert::AlertType::kWarning};
-
-  frc::Alert _shooter1RecordedCurrentAlert{
-    "Shooter Motor 1 max current was reached !", frc::Alert::AlertType::kWarning};
-
-  frc::Timer _shooter1HighCurrentTimer;
-
-  motorAlertConfig _shooter1AlertConfig = AlertController::Config(_shooter1highTemperatureAlert,
-    _shooter1CurrentAlert, _shooter1RecordedCurrentAlert, _shooter1RecordedTemperatureAlert,
-    _shooter1HighCurrentTimer, 60_degC, 20_A);
+  AlertController::MotorAlertConfig _shooter1AlertConfig{
+    _shooter1highTemperatureAlert, _shooter1CurrentAlert, 60_degC, 20_A};
 
   frc::Alert _shooter2highTemperatureAlert{
     "Shooter Motor 2 High Temperature!", frc::Alert::AlertType::kWarning};
   frc::Alert _shooter2CurrentAlert{"Shooter Motor 2 Overcurrent!", frc::Alert::AlertType::kWarning};
 
-  frc::Alert _shooter2RecordedTemperatureAlert{
-    "Shooter Motor 2 max Temperature was reached !", frc::Alert::AlertType::kWarning};
-
-  frc::Alert _shooter2RecordedCurrentAlert{
-    "Shooter Motor 2 max current was reached !", frc::Alert::AlertType::kWarning};
-
-  frc::Timer _shooter2HighCurrentTimer;
-
-  motorAlertConfig _shooter2AlertConfig = AlertController::Config(_shooter2highTemperatureAlert,
-    _shooter2CurrentAlert, _shooter2RecordedCurrentAlert, _shooter2RecordedTemperatureAlert,
-    _shooter2HighCurrentTimer, 60_degC, 20_A);
+  AlertController::MotorAlertConfig _shooter2AlertConfig{
+    _shooter2highTemperatureAlert, _shooter2CurrentAlert, 60_degC, 20_A};
 
   wpi::interpolating_map<units::meter_t, units::turns_per_second_t> _flyWheelSpeedTableScoring;
   wpi::interpolating_map<units::meter_t, units::turns_per_second_t> _flyWheelSpeedTablePassing;

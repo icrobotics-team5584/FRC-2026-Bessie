@@ -8,7 +8,6 @@
 #include "utilities/ICSparkFlex.h"
 
 #include <frc/Alert.h>
-#include <frc/Timer.h>
 #include <frc/simulation/FlywheelSim.h>
 #include <frc/simulation/SingleJointedArmSim.h>
 #include <frc/system/plant/DCMotor.h>

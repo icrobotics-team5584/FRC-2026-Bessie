@@ -33,17 +33,18 @@ bool SubFeeder::FeederIsEmpty() {
   return _feederEmptySensor.Get();
 }
 
-
-
 // This method will be called once per scheduler run
 void SubFeeder::Periodic() {
+  auto loopStart = frc::GetTime();
+
   Logger::Log("Feeder/Feeder Is Full", FeederIsFull());
   Logger::Log("Feeder/Feeder Is Empty", FeederIsEmpty());
-    units::celsius_t feederTemperature = _feederMotor.GetTemperature();
+  units::celsius_t feederTemperature = _feederMotor.GetTemperature();
   units::ampere_t feederCurrent = _feederMotor.GetStatorCurrent();
   AlertController::UpdateTemperatureAlert(_feederAlertConfig, feederTemperature);
   AlertController::UpdateCurrentAlert(_feederAlertConfig, feederCurrent);
-  
+
+  Logger::Log("Feeder/Loop Time", (frc::GetTime() - loopStart));
 }
 
 void SubFeeder::SimulationPeriodic() {

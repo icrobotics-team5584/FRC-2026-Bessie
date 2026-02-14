@@ -9,7 +9,6 @@
 #include "utilities/MechanismCircle2d.h"
 
 #include <frc/Alert.h>
-#include <frc/Timer.h>
 #include <frc/simulation/SingleJointedArmSim.h>
 #include <frc/system/plant/DCMotor.h>
 #include <frc/system/plant/LinearSystemId.h>
@@ -48,17 +47,8 @@ class SubDeploy : public frc2::SubsystemBase {
     "Deploy Motor High Temperature!", frc::Alert::AlertType::kWarning};
   frc::Alert _deployCurrentAlert{"Deploy Motor Overcurrent!", frc::Alert::AlertType::kWarning};
 
-  frc::Alert _deployRecordedTemperatureAlert{
-    "Deploy Motor max Temperature was reached !", frc::Alert::AlertType::kWarning};
-
-  frc::Alert _deployRecordedCurrentAlert{
-    "Deploy Motor max current was reached !", frc::Alert::AlertType::kWarning};
-
-  frc::Timer _deployHighCurrentTimer;
-
-  motorAlertConfig DeployAlertConfig = AlertController::Config(_deployHighTemperatureAlert,
-    _deployCurrentAlert, _deployRecordedCurrentAlert, _deployRecordedTemperatureAlert,
-    _deployHighCurrentTimer, 60_degC, 20_A);
+  AlertController::MotorAlertConfig DeployAlertConfig{
+    _deployHighTemperatureAlert, _deployCurrentAlert, 60_degC, 20_A};
 
   bool _hasZeroed = false;
   bool _currentlyZeroing = false;

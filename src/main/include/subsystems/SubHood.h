@@ -8,7 +8,7 @@
 #include "utilities/ICSparkMax.h"
 #include "utilities/MechanismCircle2d.h"
 
-#include <frc/Timer.h>
+#include <frc/Alert.h>
 #include <frc/simulation/DCMotorSim.h>
 #include <frc/simulation/SingleJointedArmSim.h>
 #include <frc/smartdashboard/Mechanism2d.h>
@@ -23,7 +23,7 @@
 #include <wpi/interpolating_map.h>
 
 #include "Constants.h"
-#include "frc/Alert.h"
+
 
 class SubHood : public frc2::SubsystemBase {
  public:
@@ -82,17 +82,8 @@ class SubHood : public frc2::SubsystemBase {
     "Hood Motor High Temperature!", frc::Alert::AlertType::kWarning};
   frc::Alert _hoodCurrentAlert{"Hood Motor Overcurrent!", frc::Alert::AlertType::kWarning};
 
-  frc::Alert _hoodRecordedTemperatureAlert{
-    "Hood Motor max Temperature was reached !", frc::Alert::AlertType::kWarning};
-
-  frc::Alert _hoodRecordedCurrentAlert{
-    "Hood Motor max current was reached !", frc::Alert::AlertType::kWarning};
-
-  frc::Timer _hoodHighCurrentTimer;
-
-  motorAlertConfig _hoodAlertConfig =
-    AlertController::Config(_hoodhighTemperatureAlert, _hoodCurrentAlert, _hoodRecordedCurrentAlert,
-      _hoodRecordedTemperatureAlert, _hoodHighCurrentTimer, 60_degC, 20_A);
+  AlertController::MotorAlertConfig _hoodAlertConfig{
+    _hoodhighTemperatureAlert, _hoodCurrentAlert, 60_degC, 20_A};
 
   wpi::interpolating_map<units::meter_t, units::degree_t> _hoodPitchTable;
 

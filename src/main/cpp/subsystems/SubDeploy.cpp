@@ -73,6 +73,8 @@ void SubDeploy::EnableSoftLimit(bool enabled) {
 
 // This method will be called once per scheduler run
 void SubDeploy::Periodic() {
+  auto loopStart = frc::GetTime();
+
   units::ampere_t deployCurrent = _deployMotor.GetStatorCurrent();
 
   units::celsius_t deployTemperature = _deployMotor.GetTemperature();
@@ -80,8 +82,9 @@ void SubDeploy::Periodic() {
   AlertController::UpdateTemperatureAlert(DeployAlertConfig, deployTemperature);
   AlertController::UpdateCurrentAlert(DeployAlertConfig, deployCurrent);
 
-
   RobotVisualisation::GetInstance()._deployLigament->SetAngle(_deployMotor.GetPosition());
+
+  Logger::Log("Deploy/Loop Time", (frc::GetTime() - loopStart));
 }
 
 void SubDeploy::SimulationPeriodic() {

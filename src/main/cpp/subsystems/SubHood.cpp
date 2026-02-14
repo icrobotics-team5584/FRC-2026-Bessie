@@ -34,20 +34,24 @@ SubHood::SubHood() {
 
 // This method will be called once per scheduler run
 void SubHood::Periodic() {
-  _hoodMechCircle.SetAngle(_hoodMotor.GetPosition());
-  if (_hasZeroed == false && _zeroing == false) {
-    _hoodMotor.Set(0);
-  }
-
-  Logger::Log("Hood/haszeroed", _hasZeroed);
-  Logger::Log("Hood/zeroing", _zeroing);
-  Logger::Log("Hood/IsAtTarget", HoodIsAtTarget());
 
   units::celsius_t hoodTemperature = _hoodMotor.GetTemperature();
   units::ampere_t hoodCurrent = _hoodMotor.GetStatorCurrent();
 
   AlertController::UpdateTemperatureAlert(_hoodAlertConfig, hoodTemperature);
   AlertController::UpdateCurrentAlert(_hoodAlertConfig, hoodCurrent);
+    auto loopStart = frc::GetTime();
+
+    _hoodMechCircle.SetAngle(_hoodMotor.GetPosition());
+    if (_hasZeroed == false && _zeroing == false) {
+        _hoodMotor.Set(0);
+    }
+
+    Logger::Log("Hood/haszeroed", _hasZeroed);
+    Logger::Log("Hood/zeroing", _zeroing);
+    Logger::Log("Hood/IsAtTarget", HoodIsAtTarget());
+    
+    Logger::Log("Hood/Loop Time", (frc::GetTime() - loopStart));
 }
 
 void SubHood::SimulationPeriodic() {

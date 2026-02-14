@@ -8,6 +8,7 @@
 #include "utilities/ICSparkMax.h"
 #include "utilities/MechanismCircle2d.h"
 
+#include <frc/Alert.h>
 #include <frc/DutyCycleEncoder.h>
 #include <frc/controller/SimpleMotorFeedforward.h>
 #include <frc/geometry/Transform2d.h>
@@ -26,7 +27,7 @@
 #include <units/angle.h>
 
 #include "Constants.h"
-#include "frc/Alert.h"
+
 
 class SubTurret : public frc2::SubsystemBase {
  public:
@@ -68,17 +69,8 @@ class SubTurret : public frc2::SubsystemBase {
     "Turret Motor High Temperature!", frc::Alert::AlertType::kWarning};
   frc::Alert _turretCurrentAlert{"Turret Motor Overcurrent!", frc::Alert::AlertType::kWarning};
 
-  frc::Alert _turretRecordedTemperatureAlert{
-    "Turret Motor max Temperature was reached !", frc::Alert::AlertType::kWarning};
-
-  frc::Alert _turretRecordedCurrentAlert{
-    "Turret Motor max current was reached !", frc::Alert::AlertType::kWarning};
-
-  frc::Timer _turretHighCurrentTimer;
-
-  motorAlertConfig _turretAlertConfig = AlertController::Config(_turrethighTemperatureAlert,
-    _turretCurrentAlert, _turretRecordedCurrentAlert, _turretRecordedTemperatureAlert,
-    _turretHighCurrentTimer, 60_degC, 20_A);
+  AlertController::MotorAlertConfig _turretAlertConfig{
+    _turrethighTemperatureAlert, _turretCurrentAlert, 60_degC, 20_A};
 
   frc::DutyCycleEncoder _turretEncoder1{dio::TURRET_ENCODER_1};
   frc::DutyCycleEncoder _turretEncoder2{dio::TURRET_ENCODER_2};
