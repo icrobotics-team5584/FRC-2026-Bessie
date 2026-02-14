@@ -4,9 +4,10 @@
 
 #include "subsystems/SubIntake.h"
 
+#include "utilities/RobotVisualisation.h"
+
 #include <units/current.h>
 #include <utilities/Logger.h>
-#include "utilities/RobotVisualisation.h"
 
 SubIntake::SubIntake() {
   _intakeMotorConfig.SmartCurrentLimit(60);
@@ -24,38 +25,16 @@ frc2::CommandPtr SubIntake::IntakeOff() {
   return RunOnce([this] { _intakeMotor.Set(0); });
 }
 
-void SubIntake::IntakeCurrentHighTimer() {
-  _intakeHighCurrentTimer.Start();
-
-  if (_intakeHighCurrentTimer.Get() > 3_s) {
-    _intakeCurrentAlert.Set(true);
-  }
-}
-
 // This method will be called once per scheduler run
 void SubIntake::Periodic() {
-  auto loopStart = frc::GetTime();
+   auto loopStart = frc::GetTime();
+  units::celsius_t intakeTemperature = _intakeMotor.GetTemperature();
 
   units::ampere_t intakeCurrent = _intakeMotor.GetStatorCurrent();
 
-  Logger::Log("Intake/Intake Motor Current", intakeCurrent);
+  AlertController::UpdateTemperatureAlert(_intakeAlertConfig, intakeTemperature);
+  AlertController::UpdateCurrentAlert(_intakeAlertConfig, intakeCurrent);
 
-  if (intakeCurrent > 20_A) {
-    IntakeCurrentHighTimer();
-  } else {
-    _intakeCurrentAlert.Set(false);
-    _intakeHighCurrentTimer.Reset();
-  }
-
-  units::celsius_t intakeTemperature = _intakeMotor.GetTemperature();
-
-  Logger::Log("Intake/Intake Motor Temperature", intakeTemperature);
-
-  if (intakeTemperature > 60_degC) {
-    _intakeHighTemperatureAlert.Set(true);
-  } else {
-    _intakeHighTemperatureAlert.Set(false);
-  }
   RobotVisualisation::GetInstance()._intakeWheel.SetAngle(_intakeMotor.GetPosition());
 
   Logger::Log("Intake/Loop Time", (frc::GetTime() - loopStart));
@@ -66,4 +45,3 @@ void SubIntake::SimulationPeriodic() {
   _sim.Update(20_ms);
   _intakeMotor.IterateSim(_sim.GetAngularVelocity());
 }
-
