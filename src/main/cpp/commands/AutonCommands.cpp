@@ -179,7 +179,20 @@ namespace cmd {
  
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.5_m, 2.0_m, -90_deg}; }, 0.5, 20_cm, 5_deg) //TEMP drive to end intake pos
                 .AlongWith(cmd::ShootOnTheMove())
-            //REPLACE ABOVE WITH: SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{SOME END POSITION}; }, 0.5, 20_cm),
+            //REPLACE ABOVE WITH: SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.8_m, 1.0_m, 270_deg}; }, 0.5, 20_cm, 5_deg),
+        );
+    }
+
+    frc2::CommandPtr Hoard_LeftTrench() {
+        return frc2::cmd::Sequence(
+            // STARTING POSITION: START_TRENCH_LEFT (X 3.58m, Y 7.50m, heading 0 degrees)
+            SubHood::GetInstance().ZeroHood(),
+            cmd::ShootOnTheMove().WithTimeout(2_s),
+
+            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_LEFT; }, 1.0),
+ 
+            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.8_m, 1.0_m, 270_deg}; }, 0.5, 20_cm, 5_deg) //TEMP drive to end intake pos
+                .AlongWith(cmd::ShootOnTheMove())
         );
     }
 }
