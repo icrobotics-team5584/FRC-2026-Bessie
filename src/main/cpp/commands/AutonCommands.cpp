@@ -42,7 +42,7 @@ namespace cmd {
         ).AndThen(frc2::cmd::Sequence(
             SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{3_mps, 0_mps, 0_tps}),
             frc2::cmd::RunOnce([] {
-                SubDrivebase::GetInstance().SetPose(frc::Pose2d{5.7_m, 5.8_m, SubDrivebase::GetInstance().GetGyroAngle()});
+                SubDrivebase::GetInstance().SetPose(frc::Pose2d{5.8_m, 5.8_m, SubDrivebase::GetInstance().GetGyroAngle()});
             }), //reset position after traversing the bump
 
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.5_m, 5.5_m, -90_deg}; }, 1.0, 5_cm, 5_deg), //TEMP drive to intake pos
@@ -107,7 +107,7 @@ namespace cmd {
         ).AndThen(frc2::cmd::Sequence(
             SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{3_mps, 0_mps, 0_tps}),
             frc2::cmd::RunOnce([] {
-                SubDrivebase::GetInstance().SetPose(frc::Pose2d{5.7_m, 2.27_m, SubDrivebase::GetInstance().GetGyroAngle()});
+                SubDrivebase::GetInstance().SetPose(frc::Pose2d{5.8_m, 2.27_m, SubDrivebase::GetInstance().GetGyroAngle()});
             }), //reset position after traversing the bump
 
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_RIGHT; }, 1.0),
@@ -171,7 +171,7 @@ namespace cmd {
 
             SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{3_mps, 0_mps, 0_tps}),
             frc2::cmd::RunOnce([] {
-                SubDrivebase::GetInstance().SetPose(frc::Pose2d{5.7_m, 5.8_m, SubDrivebase::GetInstance().GetGyroAngle()});
+                SubDrivebase::GetInstance().SetPose(frc::Pose2d{5.8_m, 5.8_m, SubDrivebase::GetInstance().GetGyroAngle()});
             }), //reset position after traversing the bump
 
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.5_m, 5.5_m, -90_deg}; }, 1.0, 5_cm, 5_deg), //TEMP drive to intake pos

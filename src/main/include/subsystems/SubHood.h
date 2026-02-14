@@ -58,7 +58,7 @@ class SubHood : public frc2::SubsystemBase {
   double D = 8.0;
   double S = 0.6;
 
-  units::ampere_t zeroingCurrentLimit = 18_A;
+  units::ampere_t zeroingCurrentLimit = 22_A;
 
   static constexpr units::degree_t UPPER_LIMIT = 37.5_deg;
   static constexpr units::degree_t LOWER_LIMIT = 16.5_deg;
