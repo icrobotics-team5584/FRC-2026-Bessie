@@ -25,7 +25,9 @@ namespace cmd {
       auto robotPose = PoseHandler::GetInstance().GetPose();
       Logger::Log("Turret/AimAtFieldRelative/robotPose/Rotation", robotPose.Rotation().Degrees());
       units::degree_t targetAngle = target() - robotPose.Rotation().Degrees();
-      return targetAngle;}, [] { return SubDrivebase::GetInstance().GetDesiredAngularVelocity(); });
+      return targetAngle;}, [target] { 
+        return (target() - SubTurret::GetInstance().GetTurretTargetAngle()) / 20_ms - SubDrivebase::GetInstance().GetDesiredAngularVelocity(); 
+      });
   }
 
 frc2::CommandPtr AimAtSpot(frc::Translation2d target) {
@@ -77,7 +79,7 @@ frc::Pose2d CalcFutureTurretPose() {
   units::degrees_per_second_t robotVelRot = SubDrivebase::GetInstance().GetDesiredAngularVelocity();
 
   // Account for latency
-  frc::Transform2d latencyTransform = frc::Transform2d(robotVelX * LATENCYOFFSET, robotVelY * LATENCYOFFSET, robotVelRot * LATENCYOFFSET);
+  frc::Transform2d latencyTransform = frc::Transform2d(robotVelX * offset, robotVelY * offset, robotVelRot * offset);
   robot = robot.TransformBy(latencyTransform);
   
   Logger::Log("SOTM/velX", robotVelX);

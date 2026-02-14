@@ -106,6 +106,9 @@ frc2::CommandPtr SubIndexer::Index() {
   return StartEnd([this] { _indexerMotor.Set(0.3); _outdexerMotor.Set(0.9); }, [this] { _indexerMotor.Set(0); _outdexerMotor.Set(0);});
 }
 
+frc2::CommandPtr SubIndexer::IndexOn() {
+  return RunOnce([this] { _indexerMotor.Set(0.3); _outdexerMotor.Set(0.9); });
+}
 
 frc2::CommandPtr SubIndexer::StopIndex() {
   return RunOnce([this] { _indexerMotor.Set(0); _outdexerMotor.Set(0); });

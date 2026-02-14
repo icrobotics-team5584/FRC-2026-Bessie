@@ -135,9 +135,9 @@ units::degree_t SubTurret::GetTurretAngleAtTime(units::second_t time) {
     }
 }
 
-frc2::CommandPtr SubTurret::SetTurretTargetAngle(std::function<units::degree_t()> angle, std::function<units::degrees_per_second_t()> robotAngVel){
-    return Run([this, angle, robotAngVel] {
-        units::degrees_per_second_t nextVel = -robotAngVel(); 
+frc2::CommandPtr SubTurret::SetTurretTargetAngle(std::function<units::degree_t()> angle, std::function<units::degrees_per_second_t()> angVelTarget){
+    return Run([this, angle, angVelTarget] {
+        units::degrees_per_second_t nextVel = angVelTarget(); 
         // we want the turret to negate the robot rotation, hence the negative
 
         units::volt_t rotationFeedforward = _robotRotVelFF.Calculate(nextVel);
@@ -184,6 +184,10 @@ units::degree_t SubTurret::CalcOptimisedTurretAngle(units::degree_t angle) {
     return newTarget;
 }
 
+units::degree_t SubTurret::GetTurretTargetAngle() {
+    return _turretMotor.GetPositionTarget();
+}
+
 void SubTurret::SetTurretAngle(units::degree_t angle) {
     _turretMotor.SetPosition(angle);
 }
@@ -211,11 +215,11 @@ bool SubTurret::IsAtTarget() {
     return units::math::abs(_turretMotor.GetPosError()) < TOLARANCE;
 }
 
-bool SubTurret::IsApproachingMax(std::function<units::millisecond_t()> time) {
+bool SubTurret::IsNotApproachingMax(std::function<units::millisecond_t()> time) {
 units::degree_t futureTurretAngle = GetTurretAngle() + _turretMotor.GetVelocity() * time();
 Logger::Log("SOTM/FutureTurretAngle", futureTurretAngle);
 Logger::Log("SOTM/TurretApproachingMax", futureTurretAngle > POS_LIMIT && futureTurretAngle < NEG_LIMIT);
-return (futureTurretAngle > POS_LIMIT || futureTurretAngle < NEG_LIMIT);
+return (futureTurretAngle < POS_LIMIT || futureTurretAngle > NEG_LIMIT);
 }
 
 units::degree_t SubTurret::GetFieldRelativeTurretAngle() {

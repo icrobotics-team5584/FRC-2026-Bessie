@@ -39,12 +39,13 @@ class SubTurret : public frc2::SubsystemBase {
   units::degree_t GetTurretAngleAtTime(units::second_t time);
   units::degree_t CalcOptimisedTurretAngle(units::degree_t angle);
   units::degree_t GetFieldRelativeTurretAngle();
+  units::degree_t GetTurretTargetAngle();
     
   void SetTurretAngle(units::degree_t angle);
   void ZeroTurret();
 
   bool IsAtTarget();
-  bool IsApproachingMax(std::function<units::millisecond_t()> time);
+  bool IsNotApproachingMax(std::function<units::millisecond_t()> time);
 
   frc2::CommandPtr SetTurretTargetAngle(std::function<units::degree_t()> angle, std::function<units::degrees_per_second_t()> robotAngVel);
   frc2::CommandPtr ZeroTurretCmd();

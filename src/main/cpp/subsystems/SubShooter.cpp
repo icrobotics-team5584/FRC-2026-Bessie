@@ -38,6 +38,10 @@ SubShooter::SubShooter() {
     _shooterMotor2.GetConfigurator().Apply(_shooterMotorConfig);
 
     _shooterMotor1.GetClosedLoopReference().SetUpdateFrequency(100_Hz);
+    _shooterMotor1.GetStatorCurrent().SetUpdateFrequency(100_Hz);
+
+    _shooterMotor2.GetClosedLoopReference().SetUpdateFrequency(100_Hz);
+    _shooterMotor2.GetStatorCurrent().SetUpdateFrequency(100_Hz);
 
     _timeOfFlightTable.insert(1.8575_m, 0.8_s);
     _timeOfFlightTable.insert(2.3575_m, 0.5_s);
@@ -113,8 +117,8 @@ frc2::CommandPtr SubShooter::StopShooter() {
 }
 
 bool SubShooter::IsAtSpeed() {
-    return units::math::abs(_shooterMotor1.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 1.0_tps &&
-    units::math::abs(_shooterMotor2.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 1.0_tps;
+    return units::math::abs(_shooterMotor1.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 4.0_tps &&
+    units::math::abs(_shooterMotor2.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 4.0_tps;
 }
 
 frc2::CommandPtr SubShooter::SpinWithDistance(std::function<units::meter_t()> distance, std::function<bool()> isPassing) {

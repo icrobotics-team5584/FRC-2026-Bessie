@@ -33,6 +33,7 @@ class SubIndexer : public frc2::SubsystemBase {
   frc2::CommandPtr IndexerOutOff();
 
   frc2::CommandPtr Index();
+  frc2::CommandPtr IndexOn();
   frc2::CommandPtr StopIndex();
 
   void IndexerCurrentHighTimer();
