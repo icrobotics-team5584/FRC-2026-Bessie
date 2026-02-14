@@ -17,10 +17,12 @@ SubDrivebase::SubDrivebase() {
 }
 
 void SubDrivebase::Periodic() {
-  auto loopstart = frc::GetTime();
+  auto loopStart = frc::GetTime();
+
   LogDrivebaseStates();
   UpdateOdometry();
-  Logger::Log("Drivebase/loop time (sec)", (frc::GetTime() - loopstart));
+  
+  Logger::Log("Drivebase/Loop Time", (frc::GetTime() - loopStart));
 }
 
 void SubDrivebase::SimulationPeriodic() {
@@ -456,11 +458,11 @@ frc::ChassisSpeeds SubDrivebase::CalcJoystickSpeeds(frc2::CommandXboxController&
 frc2::CommandPtr SubDrivebase::JoystickDrive(frc2::CommandXboxController& controller, bool fieldOriented, 
   double speedScale) {
   return Drive([this, speedScale, &controller] {
-      auto speeds = CalcJoystickSpeeds(controller);
-      speeds.vx = std::clamp(speeds.vx * speedScale, -DrivebaseConfig::MAX_VELOCITY, DrivebaseConfig::MAX_VELOCITY);
-      speeds.vy = std::clamp(speeds.vy * speedScale, -DrivebaseConfig::MAX_VELOCITY, DrivebaseConfig::MAX_VELOCITY);
-      return frc::ChassisSpeeds{speeds.vx, speeds.vy, speeds.omega};
-    }, fieldOriented);
+    auto speeds = CalcJoystickSpeeds(controller);
+    speeds.vx = speeds.vx * speedScale;
+    speeds.vy = speeds.vy * speedScale;
+    return frc::ChassisSpeeds{speeds.vx, speeds.vy, speeds.omega};
+  }, fieldOriented);
 }
 
 // Special

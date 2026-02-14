@@ -57,6 +57,8 @@ void SubIndexer::IndexerOutCurrentHighTimer() {
 
 // This method will be called once per scheduler run
 void SubIndexer::Periodic() {
+  auto loopStart = frc::GetTime();
+
   units::ampere_t IndexerCurrent = _indexerMotor.GetOutputCurrent() * 1_A;
   Logger::Log("Indexer/Indexer Motor Current", IndexerCurrent);
   if (IndexerCurrent > 20_A) {
@@ -74,7 +76,6 @@ void SubIndexer::Periodic() {
     _indexerHighTemperatureAlert.Set(false);
   }
 
-
   units::ampere_t IndexerOutcurrent = _outdexerMotor.GetOutputCurrent() * 1_A;
   Logger::Log("Indexer/Indexer Motor Current", IndexerOutcurrent);
   if (IndexerOutcurrent > 20_A) {
@@ -91,6 +92,8 @@ void SubIndexer::Periodic() {
   } else {
     _outdexerHighTemperatureAlert.Set(false);
   }
+  
+  Logger::Log("Indexer/Loop Time", (frc::GetTime() - loopStart));
 }
 
 void SubIndexer::SimulationPeriodic() {
