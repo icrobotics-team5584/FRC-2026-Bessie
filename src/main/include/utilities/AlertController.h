@@ -16,10 +16,6 @@ struct motorAlertConfig {
 
 namespace AlertController {
 
-// creates an alert config from the alerts and a timer and is used in updating the alerts
-motorAlertConfig Config(frc::Alert temperatureAlert, frc::Alert currentAlert,
-  frc::Timer highCurrentTimer, units::celsius_t maxDegrees, units::ampere_t maxCurrent);
-
 // updates the alert for the temperature. automatically updates to true or false
 void UpdateTemperatureAlert(motorAlertConfig& config, units::celsius_t motorTemperature);
 

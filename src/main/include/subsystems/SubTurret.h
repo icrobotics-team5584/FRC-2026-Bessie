@@ -70,8 +70,8 @@ class SubTurret : public frc2::SubsystemBase {
 
   frc::Timer _turretHighCurrentTimer;
 
-  motorAlertConfig _turretAlertConfig = AlertController::Config(
-    _turrethighTemperatureAlert, _turretCurrentAlert, _turretHighCurrentTimer, 60_degC, 20_A);
+  motorAlertConfig _turretAlertConfig{
+    _turrethighTemperatureAlert, _turretCurrentAlert, _turretHighCurrentTimer, 60_degC, 20_A};
 
   frc::DutyCycleEncoder _turretEncoder1{dio::TURRET_ENCODER_1};
   frc::DutyCycleEncoder _turretEncoder2{dio::TURRET_ENCODER_2};

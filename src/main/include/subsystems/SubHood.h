@@ -84,8 +84,8 @@ class SubHood : public frc2::SubsystemBase {
 
   frc::Timer _hoodHighCurrentTimer;
 
-  motorAlertConfig _hoodAlertConfig = AlertController::Config(
-    _hoodhighTemperatureAlert, _hoodCurrentAlert, _hoodHighCurrentTimer, 60_degC, 20_A);
+  motorAlertConfig _hoodAlertConfig{
+    _hoodhighTemperatureAlert, _hoodCurrentAlert, _hoodHighCurrentTimer, 60_degC, 20_A};
 
   wpi::interpolating_map<units::meter_t, units::degree_t> _hoodPitchTable;
 

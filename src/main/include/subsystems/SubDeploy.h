@@ -50,8 +50,8 @@ class SubDeploy : public frc2::SubsystemBase {
 
   frc::Timer _deployHighCurrentTimer;
 
-  motorAlertConfig DeployAlertConfig = AlertController::Config(
-    _deployHighTemperatureAlert, _deployCurrentAlert, _deployHighCurrentTimer, 60_degC, 20_A);
+  motorAlertConfig DeployAlertConfig{_deployHighTemperatureAlert, _deployCurrentAlert, _deployHighCurrentTimer, 60_degC, 20_A};
+
 
   bool _hasZeroed = false;
   bool _currentlyZeroing = false;

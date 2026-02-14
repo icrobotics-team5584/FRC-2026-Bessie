@@ -48,8 +48,8 @@ class SubIntake : public frc2::SubsystemBase {
 
   frc::Timer _intakeHighCurrentTimer;
 
-  motorAlertConfig _intakeAlertConfig = AlertController::Config(
-    _intakeHighTemperatureAlert, _intakeCurrentAlert, _intakeHighCurrentTimer, 60_degC, 20_A);
+  motorAlertConfig _intakeAlertConfig{
+    _intakeHighTemperatureAlert, _intakeCurrentAlert, _intakeHighCurrentTimer, 60_degC, 20_A};
 
   // Simulation components
   static constexpr double GEARING = 1.0;

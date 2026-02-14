@@ -53,8 +53,8 @@ class SubFeeder : public frc2::SubsystemBase {
 
   frc::Timer _feederHighCurrentTimer;
 
-  motorAlertConfig _feederAlertConfig = AlertController::Config(
-    _feederHighTemperatureAlert, _feederCurrentAlert, _feederHighCurrentTimer, 60_degC, 20_A);
+  motorAlertConfig _feederAlertConfig{
+    _feederHighTemperatureAlert, _feederCurrentAlert, _feederHighCurrentTimer, 60_degC, 20_A};
 
   // Simulation components
   static constexpr double GEARING = 1.0;
