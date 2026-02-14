@@ -43,6 +43,8 @@ void SubFeeder::CurrentHighTimer() {
 
 // This method will be called once per scheduler run
 void SubFeeder::Periodic() {
+  auto loopStart = frc::GetTime();
+
   Logger::Log("Feeder/Feeder Is Full", FeederIsFull());
   Logger::Log("Feeder/Feeder Is Empty", FeederIsEmpty());
   units::ampere_t current = _feederMotor.GetStatorCurrent();
@@ -61,6 +63,8 @@ void SubFeeder::Periodic() {
   } else {
     _feederHighTemperatureAlert.Set(false);
   }
+
+  Logger::Log("Feeder/Loop Time", (frc::GetTime() - loopStart));
 }
 
 void SubFeeder::SimulationPeriodic() {

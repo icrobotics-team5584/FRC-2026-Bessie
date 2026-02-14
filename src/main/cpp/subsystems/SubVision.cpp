@@ -38,7 +38,10 @@ SubVision::SubVision() {
 }
 
 void SubVision::Periodic() {
+  auto loopStart = frc::GetTime();
   UpdateVision();
+
+  Logger::Log("Vision/Loop Time", (frc::GetTime() - loopStart));
 }
 
 void SubVision::UpdateVision() {
