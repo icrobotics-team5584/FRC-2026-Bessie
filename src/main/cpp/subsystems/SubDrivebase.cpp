@@ -376,7 +376,7 @@ bool SubDrivebase::IsAtPose(
 }
 
 frc2::CommandPtr SubDrivebase::DriveToPose(std::function<frc::Pose2d()> pose,
-  double speedScaling = 1, units::meter_t positionErrorTolerance,
+  double speedScaling, units::meter_t positionErrorTolerance,
   units::degree_t rotationErrorTolerance) {
   return RunOnce([this] {
     _rotationP2pController.Reset(GetGyroAngle(true).Degrees());

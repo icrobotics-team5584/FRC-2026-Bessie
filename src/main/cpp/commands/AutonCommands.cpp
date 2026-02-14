@@ -13,6 +13,7 @@ namespace cmd {
         return frc2::cmd::Print("Default Auton");
     }
 
+    /* TESTING AUTONS */
     frc2::CommandPtr TESTDriveInASquare() {
         return frc2::cmd::Sequence(
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{0_m, 0_m, 0_deg}; }, 1.0),
@@ -31,6 +32,8 @@ namespace cmd {
         return SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{2.5_m, 0.0_m, 180_deg}; }, 1.0);
     }
     
+    /* NEUTRAL SCORE AND CLIMB AUTONS */
+
     frc2::CommandPtr NeutralScoreAndClimb_LeftBump() {
         return frc2::cmd::Sequence(
             // STARTING POSITION: START_BUMP_LEFT (X 3.58m, Y 5.80m, heading 0 degrees)
@@ -156,5 +159,27 @@ namespace cmd {
             
             //SubClimber::GetInstance().ClimbL1()
         ));
+    }
+
+    /* HOARDING AUTONS */
+
+    frc2::CommandPtr Hoard_LeftBump() {
+        return frc2::cmd::Sequence(
+            // STARTING POSITION: START_BUMP_LEFT (X 3.58m, Y 5.80m, heading 0 degrees)
+            SubHood::GetInstance().ZeroHood(),
+            cmd::ShootOnTheMove().WithTimeout(2_s),
+
+            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{3_mps, 0_mps, 0_tps}),
+            frc2::cmd::RunOnce([] {
+                SubDrivebase::GetInstance().SetPose(frc::Pose2d{5.7_m, 5.8_m, SubDrivebase::GetInstance().GetGyroAngle()});
+            }), //reset position after traversing the bump
+
+            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.5_m, 5.5_m, -90_deg}; }, 1.0, 5_cm, 5_deg), //TEMP drive to intake pos
+            //REPLACE ABOVE WITH: SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_LEFT; }, 1.0),
+ 
+            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.5_m, 2.0_m, -90_deg}; }, 0.5, 20_cm, 5_deg) //TEMP drive to end intake pos
+                .AlongWith(cmd::ShootOnTheMove())
+            //REPLACE ABOVE WITH: SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{SOME END POSITION}; }, 0.5, 20_cm),
+        );
     }
 }
