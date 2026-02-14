@@ -8,6 +8,7 @@
 #include "utilities/ICSparkMax.h"
 #include "utilities/MechanismCircle2d.h"
 
+#include <frc/Alert.h>
 #include <frc/DutyCycleEncoder.h>
 #include <frc/controller/SimpleMotorFeedforward.h>
 #include <frc/geometry/Transform2d.h>
@@ -26,7 +27,7 @@
 #include <units/angle.h>
 
 #include "Constants.h"
-#include "frc/Alert.h"
+
 
 class SubTurret : public frc2::SubsystemBase {
  public:

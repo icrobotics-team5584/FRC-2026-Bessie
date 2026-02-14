@@ -8,6 +8,7 @@
 #include "utilities/ICSparkMax.h"
 #include "utilities/MechanismCircle2d.h"
 
+#include <frc/Alert.h>
 #include <frc/simulation/DCMotorSim.h>
 #include <frc/simulation/SingleJointedArmSim.h>
 #include <frc/smartdashboard/Mechanism2d.h>
@@ -22,7 +23,7 @@
 #include <wpi/interpolating_map.h>
 
 #include "Constants.h"
-#include "frc/Alert.h"
+
 
 class SubHood : public frc2::SubsystemBase {
  public:
