@@ -36,6 +36,7 @@ void KrakenIO::ConfigTurnMotor() {
 
 void KrakenIO::SetDesiredAngle(units::degree_t angle) {
     _canTurnMotor.SetControl(ctre::phoenix6::controls::PositionVoltage(angle).WithEnableFOC(FOCstate));
+    _desiredAngle = angle;
 }
 
 void KrakenIO::SetAngle(units::turn_t angle) {
@@ -61,6 +62,7 @@ void KrakenIO::SetDesiredVelocity(units::meters_per_second_t velocity, units::ne
     _canDriveMotor.SetControl(ctre::phoenix6::controls::VelocityVoltage{(TurnsPerSec)}.WithEnableFOC(true).WithFeedForward(torqueVoltageFF));
 
     Logger::Log("swerve/drive " + std::to_string(_canDriveMotor.GetDeviceID()) + " torqueVoltage", torqueVoltageFF);
+    _desiredSpeed = velocity;
 }
 
 void KrakenIO::DriveStraightVolts(units::volt_t volts) {
@@ -115,8 +117,16 @@ frc::Rotation2d KrakenIO::GetAngle() {
     return turnAngle;
 }
 
+frc::Rotation2d KrakenIO::GetDesiredAngle() {
+    return _desiredAngle;
+}
+
 units::meters_per_second_t KrakenIO::GetSpeed() {
     return (_canDriveMotor.GetVelocity().GetValue().value() * WHEEL_CIRCUMFERENCE.value()) * 1_mps;
+}
+
+units::meters_per_second_t KrakenIO::GetDesiredSpeed() {
+    return _desiredSpeed;
 }
 
 units::volt_t KrakenIO::GetDriveVoltage() {
@@ -125,6 +135,10 @@ units::volt_t KrakenIO::GetDriveVoltage() {
 
 frc::SwerveModuleState KrakenIO::GetState() {
     return {GetSpeed(), GetAngle()};
+}
+
+frc::SwerveModuleState KrakenIO::GetDesiredState() {
+    return {GetDesiredSpeed(), GetDesiredAngle()};
 }
 
 units::radian_t KrakenIO::GetDrivenRotations() {
