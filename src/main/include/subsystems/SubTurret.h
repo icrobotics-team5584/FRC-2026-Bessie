@@ -69,8 +69,14 @@ class SubTurret : public frc2::SubsystemBase {
     "Turret Motor High Temperature!", frc::Alert::AlertType::kWarning};
   frc::Alert _turretCurrentAlert{"Turret Motor Overcurrent!", frc::Alert::AlertType::kWarning};
 
-  AlertController::MotorAlertConfig _turretAlertConfig{
-    _turrethighTemperatureAlert, _turretCurrentAlert, 60_degC, 20_A};
+  frc::Alert _turretRecordedTemperatureAlert{
+    "Turret Motor max Temperature was reached !", frc::Alert::AlertType::kWarning};
+
+  frc::Alert _turretRecordedCurrentAlert{
+    "Turret Motor max current was reached !", frc::Alert::AlertType::kWarning};
+  AlertController::MotorAlertConfig _turretAlertConfig{_turrethighTemperatureAlert,
+    _turretCurrentAlert, _turretRecordedTemperatureAlert, _turretRecordedCurrentAlert, 60_degC,
+    20_A};
 
   frc::DutyCycleEncoder _turretEncoder1{dio::TURRET_ENCODER_1};
   frc::DutyCycleEncoder _turretEncoder2{dio::TURRET_ENCODER_2};
