@@ -19,7 +19,7 @@ namespace canid {
 
     constexpr int PIGEON_2 = 13; 
     
-    constexpr int INTAKE = 39;
+    constexpr int INTAKE = 14;
     constexpr int INDEXER = 16;
     constexpr int FEEDER = 17;
     constexpr int DEPLOY = 18;
