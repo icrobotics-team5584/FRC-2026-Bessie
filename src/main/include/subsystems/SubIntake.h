@@ -46,10 +46,16 @@ class SubIntake : public frc2::SubsystemBase {
     "Intake Motor High Temperature!", frc::Alert::AlertType::kWarning};
   frc::Alert _intakeCurrentAlert{"Intake Motor Overcurrent!", frc::Alert::AlertType::kWarning};
 
+  frc::Alert _intakeRecordedTemperatureAlert{
+    "Intake Motor max Temperature was reached !", frc::Alert::AlertType::kWarning};
+
+  frc::Alert _intakeRecordedCurrentAlert{
+    "Intake Motor max current was reached !", frc::Alert::AlertType::kWarning};
+
   frc::Timer _intakeHighCurrentTimer;
 
-  motorAlertConfig _intakeAlertConfig = AlertController::Config(
-    _intakeHighTemperatureAlert, _intakeCurrentAlert, _intakeHighCurrentTimer, 60_degC, 20_A);
+  motorAlertConfig _intakeAlertConfig = AlertController::Config(_intakeHighTemperatureAlert,
+    _intakeCurrentAlert, _intakeRecordedCurrentAlert,_intakeRecordedTemperatureAlert,_intakeHighCurrentTimer, 60_degC, 20_A);
 
   // Simulation components
   static constexpr double GEARING = 1.0;

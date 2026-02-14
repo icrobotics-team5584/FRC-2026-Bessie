@@ -48,10 +48,17 @@ class SubDeploy : public frc2::SubsystemBase {
     "Deploy Motor High Temperature!", frc::Alert::AlertType::kWarning};
   frc::Alert _deployCurrentAlert{"Deploy Motor Overcurrent!", frc::Alert::AlertType::kWarning};
 
+  frc::Alert _deployRecordedTemperatureAlert{
+    "Deploy Motor max Temperature was reached !", frc::Alert::AlertType::kWarning};
+
+  frc::Alert _deployRecordedCurrentAlert{
+    "Deploy Motor max current was reached !", frc::Alert::AlertType::kWarning};
+
   frc::Timer _deployHighCurrentTimer;
 
-  motorAlertConfig DeployAlertConfig = AlertController::Config(
-    _deployHighTemperatureAlert, _deployCurrentAlert, _deployHighCurrentTimer, 60_degC, 20_A);
+  motorAlertConfig DeployAlertConfig = AlertController::Config(_deployHighTemperatureAlert,
+    _deployCurrentAlert, _deployRecordedCurrentAlert, _deployRecordedTemperatureAlert,
+    _deployHighCurrentTimer, 60_degC, 20_A);
 
   bool _hasZeroed = false;
   bool _currentlyZeroing = false;

@@ -51,10 +51,17 @@ class SubFeeder : public frc2::SubsystemBase {
 
   frc::Alert _feederCurrentAlert{"Feeder Motor Overcurrent!", frc::Alert::AlertType::kWarning};
 
+  frc::Alert _feederRecordedTemperatureAlert{
+    "Feeder Motor max Temperature was reached !", frc::Alert::AlertType::kWarning};
+
+  frc::Alert _feederRecordedCurrentAlert{
+    "Feeder Motor max current was reached !", frc::Alert::AlertType::kWarning};
+
   frc::Timer _feederHighCurrentTimer;
 
-  motorAlertConfig _feederAlertConfig = AlertController::Config(
-    _feederHighTemperatureAlert, _feederCurrentAlert, _feederHighCurrentTimer, 60_degC, 20_A);
+  motorAlertConfig _feederAlertConfig = AlertController::Config(_feederHighTemperatureAlert,
+    _feederCurrentAlert, _feederRecordedCurrentAlert, _feederRecordedTemperatureAlert,
+    _feederHighCurrentTimer, 60_degC, 20_A);
 
   // Simulation components
   static constexpr double GEARING = 1.0;
