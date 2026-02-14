@@ -81,6 +81,8 @@ void SubDeploy::DeployCurrentHighTimer() {
 
 // This method will be called once per scheduler run
 void SubDeploy::Periodic() {
+  auto loopStart = frc::GetTime();
+
   units::ampere_t deployCurrent = _deployMotor.GetStatorCurrent();
   Logger::Log("Deploy/Deploy Motor Current", deployCurrent);
 
@@ -100,6 +102,8 @@ void SubDeploy::Periodic() {
     _deployHighTemperatureAlert.Set(false);
   }
    RobotVisualisation::GetInstance()._deployLigament->SetAngle(_deployMotor.GetPosition());
+
+  Logger::Log("Deploy/Loop Time", (frc::GetTime() - loopStart));
 }
 
 void SubDeploy::SimulationPeriodic() {

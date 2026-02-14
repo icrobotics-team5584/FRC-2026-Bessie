@@ -39,14 +39,14 @@ SubShooter::SubShooter() {
 
     _shooterMotor1.GetClosedLoopReference().SetUpdateFrequency(100_Hz);
 
-    _timeOfFlightTable.insert(1270_mm, 0.8_s);
-    _timeOfFlightTable.insert(1770_mm, 0.5_s);
-    _timeOfFlightTable.insert(2270_mm, 0.93_s);
-    _timeOfFlightTable.insert(2770_mm, 1.1_s);
-    _timeOfFlightTable.insert(3770_mm, 1.18_s);
-    _timeOfFlightTable.insert(3770_mm, 1.18_s);
-    _timeOfFlightTable.insert(4270_mm, 1.28_s);
-    _timeOfFlightTable.insert(4770_mm, 1.28_s);
+    _timeOfFlightTable.insert(1.8575_m, 0.8_s);
+    _timeOfFlightTable.insert(2.3575_m, 0.5_s);
+    _timeOfFlightTable.insert(2.8575_m, 0.93_s);
+    _timeOfFlightTable.insert(3.3575_m, 1.1_s);
+    _timeOfFlightTable.insert(3.8575_m, 1.18_s);
+    _timeOfFlightTable.insert(4.3575_m, 1.18_s);
+    _timeOfFlightTable.insert(4.6875_m, 1.28_s);
+    _timeOfFlightTable.insert(5.1875_m, 1.28_s);
 
     frc::SmartDashboard::PutData("Shooter/mech2dDisplay", &_shooterMech);
 
@@ -67,6 +67,8 @@ SubShooter::SubShooter() {
 
 // This method will be called once per scheduler run
 void SubShooter::Periodic() {
+    auto loopStart = frc::GetTime();
+
     Logger::LogFalcon("Shooter/Motor1", _shooterMotor1);
     Logger::LogFalcon("Shooter/Motor2", _shooterMotor2);
     Logger::Log("Shooter/IsAtSpeed", IsAtSpeed());
@@ -76,6 +78,8 @@ void SubShooter::Periodic() {
 
     units::angle::degree_t motor2Position = _shooterMotor2.GetPosition().GetValue();
     _shooterMechBottomRoller.SetAngle(motor2Position);
+
+    Logger::Log("Shooter/Loop Time", (frc::GetTime() - loopStart));
 }
 
 void SubShooter::SimulationPeriodic() {
