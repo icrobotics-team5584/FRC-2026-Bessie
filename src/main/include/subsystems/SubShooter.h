@@ -8,7 +8,6 @@
 #include "utilities/MechanismCircle2d.h"
 
 #include <frc/Alert.h>
-#include <frc/Timer.h>
 #include <frc/simulation/FlywheelSim.h>
 #include <frc/smartdashboard/Mechanism2d.h>
 #include <frc/smartdashboard/MechanismLigament2d.h>
@@ -66,19 +65,15 @@ class SubShooter : public frc2::SubsystemBase {
     "Shooter Motor 1 High Temperature!", frc::Alert::AlertType::kWarning};
   frc::Alert _shooter1CurrentAlert{"Shooter Motor 1 Overcurrent!", frc::Alert::AlertType::kWarning};
 
-  frc::Timer _shooter1HighCurrentTimer;
-
   motorAlertConfig _shooter1AlertConfig{
-    _shooter1highTemperatureAlert, _shooter1CurrentAlert, _shooter1HighCurrentTimer, 60_degC, 20_A};
+    _shooter1highTemperatureAlert, _shooter1CurrentAlert, 60_degC, 20_A};
 
   frc::Alert _shooter2highTemperatureAlert{
     "Shooter Motor 2 High Temperature!", frc::Alert::AlertType::kWarning};
   frc::Alert _shooter2CurrentAlert{"Shooter Motor 2 Overcurrent!", frc::Alert::AlertType::kWarning};
 
-  frc::Timer _shooter2HighCurrentTimer;
-
   motorAlertConfig _shooter2AlertConfig{
-    _shooter2highTemperatureAlert, _shooter2CurrentAlert, _shooter2HighCurrentTimer, 60_degC, 20_A};
+    _shooter2highTemperatureAlert, _shooter2CurrentAlert, 60_degC, 20_A};
 
   wpi::interpolating_map<units::meter_t, units::turns_per_second_t> _flyWheelSpeedTableScoring;
   wpi::interpolating_map<units::meter_t, units::turns_per_second_t> _flyWheelSpeedTablePassing;

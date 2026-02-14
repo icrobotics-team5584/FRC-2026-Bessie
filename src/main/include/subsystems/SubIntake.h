@@ -8,7 +8,6 @@
 #include "utilities/ICSparkFlex.h"
 
 #include <frc/Alert.h>
-#include <frc/Timer.h>
 #include <frc/simulation/FlywheelSim.h>
 #include <frc/simulation/SingleJointedArmSim.h>
 #include <frc/system/plant/DCMotor.h>
@@ -46,10 +45,8 @@ class SubIntake : public frc2::SubsystemBase {
     "Intake Motor High Temperature!", frc::Alert::AlertType::kWarning};
   frc::Alert _intakeCurrentAlert{"Intake Motor Overcurrent!", frc::Alert::AlertType::kWarning};
 
-  frc::Timer _intakeHighCurrentTimer;
-
   motorAlertConfig _intakeAlertConfig{
-    _intakeHighTemperatureAlert, _intakeCurrentAlert, _intakeHighCurrentTimer, 60_degC, 20_A};
+    _intakeHighTemperatureAlert, _intakeCurrentAlert, 60_degC, 20_A};
 
   // Simulation components
   static constexpr double GEARING = 1.0;

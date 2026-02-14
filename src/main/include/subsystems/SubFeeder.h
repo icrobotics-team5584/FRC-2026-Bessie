@@ -9,7 +9,6 @@
 
 #include <frc/Alert.h>
 #include <frc/DigitalInput.h>
-#include <frc/Timer.h>
 #include <frc/simulation/FlywheelSim.h>
 #include <frc/system/plant/DCMotor.h>
 #include <frc/system/plant/LinearSystemId.h>
@@ -51,10 +50,8 @@ class SubFeeder : public frc2::SubsystemBase {
 
   frc::Alert _feederCurrentAlert{"Feeder Motor Overcurrent!", frc::Alert::AlertType::kWarning};
 
-  frc::Timer _feederHighCurrentTimer;
-
   motorAlertConfig _feederAlertConfig{
-    _feederHighTemperatureAlert, _feederCurrentAlert, _feederHighCurrentTimer, 60_degC, 20_A};
+    _feederHighTemperatureAlert, _feederCurrentAlert, 60_degC, 20_A};
 
   // Simulation components
   static constexpr double GEARING = 1.0;

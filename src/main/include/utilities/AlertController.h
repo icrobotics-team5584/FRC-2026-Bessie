@@ -8,10 +8,9 @@
 struct motorAlertConfig {
   frc::Alert temperatureAlert;
   frc::Alert currentAlert;
-  frc::Timer highCurrentTimer;
-
   units::celsius_t maxDegrees;
   units::ampere_t maxCurrent;
+  frc::Timer highCurrentTimer = frc::Timer();
 };
 
 namespace AlertController {
