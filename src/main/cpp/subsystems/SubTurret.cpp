@@ -32,6 +32,11 @@ SubTurret::SubTurret() {
 // This method will be called once per scheduler run
 void SubTurret::Periodic() {
     auto loopStart = frc::GetTime();
+    units::celsius_t turretTemperature = _turretMotor.GetTemperature();
+    units::ampere_t turretCurrent = _turretMotor.GetStatorCurrent();
+
+    AlertController::UpdateTemperatureAlert(_turretAlertConfig, turretTemperature);
+    AlertController::UpdateCurrentAlert(_turretAlertConfig, turretCurrent);
 
     if(_hasZeroed == false && _turretEncoder1.IsConnected() && _turretEncoder2.IsConnected()) {
         units::degree_t motorPosition = _turretMotor.GetPosition();

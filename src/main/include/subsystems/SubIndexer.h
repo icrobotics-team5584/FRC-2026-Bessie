@@ -4,10 +4,10 @@
 
 #pragma once
 
+#include "utilities/AlertController.h"
 #include "utilities/ICSparkFlex.h"
 
 #include <frc/Alert.h>
-#include <frc/Timer.h>
 #include <frc/simulation/FlywheelSim.h>
 #include <frc/system/plant/DCMotor.h>
 #include <frc/system/plant/LinearSystemId.h>
@@ -36,16 +36,6 @@ class SubIndexer : public frc2::SubsystemBase {
   frc2::CommandPtr IndexOn();
   frc2::CommandPtr StopIndex();
 
-  void IndexerCurrentHighTimer();
-  void IndexerOutCurrentHighTimer();
-
-  frc::Alert _indexerCurrentAlert{"Indexer Motor Overcurrent!", frc::Alert::AlertType::kWarning};
-  frc::Alert _indexerHighTemperatureAlert{
-    "Indexer Motor High Temperature!", frc::Alert::AlertType::kWarning};
-
-  frc::Alert _outdexerCurrentAlert{"IndexerOut Motor Overcurrent!", frc::Alert::AlertType::kWarning};
-  frc::Alert _outdexerHighTemperatureAlert{
-    "IndexerOut Motor High Temperature!", frc::Alert::AlertType::kWarning};
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */
@@ -56,14 +46,24 @@ class SubIndexer : public frc2::SubsystemBase {
   ICSparkFlex _indexerMotor{canid::INDEXER};
   rev::spark::SparkFlexConfig _indexerMotorConfig;
 
-  frc::Timer _indexerHighCurrentTimer;
+  frc::Alert _indexerHighTemperatureAlert{
+    "Indexer Motor High Temperature!", frc::Alert::AlertType::kWarning};
+  frc::Alert _indexerCurrentAlert{"Indexer Motor Overcurrent!", frc::Alert::AlertType::kWarning};
+
+  AlertController::MotorAlertConfig _indexerAlertConfig{
+    _indexerHighTemperatureAlert, _indexerCurrentAlert, 60_degC, 20_A};
 
   ICSparkFlex _outdexerMotor{canid::OUTDEXER};
   rev::spark::SparkFlexConfig _outdexerMotorConfig;
 
-  frc::Timer _outdexerHighCurrentTimer;
+  frc::Alert _outdexerHighTemperatureAlert{
+    "IndexerOut Motor High Temperature!", frc::Alert::AlertType::kWarning};
+  frc::Alert _outdexerCurrentAlert{
+    "IndexerOut Motor Overcurrent!", frc::Alert::AlertType::kWarning};
 
-   
+  AlertController::MotorAlertConfig _outdexerAlertConfig{
+    _outdexerHighTemperatureAlert, _outdexerCurrentAlert, 60_degC, 20_A};
+
   // Simulation components
   static constexpr double GEARING = 1.0;
   static constexpr units::kilogram_square_meter_t MOI = 0.0000001_kg_sq_m;
