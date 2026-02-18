@@ -14,8 +14,8 @@ void KrakenIO::ConfigMotor() {
 
     config.CurrentLimits.SupplyCurrentLimitEnable = KrakenMotorConfig::ENABLE_SUPPLY_CURRENT_LIMIT;
     config.CurrentLimits.SupplyCurrentLimit = KrakenMotorConfig::SUPPLY_CURRENT_LIMT;
-    config.CurrentLimits.SupplyCurrentLowerLimit = KrakenMotorConfig::SUPPLY_CURRENT_LOWER_LIMT;
-    config.CurrentLimits.SupplyCurrentLowerTime = KrakenMotorConfig::SUPPLY_CURRENT_LOWER_LIMT;
+    config.CurrentLimits.SupplyCurrentLowerLimit = KrakenMotorConfig::SUPPLY_CURRENT_LOWER_LIMIT;
+    config.CurrentLimits.SupplyCurrentLowerTime = KrakenMotorConfig::SUPPLY_CURRENT_LOWER_TIME;
     
     config.CurrentLimits.StatorCurrentLimitEnable = KrakenMotorConfig::ENABLE_STATOR_CURRENT_LIMIT;
     config.CurrentLimits.StatorCurrentLimit = KrakenMotorConfig::STATOR_CURRENT_LIMIT;
