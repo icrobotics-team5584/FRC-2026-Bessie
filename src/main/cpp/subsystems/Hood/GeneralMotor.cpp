@@ -1,14 +1,14 @@
 #include "subsystems/Hood/GeneralMotor.h"
-#include "subsystems/Hood/KrakenIO.h"
-#include "subsystems/Hood/NeoIO.h"
+#include "subsystems/Hood/HoodKrakenIO.h"
+#include "subsystems/Hood/HoodNeoIO.h"
 #include "utilities/BotVars.h"
 
 GeneralMotor::GeneralMotor(int motorCanID) {
     if (BotVars::GetRobot() == BotVars::PRACTICE){
-    _io = std::make_unique<NeoIO>(motorCanID);
+    _io = std::make_unique<HoodNeoIO>(motorCanID);
   }
   else {
-    _io = std::make_unique<KrakenIO>(motorCanID);
+    _io = std::make_unique<HoodKrakenIO>(motorCanID);
   }
 
   ConfigMotor();
