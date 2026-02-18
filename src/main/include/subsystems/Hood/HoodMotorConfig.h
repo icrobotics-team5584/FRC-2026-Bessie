@@ -1,7 +1,10 @@
-#include "Constants.h"
+#pragma once
+
 #include <rev/config/SparkBaseConfig.h>
-#include <units/time.h>
 #include <ctre/phoenix6/signals/SpnEnums.hpp>
+#include <units/time.h>
+#include <units/current.h>
+#include <units/voltage.h>
 
 namespace NeoMotorConfig{
     constexpr double P = 16;
