@@ -21,7 +21,7 @@ SubIntake::SubIntake() {
   _intakeFollowerMotorConfig.Follow(_intakeMotor);
   _intakeFollowerMotor.OverwriteConfig(_intakeFollowerMotorConfig);
 
-  Logger::Log("Intake/Intake Motor", &_intakeFollowerMotor);
+  Logger::Log("Intake/Follower Intake Motor", &_intakeFollowerMotor);
 }
 
 frc2::CommandPtr SubIntake::IntakeOn() {
