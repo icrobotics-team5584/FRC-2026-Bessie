@@ -1,3 +1,5 @@
+#pragma once
+
 #include "MotorIO.h"
 
 class GeneralMotor {
