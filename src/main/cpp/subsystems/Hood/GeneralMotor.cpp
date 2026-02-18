@@ -20,6 +20,9 @@ void GeneralMotor::ConfigMotor() {
 void GeneralMotor::SetVoltage(units::volt_t voltage) {
     _io->SetVoltage(voltage);
 }
+void GeneralMotor::SetPosition(units::degree_t pos) {
+    _io->SetPosition(pos);
+}
 void GeneralMotor::SetPositionTarget(units::degree_t target) {
     _io->SetPositionTarget(target);
 }
@@ -37,6 +40,9 @@ units::degree_t GeneralMotor::GetPosition() {
 }
 units::degree_t GeneralMotor::GetPositionTarget() {
     return _io->GetPositionTarget();
+}
+units::degree_t GeneralMotor::GetPositionError() {
+    return _io->GetPositionError();
 }
 units::ampere_t GeneralMotor::GetCurrent() {
     return _io->GetCurrent();

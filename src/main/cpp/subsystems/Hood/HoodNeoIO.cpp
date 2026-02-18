@@ -22,6 +22,10 @@ void HoodNeoIO::SetVoltage(units::volt_t voltage) {
     _motor.SetVoltage(voltage);
 }
 
+void HoodNeoIO::SetPosition(units::degree_t pos) {
+    _motor.SetPosition(pos);
+}
+
 void HoodNeoIO::SetPositionTarget(units::degree_t target) {
     _motor.SetPositionTarget(target);
 }
@@ -50,6 +54,10 @@ units::degree_t HoodNeoIO::GetPosition() {
 
 units::degree_t HoodNeoIO::GetPositionTarget() {
     return _motor.GetPositionTarget();
+}
+
+units::degree_t HoodNeoIO::GetPositionError() {
+    return _motor.GetPosError();
 }
 
 units::ampere_t HoodNeoIO::GetCurrent() {

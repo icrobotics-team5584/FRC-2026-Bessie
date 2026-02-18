@@ -27,6 +27,10 @@ void HoodKrakenIO::SetVoltage(units::volt_t voltage) {
     _motor.SetControl(ctre::phoenix6::controls::VoltageOut{voltage});
 }
 
+void HoodKrakenIO::SetPosition(units::degree_t pos) {
+    _motor.SetPosition(pos);
+}
+
 void HoodKrakenIO::SetPositionTarget(units::degree_t target) {
     _desiredAngle = target;
     _motor.SetControl(ctre::phoenix6::controls::PositionVoltage(_desiredAngle)
@@ -55,6 +59,10 @@ units::degree_t HoodKrakenIO::GetPosition() {
 
 units::degree_t HoodKrakenIO::GetPositionTarget() {
     return _desiredAngle;
+}
+
+units::degree_t HoodKrakenIO::GetPositionError() {
+    return _desiredAngle - GetPosition();
 }
 
 units::ampere_t HoodKrakenIO::GetCurrent() {
