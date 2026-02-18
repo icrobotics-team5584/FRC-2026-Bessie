@@ -41,7 +41,7 @@ namespace KrakenMotorConfig{
 
     constexpr bool ENABLE_SUPPLY_CURRENT_LIMIT = true;
     constexpr bool ENABLE_STATOR_CURRENT_LIMIT = true;
-    constexpr bool ENABLE_FOC = false;
+    constexpr bool ENABLE_FOC = true;
     
     constexpr ctre::phoenix6::signals::InvertedValue INVERTED = ctre::phoenix6::signals::InvertedValue::Clockwise_Positive;
     constexpr ctre::phoenix6::signals::NeutralModeValue IDLE_MODE = ctre::phoenix6::signals::NeutralModeValue::Brake;
