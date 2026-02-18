@@ -50,6 +50,10 @@ void HoodNeoIO::StopMotor() {
     _motor.Set(0);
 }
 
+void HoodNeoIO::IterateSim(units::revolutions_per_minute_t velocity, units::turn_t position) {
+    _motor.IterateSim(velocity, std::make_optional<units::turn_t>(position));
+}
+
 units::degree_t HoodNeoIO::GetPosition() {
     return _motor.GetPosition();
 }

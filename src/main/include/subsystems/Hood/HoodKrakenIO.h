@@ -10,13 +10,17 @@ class HoodKrakenIO : public MotorIO {
         void SetBrakeMode(bool isBreakModeOn) override;
         void Log(std::string keyName) override;
         void StopMotor() override;
+        void IterateSim(units::revolutions_per_minute_t velocity, units::turn_t position) override;
         units::degree_t GetPosition() override;
         units::degree_t GetPositionTarget() override;
         units::degree_t GetPositionError() override;
         units::ampere_t GetCurrent() override;
         units::volt_t GetVoltage() override;    
+        units::volt_t CalcSimVoltage() override;
     private:
         ctre::phoenix6::hardware::TalonFX _motor;
-        
+
+        units::volt_t _simVoltage = 0_V;
+
         units::degree_t _desiredAngle;
 };

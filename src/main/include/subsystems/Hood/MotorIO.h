@@ -17,9 +17,11 @@ class MotorIO {
         virtual void SetBrakeMode(bool isBreakModeOn) = 0;
         virtual void Log(std::string keyName) = 0;
         virtual void StopMotor() = 0;
+        virtual void IterateSim(units::revolutions_per_minute_t velocity, units::turn_t position) = 0;
         virtual units::degree_t GetPosition() = 0;
         virtual units::degree_t GetPositionTarget() = 0;
         virtual units::degree_t GetPositionError() = 0;
         virtual units::ampere_t GetCurrent() = 0;
         virtual units::volt_t GetVoltage() = 0;
+        virtual units::volt_t CalcSimVoltage() = 0;
 };

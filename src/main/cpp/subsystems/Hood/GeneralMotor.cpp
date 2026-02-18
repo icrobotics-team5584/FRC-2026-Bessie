@@ -35,6 +35,9 @@ void GeneralMotor::Log(std::string keyName) {
 void GeneralMotor::StopMotor() {
     _io->StopMotor();
 }
+void GeneralMotor::IterateSim(units::revolutions_per_minute_t velocity, std::optional<units::turn_t> position) {
+    _io->IterateSim(velocity, position);
+}
 units::degree_t GeneralMotor::GetPosition() {
     return _io->GetPosition();
 }
@@ -49,4 +52,7 @@ units::ampere_t GeneralMotor::GetCurrent() {
 }
 units::volt_t GeneralMotor::GetVoltage() {
     return _io->GetVoltage();
+}
+units::volt_t GeneralMotor::CalcSimVoltage() {
+    return _io->CalcSimVoltage();
 }

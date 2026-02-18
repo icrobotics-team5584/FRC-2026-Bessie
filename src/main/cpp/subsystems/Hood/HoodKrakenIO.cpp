@@ -1,5 +1,6 @@
 #include "subsystems/Hood/HoodKrakenIO.h"
 #include "subsystems/Hood/HoodMotorConfig.h"
+#include <frc/simulation/RoboRioSim.h>
 
 HoodKrakenIO::HoodKrakenIO(int motorCanID) : _motor(motorCanID) {}
 
@@ -53,6 +54,13 @@ void HoodKrakenIO::StopMotor() {
     _motor.Set(0);
 }
 
+void HoodKrakenIO::IterateSim(units::revolutions_per_minute_t velocity, units::turn_t position) {
+    auto& motorSim = _motor.GetSimState();
+    motorSim.SetRawRotorPosition(KrakenMotorConfig::GEAR_RATIO * position);
+    motorSim.SetRotorVelocity(KrakenMotorConfig::GEAR_RATIO * velocity);
+    _simVoltage = motorSim.GetMotorVoltage();
+}
+
 units::degree_t HoodKrakenIO::GetPosition() {
     return _motor.GetPosition().GetValue();
 }
@@ -71,4 +79,8 @@ units::ampere_t HoodKrakenIO::GetCurrent() {
 
 units::volt_t HoodKrakenIO::GetVoltage() {
     return _motor.GetMotorVoltage().GetValue();
+}
+
+units::volt_t HoodKrakenIO::CalcSimVoltage() {
+    return _simVoltage;
 }
