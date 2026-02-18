@@ -10,6 +10,7 @@ class GeneralMotor {
         void SetPositionTarget(units::degree_t target);
         void SetBrakeMode(bool isBreakModeOn);
         void StartLoggingMotor(std::string keyName);
+        void StopMotor();
         units::degree_t GetPosition();
         units::degree_t GetPositionTarget();
         units::ampere_t GetCurrent();

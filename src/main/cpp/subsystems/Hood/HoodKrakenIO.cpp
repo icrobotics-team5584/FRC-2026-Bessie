@@ -45,6 +45,10 @@ void HoodKrakenIO::StartLoggingMotor(std::string keyName) {
     Logger::LogFalcon(keyName, _motor);
 }
 
+void HoodKrakenIO::StopMotor() {
+    _motor.Set(0);
+}
+
 units::degree_t HoodKrakenIO::GetPosition() {
     return _motor.GetPosition().GetValue();
 }

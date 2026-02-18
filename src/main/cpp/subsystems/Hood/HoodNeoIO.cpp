@@ -40,6 +40,10 @@ void HoodNeoIO::StartLoggingMotor(std::string keyName) {
     Logger::Log(keyName, &_motor);
 }
 
+void HoodNeoIO::StopMotor() {
+    _motor.Set(0);
+}
+
 units::degree_t HoodNeoIO::GetPosition() {
     return _motor.GetPosition();
 }
