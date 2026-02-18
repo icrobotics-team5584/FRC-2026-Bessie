@@ -80,7 +80,7 @@ class SubHood : public frc2::SubsystemBase {
 
   wpi::interpolating_map<units::meter_t, units::degree_t> _hoodPitchTable;
 
-  static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::NEO550();
+  static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::KrakenX44FOC;
   static constexpr units::kilogram_square_meter_t MOI = 0.0001_kg_sq_m;
 
   //Sim

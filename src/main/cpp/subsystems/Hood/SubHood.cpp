@@ -8,17 +8,6 @@
 #include "utilities/Logger.h"
 
 SubHood::SubHood() {
-
-    _hoodMotorConfig.encoder.PositionConversionFactor(1/GEAR_RATIO);
-    _hoodMotorConfig.encoder.VelocityConversionFactor(1/GEAR_RATIO);
-    _hoodMotorConfig.closedLoop.Pid(P, I, D);
-    _hoodMotorConfig.closedLoop.feedForward.kS(S);
-    _hoodMotorConfig.SmartCurrentLimit(30);
-    _hoodMotorConfig.Inverted(true);
-    _hoodMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
-    _hoodMotor.OverwriteConfig(_hoodMotorConfig);
-
-    frc::SmartDashboard::PutData("Hood/Motor", &_hoodMotor);
     frc::SmartDashboard::PutData("Hood/mech2dDisplay", &_hoodMech);
 
     _hoodPitchTable.insert(1.8575_m, 0.07611_tr);
@@ -35,12 +24,13 @@ SubHood::SubHood() {
 void SubHood::Periodic() {
     _hoodMechCircle.SetAngle(_hoodMotor.GetPosition());
     if (_hasZeroed == false && _zeroing == false) {
-        _hoodMotor.Set(0);
+        _hoodMotor.StopMotor();
     }
 
     Logger::Log("Hood/haszeroed", _hasZeroed);
     Logger::Log("Hood/zeroing", _zeroing);
     Logger::Log("Hood/IsAtTarget", HoodIsAtTarget());
+    _hoodMotor.Log("Hood/Motor");
 }
 
 void SubHood::SimulationPeriodic() {
@@ -80,7 +70,7 @@ bool SubHood::HoodCurrentCheck() {
 }
 
 units::ampere_t SubHood::GetHoodMotorCurrent() {
-    return _hoodMotor.GetOutputCurrent()*1_A;
+    return _hoodMotor.GetCurrent();
 }
 
 frc2::CommandPtr SubHood::StowHood() {
@@ -98,7 +88,7 @@ frc2::CommandPtr SubHood::SetHoodPositionTargetFromDist(std::function<units::met
 }
 
 bool SubHood::HoodIsAtTarget(){
-    return units::math::abs(_hoodMotor.GetPosError()) < 0.5_deg;
+    return units::math::abs(_hoodMotor.GetPositionError()) < 0.5_deg;
 }
 
 frc2::CommandPtr SubHood::MoveHoodUp1Degree() {
