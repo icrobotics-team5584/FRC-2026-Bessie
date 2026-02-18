@@ -73,6 +73,25 @@ ShotPlanner::ShotPlannerResults ShotPlanner::CalculateShotTarget(frc::Pose2d rob
     shouldShoot = false;
     isPassing = false;
   }
+
+
+  //Manual overrides, defaults to not using
+  if (_overrideStatus == Override::PASS && !isInBotNeutralZone && !isInBlueAlliance){
+    target = fieldpos::TOP_ALLIANCE_ZONE_POSITION;
+    shouldShoot = true;
+    isPassing = true;
+  }
+  if (_overrideStatus == Override::PASS && isInBotNeutralZone && !isInBlueAlliance){
+    target = fieldpos::BOTTOM_ALLIANCE_ZONE_POSITION;
+    shouldShoot = true;
+    isPassing = true;
+  }
+  if (_overrideStatus == Override::SCORE){
+    target = fieldpos::HUB_POSITION;
+    shouldShoot = true;
+    isPassing = false;
+  }
+
   
 
     if (alliance) {
@@ -98,4 +117,8 @@ frc::Pose2d ShotPlanner::ConvertToPose2d(frc::Translation3d translation3d) {
   frc::Translation2d translation2d = translation3d.ToTranslation2d();
   frc::Pose2d targetPose{translation2d, 0_deg};
   return targetPose;
+}
+
+void ShotPlanner::SetOverride(Override override){
+  _overrideStatus = override;
 }

@@ -23,6 +23,7 @@
 #include "utilities/Logger.h"
 #include "utilities/PoseHandler.h"
 #include "utilities/ShiftHandler.h"
+#include "utilities/ShotPlanner.h"
 
 #include <frc2/command/Commands.h>
 
@@ -49,6 +50,9 @@ void RobotContainer::ConfigureBindings() {
   //Bumpers
   _driverController.LeftBumper().ToggleOnTrue(SubDeploy::GetInstance().ToggleDeploy());
   _driverController.RightBumper().WhileTrue(SubDrivebase::GetInstance().LockWheelsInXShape());
+  
+  _operatorController.LeftBumper().OnTrue(frc2::cmd::RunOnce([]{return ShotPlanner::SetOverride(ShotPlanner::Override::SCORE);}));
+  _operatorController.RightBumper().OnTrue(frc2::cmd::RunOnce([]{return ShotPlanner::SetOverride(ShotPlanner::Override::PASS);}));
 
   //Letters
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
