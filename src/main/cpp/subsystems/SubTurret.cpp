@@ -6,6 +6,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include "utilities/Logger.h"
 #include "utilities/PoseHandler.h"
+#include "utilities/RobotVisualisation.h"
 
 SubTurret::SubTurret() {
     _turretMotorConfig.encoder.PositionConversionFactor(1/GEAR_RATIO);
@@ -26,7 +27,6 @@ SubTurret::SubTurret() {
     _turretEncoder2.SetAssumedFrequency(ENCODER_FREQUENCY);
 
     frc::SmartDashboard::PutData("Turret/Motor", &_turretMotor);
-    frc::SmartDashboard::PutData("Turret/mech2dDisplay", &_turretMech);
 }
 
 // This method will be called once per scheduler run
@@ -56,7 +56,7 @@ void SubTurret::Periodic() {
         }
     }
 
-    _turretMechCircle.SetAngle(_turretMotor.GetPosition());
+    RobotVisualisation::GetInstance()._turretMechCircle.SetAngle(_turretMotor.GetPosition());
 
     Logger::Log("Turret/Field Relative Turret Angle", GetFieldRelativeTurretAngle());
     Logger::Log("Turret/CRT Positiion", GetTurretAngleCRT());

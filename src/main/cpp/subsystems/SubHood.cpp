@@ -8,6 +8,7 @@
 
 #include "frc/RobotBase.h"
 #include "frc/smartdashboard/SmartDashboard.h"
+#include "utilities/RobotVisualisation.h"
 
 SubHood::SubHood() {
   _hoodMotorConfig.encoder.PositionConversionFactor(1 / GEAR_RATIO);
@@ -20,7 +21,6 @@ SubHood::SubHood() {
   _hoodMotor.OverwriteConfig(_hoodMotorConfig);
 
   frc::SmartDashboard::PutData("Hood/Motor", &_hoodMotor);
-  frc::SmartDashboard::PutData("Hood/mech2dDisplay", &_hoodMech);
 
   _hoodPitchTable.insert(1.8575_m, 0.07611_tr);
   _hoodPitchTable.insert(2.3575_m, 0.093056_tr);
@@ -42,7 +42,7 @@ void SubHood::Periodic() {
   AlertController::UpdateCurrentAlert(_hoodAlertConfig, hoodCurrent);
     auto loopStart = frc::GetTime();
 
-    _hoodMechCircle.SetAngle(_hoodMotor.GetPosition());
+    RobotVisualisation::GetInstance()._hoodMechCircle.SetAngle(_hoodMotor.GetPosition());
     if (_hasZeroed == false && _zeroing == false) {
         _hoodMotor.Set(0);
     }

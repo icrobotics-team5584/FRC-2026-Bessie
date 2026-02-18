@@ -117,9 +117,4 @@ class SubTurret : public frc2::SubsystemBase {
   frc::LinearSystem<2, 1, 2> _turretSystem =
     frc::LinearSystemId::DCMotorSystem(MOTOR_MODEL, MOI, GEAR_RATIO);
   frc::sim::DCMotorSim _turretSim{_turretSystem, MOTOR_MODEL};
-
-  // mechanism2d
-  frc::Mechanism2d _turretMech{0.25, 0.25};
-  frc::MechanismRoot2d* _turretMechRoot = _turretMech.GetRoot("turretRoot", 0.125, 0.125);
-  MechanismCircle2d _turretMechCircle{_turretMechRoot, "turretCircle", 0.05, 0_deg};
 };
