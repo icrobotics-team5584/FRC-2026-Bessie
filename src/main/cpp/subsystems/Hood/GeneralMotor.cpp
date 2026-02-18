@@ -1,6 +1,6 @@
-#include <subsystems/Hood/GeneralMotor.h>
-#include <subsystems/Hood/KrakenIO.h>
-#include <subsystems/Hood/NeoIO.h>
+#include "subsystems/Hood/GeneralMotor.h"
+#include "subsystems/Hood/KrakenIO.h"
+#include "subsystems/Hood/NeoIO.h"
 #include "utilities/BotVars.h"
 
 GeneralMotor::GeneralMotor(int motorCanID) {
