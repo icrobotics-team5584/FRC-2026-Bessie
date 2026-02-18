@@ -7,12 +7,14 @@ class GeneralMotor {
         GeneralMotor(int motorCanID);
         void ConfigMotor();
         void SetVoltage(units::volt_t voltage);
+        void SetPosition(units::degree_t pos);
         void SetPositionTarget(units::degree_t target);
         void SetBrakeMode(bool isBreakModeOn);
-        void StartLoggingMotor(std::string keyName);
+        void Log(std::string keyName);
         void StopMotor();
         units::degree_t GetPosition();
         units::degree_t GetPositionTarget();
+        units::degree_t GetPositionError();
         units::ampere_t GetCurrent();
         units::volt_t GetVoltage();
     

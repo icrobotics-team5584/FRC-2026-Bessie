@@ -8,7 +8,7 @@ class HoodNeoIO : public MotorIO {
         void SetPosition(units::degree_t pos) override;
         void SetPositionTarget(units::degree_t target) override;
         void SetBrakeMode(bool isBreakModeOn) override;
-        void StartLoggingMotor(std::string keyName) override;
+        void Log(std::string keyName) override;
         void StopMotor() override;
         units::degree_t GetPosition() override;
         units::degree_t GetPositionTarget() override;

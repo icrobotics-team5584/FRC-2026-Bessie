@@ -45,7 +45,7 @@ void HoodKrakenIO::SetBrakeMode(bool isBreakModeOn) {
     }
 }
 
-void HoodKrakenIO::StartLoggingMotor(std::string keyName) {
+void HoodKrakenIO::Log(std::string keyName) {
     Logger::LogFalcon(keyName, _motor);
 }
 

@@ -29,8 +29,8 @@ void GeneralMotor::SetPositionTarget(units::degree_t target) {
 void GeneralMotor::SetBrakeMode(bool isBreakModeOn) {
     _io->SetBrakeMode(isBreakModeOn);
 }
-void GeneralMotor::StartLoggingMotor(std::string keyName) {
-    _io->StartLoggingMotor(keyName);
+void GeneralMotor::Log(std::string keyName) {
+    _io->Log(keyName);
 }
 void GeneralMotor::StopMotor() {
     _io->StopMotor();

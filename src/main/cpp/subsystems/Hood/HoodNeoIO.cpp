@@ -16,6 +16,8 @@ void HoodNeoIO::ConfigMotor() {
     _config.Inverted(NeoMotorConfig::INVERTED);
     _config.SetIdleMode(NeoMotorConfig::IDLE_MODE);
     _motor.OverwriteConfig(_config);
+
+    Logger::Log("Hood/Motor", &_motor);
 }
 
 void HoodNeoIO::SetVoltage(units::volt_t voltage) {
@@ -40,8 +42,8 @@ void HoodNeoIO::SetBrakeMode(bool isBreakModeOn) {
     _motor.AdjustConfigNoPersist(_brakeModeConfig);
 }
 
-void HoodNeoIO::StartLoggingMotor(std::string keyName) {
-    Logger::Log(keyName, &_motor);
+void HoodNeoIO::Log(std::string keyName) {
+    ; /* no-op */
 }
 
 void HoodNeoIO::StopMotor() {
