@@ -1,9 +1,9 @@
-#include "subsystems/Hood/KrakenIO.h"
+#include "subsystems/Hood/HoodKrakenIO.h"
 #include "subsystems/Hood/HoodMotorConfig.h"
 
-KrakenIO::KrakenIO(int motorCanID) : _motor(motorCanID) {}
+HoodKrakenIO::HoodKrakenIO(int motorCanID) : _motor(motorCanID) {}
 
-void KrakenIO::ConfigMotor() {
+void HoodKrakenIO::ConfigMotor() {
     ctre::phoenix6::configs::TalonFXConfiguration config;
     config.Feedback.SensorToMechanismRatio = KrakenMotorConfig::GEAR_RATIO;
     config.Slot0.kP = KrakenMotorConfig::P;
@@ -23,17 +23,17 @@ void KrakenIO::ConfigMotor() {
     _motor.GetConfigurator().Apply(config);
 }
 
-void KrakenIO::SetVoltage(units::volt_t voltage) {
+void HoodKrakenIO::SetVoltage(units::volt_t voltage) {
     _motor.SetControl(ctre::phoenix6::controls::VoltageOut{voltage});
 }
 
-void KrakenIO::SetPositionTarget(units::degree_t target) {
+void HoodKrakenIO::SetPositionTarget(units::degree_t target) {
     _desiredAngle = target;
     _motor.SetControl(ctre::phoenix6::controls::PositionVoltage(_desiredAngle)
         .WithEnableFOC(KrakenMotorConfig::ENABLE_FOC));
 }
 
-void KrakenIO::SetBrakeMode(bool isBreakModeOn) {
+void HoodKrakenIO::SetBrakeMode(bool isBreakModeOn) {
     if (isBreakModeOn) {
         _motor.SetNeutralMode(ctre::phoenix6::signals::NeutralModeValue::Brake);
     } else {
@@ -41,22 +41,22 @@ void KrakenIO::SetBrakeMode(bool isBreakModeOn) {
     }
 }
 
-void KrakenIO::StartLoggingMotor(std::string keyName) {
+void HoodKrakenIO::StartLoggingMotor(std::string keyName) {
     Logger::LogFalcon(keyName, _motor);
 }
 
-units::degree_t KrakenIO::GetPosition() {
+units::degree_t HoodKrakenIO::GetPosition() {
     return _motor.GetPosition().GetValue();
 }
 
-units::degree_t KrakenIO::GetPositionTarget() {
+units::degree_t HoodKrakenIO::GetPositionTarget() {
     return _desiredAngle;
 }
 
-units::ampere_t KrakenIO::GetCurrent() {
+units::ampere_t HoodKrakenIO::GetCurrent() {
     return _motor.GetStatorCurrent().GetValue();
 }
 
-units::volt_t KrakenIO::GetVoltage() {
+units::volt_t HoodKrakenIO::GetVoltage() {
     return _motor.GetMotorVoltage().GetValue();
 }

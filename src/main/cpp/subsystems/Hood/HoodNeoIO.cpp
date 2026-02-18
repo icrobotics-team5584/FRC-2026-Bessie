@@ -1,9 +1,9 @@
-#include "subsystems/Hood/NeoIO.h"
+#include "subsystems/Hood/HoodNeoIO.h"
 #include "subsystems/Hood/HoodMotorConfig.h"
 
-NeoIO::NeoIO(int motorCanID) : _motor(motorCanID) {}
+HoodNeoIO::HoodNeoIO(int motorCanID) : _motor(motorCanID) {}
 
-void NeoIO::ConfigMotor() {
+void HoodNeoIO::ConfigMotor() {
     rev::spark::SparkBaseConfig _config;
     _config.encoder.PositionConversionFactor(1/NeoMotorConfig::GEAR_RATIO);
     _config.encoder.VelocityConversionFactor(1/NeoMotorConfig::GEAR_RATIO);
@@ -18,15 +18,15 @@ void NeoIO::ConfigMotor() {
     _motor.OverwriteConfig(_config);
 }
 
-void NeoIO::SetVoltage(units::volt_t voltage) {
+void HoodNeoIO::SetVoltage(units::volt_t voltage) {
     _motor.SetVoltage(voltage);
 }
 
-void NeoIO::SetPositionTarget(units::degree_t target) {
+void HoodNeoIO::SetPositionTarget(units::degree_t target) {
     _motor.SetPositionTarget(target);
 }
 
-void NeoIO::SetBrakeMode(bool isBreakModeOn) {
+void HoodNeoIO::SetBrakeMode(bool isBreakModeOn) {
     rev::spark::SparkBaseConfig _brakeModeConfig;
     if (isBreakModeOn) {
         _brakeModeConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
@@ -36,22 +36,22 @@ void NeoIO::SetBrakeMode(bool isBreakModeOn) {
     _motor.AdjustConfigNoPersist(_brakeModeConfig);
 }
 
-void NeoIO::StartLoggingMotor(std::string keyName) {
+void HoodNeoIO::StartLoggingMotor(std::string keyName) {
     Logger::Log(keyName, &_motor);
 }
 
-units::degree_t NeoIO::GetPosition() {
+units::degree_t HoodNeoIO::GetPosition() {
     return _motor.GetPosition();
 }
 
-units::degree_t NeoIO::GetPositionTarget() {
+units::degree_t HoodNeoIO::GetPositionTarget() {
     return _motor.GetPositionTarget();
 }
 
-units::ampere_t NeoIO::GetCurrent() {
+units::ampere_t HoodNeoIO::GetCurrent() {
     return _motor.GetStatorCurrent();
 }
 
-units::volt_t NeoIO::GetVoltage() {
+units::volt_t HoodNeoIO::GetVoltage() {
     return _motor.GetMotorVoltage();
 }

@@ -1,8 +1,8 @@
 #include "MotorIO.h"
 
-class KrakenIO : public MotorIO {
+class HoodNeoIO : public MotorIO {
     public:
-        KrakenIO(int motorCanID);
+        HoodNeoIO(int motorCanID);
         void ConfigMotor() override;
         void SetVoltage(units::volt_t voltage) override;
         void SetPositionTarget(units::degree_t target) override;
@@ -12,8 +12,6 @@ class KrakenIO : public MotorIO {
         units::degree_t GetPositionTarget() override;
         units::ampere_t GetCurrent() override;
         units::volt_t GetVoltage() override;    
-    private:
-        ctre::phoenix6::hardware::TalonFX _motor;
-        
-        units::degree_t _desiredAngle;
+    private:        
+        ICSparkMax _motor;
 };
