@@ -26,6 +26,8 @@ class ShotPlanner {
   static ShotPlannerResults CalculateShotTarget(frc::Pose2d robotPos);
   static bool IsWithinZone(
   frc::Translation2d topRightCorner, frc::Translation2d bottomLeftCorner, frc::Pose2d robotPos);
+  static bool IsInTopHalf(frc::Pose2d robotPos);
+  static bool IsInAllianceZone(frc::Pose2d robotPos);
   static frc::Pose2d ConvertToPose2d(frc::Translation3d translation3d);
   static void SetOverride(Override override);
     
