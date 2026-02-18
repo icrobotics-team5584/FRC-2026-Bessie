@@ -1,7 +1,5 @@
 #include "utilities/AlertController.h"
 
-#include "utilities/Logger.h"
-
 namespace AlertController {
 
 // updates the alert for the temperature. automatically updates to true or false
