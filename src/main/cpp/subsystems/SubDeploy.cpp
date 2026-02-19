@@ -85,6 +85,8 @@ void SubDeploy::Periodic() {
   RobotVisualisation::GetInstance()._deployLigament->SetAngle(_deployMotor.GetPosition());
 
   Logger::Log("Deploy/Loop Time", (frc::GetTime() - loopStart));
+  Logger::Log("Deploy/IsZeroing", _currentlyZeroing);
+  Logger::Log("Deploy/HasZeroed", _hasZeroed);
 }
 
 void SubDeploy::SimulationPeriodic() {
