@@ -126,7 +126,11 @@ frc2::CommandPtr SubShooter::SetShooterTarget(std::function<units::turns_per_sec
     [this, speed] { _shooterMotor1.SetControl(_flywheelTargetVelocity.WithVelocity(speed())); });
 }
 
-frc2::CommandPtr SubShooter::StopShooter() {
+frc2::CommandPtr SubShooter::StopShooter(bool override = false) {
+  if (override == true) {
+    return frc2::cmd::None();
+  }
+
   return RunOnce(
     [this] { _shooterMotor1.SetControl(_flywheelTargetVelocity.WithVelocity(0_tps)); });
 }
