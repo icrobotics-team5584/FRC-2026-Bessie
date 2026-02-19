@@ -20,15 +20,16 @@
 
 namespace cmd {  
    
-  frc2::CommandPtr AimAtFieldRelative(std::function<units::degree_t()> target) {
-    return SubTurret::GetInstance().SetTurretTargetAngle([target] {     
-      auto robotPose = PoseHandler::GetInstance().GetPose();
-      Logger::Log("Turret/AimAtFieldRelative/robotPose/Rotation", robotPose.Rotation().Degrees());
-      units::degree_t targetAngle = target() - robotPose.Rotation().Degrees();
-      return targetAngle;}, [target] { 
-        return (target() - SubTurret::GetInstance().GetTurretTargetAngle()) / 20_ms - SubDrivebase::GetInstance().GetDesiredAngularVelocity(); 
-      });
-  }
+frc2::CommandPtr AimAtFieldRelative(std::function<units::degree_t()> target) {
+  return SubTurret::GetInstance().SetTurretTargetAngle([target] {     
+    auto robotPose = PoseHandler::GetInstance().GetPose();
+    Logger::Log("Turret/AimAtFieldRelative/robotPose/Rotation", robotPose.Rotation().Degrees());
+    units::degree_t targetAngle = target() - robotPose.Rotation().Degrees();
+    return targetAngle;}, [target] {
+      Logger::Log("Turret/AimAtFieldRelative/desired target velocity (target - past target)", (target() - SubTurret::GetInstance().GetTurretTargetAngle()) / 20_ms);
+      return (target() - SubTurret::GetInstance().GetTurretTargetAngle()) / 20_ms - SubDrivebase::GetInstance().GetDesiredAngularVelocity(); 
+    });
+}
 
 frc2::CommandPtr AimAtSpot(frc::Translation2d target) {
   return cmd::AimAtFieldRelative([target] {
@@ -73,17 +74,25 @@ frc::Pose2d CalcFutureTurretPose() {
   units::meter_t distance = target.Distance(robot.Translation());
 
   // Calculate field relative robot velocity
-  frc::ChassisSpeeds robotVel = SubDrivebase::GetInstance().GetDesiredFieldRelativeVelocity();
+  frc::ChassisSpeeds robotVel = SubDrivebase::GetInstance().GetDesiredVelocity();
   units::meters_per_second_t robotVelX = robotVel.vx;
   units::meters_per_second_t robotVelY = robotVel.vy;
   units::degrees_per_second_t robotVelRot = SubDrivebase::GetInstance().GetDesiredAngularVelocity();
 
   // Account for latency
-  frc::Transform2d latencyTransform = frc::Transform2d(robotVelX * offset, robotVelY * offset, robotVelRot * offset);
-  robot = robot.TransformBy(latencyTransform);
+  frc::ChassisSpeeds robotRelativeVel = SubDrivebase::GetInstance().GetDesiredVelocity(false);
+  units::meters_per_second_t robotRelativeVelX = robotRelativeVel.vx;
+  units::meters_per_second_t robotRelativeVelY = robotRelativeVel.vy;
   
+  frc::Transform2d latencyTransform = frc::Transform2d(robotRelativeVelX * offset, robotRelativeVelY * offset, robotVelRot * offset);
+  robot = robot.TransformBy(latencyTransform);
+
   Logger::Log("SOTM/velX", robotVelX);
   Logger::Log("SOTM/velY", robotVelY);
+
+  Logger::Log("SOTM/robotRelativeVelX", robotRelativeVelX);
+  Logger::Log("SOTM/robotRelativeVelY", robotRelativeVelY);
+
   Logger::Log("SOTM/velRot", robotVelRot);
 
   units::second_t TOF;
