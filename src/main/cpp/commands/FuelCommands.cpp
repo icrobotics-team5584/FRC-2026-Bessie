@@ -87,7 +87,7 @@ frc2::CommandPtr EjectFuel() {
   .AlongWith(SubIntake::GetInstance().ReverseIntake())
   .AlongWith(SubIndexer::GetInstance().Index())
   .AlongWith(SubFeeder::GetInstance().Feed())
-  .AlongWith(SubTurret::GetInstance().SetTurretTargetAngle([] { return 180_deg; })) // point turret out of robot
+  .AlongWith(SubTurret::GetInstance().SetTurretTargetAngle([] { return 180_deg; }, []{return 0_deg_per_s;})) // point turret out of robot
   .AlongWith(SubHood::GetInstance().HoodToEjectAngle()); 
   // this is past the limit but the hood will always go to its lower limit(if lower limit changes it'll go there)
 }
