@@ -32,17 +32,24 @@ frc2::CommandPtr StationaryShootAt(frc::Translation2d target) {
     Logger::FieldDisplay::GetInstance().DisplayPose("Turret/turretPose", turretPose);
     Logger::Log("Shooter/distToTargetInner", target.Distance(turretPose.Translation()));
 
-    return target.Distance(turretPose.Translation());};
+    return target.Distance(turretPose.Translation());
+  };
+  
+  auto readyToShoot = [] {
+    return SubShooter::GetInstance().IsAtSpeed() &&
+      SubTurret::GetInstance().IsAtTarget() &&
+      SubHood::GetInstance().HoodIsAtTarget();
+  };
 
-  return frc2::cmd::Parallel(cmd::AimAtSpot(target),
-    SubShooter::GetInstance().SpinWithDistance(distanceToTarget, []{return ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose()).isPassing;}),
-    SubHood::GetInstance().SetHoodPositionTargetFromDist(distanceToTarget))
-    .Until([] {
-      return SubShooter::GetInstance().IsAtSpeed() && SubTurret::GetInstance().IsAtTarget() &&
-             SubHood::GetInstance().HoodIsAtTarget();
-    })
-    .AndThen(frc2::cmd::Parallel(SubIntake::GetInstance().IntakeOn(),
-      SubFeeder::GetInstance().FeederOn(), SubIndexer::GetInstance().Index()));
+  return frc2::cmd::Parallel(
+      cmd::AimAtSpot(target),
+      SubShooter::GetInstance().SpinWithDistance(distanceToTarget, []{return ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose()).isPassing;}),
+      SubHood::GetInstance().SetHoodPositionTargetFromDist(distanceToTarget))
+    .Until( readyToShoot )
+    .AndThen(frc2::cmd::Parallel(
+      SubIntake::GetInstance().IntakeOn(),
+      SubFeeder::GetInstance().FeederOn(),
+      SubIndexer::GetInstance().Index()));
 }
 
 frc2::CommandPtr ShootWhenReady() {
