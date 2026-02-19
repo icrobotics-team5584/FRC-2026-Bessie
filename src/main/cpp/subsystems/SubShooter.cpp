@@ -96,6 +96,7 @@ void SubShooter::Periodic() {
   AlertController::UpdateCurrentAlert(_shooter2AlertConfig, shooter2Current);
 
   Logger::Log("Shooter/Loop Time", (frc::GetTime() - loopStart));
+  Logger::Tune("Shooter/Preserving Flywheel Speed", _preservingFlywheelSpeed);
 }
 
 void SubShooter::SimulationPeriodic() {
