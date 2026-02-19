@@ -90,12 +90,14 @@ bool ShotPlanner::IsInTopHalf(frc::Pose2d robotPos) {
   if (robotPos.Y() < 4_m) {
     return true;
   }
+  return false;
 }
 
 bool ShotPlanner::IsInAllianceZone(frc::Pose2d robotPos){
   if (robotPos.X() < 2.5_m){
     return true;
   }
+  return false;
 }
 
 frc::Pose2d ShotPlanner::ConvertToPose2d(frc::Translation3d translation3d) {
