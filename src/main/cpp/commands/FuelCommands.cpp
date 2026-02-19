@@ -73,16 +73,20 @@ frc2::CommandPtr ShootWhenReady() {
 }
 
 frc2::CommandPtr AimOnTheMove() {
+  auto isPassing = [] {
+    return ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose()).isPassing;
+  };
+
+  auto shootingDistance = [] { 
+    return CalcShootOnTheMoveDistance(); 
+  };
+
   return SubShooter::GetInstance()
-    .SpinWithDistance([] { return CalcShootOnTheMoveDistance(); },
-      [] {
-        return ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose()).isPassing;
-      })
+    .SpinWithDistance(shootingDistance, isPassing)
     .AlongWith(frc2::cmd::Either(
-      SubHood::GetInstance().SetHoodPositionTarget([] { return SubHood::PASSING_ANGLE; }),
-      SubHood::GetInstance().SetHoodPositionTargetFromDist(
-        [] { return CalcShootOnTheMoveDistance();}),
-      []{return ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose()).isPassing;}))
+        SubHood::GetInstance().SetHoodPositionTarget([] { return SubHood::PASSING_ANGLE; }),
+        SubHood::GetInstance().SetHoodPositionTargetFromDist(shootingDistance),
+        isPassing)) /* <- the condition for the frc2::cmd::Either */
     .AlongWith(AimAtFieldRelative([] { return CalcShootOnTheMoveAngle(); }));
 }
 
