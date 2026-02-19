@@ -58,6 +58,10 @@ void RobotContainer::ConfigureBindings() {
     SubDrivebase::GetInstance().SetPose(frc::Pose2d{0_m, 0_m, 0_deg});
   }));
 
+  /* Holds */
+  _operatorController.X().OnTrue(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); }));
+  _operatorController.X().OnFalse(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(false); }));
+
   //POVs
   _driverController.POVDown().OnTrue(
     SubTurret::GetInstance().SetTurretTargetAngle([] { return 180_deg; }, [] { return 0_deg_per_s; }));
@@ -68,7 +72,7 @@ void RobotContainer::ConfigureBindings() {
 
   //Other
 
-  frc2::Trigger([]{return ShiftHandler::GetTimeLeft() < 3_s;}).OnTrue(Rumble(1, 0.5_s));
+  frc2::Trigger([]{return ShiftHandler::GetInstance().GetTimeLeft() < 3_s;}).OnTrue(Rumble(1, 0.5_s));
 }
 
 std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {

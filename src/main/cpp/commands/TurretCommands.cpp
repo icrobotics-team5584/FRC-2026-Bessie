@@ -16,6 +16,8 @@
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/Commands.h>
 
+#include <frc/geometry/Translation2d.h>
+
 namespace cmd {  
    
   frc2::CommandPtr AimAtFieldRelative(std::function<units::degree_t()> target) {
@@ -103,7 +105,7 @@ frc::Pose2d CalcFutureTurretPose() {
 
     // calculate future pose by adding offsets to current robot position
     futurePose =
-      frc::Pose2d(robotX + offsetX, robotY + offsetY, robot.Rotation().Degrees() + offsetRot);
+      frc::Pose2d(robotX + offsetX, robotY + offsetY, robot.Rotation());
 
     distance = target.Distance(futurePose.Translation());
   }
@@ -113,7 +115,18 @@ frc::Pose2d CalcFutureTurretPose() {
   // convert robot to turret pose
   frc::Pose2d turretFuturePose = futurePose.TransformBy(SubTurret::ROBOT_TO_TURRET);
 
+  // Account for Robot Angular Velocity (Turret Whip)
+  units::meter_t turretVelocityMagnitude = ( robotVelRot.value()/360 * 2 * 3.14159 * SubTurret::ROBOT_TO_TURRET.Translation().Norm() / 1_s ) * TOF;
+  units::degree_t turretVelocityDirection = -90_deg; 
+  frc::Translation2d turretVelocity = frc::Translation2d{ turretVelocityMagnitude, turretVelocityDirection };
+  frc::Transform2d turretVelocityTransform = frc::Transform2d{ turretVelocity, 0_deg};
+
+  turretFuturePose = turretFuturePose.TransformBy(turretVelocityTransform);
+
+  Logger::Log("SOTM/Turret Velocity (Turret Whip)", turretVelocityMagnitude);
+  Logger::Log("SOTM/Turret Velocity Direction (Turret Whip Direction)", turretVelocityDirection);
   Logger::FieldDisplay::GetInstance().DisplayPose("SOTM/futureTurretPose", turretFuturePose);
+
   return turretFuturePose;
 }
 

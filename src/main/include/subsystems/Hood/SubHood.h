@@ -4,12 +4,21 @@
 
 #pragma once
 
-#include <frc2/command/SubsystemBase.h>
-
+#include "utilities/AlertController.h"
 #include "utilities/ICSparkMax.h"
-#include "Constants.h"
+#include "utilities/MechanismCircle2d.h"
+
+#include <frc/Alert.h>
+#include <frc/simulation/DCMotorSim.h>
+#include <frc/simulation/SingleJointedArmSim.h>
+#include <frc/smartdashboard/Mechanism2d.h>
+#include <frc/smartdashboard/MechanismLigament2d.h>
+#include <frc/system/plant/DCMotor.h>
+#include <frc/system/plant/LinearSystemId.h>
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/Commands.h>
+#include <frc2/command/SubsystemBase.h>
+
 #include <units/angle.h>
 #include <wpi/interpolating_map.h>
 
@@ -22,6 +31,7 @@
 #include "utilities/MechanismCircle2d.h"
 #include "GeneralMotor.h"
 #include "HoodMotorConfig.h"
+#include "Constants.h"
 
 class SubHood : public frc2::SubsystemBase {
  public:
@@ -33,28 +43,27 @@ class SubHood : public frc2::SubsystemBase {
 
   void SimulationPeriodic();
 
-  bool HoodCurrentCheck(); 
+  bool HoodCurrentCheck();
   bool HoodIsAtTarget();
-  
+
   units::ampere_t GetHoodMotorCurrent();
 
-  frc2::CommandPtr ManualHoodDown(); 
-  frc2::CommandPtr StowHood(); 
+  frc2::CommandPtr ManualHoodDown();
+  frc2::CommandPtr StowHood();
   frc2::CommandPtr ZeroHood();
   frc2::CommandPtr SetHoodPositionTarget(std::function<units::degree_t()> angle);
   frc2::CommandPtr SetHoodPositionTargetFromDist(std::function<units::meter_t()> distanceToTarget);
   frc2::CommandPtr MoveHoodUp1Degree();
   frc2::CommandPtr MoveHoodDown1Degree();
-  
+
   static constexpr units::degree_t PASSING_ANGLE = 37_deg;
-  
+
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */
   void Periodic() override;
 
  private:
-
   //double P = 16.0;
   //double I = 0.0;
   //double D = 8.0;
@@ -78,6 +87,13 @@ class SubHood : public frc2::SubsystemBase {
   //ICSparkMax _hoodMotor{canid::HOOD_MOTOR};
   //rev::spark::SparkBaseConfig _hoodMotorConfig;
 
+  frc::Alert _hoodhighTemperatureAlert{
+    "Hood Motor High Temperature!", frc::Alert::AlertType::kWarning};
+  frc::Alert _hoodCurrentAlert{"Hood Motor Overcurrent!", frc::Alert::AlertType::kWarning};
+
+  AlertController::MotorAlertConfig _hoodAlertConfig{
+    _hoodhighTemperatureAlert, _hoodCurrentAlert, 60_degC, 20_A};
+
   wpi::interpolating_map<units::meter_t, units::degree_t> _hoodPitchTable;
 
   static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::KrakenX44FOC;
@@ -88,7 +104,7 @@ class SubHood : public frc2::SubsystemBase {
   frc::sim::SingleJointedArmSim _hoodSim{_hoodSystem, MOTOR_MODEL, SIM_GEAR_RATIO, ARM_LENGTH, 
     LOWER_LIMIT, UPPER_LIMIT, SIMULATE_GRAVITY, STARTING_ANGLE};
 
-  //mechanism2d
+  // mechanism2d
   frc::Mechanism2d _hoodMech{0.25, 0.25};
   frc::MechanismRoot2d* _hoodMechRoot = _hoodMech.GetRoot("hoodRoot", 0.125, 0.125);
   MechanismCircle2d _hoodMechCircle{_hoodMechRoot, "hoodCircle", 0.05, 0_deg};

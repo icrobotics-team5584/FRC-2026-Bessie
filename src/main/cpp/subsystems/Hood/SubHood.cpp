@@ -7,21 +7,32 @@
 #include "frc/RobotBase.h"
 #include "utilities/Logger.h"
 
-SubHood::SubHood() {
-    frc::SmartDashboard::PutData("Hood/mech2dDisplay", &_hoodMech);
+#include "frc/RobotBase.h"
+#include "frc/smartdashboard/SmartDashboard.h"
 
-    _hoodPitchTable.insert(1.8575_m, 0.07611_tr);
-    _hoodPitchTable.insert(2.3575_m, 0.093056_tr);
-    _hoodPitchTable.insert(2.8575_m, 0.093056_tr);
-    _hoodPitchTable.insert(3.3575_m, 0.093056_tr);
-    _hoodPitchTable.insert(3.8575_m, 0.098611_tr);
-    _hoodPitchTable.insert(4.3575_m, 0.098611_tr);
-    _hoodPitchTable.insert(4.6875_m, 0.098611_tr);
-    _hoodPitchTable.insert(5.1875_m, 0.098611_tr);
+SubHood::SubHood() {
+  frc::SmartDashboard::PutData("Hood/mech2dDisplay", &_hoodMech);
+
+  _hoodPitchTable.insert(1.8575_m, 0.07611_tr);
+  _hoodPitchTable.insert(2.3575_m, 0.093056_tr);
+  _hoodPitchTable.insert(2.8575_m, 0.093056_tr);
+  _hoodPitchTable.insert(3.3575_m, 0.093056_tr);
+  _hoodPitchTable.insert(3.8575_m, 0.098611_tr);
+  _hoodPitchTable.insert(4.3575_m, 0.098611_tr);
+  _hoodPitchTable.insert(4.6875_m, 0.098611_tr);
+  _hoodPitchTable.insert(5.1875_m, 0.098611_tr);
 }
 
 // This method will be called once per scheduler run
 void SubHood::Periodic() {
+
+  units::celsius_t hoodTemperature = _hoodMotor.GetTemperature();
+  units::ampere_t hoodCurrent = _hoodMotor.GetCurrent();
+
+  AlertController::UpdateTemperatureAlert(_hoodAlertConfig, hoodTemperature);
+  AlertController::UpdateCurrentAlert(_hoodAlertConfig, hoodCurrent);
+    auto loopStart = frc::GetTime();
+
     _hoodMechCircle.SetAngle(_hoodMotor.GetPosition());
     if (_hasZeroed == false && _zeroing == false) {
         _hoodMotor.StopMotor();
@@ -30,13 +41,15 @@ void SubHood::Periodic() {
     Logger::Log("Hood/haszeroed", _hasZeroed);
     Logger::Log("Hood/zeroing", _zeroing);
     Logger::Log("Hood/IsAtTarget", HoodIsAtTarget());
+    Logger::Log("Hood/Loop Time", (frc::GetTime() - loopStart));
+    
     _hoodMotor.Log("Hood/Motor");
 }
 
 void SubHood::SimulationPeriodic() {
-    _hoodSim.SetInputVoltage(_hoodMotor.CalcSimVoltage());
-    _hoodSim.Update(20_ms);
-    _hoodMotor.IterateSim(_hoodSim.GetVelocity(), _hoodSim.GetAngle());
+  _hoodSim.SetInputVoltage(_hoodMotor.CalcSimVoltage());
+  _hoodSim.Update(20_ms);
+  _hoodMotor.IterateSim(_hoodSim.GetVelocity(), _hoodSim.GetAngle());
 }
 
 frc2::CommandPtr SubHood::SetHoodPositionTarget(std::function<units::degree_t()> angle) {
@@ -45,28 +58,30 @@ frc2::CommandPtr SubHood::SetHoodPositionTarget(std::function<units::degree_t()>
         if(target > UPPER_LIMIT) {target = UPPER_LIMIT;}
         if(target < LOWER_LIMIT) {target = LOWER_LIMIT;}
 
-        _hoodMotor.SetPositionTarget(target);});
+    _hoodMotor.SetPositionTarget(target);
+  });
 }
 
 frc2::CommandPtr SubHood::ZeroHood() {
-    return RunOnce([this] {_zeroing = true;}).AndThen(ManualHoodDown())
-    .Until([this] {return HoodCurrentCheck();})
-    .AndThen([this] {_hoodMotor.SetPosition(LOWER_LIMIT);})
+  return RunOnce([this] { _zeroing = true; })
+    .AndThen(ManualHoodDown())
+    .Until([this] { return HoodCurrentCheck(); })
+    .AndThen([this] { _hoodMotor.SetPosition(LOWER_LIMIT); })
     .FinallyDo([this] {
-        _hoodMotor.StopMotor();
-        _hoodMotor.SetPositionTarget(LOWER_LIMIT);
-        _zeroing = false;
+      _hoodMotor.StopMotor();
+      _hoodMotor.SetPositionTarget(LOWER_LIMIT);
+      _zeroing = false;
     });
 }
 
 bool SubHood::HoodCurrentCheck() {
-    _hasZeroed = false;
-    if(units::math::abs(GetHoodMotorCurrent()) > zeroingCurrentLimit) {
-        _hasZeroed = true;
-        return true;
-    }
+  _hasZeroed = false;
+  if (units::math::abs(GetHoodMotorCurrent()) > zeroingCurrentLimit) {
+    _hasZeroed = true;
+    return true;
+  }
 
-    return false;
+  return false;
 }
 
 units::ampere_t SubHood::GetHoodMotorCurrent() {
@@ -74,27 +89,31 @@ units::ampere_t SubHood::GetHoodMotorCurrent() {
 }
 
 frc2::CommandPtr SubHood::StowHood() {
-    return RunOnce([this] {_hoodMotor.SetPositionTarget(STOW_ANGLE);});
+  return RunOnce([this] { _hoodMotor.SetPositionTarget(STOW_ANGLE); });
 }
 
 frc2::CommandPtr SubHood::ManualHoodDown() {
-    return StartEnd([this] {_hoodMotor.SetVoltage(-1_V);}, 
-    [this] {auto targRot = _hoodMotor.GetPosition();
-    _hoodMotor.SetPositionTarget(targRot);});
+  return StartEnd([this] { _hoodMotor.SetVoltage(-1_V); },
+    [this] {
+      auto targRot = _hoodMotor.GetPosition();
+      _hoodMotor.SetPositionTarget(targRot);
+    });
 }
 
-frc2::CommandPtr SubHood::SetHoodPositionTargetFromDist(std::function<units::meter_t()> distanceToTarget){
-    return SetHoodPositionTarget([this, distanceToTarget] { return _hoodPitchTable[distanceToTarget()]; });
+frc2::CommandPtr SubHood::SetHoodPositionTargetFromDist(
+  std::function<units::meter_t()> distanceToTarget) {
+  return SetHoodPositionTarget(
+    [this, distanceToTarget] { return _hoodPitchTable[distanceToTarget()]; });
 }
 
-bool SubHood::HoodIsAtTarget(){
-    return units::math::abs(_hoodMotor.GetPositionError()) < 0.5_deg;
+bool SubHood::HoodIsAtTarget() {
+  return units::math::abs(_hoodMotor.GetPosisitonError()) < 0.5_deg;
 }
 
 frc2::CommandPtr SubHood::MoveHoodUp1Degree() {
-    return SetHoodPositionTarget([this] {return _hoodMotor.GetPositionTarget() + 1_deg;});
+  return SetHoodPositionTarget([this] { return _hoodMotor.GetPositionTarget() + 1_deg; });
 }
 
 frc2::CommandPtr SubHood::MoveHoodDown1Degree() {
-    return SetHoodPositionTarget([this] {return _hoodMotor.GetPositionTarget() - 1_deg;});
+  return SetHoodPositionTarget([this] { return _hoodMotor.GetPositionTarget() - 1_deg; });
 }
