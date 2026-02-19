@@ -33,34 +33,18 @@ bool SubFeeder::FeederIsEmpty() {
   return _feederEmptySensor.Get();
 }
 
-void SubFeeder::CurrentHighTimer() {
-  _feederHighCurrentTimer.Start();
-
-  if (_feederHighCurrentTimer.Get() > 3_s) {
-    _feederCurrentAlert.Set(true);
-  }
-}
-
 // This method will be called once per scheduler run
 void SubFeeder::Periodic() {
+  auto loopStart = frc::GetTime();
+
   Logger::Log("Feeder/Feeder Is Full", FeederIsFull());
   Logger::Log("Feeder/Feeder Is Empty", FeederIsEmpty());
-  units::ampere_t current = _feederMotor.GetStatorCurrent();
-  Logger::Log("Feeder/Feeder Motor Current", current);
-  if (current > 20_A) {
-    SubFeeder::CurrentHighTimer();
-  } else {
-    _feederCurrentAlert.Set(false);
-    _feederHighCurrentTimer.Reset();
-  }
+  units::celsius_t feederTemperature = _feederMotor.GetTemperature();
+  units::ampere_t feederCurrent = _feederMotor.GetStatorCurrent();
+  AlertController::UpdateTemperatureAlert(_feederAlertConfig, feederTemperature);
+  AlertController::UpdateCurrentAlert(_feederAlertConfig, feederCurrent);
 
-  units::celsius_t temperature = _feederMotor.GetTemperature();
-  Logger::Log("Feeder/Feeder Motor Temperature", temperature);
-  if (temperature > 60_degC) {
-    _feederHighTemperatureAlert.Set(true);
-  } else {
-    _feederHighTemperatureAlert.Set(false);
-  }
+  Logger::Log("Feeder/Loop Time", (frc::GetTime() - loopStart));
 }
 
 void SubFeeder::SimulationPeriodic() {
