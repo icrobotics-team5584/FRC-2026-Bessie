@@ -189,6 +189,37 @@ namespace cmd {
         );
     }
 
+    frc2::CommandPtr Hoard_RightBump() {
+        return frc2::cmd::Sequence(
+            // STARTING POSITION: START_BUMP_RIGHT (X 3.58m, Y 2.27m, heading 0 degrees)
+            SubHood::GetInstance().ZeroHood(),
+            cmd::ShootOnTheMove().WithTimeout(2_s),
+
+            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{3_mps, 0_mps, 0_tps}),
+            frc2::cmd::RunOnce([] {
+                SubDrivebase::GetInstance().SetPose(frc::Pose2d{5.8_m, 2.27_m, SubDrivebase::GetInstance().GetGyroAngle()});
+            }), //reset position after traversing the bump
+
+            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_RIGHT; }, 1.0),
+ 
+            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.8_m, 6.0_m, 90_deg}; }, 0.5, 20_cm, 5_deg) //TEMP drive to end intake pos
+                .AlongWith(cmd::ShootOnTheMove())
+        );
+    }
+
+    frc2::CommandPtr Hoard_RightTrench() {
+        return frc2::cmd::Sequence(
+            // STARTING POSITION: START_TRENCH_RIGHT (X 3.58m, Y 0.57m, heading 0 degrees)
+            SubHood::GetInstance().ZeroHood(),
+            cmd::ShootOnTheMove().WithTimeout(2_s),
+
+            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_RIGHT; }, 1.0),
+ 
+            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.8_m, 6.0_m, 90_deg}; }, 0.5, 20_cm, 5_deg) //TEMP drive to end intake pos
+                .AlongWith(cmd::ShootOnTheMove())
+        );
+    }
+
     /* NEUTRAL AND OUTPOST SCORE AUTONS */
 
     frc2::CommandPtr NeutralAndOutpostScore_RightBump() {
