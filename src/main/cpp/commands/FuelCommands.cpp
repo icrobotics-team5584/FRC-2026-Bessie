@@ -32,43 +32,61 @@ frc2::CommandPtr StationaryShootAt(frc::Translation2d target) {
     Logger::FieldDisplay::GetInstance().DisplayPose("Turret/turretPose", turretPose);
     Logger::Log("Shooter/distToTargetInner", target.Distance(turretPose.Translation()));
 
-    return target.Distance(turretPose.Translation());};
+    return target.Distance(turretPose.Translation());
+  };
+  
+  auto readyToShoot = [] {
+    return SubShooter::GetInstance().IsAtSpeed() &&
+      SubTurret::GetInstance().IsAtTarget() &&
+      SubHood::GetInstance().HoodIsAtTarget();
+  };
 
-  return frc2::cmd::Parallel(cmd::AimAtSpot(target),
-    SubShooter::GetInstance().SpinWithDistance(distanceToTarget, []{return ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose()).isPassing;}),
-    SubHood::GetInstance().SetHoodPositionTargetFromDist(distanceToTarget))
-    .Until([] {
-      return SubShooter::GetInstance().IsAtSpeed() && SubTurret::GetInstance().IsAtTarget() &&
-             SubHood::GetInstance().HoodIsAtTarget();
-    })
-    .AndThen(frc2::cmd::Parallel(SubIntake::GetInstance().IntakeOn(),
-      SubFeeder::GetInstance().FeederOn(), SubIndexer::GetInstance().Index()));
+  auto isPassing = [] {
+    return ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose()).isPassing;
+  };
+
+  return frc2::cmd::Parallel(
+      cmd::AimAtSpot(target),
+      SubShooter::GetInstance().SpinWithDistance(distanceToTarget, isPassing),
+      SubHood::GetInstance().SetHoodPositionTargetFromDist(distanceToTarget))
+    .Until(readyToShoot)
+    .AndThen(frc2::cmd::Parallel(
+      SubIntake::GetInstance().IntakeOn(),
+      SubFeeder::GetInstance().FeederOn(),
+      SubIndexer::GetInstance().Index()));
 }
 
 frc2::CommandPtr ShootWhenReady() {
-  return frc2::cmd::Either(SubFeeder::GetInstance().FeederOn().AlongWith(SubIndexer::GetInstance().Index()),
-    SubFeeder::GetInstance().FeederOff().AlongWith(SubIndexer::GetInstance().StopIndex()),
-    [] {
-       auto currentPose = PoseHandler::GetInstance().GetPose();
-       return SubHood::GetInstance().HoodIsAtTarget() && SubShooter::GetInstance().IsAtSpeed() &&
-              SubTurret::GetInstance().IsAtTarget() &&
-              ShotPlanner::CalculateShotTarget(currentPose).shouldShoot;
+  auto shouldLoadFuel = [] {
+    auto currentPose = PoseHandler::GetInstance().GetPose();
+    return SubHood::GetInstance().HoodIsAtTarget() && 
+      SubShooter::GetInstance().IsAtSpeed() &&
+      SubTurret::GetInstance().IsAtTarget() &&
+      ShotPlanner::CalculateShotTarget(currentPose).shouldShoot;
+  };
 
-    })
+  return frc2::cmd::Either(
+      SubFeeder::GetInstance().FeederOn().AlongWith(SubIndexer::GetInstance().Index()),
+      SubFeeder::GetInstance().FeederOff().AlongWith(SubIndexer::GetInstance().StopIndex()),
+      shouldLoadFuel) /* <- the condition for the frc2::cmd::Either */
     .Repeatedly();
 }
 
 frc2::CommandPtr AimOnTheMove() {
+  auto isPassing = [] {
+    return ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose()).isPassing;
+  };
+
+  auto shootingDistance = [] { 
+    return CalcShootOnTheMoveDistance(); 
+  };
+
   return SubShooter::GetInstance()
-    .SpinWithDistance([] { return CalcShootOnTheMoveDistance(); },
-      [] {
-        return ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose()).isPassing;
-      })
+    .SpinWithDistance(shootingDistance, isPassing)
     .AlongWith(frc2::cmd::Either(
-      SubHood::GetInstance().SetHoodPositionTarget([] { return SubHood::PASSING_ANGLE; }),
-      SubHood::GetInstance().SetHoodPositionTargetFromDist(
-        [] { return CalcShootOnTheMoveDistance();}),
-      []{return ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose()).isPassing;}))
+        SubHood::GetInstance().SetHoodPositionTarget([] { return SubHood::PASSING_ANGLE; }),
+        SubHood::GetInstance().SetHoodPositionTargetFromDist(shootingDistance),
+        isPassing)) /* <- the condition for the frc2::cmd::Either */
     .AlongWith(AimAtFieldRelative([] { return CalcShootOnTheMoveAngle(); }));
 }
 

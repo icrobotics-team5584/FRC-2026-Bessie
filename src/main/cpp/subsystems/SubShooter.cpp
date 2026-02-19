@@ -96,6 +96,7 @@ void SubShooter::Periodic() {
   AlertController::UpdateCurrentAlert(_shooter2AlertConfig, shooter2Current);
 
   Logger::Log("Shooter/Loop Time", (frc::GetTime() - loopStart));
+  Logger::Tune("Shooter/Preserving Flywheel Speed", _preservingFlywheelSpeed);
 }
 
 void SubShooter::SimulationPeriodic() {
@@ -125,7 +126,11 @@ frc2::CommandPtr SubShooter::SetShooterTarget(std::function<units::turns_per_sec
     [this, speed] { _shooterMotor1.SetControl(_flywheelTargetVelocity.WithVelocity(speed())); });
 }
 
-frc2::CommandPtr SubShooter::StopShooter() {
+frc2::CommandPtr SubShooter::StopShooter(bool override) {
+  if (override == true) {
+    return frc2::cmd::None();
+  }
+
   return RunOnce(
     [this] { _shooterMotor1.SetControl(_flywheelTargetVelocity.WithVelocity(0_tps)); });
 }
@@ -135,6 +140,10 @@ bool SubShooter::IsAtSpeed() {
            _shooterMotor1.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 1.0_tps &&
          units::math::abs(
            _shooterMotor2.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 1.0_tps;
+}
+
+bool SubShooter::PreservingFlywheelSpeed() {
+  return _preservingFlywheelSpeed;
 }
 
 frc2::CommandPtr SubShooter::SpinWithDistance(

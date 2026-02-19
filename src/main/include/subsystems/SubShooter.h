@@ -33,11 +33,12 @@ class SubShooter : public frc2::SubsystemBase {
   void SimulationPeriodic();
 
   frc2::CommandPtr SetShooterTarget(std::function<units::turns_per_second_t()> speed);
-  frc2::CommandPtr StopShooter();
+  frc2::CommandPtr StopShooter(bool override = false);
   frc2::CommandPtr SpinWithDistance(
     std::function<units::meter_t()> distance, std::function<bool()> isPassing);
 
   bool IsAtSpeed();
+  bool PreservingFlywheelSpeed();
 
   units::second_t GetTimeOfFLightWithDistance(units::meter_t distance);
 
@@ -57,6 +58,8 @@ class SubShooter : public frc2::SubsystemBase {
   double I = 0;
   double D = 0;
   double V = 0.12;
+
+  bool _preservingFlywheelSpeed = true;
 
   ctre::phoenix6::configs::TalonFXConfiguration _shooterMotorConfig;
   ctre::phoenix6::controls::VelocityVoltage _flywheelTargetVelocity{0_tps};
