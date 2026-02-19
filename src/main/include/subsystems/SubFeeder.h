@@ -4,11 +4,11 @@
 
 #pragma once
 
+#include "utilities/AlertController.h"
 #include "utilities/ICSparkFlex.h"
 
 #include <frc/Alert.h>
 #include <frc/DigitalInput.h>
-#include <frc/Timer.h>
 #include <frc/simulation/FlywheelSim.h>
 #include <frc/system/plant/DCMotor.h>
 #include <frc/system/plant/LinearSystemId.h>
@@ -34,12 +34,6 @@ class SubFeeder : public frc2::SubsystemBase {
   bool FeederIsFull();
   bool FeederIsEmpty();
 
-  void CurrentHighTimer();
-
-  frc::Alert _feederCurrentAlert{"Feeder Motor Overcurrent!", frc::Alert::AlertType::kWarning};
-  frc::Alert _feederHighTemperatureAlert{
-    "Feeder Motor High Temperature!", frc::Alert::AlertType::kWarning};
-
   void Periodic() override;
 
   void SimulationPeriodic() override;
@@ -51,7 +45,13 @@ class SubFeeder : public frc2::SubsystemBase {
   frc::DigitalInput _feederFullSensor{dio::FEEDER_FULL_SENSOR};
   frc::DigitalInput _feederEmptySensor{dio::FEEDER_EMPTY_SENSOR};
 
-  frc::Timer _feederHighCurrentTimer;
+  frc::Alert _feederHighTemperatureAlert{
+    "Feeder Motor High Temperature!", frc::Alert::AlertType::kWarning};
+
+  frc::Alert _feederCurrentAlert{"Feeder Motor Overcurrent!", frc::Alert::AlertType::kWarning};
+
+  AlertController::MotorAlertConfig _feederAlertConfig{
+    _feederHighTemperatureAlert, _feederCurrentAlert, 60_degC, 20_A};
 
   // Simulation components
   static constexpr double GEARING = 1.0;
