@@ -6,6 +6,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include "utilities/Logger.h"
 #include "utilities/PoseHandler.h"
+#include <frc/RobotBase.h>
 
 SubTurret::SubTurret() {
     _turretMotorConfig.encoder.PositionConversionFactor(1/GEAR_RATIO);
@@ -85,6 +86,10 @@ void SubTurret::SimulationPeriodic() {
 }
 
 units::degree_t SubTurret::GetTurretAngleCRT() {
+
+    if(frc::RobotBase::IsSimulation()) {
+        return _turretMotor.GetPosition();
+    }
 
     // get encoder values and difference
     double e1deg = getEncoder1Degrees().value();

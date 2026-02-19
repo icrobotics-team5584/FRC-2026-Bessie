@@ -38,8 +38,10 @@ class SubIntake : public frc2::SubsystemBase {
 
  private:
   ICSparkFlex _intakeMotor{canid::INTAKE};
+  ICSparkFlex _intakeFollowerMotor{canid::INTAKE_FOLLOWER};
 
   rev::spark::SparkFlexConfig _intakeMotorConfig;
+  rev::spark::SparkFlexConfig _intakeFollowerMotorConfig;
 
   frc::Alert _intakeHighTemperatureAlert{
     "Intake Motor High Temperature!", frc::Alert::AlertType::kWarning};
@@ -54,6 +56,13 @@ class SubIntake : public frc2::SubsystemBase {
   AlertController::MotorAlertConfig _intakeAlertConfig{_intakeHighTemperatureAlert,
     _intakeCurrentAlert, _intakeRecordedCurrentAlert, _intakeRecordedTemperatureAlert, 60_degC,
     20_A};
+
+  frc::Alert _intakeFollowerHighTemperatureAlert{
+    "Intake Follower Motor High Temperature!", frc::Alert::AlertType::kWarning};
+  frc::Alert _intakeFollowerCurrentAlert{"Intake Follower Motor Overcurrent!", frc::Alert::AlertType::kWarning};
+
+  AlertController::MotorAlertConfig _intakeFollowerAlertConfig{
+    _intakeFollowerHighTemperatureAlert, _intakeFollowerCurrentAlert, 60_degC, 20_A};
 
   // Simulation components
   static constexpr double GEARING = 1.0;
