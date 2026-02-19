@@ -16,6 +16,9 @@ namespace cmd {
     frc2::CommandPtr Hoard_LeftTrench();
     frc2::CommandPtr Hoard_RightBump();
     frc2::CommandPtr Hoard_RightTrench();
+
+    frc2::CommandPtr NeutralAndOutpostScore_RightBump();
+    frc2::CommandPtr NeutralAndOutpostScore_RightTrench();
     
     frc2::CommandPtr OutpostDepotClimb();
 }
