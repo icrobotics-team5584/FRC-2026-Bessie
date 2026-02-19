@@ -30,6 +30,7 @@ class ShotPlanner {
   static bool IsInAllianceZone(frc::Pose2d robotPos);
   static frc::Pose2d ConvertToPose2d(frc::Translation3d translation3d);
   static void SetOverride(Override override);
+  static bool GetOverrideEnabled();
     
    private:
     static inline Override _overrideStatus = Override::NONE;

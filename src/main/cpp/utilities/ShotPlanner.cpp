@@ -108,3 +108,10 @@ void ShotPlanner::SetOverride(Override override){
   _overrideStatus = override;
   Logger::Log("Shot Planner/override status", _overrideStatus);
 }
+
+bool ShotPlanner::GetOverrideEnabled(){
+  if (_overrideStatus != Override::NONE){
+    return true;
+  }
+  return false;
+}
