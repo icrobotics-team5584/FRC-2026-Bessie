@@ -41,11 +41,15 @@ frc2::CommandPtr StationaryShootAt(frc::Translation2d target) {
       SubHood::GetInstance().HoodIsAtTarget();
   };
 
+  auto isPassing = [] {
+    return ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose()).isPassing;
+  };
+
   return frc2::cmd::Parallel(
       cmd::AimAtSpot(target),
-      SubShooter::GetInstance().SpinWithDistance(distanceToTarget, []{return ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose()).isPassing;}),
+      SubShooter::GetInstance().SpinWithDistance(distanceToTarget, isPassing),
       SubHood::GetInstance().SetHoodPositionTargetFromDist(distanceToTarget))
-    .Until( readyToShoot )
+    .Until(readyToShoot)
     .AndThen(frc2::cmd::Parallel(
       SubIntake::GetInstance().IntakeOn(),
       SubFeeder::GetInstance().FeederOn(),
