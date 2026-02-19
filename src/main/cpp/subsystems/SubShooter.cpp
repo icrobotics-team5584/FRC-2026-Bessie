@@ -10,7 +10,7 @@
 #include <ctre/phoenix6/controls/Follower.hpp>
 
 #include "frc/smartdashboard/SmartDashboard.h"
-#include "Utilities/RobotVisualisation.h"
+#include "utilities/RobotVisualisation.h"
 
 SubShooter::SubShooter() {
   // Coast Mode
