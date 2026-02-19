@@ -81,6 +81,10 @@ units::volt_t HoodKrakenIO::GetVoltage() {
     return _motor.GetMotorVoltage().GetValue();
 }
 
+units::celsius_t HoodKrakenIO::GetTemperature() {
+    return _motor.GetDeviceTemp().GetValue();
+}
+
 units::volt_t HoodKrakenIO::CalcSimVoltage() {
     return _simVoltage;
 }

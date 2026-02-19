@@ -107,7 +107,7 @@ frc2::CommandPtr SubHood::SetHoodPositionTargetFromDist(
 }
 
 bool SubHood::HoodIsAtTarget() {
-  return units::math::abs(_hoodMotor.GetPosisitonError()) < 0.5_deg;
+  return units::math::abs(_hoodMotor.GetPositionError()) < 0.5_deg;
 }
 
 frc2::CommandPtr SubHood::MoveHoodUp1Degree() {

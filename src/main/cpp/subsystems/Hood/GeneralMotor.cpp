@@ -53,6 +53,9 @@ units::ampere_t GeneralMotor::GetCurrent() {
 units::volt_t GeneralMotor::GetVoltage() {
     return _io->GetVoltage();
 }
+units::celsius_t GeneralMotor::GetTemperature() {
+    return _io->GetTemperature();
+}
 units::volt_t GeneralMotor::CalcSimVoltage() {
     return _io->CalcSimVoltage();
 }

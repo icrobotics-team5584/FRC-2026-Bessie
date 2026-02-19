@@ -18,6 +18,7 @@ class GeneralMotor {
         units::degree_t GetPositionError();
         units::ampere_t GetCurrent();
         units::volt_t GetVoltage();
+        units::celsius_t GetTemperature();
         units::volt_t CalcSimVoltage();
     
     private:

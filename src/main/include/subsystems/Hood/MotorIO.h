@@ -4,6 +4,7 @@
 #include <units/angle.h>
 #include <units/current.h>
 #include <units/voltage.h>
+#include <units/temperature.h>
 
 #include "utilities/ICSparkMax.h"
 #include "utilities/Logger.h"
@@ -23,5 +24,6 @@ class MotorIO {
         virtual units::degree_t GetPositionError() = 0;
         virtual units::ampere_t GetCurrent() = 0;
         virtual units::volt_t GetVoltage() = 0;
+        virtual units::celsius_t GetTemperature() = 0;
         virtual units::volt_t CalcSimVoltage() = 0;
 };

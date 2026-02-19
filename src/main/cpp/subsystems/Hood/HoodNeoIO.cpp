@@ -70,6 +70,10 @@ units::ampere_t HoodNeoIO::GetCurrent() {
     return _motor.GetStatorCurrent();
 }
 
+units::celsius_t HoodNeoIO::GetTemperature() {
+    return _motor.GetTemperature();
+}
+
 units::volt_t HoodNeoIO::GetVoltage() {
     return _motor.GetMotorVoltage();
 }

@@ -16,6 +16,7 @@ class HoodNeoIO : public MotorIO {
         units::degree_t GetPositionError() override;
         units::ampere_t GetCurrent() override;
         units::volt_t GetVoltage() override;
+        units::celsius_t GetTemperature() override;
         units::volt_t CalcSimVoltage() override;
     private:        
         ICSparkMax _motor;
