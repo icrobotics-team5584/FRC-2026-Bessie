@@ -147,6 +147,7 @@ units::degree_t SubTurret::GetTurretAngleAtTime(units::second_t time) {
 
 frc2::CommandPtr SubTurret::SetTurretTargetAngle(std::function<units::degree_t()> angle, std::function<units::degrees_per_second_t()> angVelTarget){
     return Run([this, angle, angVelTarget] {
+        turretTarget = angle();
         units::degrees_per_second_t nextVel = angVelTarget(); 
         // we want the turret to negate the robot rotation, hence the negative
 
