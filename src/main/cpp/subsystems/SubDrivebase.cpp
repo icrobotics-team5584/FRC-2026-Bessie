@@ -104,14 +104,6 @@ void SubDrivebase::LogDrivebaseStates() {
   _backRight.SendSensorsToDash();
 }
 
-// frc::ChassisSpeeds SubDrivebase::GetRobotRelativeSpeeds() {
-//   auto fl = _frontLeft.GetState();
-//   auto fr = _frontRight.GetState();
-//   auto bl = _backLeft.GetState();
-//   auto br = _backRight.GetState();
-//   return _kinematics.ToChassisSpeeds(fl, fr, bl, br);
-// }
-
 wpi::array<frc::SwerveModulePosition, 4U> SubDrivebase::GetSwerveStates() {
   return {
     _frontLeft.GetPosition(),

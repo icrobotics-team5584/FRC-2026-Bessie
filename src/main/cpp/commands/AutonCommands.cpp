@@ -45,12 +45,10 @@ namespace cmd {
                 SubDrivebase::GetInstance().SetPose(frc::Pose2d{5.8_m, 5.8_m, SubDrivebase::GetInstance().GetGyroAngle()});
             }), //reset position after traversing the bump
 
-            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.5_m, 5.5_m, -90_deg}; }, 1.0, 5_cm, 5_deg), //TEMP drive to intake pos
-            //REPLACE ABOVE WITH: SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_LEFT; }, 1.0),
+            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_LEFT; }, 1.0),
  
-            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.5_m, 3.5_m, -90_deg}; }, 0.5, 20_cm, 5_deg) //TEMP drive to end intake pos
+            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_END_LEFT; }, 0.5, 20_cm) //TEMP drive to end intake pos
                 .DeadlineFor(SubIntake::GetInstance().IntakeOn()),
-            //REPLACE ABOVE WITH: SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_END_LEFT; }, 0.5, 20_cm),
 
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.9_m, 5.3_m, 180_deg}; }, 1.0, 20_cm, 5_deg)
                 .DeadlineFor(SubIntake::GetInstance().IntakeOn()), //return to bump (continue intaking)
@@ -69,7 +67,6 @@ namespace cmd {
         ));
     }
 
-    //DO NOT RUN UNTIL WE HAVE FULL HALF FIELD
     frc2::CommandPtr NeutralScoreAndClimb_LeftTrench() {
         return frc2::cmd::Sequence(
             // STARTING POSITION: START_TRENCH_LEFT (X 3.58m, Y 7.50m, heading 0 degrees)
@@ -98,7 +95,6 @@ namespace cmd {
         ));
     }
 
-    //DO NOT RUN UNTIL WE HAVE FULL HALF FIELD
     frc2::CommandPtr NeutralScoreAndClimb_RightBump() {
         return frc2::cmd::Sequence(
             // STARTING POSITION: START_BUMP_RIGHT (X 3.58m, Y 2.27m, heading 0 degrees)
@@ -132,7 +128,6 @@ namespace cmd {
         ));
     }
 
-    //DO NOT RUN UNTIL WE HAVE FULL HALF FIELD
     frc2::CommandPtr NeutralScoreAndClimb_RightTrench() {
         return frc2::cmd::Sequence(
             // STARTING POSITION: START_TRENCH_RIGHT (X 3.58m, Y 0.57m, heading 0 degrees)
@@ -174,12 +169,10 @@ namespace cmd {
                 SubDrivebase::GetInstance().SetPose(frc::Pose2d{5.8_m, 5.8_m, SubDrivebase::GetInstance().GetGyroAngle()});
             }), //reset position after traversing the bump
 
-            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.5_m, 5.5_m, -90_deg}; }, 1.0, 5_cm, 5_deg), //TEMP drive to intake pos
-            //REPLACE ABOVE WITH: SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_LEFT; }, 1.0),
+            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_LEFT; }, 1.0),
  
-            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.5_m, 2.0_m, -90_deg}; }, 0.5, 20_cm, 5_deg) //TEMP drive to end intake pos
+            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.8_m, 1.0_m, 270_deg}; }, 0.5, 20_cm, 5_deg) //TEMP drive to end intake pos
                 .AlongWith(cmd::ShootOnTheMove())
-            //REPLACE ABOVE WITH: SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.8_m, 1.0_m, 270_deg}; }, 0.5, 20_cm, 5_deg),
         );
     }
 
