@@ -21,13 +21,20 @@
 namespace cmd {  
    
 frc2::CommandPtr AimAtFieldRelative(std::function<units::degree_t()> target) {
-  return SubTurret::GetInstance().SetTurretTargetAngle([target] {     
-    auto robotPose = PoseHandler::GetInstance().GetPose();
-    Logger::Log("Turret/AimAtFieldRelative/robotPose/Rotation", robotPose.Rotation().Degrees());
-    units::degree_t targetAngle = target() - robotPose.Rotation().Degrees();
-    return targetAngle;}, [target] {
-      Logger::Log("Turret/AimAtFieldRelative/desired target velocity (target - past target)", (target() - SubTurret::GetInstance().GetTurretTargetAngle()) / 20_ms);
-      return (target() - SubTurret::GetInstance().GetTurretTargetAngle()) / 20_ms - SubDrivebase::GetInstance().GetDesiredAngularVelocity(); 
+  return SubTurret::GetInstance().SetTurretTargetAngle(
+    [target] {
+      auto robotPose = PoseHandler::GetInstance().GetPose();
+      Logger::Log("Turret/AimAtFieldRelative/robotPose/Rotation", robotPose.Rotation().Degrees());
+      units::degree_t targetAngle = target() - robotPose.Rotation().Degrees();
+      return targetAngle;
+    },
+    [target] {
+      Logger::Log("Turret/AimAtFieldRelative/desired target velocity (new target - current target)",
+        (target() - SubTurret::GetInstance().GetTurretTargetAngle()) / 20_ms);
+      Logger::Log("Turret/AimAtFieldRelative/New Turret Target Angle", target());
+      Logger::Log("Turret/AimAtFieldRelative/Current Turret Target Angle", SubTurret::GetInstance().GetTurretTargetAngle());
+      return (target() - SubTurret::GetInstance().GetTurretTargetAngle()) / 20_ms -
+             SubDrivebase::GetInstance().GetDesiredAngularVelocity();
     });
 }
 
