@@ -12,7 +12,7 @@ class GeneralMotor {
         void SetBrakeMode(bool isBreakModeOn);
         void Log(std::string keyName);
         void StopMotor();
-        void IterateSim(units::revolutions_per_minute_t velocity, std::optional<units::turn_t> position);
+        void IterateSim(units::revolutions_per_minute_t velocity, units::turn_t position);
         units::degree_t GetPosition();
         units::degree_t GetPositionTarget();
         units::degree_t GetPositionError();

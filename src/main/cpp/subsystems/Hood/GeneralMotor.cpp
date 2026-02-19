@@ -35,7 +35,7 @@ void GeneralMotor::Log(std::string keyName) {
 void GeneralMotor::StopMotor() {
     _io->StopMotor();
 }
-void GeneralMotor::IterateSim(units::revolutions_per_minute_t velocity, std::optional<units::turn_t> position) {
+void GeneralMotor::IterateSim(units::revolutions_per_minute_t velocity, units::turn_t position) {
     _io->IterateSim(velocity, position);
 }
 units::degree_t GeneralMotor::GetPosition() {
