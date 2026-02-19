@@ -4,6 +4,7 @@
 
 #include "subsystems/SubTurret.h"
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/RobotBase.h>
 #include "utilities/Logger.h"
 #include "utilities/PoseHandler.h"
 #include "utilities/RobotVisualisation.h"
@@ -44,7 +45,7 @@ void SubTurret::Periodic() {
         Logger::Log("Turret/reset/motorPosition", motorPosition);
         Logger::Log("Turret/reset/crtPosition", crtPosition);
 
-        bool CRTSameAsMotor = (units::math::abs(motorPosition - crtPosition) < 0.5_deg);
+        bool CRTSameAsMotor = (units::math::abs(motorPosition - crtPosition) < 0.5_deg || frc::RobotBase::IsSimulation());
         Logger::Log("Turret/reset/CRTSameAsMotor", CRTSameAsMotor);
 
         if(CRTSameAsMotor){

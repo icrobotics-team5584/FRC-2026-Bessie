@@ -79,7 +79,7 @@ class SubTurret : public frc2::SubsystemBase {
   units::degree_t getEncoder2Degrees();
 
   static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::NEO();
-  static constexpr units::kilogram_square_meter_t MOI = 0.0001_kg_sq_m;
+  static constexpr units::kilogram_square_meter_t MOI = 1_kg_sq_m;
 
   frc::SimpleMotorFeedforward<units::turn> _robotRotVelFF{kS, kV, kA};
 

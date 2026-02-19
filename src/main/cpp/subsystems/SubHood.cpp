@@ -84,7 +84,7 @@ frc2::CommandPtr SubHood::ZeroHood() {
 
 bool SubHood::HoodCurrentCheck() {
   _hasZeroed = false;
-  if (units::math::abs(GetHoodMotorCurrent()) > zeroingCurrentLimit) {
+  if (units::math::abs(GetHoodMotorCurrent()) > zeroingCurrentLimit || frc::RobotBase::IsSimulation()) {
     _hasZeroed = true;
     return true;
   }

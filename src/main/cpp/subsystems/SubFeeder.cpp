@@ -5,7 +5,8 @@
 #include "subsystems/SubFeeder.h"
 
 #include <units/current.h>
-#include <utilities/Logger.h>
+#include "utilities/Logger.h"
+#include "utilities/RobotVisualisation.h"
 
 SubFeeder::SubFeeder() {
   _feederMotorConfig.SmartCurrentLimit(60);
@@ -43,6 +44,9 @@ void SubFeeder::Periodic() {
   units::ampere_t feederCurrent = _feederMotor.GetStatorCurrent();
   AlertController::UpdateTemperatureAlert(_feederAlertConfig, feederTemperature);
   AlertController::UpdateCurrentAlert(_feederAlertConfig, feederCurrent);
+
+  RobotVisualisation::GetInstance()._feederMechTopWheel.SetAngle(_feederMotor.GetPosition());
+  RobotVisualisation::GetInstance()._feederMechBottomWheel.SetAngle(_feederMotor.GetPosition());
 
   Logger::Log("Feeder/Loop Time", (frc::GetTime() - loopStart));
 }

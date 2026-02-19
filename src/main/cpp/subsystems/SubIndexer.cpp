@@ -4,9 +4,10 @@
 
 #include "subsystems/SubIndexer.h"
 
+#include "utilities/RobotVisualisation.h"
+
 #include <units/current.h>
 #include <utilities/Logger.h>
-#include "utilities/RobotVisualisation.h"
 
 SubIndexer::SubIndexer() {
   _indexerMotorConfig.SmartCurrentLimit(60);
@@ -60,7 +61,7 @@ void SubIndexer::Periodic() {
 
   RobotVisualisation::GetInstance()._indexerMechCircle.SetAngle(_indexerMotor.GetPosition());
   RobotVisualisation::GetInstance()._outdexerMechCircle.SetAngle(_outdexerMotor.GetPosition());
-  
+
   Logger::Log("Indexer/Loop Time", (frc::GetTime() - loopStart));
 }
 
@@ -68,6 +69,8 @@ void SubIndexer::SimulationPeriodic() {
   _sim.SetInputVoltage(_indexerMotor.CalcSimVoltage());
   _sim.Update(20_ms);
   _indexerMotor.IterateSim(_sim.GetAngularVelocity());
+  auto torque = MOTOR_MODEL.Torque(_outdexerMotor.GetStatorCurrent());
+  _outdexerMotor.IterateSim(MOTOR_MODEL.Speed(torque, _outdexerMotor.CalcSimVoltage()));
 }
 
 frc2::CommandPtr SubIndexer::Index() {

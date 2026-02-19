@@ -65,7 +65,7 @@ class SubHood : public frc2::SubsystemBase {
 
   static constexpr units::degree_t UPPER_LIMIT = 37.5_deg;
   static constexpr units::degree_t LOWER_LIMIT = 16.5_deg;
-  static constexpr bool SIMULATE_GRAVITY = true;
+  static constexpr bool SIMULATE_GRAVITY = false;
   static constexpr units::degree_t STARTING_ANGLE = 13_deg;
   static constexpr units::degree_t STOW_ANGLE = 12.5_deg;
   static constexpr double GEAR_RATIO = (56.0 / 8.0) * (370.0 / 34.0);
@@ -88,7 +88,7 @@ class SubHood : public frc2::SubsystemBase {
   wpi::interpolating_map<units::meter_t, units::degree_t> _hoodPitchTable;
 
   static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::NEO550();
-  static constexpr units::kilogram_square_meter_t MOI = 0.0001_kg_sq_m;
+  static constexpr units::kilogram_square_meter_t MOI = 0.1_kg_sq_m;
 
   // Sim
   frc::LinearSystem<2, 1, 2> _hoodSystem =
