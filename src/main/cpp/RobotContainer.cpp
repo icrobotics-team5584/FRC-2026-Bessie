@@ -44,8 +44,13 @@ void RobotContainer::ConfigureBindings() {
   //Triggers
   _driverController.LeftTrigger().WhileTrue(cmd::IntakeSequence());
   _driverController.RightTrigger().WhileTrue(cmd::ShootOnTheMove());
-  _driverController.RightTrigger().OnFalse(SubFeeder::GetInstance().FeederOff());
-
+  _driverController.RightTrigger().OnFalse(frc2::cmd::Parallel(
+    SubFeeder::GetInstance().FeederOff(),
+    frc2::cmd::RunOnce([] {
+      if(SubShooter::GetInstance().PreservingFlywheelSpeed() == false) {
+        SubShooter::GetInstance().StopShooter();
+      }
+  })));
   //Bumpers
   _driverController.LeftBumper().ToggleOnTrue(SubDeploy::GetInstance().ToggleDeploy());
   _driverController.RightBumper().WhileTrue(SubDrivebase::GetInstance().LockWheelsInXShape());
