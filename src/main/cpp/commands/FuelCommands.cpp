@@ -25,6 +25,12 @@ frc2::CommandPtr IntakeSequence() {
     .AlongWith(SubIntake::GetInstance().IntakeOn());
 }
 
+frc2::CommandPtr OuttakeSequence() {
+  return SubDeploy::GetInstance()
+    .DeployIntake()
+    .AlongWith(SubIntake::GetInstance().ReverseIntake());
+}
+
 frc2::CommandPtr StationaryShootAt(frc::Translation2d target) {
   auto distanceToTarget = [target] {
     auto curPose = PoseHandler::GetInstance().GetPose();
@@ -75,6 +81,15 @@ frc2::CommandPtr AimOnTheMove() {
 
 frc2::CommandPtr ShootOnTheMove(){
   return AimOnTheMove().AlongWith(ShootWhenReady()).AlongWith(SubIntake::GetInstance().IntakeOn());
+}
+
+frc2::CommandPtr EjectFuel() {
+  return SubShooter::GetInstance().SpinShooterSlowly()
+  .AlongWith(SubIntake::GetInstance().ReverseIntake())
+  .AlongWith(SubIndexer::GetInstance().Index())
+  .AlongWith(SubFeeder::GetInstance().Feed())
+  .AlongWith(SubTurret::GetInstance().SetTurretTargetAngle([] { return 180_deg; }, []{return 0_deg_per_s;})) // point turret out of robot
+  .AlongWith(SubHood::GetInstance().HoodToEjectAngle()); 
 }
 
 frc2::CommandPtr DisableAllOverrides() {

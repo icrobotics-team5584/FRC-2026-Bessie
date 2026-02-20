@@ -32,6 +32,10 @@ frc2::CommandPtr SubIntake::IntakeOff() {
   return RunOnce([this] { _intakeMotor.Set(0); });
 }
 
+frc2::CommandPtr SubIntake::ReverseIntake() {
+  return StartEnd([this] { _intakeMotor.Set(-1.0); }, [this] { _intakeMotor.Set(0); });
+}
+
 // This method will be called once per scheduler run
 void SubIntake::Periodic() {
   auto loopStart = frc::GetTime();
