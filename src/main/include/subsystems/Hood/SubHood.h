@@ -5,33 +5,19 @@
 #pragma once
 
 #include "utilities/AlertController.h"
-#include "utilities/ICSparkMax.h"
 #include "utilities/MechanismCircle2d.h"
 
-#include <frc/Alert.h>
 #include <frc/simulation/DCMotorSim.h>
 #include <frc/simulation/SingleJointedArmSim.h>
-#include <frc/smartdashboard/Mechanism2d.h>
-#include <frc/smartdashboard/MechanismLigament2d.h>
-#include <frc/system/plant/DCMotor.h>
 #include <frc/system/plant/LinearSystemId.h>
-#include <frc2/command/CommandPtr.h>
 #include <frc2/command/Commands.h>
 #include <frc2/command/SubsystemBase.h>
 
-#include <units/angle.h>
 #include <wpi/interpolating_map.h>
 
-#include <frc/simulation/DCMotorSim.h>
-#include <frc/simulation/SingleJointedArmSim.h>
-#include <frc/system/plant/DCMotor.h>
-#include <frc/system/plant/LinearSystemId.h>
-#include <frc/smartdashboard/Mechanism2d.h>
-#include <frc/smartdashboard/MechanismLigament2d.h>
-#include "utilities/MechanismCircle2d.h"
-#include "HoodMotorIO.h"
-#include "HoodMotorConfig.h"
 #include "Constants.h"
+#include "HoodMotorConfig.h"
+#include "HoodMotorIO.h"
 
 class SubHood : public frc2::SubsystemBase {
  public:
