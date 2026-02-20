@@ -54,9 +54,12 @@ void SubDrivebase::LogDrivebaseStates() {
   Logger::Log("Drivebase/Coast Button", CheckCoastButton().Get());
 
   Logger::Log("Drivebase/velocity", GetVelocity());
-  Logger::Log("Drivebase/velocity/desired field relative vx", GetChassisSpeeds().vx);
-  Logger::Log("Drivebase/velocity/desired field relative vy", GetChassisSpeeds().vy);
+  Logger::Log("Drivebase/velocity/desired field relative vx", GetDesiredChassisSpeeds().vx);
+  Logger::Log("Drivebase/velocity/desired field relative vy", GetDesiredChassisSpeeds().vy);
   Logger::Log("Drivebase/velocity/desired angular velocity", GetDesiredAngularVelocity());
+
+  Logger::Log("Drivebase/velocity/field relative vx", GetChassisSpeeds().vx);
+  Logger::Log("Drivebase/velocity/field relative vy", GetChassisSpeeds().vy);
 
   Logger::Log("Drivebase/Internal Encoder Swerve States",wpi::array{
     _frontLeft.GetState(),
@@ -250,22 +253,22 @@ units::meters_per_second_t SubDrivebase::GetVelocity() {
 }
 
 frc::ChassisSpeeds SubDrivebase::GetChassisSpeeds(bool fieldRelative) {
-  auto speeds = _kinematics.ToChassisSpeeds(_frontLeft.GetState(), _frontRight.GetState(),
-                                            _backLeft.GetState(), _backRight.GetState());
-  if(fieldRelative) {
-  speeds = frc::ChassisSpeeds::FromRobotRelativeSpeeds(speeds, GetGyroAngle(false).Degrees());
+  auto speeds = _kinematics.ToChassisSpeeds(
+    _frontLeft.GetState(), _frontRight.GetState(), _backLeft.GetState(), _backRight.GetState());
+  if (fieldRelative) {
+    speeds = frc::ChassisSpeeds::FromRobotRelativeSpeeds(speeds, GetGyroAngle(false).Degrees());
   }
-  
+
   return speeds;
 }
 
 frc::ChassisSpeeds SubDrivebase::GetDesiredChassisSpeeds(bool fieldRelative) {
-  auto speeds = _kinematics.ToChassisSpeeds(_frontLeft.GetDesiredState(), _frontRight.GetDesiredState(),
-                                            _backLeft.GetDesiredState(), _backRight.GetDesiredState());
-  if(fieldRelative) {
-  speeds = frc::ChassisSpeeds::FromRobotRelativeSpeeds(speeds, GetGyroAngle(false).Degrees());
+  auto speeds = _kinematics.ToChassisSpeeds(_frontLeft.GetDesiredState(),
+    _frontRight.GetDesiredState(), _backLeft.GetDesiredState(), _backRight.GetDesiredState());
+  if (fieldRelative) {
+    speeds = frc::ChassisSpeeds::FromRobotRelativeSpeeds(speeds, GetGyroAngle(false).Degrees());
   }
-  
+
   return speeds;
 }
 
