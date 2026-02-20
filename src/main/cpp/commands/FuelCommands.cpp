@@ -9,6 +9,7 @@
 #include "subsystems/SubTurret.h"
 #include "utilities/Logger.h"
 #include "utilities/ShotPlanner.h"
+#include "utilities/ShiftHandler.h"
 #include "utilities/FieldConstants.h"
 #include "utilities/ICgeometry.h"
 
@@ -22,6 +23,12 @@ frc2::CommandPtr IntakeSequence() {
   return SubDeploy::GetInstance()
     .DeployIntake()
     .AlongWith(SubIntake::GetInstance().IntakeOn());
+}
+
+frc2::CommandPtr OuttakeSequence() {
+  return SubDeploy::GetInstance()
+    .DeployIntake()
+    .AlongWith(SubIntake::GetInstance().ReverseIntake());
 }
 
 frc2::CommandPtr StationaryShootAt(frc::Translation2d target) {
@@ -76,5 +83,21 @@ frc2::CommandPtr AimOnTheMove() {
 
 frc2::CommandPtr ShootOnTheMove(){
   return AimOnTheMove().AlongWith(ShootWhenReady()).AlongWith(SubIntake::GetInstance().IntakeOn());
+}
+
+frc2::CommandPtr EjectFuel() {
+  return SubShooter::GetInstance().SpinShooterSlowly()
+  .AlongWith(SubIntake::GetInstance().ReverseIntake())
+  .AlongWith(SubIndexer::GetInstance().Index())
+  .AlongWith(SubFeeder::GetInstance().Feed())
+  .AlongWith(SubTurret::GetInstance().SetTurretTargetAngle([] { return 180_deg; }, []{return 0_deg_per_s;})) // point turret out of robot
+  .AlongWith(SubHood::GetInstance().HoodToEjectAngle()); 
+}
+
+frc2::CommandPtr DisableAllOverrides() {
+  return frc2::cmd::RunOnce([] {
+    ShotPlanner::SetOverride(ShotPlanner::Override::NONE);
+    ShiftHandler::GetInstance().SetOverrideActive(false);
+  });
 }
 }  // namespace cmd

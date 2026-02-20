@@ -125,3 +125,7 @@ frc2::CommandPtr SubHood::MoveHoodUp1Degree() {
 frc2::CommandPtr SubHood::MoveHoodDown1Degree() {
   return SetHoodPositionTarget([this] { return _hoodMotor.GetPositionTarget() - 1_deg; });
 }
+
+frc2::CommandPtr SubHood::HoodToEjectAngle() {
+    return SubHood::GetInstance().SetHoodPositionTarget([] {return LOWER_LIMIT + 5_deg;});
+}
