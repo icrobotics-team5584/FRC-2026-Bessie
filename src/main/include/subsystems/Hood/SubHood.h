@@ -51,7 +51,6 @@ class SubHood : public frc2::SubsystemBase {
   void Periodic() override;
 
  private:
-
   units::ampere_t zeroingCurrentLimit = 22_A;
 
   static constexpr units::degree_t UPPER_LIMIT = 37.5_deg;
@@ -75,17 +74,18 @@ class SubHood : public frc2::SubsystemBase {
     _hoodhighTemperatureAlert, _hoodCurrentAlert, 60_degC, 20_A};
 
   wpi::interpolating_map<units::meter_t, units::degree_t> _hoodPitchTable;
-  
-  /* The (1) argument in KrakenX44FOC exists because the compiler was 
-   * complaining about no default constructor exisitng even though (1) is the 
+
+  /* The (1) argument in KrakenX44FOC exists because the compiler was
+   * complaining about no default constructor exisitng even though (1) is the
    * default argument */
   static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::KrakenX44FOC(1);
   static constexpr units::kilogram_square_meter_t MOI = 0.0001_kg_sq_m;
 
-  //Sim
-  frc::LinearSystem<2,1,2> _hoodSystem = frc::LinearSystemId::SingleJointedArmSystem(MOTOR_MODEL, MOI, KrakenMotorConfig::GEAR_RATIO);
-  frc::sim::SingleJointedArmSim _hoodSim{_hoodSystem, MOTOR_MODEL, KrakenMotorConfig::GEAR_RATIO, ARM_LENGTH, 
-    LOWER_LIMIT, UPPER_LIMIT, SIMULATE_GRAVITY, STARTING_ANGLE};
+  // Sim
+  frc::LinearSystem<2, 1, 2> _hoodSystem =
+    frc::LinearSystemId::SingleJointedArmSystem(MOTOR_MODEL, MOI, KrakenMotorConfig::GEAR_RATIO);
+  frc::sim::SingleJointedArmSim _hoodSim{_hoodSystem, MOTOR_MODEL, KrakenMotorConfig::GEAR_RATIO,
+    ARM_LENGTH, LOWER_LIMIT, UPPER_LIMIT, SIMULATE_GRAVITY, STARTING_ANGLE};
 
   // mechanism2d
   frc::Mechanism2d _hoodMech{0.25, 0.25};
