@@ -130,6 +130,10 @@ frc2::CommandPtr SubShooter::StopShooter() {
     [this] { _shooterMotor1.SetControl(_flywheelTargetVelocity.WithVelocity(0_tps)); });
 }
 
+frc2::CommandPtr SubShooter::SpinShooterSlowly() {
+    return Run([this] {_shooterMotor1.SetControl(_flywheelTargetVelocity.WithVelocity(10_tps));});
+}
+
 bool SubShooter::IsAtSpeed() {
   return units::math::abs(
            _shooterMotor1.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 1.0_tps &&
