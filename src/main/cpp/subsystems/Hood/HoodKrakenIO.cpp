@@ -10,6 +10,7 @@ void HoodKrakenIO::ConfigMotor() {
     config.Slot0.kP = KrakenMotorConfig::P;
     config.Slot0.kI = KrakenMotorConfig::I;
     config.Slot0.kD = KrakenMotorConfig::D;
+    config.Slot0.kS = KrakenMotorConfig::S;
     config.MotorOutput.Inverted = KrakenMotorConfig::INVERTED;
     config.MotorOutput.NeutralMode = KrakenMotorConfig::IDLE_MODE;
 
