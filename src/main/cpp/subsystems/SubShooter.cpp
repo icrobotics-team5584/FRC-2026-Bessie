@@ -41,20 +41,20 @@ SubShooter::SubShooter() {
   _shooterMotor1.GetConfigurator().Apply(_shooterMotorConfig);
   _shooterMotor2.GetConfigurator().Apply(_shooterMotorConfig);
 
-    _shooterMotor1.GetClosedLoopReference().SetUpdateFrequency(100_Hz);
-    _shooterMotor1.GetStatorCurrent().SetUpdateFrequency(100_Hz);
+  _shooterMotor1.GetClosedLoopReference().SetUpdateFrequency(100_Hz);
+  _shooterMotor1.GetStatorCurrent().SetUpdateFrequency(100_Hz);
 
-    _shooterMotor2.GetClosedLoopReference().SetUpdateFrequency(100_Hz);
-    _shooterMotor2.GetStatorCurrent().SetUpdateFrequency(100_Hz);
+  _shooterMotor2.GetClosedLoopReference().SetUpdateFrequency(100_Hz);
+  _shooterMotor2.GetStatorCurrent().SetUpdateFrequency(100_Hz);
 
-    _timeOfFlightTable.insert(1.8575_m, 0.8_s);
-    _timeOfFlightTable.insert(2.3575_m, 0.5_s);
-    _timeOfFlightTable.insert(2.8575_m, 0.93_s);
-    _timeOfFlightTable.insert(3.3575_m, 1.1_s);
-    _timeOfFlightTable.insert(3.8575_m, 1.18_s);
-    _timeOfFlightTable.insert(4.3575_m, 1.18_s);
-    _timeOfFlightTable.insert(4.6875_m, 1.28_s);
-    _timeOfFlightTable.insert(5.1875_m, 1.28_s);
+  _timeOfFlightTable.insert(1.8575_m, 0.8_s);
+  _timeOfFlightTable.insert(2.3575_m, 0.5_s);
+  _timeOfFlightTable.insert(2.8575_m, 0.93_s);
+  _timeOfFlightTable.insert(3.3575_m, 1.1_s);
+  _timeOfFlightTable.insert(3.8575_m, 1.18_s);
+  _timeOfFlightTable.insert(4.3575_m, 1.18_s);
+  _timeOfFlightTable.insert(4.6875_m, 1.28_s);
+  _timeOfFlightTable.insert(5.1875_m, 1.28_s);
 
   frc::SmartDashboard::PutData("Shooter/mech2dDisplay", &_shooterMech);
 
@@ -139,8 +139,8 @@ frc2::CommandPtr SubShooter::SpinShooterSlowly() {
 }
 
 bool SubShooter::IsAtSpeed() {
-    return units::math::abs(_shooterMotor1.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 4.0_tps &&
-    units::math::abs(_shooterMotor2.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 4.0_tps;
+  return units::math::abs(_shooterMotor1.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 4.0_tps &&
+  units::math::abs(_shooterMotor2.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 4.0_tps;
 }
 
 frc2::CommandPtr SubShooter::SpinWithDistance(
