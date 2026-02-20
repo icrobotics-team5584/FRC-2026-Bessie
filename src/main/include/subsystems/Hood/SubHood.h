@@ -95,8 +95,11 @@ class SubHood : public frc2::SubsystemBase {
     _hoodhighTemperatureAlert, _hoodCurrentAlert, 60_degC, 20_A};
 
   wpi::interpolating_map<units::meter_t, units::degree_t> _hoodPitchTable;
-
-  static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::KrakenX44FOC;
+  
+  /* The (1) argument in KrakenX44FOC exists because the compiler was 
+   * complaining about no default constructor exisitng even though (1) is the 
+   * default argument */
+  static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::KrakenX44FOC(1);
   static constexpr units::kilogram_square_meter_t MOI = 0.0001_kg_sq_m;
 
   //Sim
