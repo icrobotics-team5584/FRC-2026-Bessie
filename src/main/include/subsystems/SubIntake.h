@@ -29,6 +29,7 @@ class SubIntake : public frc2::SubsystemBase {
 
   frc2::CommandPtr IntakeOn();
   frc2::CommandPtr IntakeOff();
+  frc2::CommandPtr ReverseIntake();
 
   /**
    * Will be called periodically whenever the CommandScheduler runs.

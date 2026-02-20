@@ -72,9 +72,9 @@ frc2::CommandPtr SubHood::SetHoodPositionTarget(std::function<units::degree_t()>
 }
 
 frc2::CommandPtr SubHood::ZeroHood() {
-  return RunOnce([this] { _zeroing = true; })
+    return RunOnce([this] { _zeroing = true; })
     .AndThen(ManualHoodDown())
-    .Until([this] { return HoodCurrentCheck(); })
+    .Until([this] { return (HoodCurrentCheck() || frc::RobotBase::IsSimulation()); })
     .AndThen([this] { _hoodMotor->SetPosition(LOWER_LIMIT); })
     .FinallyDo([this] {
       _hoodMotor->StopMotor();
@@ -125,4 +125,8 @@ frc2::CommandPtr SubHood::MoveHoodUp1Degree() {
 
 frc2::CommandPtr SubHood::MoveHoodDown1Degree() {
   return SetHoodPositionTarget([this] { return _hoodMotor->GetPositionTarget() - 1_deg; });
+}
+
+frc2::CommandPtr SubHood::HoodToEjectAngle() {
+    return SubHood::GetInstance().SetHoodPositionTarget([] {return LOWER_LIMIT + 5_deg;});
 }
