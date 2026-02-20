@@ -9,6 +9,7 @@
 #include "subsystems/SubTurret.h"
 #include "utilities/Logger.h"
 #include "utilities/ShotPlanner.h"
+#include "utilities/ShiftHandler.h"
 #include "utilities/FieldConstants.h"
 #include "utilities/ICgeometry.h"
 
@@ -74,5 +75,12 @@ frc2::CommandPtr AimOnTheMove() {
 
 frc2::CommandPtr ShootOnTheMove(){
   return AimOnTheMove().AlongWith(ShootWhenReady()).AlongWith(SubIntake::GetInstance().IntakeOn());
+}
+
+frc2::CommandPtr DisableAllOverrides(){
+  return frc2::cmd::Parallel(
+    frc2::cmd::RunOnce([]{return ShotPlanner::SetOverride(ShotPlanner::Override::NONE);}),
+    frc2::cmd::RunOnce([]{return ShiftHandler::GetInstance().SetOverrideActive(false);})
+  );
 }
 }  // namespace cmd

@@ -62,9 +62,10 @@ void RobotContainer::ConfigureBindings() {
     SubDrivebase::GetInstance().SetPose(frc::Pose2d{0_m, 0_m, 0_deg});
   }));
 
-  /* Holds */
+  /* Operator */
   _operatorController.X().OnTrue(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); }));
   _operatorController.X().OnFalse(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(false); }));
+  _operatorController.Y().OnTrue(cmd::DisableAllOverrides());
 
   //POVs
   _driverController.POVDown().OnTrue(
