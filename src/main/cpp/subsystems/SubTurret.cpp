@@ -6,6 +6,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include "utilities/Logger.h"
 #include "utilities/PoseHandler.h"
+#include <frc/RobotBase.h>
 
 SubTurret::SubTurret() {
     _turretMotorConfig.encoder.PositionConversionFactor(1/GEAR_RATIO);
@@ -31,6 +32,12 @@ SubTurret::SubTurret() {
 
 // This method will be called once per scheduler run
 void SubTurret::Periodic() {
+    auto loopStart = frc::GetTime();
+    units::celsius_t turretTemperature = _turretMotor.GetTemperature();
+    units::ampere_t turretCurrent = _turretMotor.GetStatorCurrent();
+
+    AlertController::UpdateTemperatureAlert(_turretAlertConfig, turretTemperature);
+    AlertController::UpdateCurrentAlert(_turretAlertConfig, turretCurrent);
 
     if(_hasZeroed == false && _turretEncoder1.IsConnected() && _turretEncoder2.IsConnected()) {
         units::degree_t motorPosition = _turretMotor.GetPosition();
@@ -68,6 +75,7 @@ void SubTurret::Periodic() {
     Logger::Log("Turret/Encoder/Encoder1Frequency", _turretEncoder1.GetFrequency());
     Logger::Log("Turret/Encoder/Encoder2Frequency", _turretEncoder2.GetFrequency());
 
+    Logger::Log("Turret/Loop Time", (frc::GetTime() - loopStart));
     _turretPos.AddSample(frc::Timer::GetFPGATimestamp(), CalcOptimisedTurretAngle(_turretMotor.GetPosition()));
 }
 
@@ -78,6 +86,10 @@ void SubTurret::SimulationPeriodic() {
 }
 
 units::degree_t SubTurret::GetTurretAngleCRT() {
+
+    if(frc::RobotBase::IsSimulation()) {
+        return _turretMotor.GetPosition();
+    }
 
     // get encoder values and difference
     double e1deg = getEncoder1Degrees().value();
