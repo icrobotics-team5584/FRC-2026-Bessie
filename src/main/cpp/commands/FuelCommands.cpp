@@ -9,6 +9,7 @@
 #include "subsystems/SubTurret.h"
 #include "utilities/Logger.h"
 #include "utilities/ShotPlanner.h"
+#include "utilities/ShiftHandler.h"
 #include "utilities/FieldConstants.h"
 #include "utilities/ICgeometry.h"
 
@@ -91,4 +92,10 @@ frc2::CommandPtr EjectFuel() {
   .AlongWith(SubHood::GetInstance().HoodToEjectAngle()); 
 }
 
+frc2::CommandPtr DisableAllOverrides() {
+  return frc2::cmd::RunOnce([] {
+    ShotPlanner::SetOverride(ShotPlanner::Override::NONE);
+    ShiftHandler::GetInstance().SetOverrideActive(false);
+  });
+}
 }  // namespace cmd

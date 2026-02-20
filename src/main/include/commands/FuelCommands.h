@@ -13,4 +13,5 @@ frc2::CommandPtr AimOnTheMove();
 frc2::CommandPtr ShootOnTheMove();
 
 frc2::CommandPtr EjectFuel();
+frc2::CommandPtr DisableAllOverrides();
 }
