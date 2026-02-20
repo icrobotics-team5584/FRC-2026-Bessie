@@ -29,7 +29,7 @@
 #include <frc/smartdashboard/Mechanism2d.h>
 #include <frc/smartdashboard/MechanismLigament2d.h>
 #include "utilities/MechanismCircle2d.h"
-#include "GeneralMotor.h"
+#include "HoodMotorIO.h"
 #include "HoodMotorConfig.h"
 #include "Constants.h"
 
@@ -83,7 +83,7 @@ class SubHood : public frc2::SubsystemBase {
   bool _zeroing = false;
   bool _hasZeroed = false;
 
-  GeneralMotor _hoodMotor{canid::HOOD_MOTOR};
+  std::unique_ptr<HoodMotorIO> _hoodMotor;
   //ICSparkMax _hoodMotor{canid::HOOD_MOTOR};
   //rev::spark::SparkBaseConfig _hoodMotorConfig;
 

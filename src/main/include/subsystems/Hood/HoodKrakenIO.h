@@ -1,6 +1,6 @@
-#include "MotorIO.h"
+#include "HoodMotorIO.h"
 
-class HoodKrakenIO : public MotorIO {
+class HoodKrakenIO : public HoodMotorIO {
     public:
         HoodKrakenIO(int motorCanID);
         void ConfigMotor() override;

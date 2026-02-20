@@ -9,7 +9,7 @@
 #include "utilities/ICSparkMax.h"
 #include "utilities/Logger.h"
 
-class MotorIO {
+class HoodMotorIO {
     public:
         virtual void ConfigMotor() = 0;
         virtual void SetVoltage(units::volt_t voltage) = 0;
