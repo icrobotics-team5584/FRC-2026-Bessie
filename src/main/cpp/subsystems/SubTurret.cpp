@@ -238,10 +238,10 @@ units::degree_t SubTurret::GetFieldRelativeTurretAngle() {
     return robot.Rotation().Degrees() + GetTurretAngle();
 }
 
-units::degree_t SubTurret::GetLastTurretTargetAngle() {
+units::degree_t SubTurret::GetLastFieldRelativeTarget() {
     return _lastFieldRelativeTurretTarget;
 }
 
-void SubTurret::SetLastTargetAngle(units::degree_t angle) {
+void SubTurret::SetLastFieldRelativeTarget(units::degree_t angle) {
     _lastFieldRelativeTurretTarget = angle;
 }
