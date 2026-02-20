@@ -122,8 +122,7 @@ frc::Pose2d CalcFutureTurretPose() {
   for (int i = 0; i < 20; i++) {
     // Get future pose
     TOF = SubShooter::GetInstance().GetTimeOfFLightWithDistance(distance);
-    Logger::Log("SOTM/ToFWithOffset", TOF);
-    Logger::Log("SOTM/ToFWithOutOffset", SubShooter::GetInstance().GetTimeOfFLightWithDistance(distance));
+    Logger::Log("SOTM/TimeOfFlight", TOF);
 
     // calculate offset due to velocity
     units::meter_t offsetX = robotVelX * TOF;
