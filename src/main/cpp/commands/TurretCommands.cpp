@@ -33,14 +33,14 @@ frc2::CommandPtr AimAtFieldRelative(std::function<units::degree_t()> target) {
       },
       [target] {
         units::degrees_per_second_t desiredTurretAngVel;
-        bool TurretVelFF = Logger::Tune("Turret/AimAtFieldRelative/Turret Vel FF/TurretVelFFON", true);
-        double TurretVelFFScaling = Logger::Tune("Turret/AimAtFieldRelative/Turret Vel FF/TurretVelFFScaling", 1.0);
+        bool turretVelFF = Logger::Tune("Turret/AimAtFieldRelative/Turret Vel FF/TurretVelFFON", true);
+        double turretVelFFScaling = Logger::Tune("Turret/AimAtFieldRelative/Turret Vel FF/turretVelFFScaling", 1.0);
         units::degree_t lastTurretTarget = SubTurret::GetInstance().GetLastTurretTargetAngle();
 
         desiredTurretAngVel = -SubDrivebase::GetInstance().GetDesiredAngularVelocity();
-        if(TurretVelFF) {
+        if(turretVelFF) {
           desiredTurretAngVel =
-            (target() - lastTurretTarget)*TurretVelFFScaling / 20_ms -
+            (target() - lastTurretTarget)*turretVelFFScaling / 20_ms -
             SubDrivebase::GetInstance().GetDesiredAngularVelocity();
         }
 

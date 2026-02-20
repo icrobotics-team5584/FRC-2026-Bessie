@@ -53,13 +53,14 @@ frc2::CommandPtr StationaryShootAt(frc::Translation2d target) {
 }
 
 frc2::CommandPtr ShootWhenReady() {
-  return frc2::cmd::WaitUntil([] { return SubSystemsOnTarget; })
-  .AndThen(SubFeeder::GetInstance().Feed().AlongWith(SubIndexer::GetInstance().Index()))
-  .Until([] { return !SubSystemsOnTarget(); })
-  .Repeatedly();
+  return frc2::cmd::WaitUntil([] { return IsReadyToShoot(); })
+    .AndThen(SubFeeder::GetInstance().Feed().AlongWith(SubIndexer::GetInstance().Index()).Until([] {
+      return !IsReadyToShoot();
+    }))
+    .Repeatedly();
 }
 
-bool SubSystemsOnTarget() {
+bool IsReadyToShoot() {
   auto currentPose = PoseHandler::GetInstance().GetPose();
   return SubHood::GetInstance().HoodIsAtTarget() && SubShooter::GetInstance().IsAtSpeed() &&
         SubTurret::GetInstance().IsAtTarget() &&
