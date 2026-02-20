@@ -3,18 +3,18 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "subsystems/Hood/SubHood.h"
-#include "subsystems/Hood/HoodNeoIO.h"
+
 #include "subsystems/Hood/HoodKrakenIO.h"
-#include "frc/smartdashboard/SmartDashboard.h"
-#include "frc/RobotBase.h"
-#include "utilities/Logger.h"
+#include "subsystems/Hood/HoodNeoIO.h"
+
 #include "utilities/BotVars.h"
+#include "utilities/Logger.h"
 
 #include "frc/RobotBase.h"
 #include "frc/smartdashboard/SmartDashboard.h"
 
 SubHood::SubHood() {
-  if(BotVars::GetRobot() == BotVars::PRACTICE) {
+  if (BotVars::GetRobot() == BotVars::PRACTICE) {
     _hoodMotor = std::make_unique<HoodNeoIO>(canid::HOOD_MOTOR);
   } else {
     _hoodMotor = std::make_unique<HoodKrakenIO>(canid::HOOD_MOTOR);
@@ -34,25 +34,24 @@ SubHood::SubHood() {
 
 // This method will be called once per scheduler run
 void SubHood::Periodic() {
-
   units::celsius_t hoodTemperature = _hoodMotor->GetTemperature();
   units::ampere_t hoodCurrent = _hoodMotor->GetCurrent();
 
   AlertController::UpdateTemperatureAlert(_hoodAlertConfig, hoodTemperature);
   AlertController::UpdateCurrentAlert(_hoodAlertConfig, hoodCurrent);
-    auto loopStart = frc::GetTime();
+  auto loopStart = frc::GetTime();
 
-    _hoodMechCircle.SetAngle(_hoodMotor->GetPosition());
-    if (_hasZeroed == false && _zeroing == false) {
-        _hoodMotor->StopMotor();
-    }
+  _hoodMechCircle.SetAngle(_hoodMotor->GetPosition());
+  if (_hasZeroed == false && _zeroing == false) {
+    _hoodMotor->StopMotor();
+  }
 
-    Logger::Log("Hood/haszeroed", _hasZeroed);
-    Logger::Log("Hood/zeroing", _zeroing);
-    Logger::Log("Hood/IsAtTarget", HoodIsAtTarget());
-    Logger::Log("Hood/Loop Time", (frc::GetTime() - loopStart));
-    
-    _hoodMotor->Log("Hood/Motor");
+  Logger::Log("Hood/haszeroed", _hasZeroed);
+  Logger::Log("Hood/zeroing", _zeroing);
+  Logger::Log("Hood/IsAtTarget", HoodIsAtTarget());
+  Logger::Log("Hood/Loop Time", (frc::GetTime() - loopStart));
+
+  _hoodMotor->Log("Hood/Motor");
 }
 
 void SubHood::SimulationPeriodic() {
@@ -62,17 +61,21 @@ void SubHood::SimulationPeriodic() {
 }
 
 frc2::CommandPtr SubHood::SetHoodPositionTarget(std::function<units::degree_t()> angle) {
-    return Run([this, angle] {
-        units::degree_t target = angle();
-        if(target > UPPER_LIMIT) {target = UPPER_LIMIT;}
-        if(target < LOWER_LIMIT) {target = LOWER_LIMIT;}
+  return Run([this, angle] {
+    units::degree_t target = angle();
+    if (target > UPPER_LIMIT) {
+      target = UPPER_LIMIT;
+    }
+    if (target < LOWER_LIMIT) {
+      target = LOWER_LIMIT;
+    }
 
     _hoodMotor->SetPositionTarget(target);
   });
 }
 
 frc2::CommandPtr SubHood::ZeroHood() {
-    return RunOnce([this] { _zeroing = true; })
+  return RunOnce([this] { _zeroing = true; })
     .AndThen(ManualHoodDown())
     .Until([this] { return (HoodCurrentCheck() || frc::RobotBase::IsSimulation()); })
     .AndThen([this] { _hoodMotor->SetPosition(LOWER_LIMIT); })
@@ -94,7 +97,7 @@ bool SubHood::HoodCurrentCheck() {
 }
 
 units::ampere_t SubHood::GetHoodMotorCurrent() {
-    return _hoodMotor->GetCurrent();
+  return _hoodMotor->GetCurrent();
 }
 
 frc2::CommandPtr SubHood::StowHood() {
@@ -128,5 +131,5 @@ frc2::CommandPtr SubHood::MoveHoodDown1Degree() {
 }
 
 frc2::CommandPtr SubHood::HoodToEjectAngle() {
-    return SubHood::GetInstance().SetHoodPositionTarget([] {return LOWER_LIMIT + 5_deg;});
+  return SubHood::GetInstance().SetHoodPositionTarget([] { return LOWER_LIMIT + 5_deg; });
 }
