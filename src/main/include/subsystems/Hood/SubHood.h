@@ -50,10 +50,6 @@ class SubHood : public frc2::SubsystemBase {
   void Periodic() override;
 
  private:
-  //double P = 16.0;
-  //double I = 0.0;
-  //double D = 8.0;
-  //double S = 0.6;
 
   units::ampere_t zeroingCurrentLimit = 23_A;
 
@@ -62,7 +58,6 @@ class SubHood : public frc2::SubsystemBase {
   static constexpr bool SIMULATE_GRAVITY = true;
   static constexpr units::degree_t STARTING_ANGLE = 13_deg;
   static constexpr units::degree_t STOW_ANGLE = 12.5_deg;
-  static constexpr double SIM_GEAR_RATIO = (56.0/8.0) * (370.0/34.0);
   static constexpr units::centimeter_t ARM_LENGTH = 20_cm;
   static constexpr units::degree_t TOLARANCE = 0.5_deg;
 
@@ -70,8 +65,6 @@ class SubHood : public frc2::SubsystemBase {
   bool _hasZeroed = false;
 
   std::unique_ptr<HoodMotorIO> _hoodMotor;
-  //ICSparkMax _hoodMotor{canid::HOOD_MOTOR};
-  //rev::spark::SparkBaseConfig _hoodMotorConfig;
 
   frc::Alert _hoodhighTemperatureAlert{
     "Hood Motor High Temperature!", frc::Alert::AlertType::kWarning};
@@ -89,8 +82,8 @@ class SubHood : public frc2::SubsystemBase {
   static constexpr units::kilogram_square_meter_t MOI = 0.0001_kg_sq_m;
 
   //Sim
-  frc::LinearSystem<2,1,2> _hoodSystem = frc::LinearSystemId::SingleJointedArmSystem(MOTOR_MODEL, MOI, SIM_GEAR_RATIO);
-  frc::sim::SingleJointedArmSim _hoodSim{_hoodSystem, MOTOR_MODEL, SIM_GEAR_RATIO, ARM_LENGTH, 
+  frc::LinearSystem<2,1,2> _hoodSystem = frc::LinearSystemId::SingleJointedArmSystem(MOTOR_MODEL, MOI, KrakenMotorConfig::GEAR_RATIO);
+  frc::sim::SingleJointedArmSim _hoodSim{_hoodSystem, MOTOR_MODEL, KrakenMotorConfig::GEAR_RATIO, ARM_LENGTH, 
     LOWER_LIMIT, UPPER_LIMIT, SIMULATE_GRAVITY, STARTING_ANGLE};
 
   // mechanism2d
