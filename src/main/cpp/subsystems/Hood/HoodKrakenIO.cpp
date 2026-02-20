@@ -1,5 +1,6 @@
 #include "subsystems/Hood/HoodKrakenIO.h"
 #include "subsystems/Hood/HoodMotorConfig.h"
+#include "utilities/Logger.h"
 #include <frc/simulation/RoboRioSim.h>
 
 HoodKrakenIO::HoodKrakenIO(int motorCanID) : _motor(motorCanID) {}

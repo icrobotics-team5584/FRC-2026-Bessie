@@ -1,4 +1,5 @@
 #include "HoodMotorIO.h"
+#include <ctre/phoenix6/TalonFX.hpp>
 
 class HoodKrakenIO : public HoodMotorIO {
     public:

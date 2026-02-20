@@ -1,4 +1,5 @@
 #include "HoodMotorIO.h"
+#include "utilities/ICSparkMax.h"
 
 class HoodNeoIO : public HoodMotorIO {
     public:

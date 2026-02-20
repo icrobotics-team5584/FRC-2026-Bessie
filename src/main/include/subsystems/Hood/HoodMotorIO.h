@@ -1,13 +1,10 @@
 #pragma once
 
-#include <ctre/phoenix6/TalonFX.hpp>
 #include <units/angle.h>
 #include <units/current.h>
 #include <units/voltage.h>
 #include <units/temperature.h>
-
-#include "utilities/ICSparkMax.h"
-#include "utilities/Logger.h"
+#include <units/angular_velocity.h>
 
 class HoodMotorIO {
     public:

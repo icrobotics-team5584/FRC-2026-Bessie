@@ -1,5 +1,6 @@
 #include "subsystems/Hood/HoodNeoIO.h"
 #include "subsystems/Hood/HoodMotorConfig.h"
+#include "utilities/Logger.h"
 
 HoodNeoIO::HoodNeoIO(int motorCanID) : _motor(motorCanID) {}
 
@@ -76,4 +77,8 @@ units::celsius_t HoodNeoIO::GetTemperature() {
 
 units::volt_t HoodNeoIO::GetVoltage() {
     return _motor.GetMotorVoltage();
+}
+
+units::volt_t HoodNeoIO::CalcSimVoltage() {
+    return _motor.CalcSimVoltage();
 }
