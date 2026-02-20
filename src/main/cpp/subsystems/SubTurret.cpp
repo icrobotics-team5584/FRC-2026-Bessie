@@ -229,7 +229,7 @@ bool SubTurret::IsNotApproachingMax(std::function<units::millisecond_t()> time) 
     units::degree_t futureTurretAngle = GetTurretAngle() + _turretMotor.GetVelocity() * time();
     bool isNotApproachingMax = futureTurretAngle < POS_LIMIT || futureTurretAngle > NEG_LIMIT;
     Logger::Log("SOTM/FutureTurretAngle", futureTurretAngle);
-    Logger::Log("SOTM/TurretApproachingMax", isNotApproachingMax);
+    Logger::Log("SOTM/TurretIsNotApproachingMax", isNotApproachingMax);
     return (isNotApproachingMax);
 }
 
