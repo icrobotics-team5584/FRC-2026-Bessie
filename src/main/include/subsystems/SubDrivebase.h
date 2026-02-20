@@ -19,7 +19,7 @@
 
 class SubDrivebase : public frc2::SubsystemBase {
  public:
-  // Constructer and instance
+  // Constructor and instance
   SubDrivebase();
 
   static SubDrivebase& GetInstance() {
@@ -39,14 +39,13 @@ class SubDrivebase : public frc2::SubsystemBase {
 
   void SetBrakeMode(bool mode);
 
-  void SetPose(frc::Pose2d pose);
-
   /* ------------------------------------------------------------------------------------------------------------- */
   /* Getters & calculations*/
 
-  frc::Rotation2d GetGyroAngle(bool allianceRelated = false);
+  frc::Rotation2d GetGyroAngle(bool allianceRelative = false);
   units::degree_t GetPitch();
   units::degree_t GetRoll();
+  units::degree_t GetApproxTiltMagnitude();
 
   units::degrees_per_second_t GetDesiredAngularVelocity();
   units::meters_per_second_t GetVelocity();
@@ -58,6 +57,11 @@ class SubDrivebase : public frc2::SubsystemBase {
   frc::ChassisSpeeds CalcDriveToPoseSpeeds(frc::Pose2d targetPose);
   frc::ChassisSpeeds CalcJoystickSpeeds(frc2::CommandXboxController& controller);
 
+  frc2::CommandPtr DriveToPose(std::function<frc::Pose2d()> pose, double speedScaling = 1,
+    units::meter_t positionErrorTolerance = 2_cm, units::degree_t rotationErrorTolerance = 2_deg);
+  void SetPose(frc::Pose2d pose);
+  bool IsAtPose(frc::Pose2d pose, units::meter_t positionErrorTolerance = 2_cm,
+    units::degree_t rotationErrorTolerance = 2_deg);
   wpi::array<frc::SwerveModulePosition, 4U> GetSwerveStates();
 
   /* ------------------------------------------------------------------------------------------------------------- */
@@ -69,6 +73,7 @@ class SubDrivebase : public frc2::SubsystemBase {
 
   // Pose drive
   frc2::CommandPtr Drive(std::function<frc::ChassisSpeeds()> speeds, bool fieldOriented);
+  frc2::CommandPtr DriveOverBump(frc::ChassisSpeeds fieldRelativeSpeeds);
 
   // Rotations
   frc2::CommandPtr AlignToAngle(frc2::CommandXboxController& controller, units::angle::degree_t angle);
@@ -89,9 +94,9 @@ class SubDrivebase : public frc2::SubsystemBase {
 
  private:
   void Drive(units::meters_per_second_t xSpeed, units::meters_per_second_t ySpeed,
-                         units::turns_per_second_t rot, bool fieldRelative,
-                         std::optional<std::array<units::newton_t, 4>> xForceFeedforwards = std::nullopt,
-                         std::optional<std::array<units::newton_t, 4>> yForceFeedforwards = std::nullopt);
+    units::turns_per_second_t rot, bool fieldRelative,
+    std::optional<std::array<units::newton_t, 4>> xForceFeedforwards = std::nullopt,
+    std::optional<std::array<units::newton_t, 4>> yForceFeedforwards = std::nullopt);
   /* ------------------------------------------------------------------------------------------------------------- */ 
   /* Definition=*/
 
@@ -119,8 +124,14 @@ class SubDrivebase : public frc2::SubsystemBase {
       DrivebaseConfig::BR_POSITION
   };
 
-  frc::PIDController _teleopTranslationController = DrivebaseConfig::TELE_TRANSLATION_PID;
-  frc::ProfiledPIDController<units::radian> _teleopRotationController = DrivebaseConfig::TELE_ROTATION_PID;
+  frc::ProfiledPIDController<units::meters> _translationP2pController = DrivebaseConfig::P2P_TRANSLATION_PID;
+  frc::ProfiledPIDController<units::radian> _rotationP2pController = DrivebaseConfig::P2P_ROTATION_PID;
+
+  // P2P
+  units::meters_per_second_squared_t _tunedMaxP2pAccel = DrivebaseConfig::MAX_P2P_ACCEL;
+  units::turns_per_second_squared_t _tunedMaxP2pAngAccel = DrivebaseConfig::MAX_P2P_ANGULAR_ACCEL;
+  frc::SlewRateLimiter<units::meters_per_second> _p2pTranslationLimiter{_tunedMaxP2pAccel};
+  frc::SlewRateLimiter<units::turns_per_second> _p2pRotationLimiter{_tunedMaxP2pAngAccel};
 
   // Joystick controller rate limiters
   double _tunedMaxJoystickAccel = DrivebaseConfig::MAX_JOYSTICK_ACCEL;
