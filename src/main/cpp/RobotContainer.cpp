@@ -52,10 +52,10 @@ RobotContainer::RobotContainer() {
 
   _autoManager.AddAuton("Hoard_LeftBump", AutonHelper::MakeCommandPtrAuto(cmd::Hoard_LeftBump()));
   _autoManager.AddAuton("Hoard_LeftTrench", AutonHelper::MakeCommandPtrAuto(cmd::Hoard_LeftTrench()));
-  //_autoManager.AddAuton("Hoard_RightBump",
-  //AutonHelper::MakeCommandPtrAuto(cmd::Hoard_RightBump()));
-  //_autoManager.AddAuton("Hoard_RightTrench",
-  //AutonHelper::MakeCommandPtrAuto(cmd::Hoard_RightTrench()));
+  _autoManager.AddAuton("Hoard_RightBump",
+  AutonHelper::MakeCommandPtrAuto(cmd::Hoard_RightBump()));
+  _autoManager.AddAuton("Hoard_RightTrench",
+  AutonHelper::MakeCommandPtrAuto(cmd::Hoard_RightTrench()));
 
   _autoManager.AddAuton("NeutralAndOutpostScore_RightBump",
     AutonHelper::MakeCommandPtrAuto(cmd::NeutralAndOutpostScore_RightBump()));
