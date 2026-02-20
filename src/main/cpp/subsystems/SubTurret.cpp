@@ -145,15 +145,15 @@ units::degree_t SubTurret::GetTurretAngleAtTime(units::second_t time) {
     }
 }
 
-frc2::CommandPtr SubTurret::SetTurretTargetAngle(std::function<units::degree_t()> angle, std::function<units::degrees_per_second_t()> robotAngVel){
-    return Run([this, angle, robotAngVel] {
-        units::degrees_per_second_t nextVel = -robotAngVel(); 
+frc2::CommandPtr SubTurret::SetTurretTargetAngle(std::function<units::degree_t()> angle, std::function<units::degrees_per_second_t()> angVelTarget){
+    return Run([this, angle, angVelTarget] {
+        units::degrees_per_second_t nextVel = angVelTarget(); 
         // we want the turret to negate the robot rotation, hence the negative
 
         units::volt_t rotationFeedforward = _robotRotVelFF.Calculate(nextVel);
 
-        Logger::Log("Turret/RobotRotFF/ffVolts", rotationFeedforward);
-        Logger::Log("Turret/RobotRotFF/DrivebaseRotVel", nextVel);
+        Logger::Log("Turret/VelocityFeedForward/ffVolts", rotationFeedforward);
+        Logger::Log("Turret/VelocityFeedForward/angVelTarget", nextVel);
         _turretMotor.SetPositionTarget(CalcOptimisedTurretAngle(angle()), rotationFeedforward);
     });
 }
@@ -194,6 +194,10 @@ units::degree_t SubTurret::CalcOptimisedTurretAngle(units::degree_t angle) {
     return newTarget;
 }
 
+units::degree_t SubTurret::GetTurretTargetAngle() {
+    return _turretMotor.GetPositionTarget();
+}
+
 void SubTurret::SetTurretAngle(units::degree_t angle) {
     _turretMotor.SetPosition(angle);
 }
@@ -221,7 +225,23 @@ bool SubTurret::IsAtTarget() {
     return units::math::abs(_turretMotor.GetPosError()) < TOLARANCE;
 }
 
+bool SubTurret::IsNotApproachingMax(std::function<units::millisecond_t()> time) {
+    units::degree_t futureTurretAngle = GetTurretAngle() + _turretMotor.GetVelocity() * time();
+    bool isNotApproachingMax = futureTurretAngle < POS_LIMIT || futureTurretAngle > NEG_LIMIT;
+    Logger::Log("SOTM/FutureTurretAngle", futureTurretAngle);
+    Logger::Log("SOTM/TurretIsNotApproachingMax", isNotApproachingMax);
+    return (isNotApproachingMax);
+}
+
 units::degree_t SubTurret::GetFieldRelativeTurretAngle() {
     auto robot = PoseHandler::GetInstance().GetPose();
     return robot.Rotation().Degrees() + GetTurretAngle();
+}
+
+units::degree_t SubTurret::GetLastFieldRelativeTarget() {
+    return _lastFieldRelativeTurretTarget;
+}
+
+void SubTurret::SetLastFieldRelativeTarget(units::degree_t angle) {
+    _lastFieldRelativeTurretTarget = angle;
 }
