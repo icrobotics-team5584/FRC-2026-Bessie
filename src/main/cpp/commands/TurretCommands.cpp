@@ -18,28 +18,38 @@
 
 #include <frc/geometry/Translation2d.h>
 
-namespace cmd {  
-   
-frc2::CommandPtr AimAtFieldRelative(std::function<units::degree_t()> target) {
-  return SubTurret::GetInstance().SetTurretTargetAngle(
-    [target] {
-      
-      auto robotPose = PoseHandler::GetInstance().GetPose();
-      Logger::Log("Turret/AimAtFieldRelative/robotPose/Rotation", robotPose.Rotation().Degrees());
-      units::degree_t targetAngle = target() - robotPose.Rotation().Degrees();
-      return targetAngle;
-    },
-    [target] {
-      auto robotPose = PoseHandler::GetInstance().GetPose();
+namespace cmd {
 
-      Logger::Log("Turret/AimAtFieldRelative/desired target velocity (new target - current target)",
-        (target() - SubTurret::GetInstance().turretTarget) / 20_ms);
-      Logger::Log("Turret/AimAtFieldRelative/New Turret Target Angle", target() + robotPose.Rotation().Degrees());
-      
-      Logger::Log("Turret/AimAtFieldRelative/Current Turret Target Angle", SubTurret::GetInstance().turretTarget);
-      return ( target() - SubTurret::GetInstance().turretTarget ) / 20_ms -
-             SubDrivebase::GetInstance().GetDesiredAngularVelocity();
-    });
+frc2::CommandPtr AimAtFieldRelative(std::function<units::degree_t()> target) {
+  return frc2::cmd::RunOnce([target] { SubTurret::GetInstance().SetLastTargetAngle(target()); })
+    .AndThen(SubTurret::GetInstance().SetTurretTargetAngle(
+      [target] {
+        auto robotPose = PoseHandler::GetInstance().GetPose();
+
+        SubTurret::GetInstance().SetLastTargetAngle(target());
+        Logger::Log("Turret/AimAtFieldRelative/robotPose/Rotation", robotPose.Rotation().Degrees());
+        units::degree_t targetAngle = target() - robotPose.Rotation().Degrees();
+        return targetAngle;
+      },
+      [target] {
+        units::degrees_per_second_t desiredTurretAngVel;
+        bool TurretVelFF = Logger::Tune("Turret/AimAtFieldRelative/Turret Vel FF/TurretVelFFON", true);
+        double TurretVelFFScaling = Logger::Tune("Turret/AimAtFieldRelative/Turret Vel FF/TurretVelFFScaling", 1.0);
+        units::degree_t lastTurretTarget = SubTurret::GetInstance().GetLastTurretTargetAngle();
+
+        desiredTurretAngVel = -SubDrivebase::GetInstance().GetDesiredAngularVelocity();
+        if(TurretVelFF) {
+          desiredTurretAngVel =
+            (target() - lastTurretTarget)*TurretVelFFScaling / 20_ms -
+            SubDrivebase::GetInstance().GetDesiredAngularVelocity();
+        }
+
+        Logger::Log(
+          "Turret/AimAtFieldRelative/Turret Vel FF/desiredTurretAngVel", desiredTurretAngVel);
+        Logger::Log("Turret/AimAtFieldRelative/Turret Vel FF/new target", target());
+        Logger::Log("Turret/AimAtFieldRelative/Turret Vel FF/last target", lastTurretTarget);
+        return desiredTurretAngVel;
+      }));
 }
 
 frc2::CommandPtr AimAtSpot(frc::Translation2d target) {
@@ -85,13 +95,13 @@ frc::Pose2d CalcFutureTurretPose() {
   units::meter_t distance = target.Distance(robot.Translation());
 
   // Calculate field relative robot velocity
-  frc::ChassisSpeeds robotVel = SubDrivebase::GetInstance().GetDesiredVelocity();
+  frc::ChassisSpeeds robotVel = SubDrivebase::GetInstance().GetChassisSpeeds();
   units::meters_per_second_t robotVelX = robotVel.vx;
   units::meters_per_second_t robotVelY = robotVel.vy;
   units::degrees_per_second_t robotVelRot = SubDrivebase::GetInstance().GetDesiredAngularVelocity();
 
   // Account for latency
-  frc::ChassisSpeeds robotRelativeVel = SubDrivebase::GetInstance().GetDesiredVelocity(false);
+  frc::ChassisSpeeds robotRelativeVel = SubDrivebase::GetInstance().GetChassisSpeeds(false);
   units::meters_per_second_t robotRelativeVelX = robotRelativeVel.vx;
   units::meters_per_second_t robotRelativeVelY = robotRelativeVel.vy;
   

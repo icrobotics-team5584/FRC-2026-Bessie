@@ -45,9 +45,11 @@ class SubTurret : public frc2::SubsystemBase {
   units::degree_t CalcOptimisedTurretAngle(units::degree_t angle);
   units::degree_t GetFieldRelativeTurretAngle();
   units::degree_t GetTurretTargetAngle();
+  units::degree_t GetLastTurretTargetAngle();
     
   void SetTurretAngle(units::degree_t angle);
   void ZeroTurret();
+  void SetLastTargetAngle(units::degree_t angle);
 
   bool IsAtTarget();
   bool IsNotApproachingMax(std::function<units::millisecond_t()> time);
@@ -57,7 +59,6 @@ class SubTurret : public frc2::SubsystemBase {
   frc2::CommandPtr ZeroTurretCmd();
 
   static constexpr frc::Transform2d ROBOT_TO_TURRET = frc::Transform2d{-235_mm, 0_mm, 0_deg};
-  units::degree_t turretTarget = 0_deg;
 
   /**
    * Will be called periodically whenever the CommandScheduler runs.
@@ -65,6 +66,9 @@ class SubTurret : public frc2::SubsystemBase {
   void Periodic() override;
 
  private:
+
+  units::degree_t _lastFieldRelativeTurretTarget = 0_deg;
+
   ICSparkMax _turretMotor{canid::TURRET_MOTOR};
   rev::spark::SparkBaseConfig _turretMotorConfig;
 
@@ -110,7 +114,7 @@ class SubTurret : public frc2::SubsystemBase {
   static constexpr double ENCODER2_RATIO = E2_TEETH / BIG_TEETH;
   static constexpr double GEAR_RATIO = (48.0 / 12.0) * (94.0 / 10.0);
 
-  static constexpr units::degree_t TOLARANCE = 2_deg;
+  static constexpr units::degree_t TOLARANCE = 8_deg;
   static constexpr units::hertz_t ENCODER_FREQUENCY = 975.6_Hz;
   // force set encoder frequency to avoid 1sec startup time
 

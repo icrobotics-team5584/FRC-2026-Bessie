@@ -54,8 +54,8 @@ void SubDrivebase::LogDrivebaseStates() {
   Logger::Log("Drivebase/Coast Button", CheckCoastButton().Get());
 
   Logger::Log("Drivebase/velocity", GetVelocity());
-  Logger::Log("Drivebase/velocity/desired field relative vx", GetDesiredVelocity().vx);
-  Logger::Log("Drivebase/velocity/desired field relative vy", GetDesiredVelocity().vy);
+  Logger::Log("Drivebase/velocity/desired field relative vx", GetChassisSpeeds().vx);
+  Logger::Log("Drivebase/velocity/desired field relative vy", GetChassisSpeeds().vy);
   Logger::Log("Drivebase/velocity/desired angular velocity", GetDesiredAngularVelocity());
 
   Logger::Log("Drivebase/Internal Encoder Swerve States",wpi::array{
@@ -249,10 +249,19 @@ units::meters_per_second_t SubDrivebase::GetVelocity() {
   return m::sqrt(m::pow<2>(speeds.vx) + m::pow<2>(speeds.vy));
 }
 
-frc::ChassisSpeeds SubDrivebase::GetDesiredVelocity(bool fieldRelative) {
+frc::ChassisSpeeds SubDrivebase::GetChassisSpeeds(bool fieldRelative) {
+  auto speeds = _kinematics.ToChassisSpeeds(_frontLeft.GetState(), _frontRight.GetState(),
+                                            _backLeft.GetState(), _backRight.GetState());
+  if(fieldRelative) {
+  speeds = frc::ChassisSpeeds::FromRobotRelativeSpeeds(speeds, GetGyroAngle(false).Degrees());
+  }
+  
+  return speeds;
+}
+
+frc::ChassisSpeeds SubDrivebase::GetDesiredChassisSpeeds(bool fieldRelative) {
   auto speeds = _kinematics.ToChassisSpeeds(_frontLeft.GetDesiredState(), _frontRight.GetDesiredState(),
                                             _backLeft.GetDesiredState(), _backRight.GetDesiredState());
-
   if(fieldRelative) {
   speeds = frc::ChassisSpeeds::FromRobotRelativeSpeeds(speeds, GetGyroAngle(false).Degrees());
   }
