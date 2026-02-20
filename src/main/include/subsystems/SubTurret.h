@@ -49,6 +49,8 @@ class SubTurret : public frc2::SubsystemBase {
   void ZeroTurret();
 
   bool IsAtTarget();
+  
+  void SetBrakeMode(bool brakeMode);
 
   frc2::CommandPtr SetTurretTargetAngle(std::function<units::degree_t()> angle,
     std::function<units::degrees_per_second_t()> robotAngVel);

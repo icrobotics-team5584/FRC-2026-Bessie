@@ -71,6 +71,17 @@ void SubDeploy::EnableSoftLimit(bool enabled) {
   }
 }
 
+void SubDeploy::SetBrakeMode(bool brakeMode){
+    rev::spark::SparkBaseConfig _neutralModeConfig;
+    if (brakeMode == true) {
+      _neutralModeConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
+      _deployMotor.AdjustConfigNoPersist(_neutralModeConfig);
+    } else if (brakeMode == false) {
+      _neutralModeConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kCoast);
+      _deployMotor.AdjustConfigNoPersist(_neutralModeConfig);
+    }
+}
+
 // This method will be called once per scheduler run
 void SubDeploy::Periodic() {
   auto loopStart = frc::GetTime();

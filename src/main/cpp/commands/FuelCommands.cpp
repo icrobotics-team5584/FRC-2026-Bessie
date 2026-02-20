@@ -75,4 +75,22 @@ frc2::CommandPtr AimOnTheMove() {
 frc2::CommandPtr ShootOnTheMove(){
   return AimOnTheMove().AlongWith(ShootWhenReady()).AlongWith(SubIntake::GetInstance().IntakeOn());
 }
+
+frc2::CommandPtr ToggleBrakeCoast(){
+  return frc2::cmd::StartEnd(
+    []{
+    SubDrivebase::GetInstance().SetBrakeMode(true);
+    SubDeploy::GetInstance().SetBrakeMode(true);
+    SubTurret::GetInstance().SetBrakeMode(true);
+  }
+  ,
+  []{
+    SubDrivebase::GetInstance().SetBrakeMode(false);
+    SubDeploy::GetInstance().SetBrakeMode(false);
+    SubTurret::GetInstance().SetBrakeMode(false);
+    }
+  )
+  .IgnoringDisable(true)
+  .Until([]{return frc::DriverStation::IsEnabled();});
+}
 }  // namespace cmd
