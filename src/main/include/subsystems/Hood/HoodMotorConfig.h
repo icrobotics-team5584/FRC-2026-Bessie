@@ -35,7 +35,7 @@ namespace KrakenMotorConfig{
      * SUPPLY_CURRENT_LOWER_TIME seconds. */
     constexpr units::ampere_t SUPPLY_CURRENT_LIMT = 30_A;
     constexpr units::ampere_t SUPPLY_CURRENT_LOWER_LIMIT = 30_A;
-    constexpr units::ampere_t STATOR_CURRENT_LIMIT = 60_A;
+    constexpr units::ampere_t STATOR_CURRENT_LIMIT = 30_A;
     
     constexpr units::second_t SUPPLY_CURRENT_LOWER_TIME = 0.1_s;
 
