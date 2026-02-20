@@ -10,7 +10,9 @@
 #include <utilities/ICgeometry.h>
 #include <utilities/Logger.h>
 
-ShotPlanner::ShotPlanner() = default;
+ShotPlanner::ShotPlanner(){
+    Logger::Log("Shot Planner/override status", _overrideStatus);
+}
 
 ShotPlanner::ShotPlannerResults ShotPlanner::CalculateShotTarget(frc::Pose2d robotPos) {
   auto alliance = frc::DriverStation::GetAlliance();
@@ -29,6 +31,9 @@ ShotPlanner::ShotPlannerResults ShotPlanner::CalculateShotTarget(frc::Pose2d rob
   bool isInTopHalf = IsInTopHalf(robotPos);
   bool isInAllianceZone = IsInAllianceZone(robotPos);
 
+  Logger::Log("Shot Planner/Is Top Half", isInTopHalf);
+  Logger::Log("Shot Planner/Is Alliance Zone", isInAllianceZone);
+
   if (isInAllianceZone && isOurHubActive){
     target = fieldpos::HUB_POSITION;
     shouldShoot = true;
@@ -40,24 +45,24 @@ ShotPlanner::ShotPlannerResults ShotPlanner::CalculateShotTarget(frc::Pose2d rob
     isPassing = false;
   }
   if (!isInAllianceZone && isInTopHalf){
-    target = fieldpos::TOP_ALLIANCE_ZONE_POSITION;
+    target = fieldpos::BOTTOM_ALLIANCE_ZONE_POSITION;
     shouldShoot = true;
     isPassing = true;
   }
   if (!isInAllianceZone && !isInTopHalf){
-    target = fieldpos::BOTTOM_ALLIANCE_ZONE_POSITION;
+    target = fieldpos::TOP_ALLIANCE_ZONE_POSITION;
     shouldShoot = true;
     isPassing = true;
   }
 
   //Manual overrides, defaults to not using
   if (_overrideStatus == Override::PASS && isInTopHalf){
-    target = fieldpos::TOP_ALLIANCE_ZONE_POSITION;
+    target = fieldpos::BOTTOM_ALLIANCE_ZONE_POSITION;
     shouldShoot = true;
     isPassing = true;
   }
   if (_overrideStatus == Override::PASS && !isInTopHalf){
-    target = fieldpos::BOTTOM_ALLIANCE_ZONE_POSITION;
+    target = fieldpos::TOP_ALLIANCE_ZONE_POSITION;
     shouldShoot = true;
     isPassing = true;
   }
@@ -94,7 +99,7 @@ bool ShotPlanner::IsInTopHalf(frc::Pose2d robotPos) {
 }
 
 bool ShotPlanner::IsInAllianceZone(frc::Pose2d robotPos){
-  if (robotPos.X() < 2.5_m){
+  if (robotPos.X() < fieldpos::BLUE_ALLIANCE_ZONE_TOP_RIGHT.X()){
     return true;
   }
   return false;

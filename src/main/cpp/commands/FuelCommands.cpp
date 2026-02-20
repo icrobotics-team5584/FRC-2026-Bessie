@@ -77,10 +77,10 @@ frc2::CommandPtr ShootOnTheMove(){
   return AimOnTheMove().AlongWith(ShootWhenReady()).AlongWith(SubIntake::GetInstance().IntakeOn());
 }
 
-frc2::CommandPtr DisableAllOverrides(){
-  return frc2::cmd::Parallel(
-    frc2::cmd::RunOnce([]{return ShotPlanner::SetOverride(ShotPlanner::Override::NONE);}),
-    frc2::cmd::RunOnce([]{return ShiftHandler::GetInstance().SetOverrideActive(false);})
-  );
+frc2::CommandPtr DisableAllOverrides() {
+  return frc2::cmd::RunOnce([] {
+    ShotPlanner::SetOverride(ShotPlanner::Override::NONE);
+    ShiftHandler::GetInstance().SetOverrideActive(false);
+  });
 }
 }  // namespace cmd

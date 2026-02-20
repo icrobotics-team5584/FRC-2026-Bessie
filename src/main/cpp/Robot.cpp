@@ -30,7 +30,6 @@ void Robot::RobotPeriodic() {
   Logger::Log("RebuiltShift/Current Shift", ShiftHandler::GetInstance().GetShiftName(ShiftHandler::GetInstance().GetCurrentShift()));
   Logger::Log("RebuiltShift/Seconds Left on Shift", ShiftHandler::GetInstance().GetTimeLeft());
   Logger::Log("RebuiltShift/Override Active", ShiftHandler::GetInstance().GetOverrideActive());
-  Logger::Log("Shot Planner/Override Active", ShotPlanner::GetOverrideEnabled());
 
   ShotPlanner::ShotPlannerResults shotTarget =
     ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose());
