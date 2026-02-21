@@ -20,5 +20,5 @@ namespace cmd {
     frc2::CommandPtr NeutralAndOutpostScore_RightBump();
     frc2::CommandPtr NeutralAndOutpostScore_RightTrench();
     
-    frc2::CommandPtr OutpostDepotClimb();
+    frc2::CommandPtr GASTAUTON_NeutralOutpostClimb_RightTrench();
 }

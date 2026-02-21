@@ -1,12 +1,15 @@
 #include "commands/AutonCommands.h"
-#include "commands/FuelCommands.h"
-#include "commands/TurretCommands.h"
+
 #include "subsystems/SubDrivebase.h"
+#include "subsystems/SubHood.h"
 #include "subsystems/SubIntake.h"
 #include "subsystems/SubShooter.h"
-#include "subsystems/SubHood.h"
-#include "utilities/PoseHandler.h"
+
+#include "commands/FuelCommands.h"
+#include "commands/TurretCommands.h"
+
 #include "utilities/FieldConstants.h"
+#include "utilities/PoseHandler.h"
 
 namespace cmd {
     frc2::CommandPtr DefaultAuton() {
@@ -45,9 +48,9 @@ namespace cmd {
                 SubDrivebase::GetInstance().SetPose(frc::Pose2d{5.8_m, 5.8_m, SubDrivebase::GetInstance().GetGyroAngle()});
             }), //reset position after traversing the bump
 
-            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_LEFT; }, 1.0),
+            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_LEFT; }, 1.0, 20_cm),
  
-            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_END_LEFT; }, 0.5, 20_cm) //TEMP drive to end intake pos
+            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_END_LEFT; }, 0.5, 20_cm, 3_deg)
                 .DeadlineFor(SubIntake::GetInstance().IntakeOn()),
 
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.9_m, 5.3_m, 180_deg}; }, 1.0, 20_cm, 5_deg)
@@ -73,9 +76,9 @@ namespace cmd {
             SubHood::GetInstance().ZeroHood(),
             cmd::ShootOnTheMove().WithTimeout(2_s)
         ).AndThen(frc2::cmd::Sequence(
-            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_LEFT; }, 1.0),
+            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_LEFT; }, 1.0, 20_cm),
  
-            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_END_LEFT; }, 0.5, 20_cm)
+            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_END_LEFT; }, 0.5, 20_cm, 3_deg)
                 .DeadlineFor(SubIntake::GetInstance().IntakeOn()),
 
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.9_m, 5.3_m, 180_deg}; }, 1.0, 20_cm, 5_deg)
@@ -106,9 +109,9 @@ namespace cmd {
                 SubDrivebase::GetInstance().SetPose(frc::Pose2d{5.8_m, 2.27_m, SubDrivebase::GetInstance().GetGyroAngle()});
             }), //reset position after traversing the bump
 
-            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_RIGHT; }, 1.0),
+            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_RIGHT; }, 1.0, 20_cm),
  
-            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_END_RIGHT; }, 0.5, 20_cm)
+            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_END_RIGHT; }, 0.5, 20_cm, 3_deg)
                 .DeadlineFor(SubIntake::GetInstance().IntakeOn()),
 
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.9_m, 2.9_m, 180_deg}; }, 1.0, 20_cm, 5_deg)
@@ -134,9 +137,9 @@ namespace cmd {
             SubHood::GetInstance().ZeroHood(),
             cmd::ShootOnTheMove().WithTimeout(2_s)
         ).AndThen(frc2::cmd::Sequence(
-            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_RIGHT; }, 1.0),
+            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_RIGHT; }, 1.0, 20_cm),
  
-            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_END_RIGHT; }, 0.5, 20_cm)
+            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_END_RIGHT; }, 0.5, 20_cm, 3_deg)
                 .DeadlineFor(SubIntake::GetInstance().IntakeOn()),
 
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.9_m, 2.9_m, 180_deg}; }, 1.0, 20_cm, 5_deg)
@@ -169,7 +172,7 @@ namespace cmd {
                 SubDrivebase::GetInstance().SetPose(frc::Pose2d{5.8_m, 5.8_m, SubDrivebase::GetInstance().GetGyroAngle()});
             }), //reset position after traversing the bump
 
-            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_LEFT; }, 1.0),
+            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_LEFT; }, 1.0, 20_cm),
  
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.8_m, 1.0_m, 270_deg}; }, 0.5, 20_cm, 5_deg) //TEMP drive to end intake pos
                 .AlongWith(cmd::ShootOnTheMove())
@@ -182,7 +185,7 @@ namespace cmd {
             SubHood::GetInstance().ZeroHood(),
             cmd::ShootOnTheMove().WithTimeout(2_s),
 
-            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_LEFT; }, 1.0),
+            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_LEFT; }, 1.0, 20_cm),
  
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.8_m, 1.0_m, 270_deg}; }, 0.5, 20_cm, 5_deg) //TEMP drive to end intake pos
                 .AlongWith(cmd::ShootOnTheMove())
@@ -200,7 +203,7 @@ namespace cmd {
                 SubDrivebase::GetInstance().SetPose(frc::Pose2d{5.8_m, 2.27_m, SubDrivebase::GetInstance().GetGyroAngle()});
             }), //reset position after traversing the bump
 
-            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_RIGHT; }, 1.0),
+            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_RIGHT; }, 1.0, 20_cm),
  
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.8_m, 6.0_m, 90_deg}; }, 0.5, 20_cm, 5_deg) //TEMP drive to end intake pos
                 .AlongWith(cmd::ShootOnTheMove())
@@ -213,7 +216,7 @@ namespace cmd {
             SubHood::GetInstance().ZeroHood(),
             cmd::ShootOnTheMove().WithTimeout(2_s),
 
-            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_RIGHT; }, 1.0),
+            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_RIGHT; }, 1.0, 20_cm),
  
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.8_m, 6.0_m, 90_deg}; }, 0.5, 20_cm, 5_deg) //TEMP drive to end intake pos
                 .AlongWith(cmd::ShootOnTheMove())
@@ -233,9 +236,9 @@ namespace cmd {
                 SubDrivebase::GetInstance().SetPose(frc::Pose2d{5.8_m, 2.27_m, SubDrivebase::GetInstance().GetGyroAngle()});
             }), //reset position after traversing the bump
 
-            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_RIGHT; }, 1.0),
+            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_RIGHT; }, 1.0, 20_cm),
  
-            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_END_RIGHT; }, 0.5, 20_cm)
+            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_END_RIGHT; }, 0.5, 20_cm, 3_deg)
                 .DeadlineFor(SubIntake::GetInstance().IntakeOn()),
 
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.9_m, 2.9_m, 180_deg}; }, 1.0, 20_cm, 5_deg)
@@ -259,9 +262,9 @@ namespace cmd {
             SubHood::GetInstance().ZeroHood(),
             cmd::ShootOnTheMove().WithTimeout(2_s)
         ).AndThen(frc2::cmd::Sequence(
-            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_RIGHT; }, 1.0),
+            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_RIGHT; }, 1.0, 20_cm),
  
-            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_END_RIGHT; }, 0.5, 20_cm)
+            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_END_RIGHT; }, 0.5, 20_cm, 3_deg)
                 .DeadlineFor(SubIntake::GetInstance().IntakeOn()),
 
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.9_m, 2.9_m, 180_deg}; }, 1.0, 20_cm, 5_deg)
@@ -277,5 +280,35 @@ namespace cmd {
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::OUTPOST; }, 1.0)
                 .AlongWith(cmd::ShootOnTheMove())
         );
+    }
+
+    frc2::CommandPtr GASTAUTON_NeutralOutpostClimb_RightTrench() {
+        return frc2::cmd::Sequence(
+            // STARTING POSITION: START_TRENCH_RIGHT (X 3.58m, Y 0.57m, heading 0 degrees)
+            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_RIGHT; }, 1.0, 30_cm, 3_deg)
+                .AlongWith(SubHood::GetInstance().ZeroHood()),
+ 
+            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_END_RIGHT; }, 0.5, 20_cm, 3_deg)
+                .DeadlineFor(SubIntake::GetInstance().IntakeOn()),
+
+            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.9_m, 2.9_m, 180_deg}; }, 1.0, 20_cm, 5_deg)
+                .DeadlineFor(SubIntake::GetInstance().IntakeOn()), //return to bump (continue intaking)
+            
+            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{-3_mps, 0_mps, 0_tps}),
+            frc2::cmd::RunOnce([] {
+                SubDrivebase::GetInstance().SetPose(frc::Pose2d{3.5_m, 2.9_m, SubDrivebase::GetInstance().GetGyroAngle()});
+            }) //reset position
+        ).DeadlineFor(
+            cmd::AimAtSpot(fieldpos::HUB_POSITION.ToTranslation2d())
+        ).AndThen(
+            cmd::ShootOnTheMove().WithDeadline(frc2::cmd::Sequence(
+                SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::OUTPOST; }, 1.0, 20_cm),
+                frc2::cmd::Wait(3_s),
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{1.7_m, 2.8_m, 0_deg}; }, 1.0, 40_cm, 5_deg), //so we don't crash into the tower
+                SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::TOWER; }, 1.0)
+            ))
+        )/*.AndThen(
+            SubClimber::GetInstance().ClimbL1()
+        )*/;
     }
 }
