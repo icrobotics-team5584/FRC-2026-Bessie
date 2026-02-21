@@ -110,8 +110,18 @@ frc2::CommandPtr SubHood::ManualHoodDown() {
 
 frc2::CommandPtr SubHood::SetHoodPositionTargetFromDist(
   std::function<units::meter_t()> distanceToTarget) {
-  return SetHoodPositionTarget(
-    [this, distanceToTarget] { return _hoodPitchTable[distanceToTarget()]; });
+  return SetHoodPositionTarget([this, distanceToTarget] {
+    return _hoodPitchTable[distanceToTarget()] + Logger::Tune("Hood/Angle Manual Offset", 0_deg);
+  });
+}
+
+frc2::CommandPtr SubHood::AdjustManualAngleOffset(units::degree_t offset) {
+  // Using frc2 cmd so we dont require subsystem
+  return frc2::cmd::RunOnce([this, offset] {
+    units::degree_t oldOffset = Logger::Tune("Hood/Angle Manual Offset", 0_deg);
+    units::degree_t newOffset = oldOffset + offset;
+    Logger::Log("Hood/Angle Manual Offset", newOffset);
+  });
 }
 
 bool SubHood::HoodIsAtTarget() {
