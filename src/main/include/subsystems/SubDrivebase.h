@@ -80,7 +80,7 @@ class SubDrivebase : public frc2::SubsystemBase {
 
   // Gyro and sensor
   frc2::CommandPtr SyncSensor();
-  frc2::CommandPtr ResetGyroCmd();
+  frc2::CommandPtr ZeroRotation();
 
   // Testing
   frc2::CommandPtr CharacteriseWheels();
