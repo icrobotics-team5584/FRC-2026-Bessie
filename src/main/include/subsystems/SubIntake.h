@@ -63,14 +63,15 @@ class SubIntake : public frc2::SubsystemBase {
   frc::Alert _intakeFollowerCurrentAlert{
     "Intake Follower Motor Overcurrent!", frc::Alert::AlertType::kWarning};
 
-    frc::Alert _intakeFollowerRecordedTemperatureAlert{
+  frc::Alert _intakeFollowerRecordedTemperatureAlert{
     "Intake Follower Motor max Temperature was reached !", frc::Alert::AlertType::kWarning};
 
   frc::Alert _intakeFollowerRecordedCurrentAlert{
     "Intake Follower Motor max current was reached !", frc::Alert::AlertType::kWarning};
 
-  AlertController::MotorAlertConfig _intakeFollowerAlertConfig{
-    _intakeFollowerHighTemperatureAlert, _intakeFollowerCurrentAlert, _intakeFollowerRecordedTemperatureAlert, _intakeFollowerRecordedCurrentAlert,60_degC, 20_A};
+  AlertController::MotorAlertConfig _intakeFollowerAlertConfig{_intakeFollowerHighTemperatureAlert,
+    _intakeFollowerCurrentAlert, _intakeFollowerRecordedTemperatureAlert,
+    _intakeFollowerRecordedCurrentAlert, 60_degC, 20_A};
 
   // Simulation components
   static constexpr double GEARING = 1.0;
