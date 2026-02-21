@@ -12,6 +12,8 @@ namespace cmd {
     frc::Pose2d CalcFutureTurretPose();
 
     frc::Translation2d GetShotTarget();
+
+    static constexpr units::millisecond_t LATENCYOFFSET = 100_ms;
 }
 
 
