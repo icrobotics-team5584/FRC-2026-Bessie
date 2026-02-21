@@ -92,7 +92,7 @@ class SubTurret : public frc2::SubsystemBase {
   units::degree_t getEncoder2Degrees();
 
   static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::NEO();
-  static constexpr units::kilogram_square_meter_t MOI = 0.0001_kg_sq_m;
+  static constexpr units::kilogram_square_meter_t MOI = 1_kg_sq_m;
 
   frc::SimpleMotorFeedforward<units::turn> _robotRotVelFF{kS, kV, kA};
 
@@ -130,9 +130,4 @@ class SubTurret : public frc2::SubsystemBase {
   frc::LinearSystem<2, 1, 2> _turretSystem =
     frc::LinearSystemId::DCMotorSystem(MOTOR_MODEL, MOI, GEAR_RATIO);
   frc::sim::DCMotorSim _turretSim{_turretSystem, MOTOR_MODEL};
-
-  // mechanism2d
-  frc::Mechanism2d _turretMech{0.25, 0.25};
-  frc::MechanismRoot2d* _turretMechRoot = _turretMech.GetRoot("turretRoot", 0.125, 0.125);
-  MechanismCircle2d _turretMechCircle{_turretMechRoot, "turretCircle", 0.05, 0_deg};
 };
