@@ -10,6 +10,7 @@
 #include <ctre/phoenix6/controls/Follower.hpp>
 
 #include "frc/smartdashboard/SmartDashboard.h"
+#include "utilities/RobotVisualisation.h"
 
 SubShooter::SubShooter() {
   // Coast Mode
@@ -42,17 +43,19 @@ SubShooter::SubShooter() {
   _shooterMotor2.GetConfigurator().Apply(_shooterMotorConfig);
 
   _shooterMotor1.GetClosedLoopReference().SetUpdateFrequency(100_Hz);
+  _shooterMotor1.GetStatorCurrent().SetUpdateFrequency(100_Hz);
 
-    _timeOfFlightTable.insert(1.8575_m, 0.8_s);
-    _timeOfFlightTable.insert(2.3575_m, 0.5_s);
-    _timeOfFlightTable.insert(2.8575_m, 0.93_s);
-    _timeOfFlightTable.insert(3.3575_m, 1.1_s);
-    _timeOfFlightTable.insert(3.8575_m, 1.18_s);
-    _timeOfFlightTable.insert(4.3575_m, 1.18_s);
-    _timeOfFlightTable.insert(4.6875_m, 1.28_s);
-    _timeOfFlightTable.insert(5.1875_m, 1.28_s);
+  _shooterMotor2.GetClosedLoopReference().SetUpdateFrequency(100_Hz);
+  _shooterMotor2.GetStatorCurrent().SetUpdateFrequency(100_Hz);
 
-  frc::SmartDashboard::PutData("Shooter/mech2dDisplay", &_shooterMech);
+  _timeOfFlightTable.insert(1.8575_m, 0.8_s);
+  _timeOfFlightTable.insert(2.3575_m, 0.5_s);
+  _timeOfFlightTable.insert(2.8575_m, 0.93_s);
+  _timeOfFlightTable.insert(3.3575_m, 1.1_s);
+  _timeOfFlightTable.insert(3.8575_m, 1.18_s);
+  _timeOfFlightTable.insert(4.3575_m, 1.18_s);
+  _timeOfFlightTable.insert(4.6875_m, 1.28_s);
+  _timeOfFlightTable.insert(5.1875_m, 1.28_s);
 
   _flyWheelSpeedTableScoring.insert(1.8575_m, 26_tps);
   _flyWheelSpeedTableScoring.insert(2.3575_m, 27_tps);
@@ -78,10 +81,10 @@ void SubShooter::Periodic() {
   Logger::Log("Shooter/IsAtSpeed", IsAtSpeed());
 
   units::angle::degree_t motor1Position = _shooterMotor1.GetPosition().GetValue();
-  _shooterMechTopRoller.SetAngle(motor1Position);
+  RobotVisualisation::GetInstance()._shooterMechTopRoller.SetAngle(motor1Position);
 
   units::angle::degree_t motor2Position = _shooterMotor2.GetPosition().GetValue();
-  _shooterMechBottomRoller.SetAngle(motor2Position);
+  RobotVisualisation::GetInstance()._shooterMechBottomRoller.SetAngle(motor2Position);
 
   units::celsius_t shooter1Temperature = _shooterMotor1.GetDeviceTemp().GetValue();
   units::ampere_t shooter1Current = _shooterMotor1.GetStatorCurrent().GetValue();
@@ -135,10 +138,8 @@ frc2::CommandPtr SubShooter::SpinShooterSlowly() {
 }
 
 bool SubShooter::IsAtSpeed() {
-  return units::math::abs(
-           _shooterMotor1.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 1.0_tps &&
-         units::math::abs(
-           _shooterMotor2.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 1.0_tps;
+  return units::math::abs(_shooterMotor1.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 4.0_tps &&
+  units::math::abs(_shooterMotor2.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 4.0_tps;
 }
 
 frc2::CommandPtr SubShooter::SpinWithDistance(

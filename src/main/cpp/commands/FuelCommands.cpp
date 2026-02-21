@@ -53,16 +53,19 @@ frc2::CommandPtr StationaryShootAt(frc::Translation2d target) {
 }
 
 frc2::CommandPtr ShootWhenReady() {
-  return frc2::cmd::Either(SubFeeder::GetInstance().FeederOn().AlongWith(SubIndexer::GetInstance().Index()),
-    SubFeeder::GetInstance().FeederOff().AlongWith(SubIndexer::GetInstance().StopIndex()),
-    [] {
-       auto currentPose = PoseHandler::GetInstance().GetPose();
-       return SubHood::GetInstance().HoodIsAtTarget() && SubShooter::GetInstance().IsAtSpeed() &&
-              SubTurret::GetInstance().IsAtTarget() &&
-              ShotPlanner::CalculateShotTarget(currentPose).shouldShoot;
-
-    })
+  return frc2::cmd::WaitUntil([] { return IsReadyToShoot(); })
+    .AndThen(SubFeeder::GetInstance().Feed().AlongWith(SubIndexer::GetInstance().Index()).Until([] {
+      return !IsReadyToShoot();
+    }))
     .Repeatedly();
+}
+
+bool IsReadyToShoot() {
+  auto currentPose = PoseHandler::GetInstance().GetPose();
+  return SubHood::GetInstance().HoodIsAtTarget() && SubShooter::GetInstance().IsAtSpeed() &&
+        SubTurret::GetInstance().IsAtTarget() &&
+        ShotPlanner::CalculateShotTarget(currentPose).shouldShoot &&
+        SubTurret::GetInstance().IsNotApproachingMax([] { return LATENCYOFFSET; });
 }
 
 frc2::CommandPtr AimOnTheMove() {
