@@ -4,15 +4,14 @@
 
 #include "Robot.h"
 
-#include "utilities/ShiftHandler.h"
 #include "utilities/Logger.h"
 #include "utilities/PoseHandler.h"
+#include "utilities/ShiftHandler.h"
 #include "utilities/ShotPlanner.h"
 
-#include <frc2/command/CommandScheduler.h>
 #include <frc/DataLogManager.h>
-
 #include <frc/geometry/Transform2d.h>
+#include <frc2/command/CommandScheduler.h>
 
 Robot::Robot() {
   //USB logging

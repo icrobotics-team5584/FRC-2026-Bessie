@@ -31,9 +31,6 @@ class SubFeeder : public frc2::SubsystemBase {
   frc2::CommandPtr FeederOn();
   frc2::CommandPtr FeederOff();
 
-  bool FeederIsFull();
-  bool FeederIsEmpty();
-
   void Periodic() override;
 
   void SimulationPeriodic() override;
@@ -41,9 +38,6 @@ class SubFeeder : public frc2::SubsystemBase {
  private:
   ICSparkFlex _feederMotor{canid::FEEDER};
   rev::spark::SparkFlexConfig _feederMotorConfig;
-
-  frc::DigitalInput _feederFullSensor{dio::FEEDER_FULL_SENSOR};
-  frc::DigitalInput _feederEmptySensor{dio::FEEDER_EMPTY_SENSOR};
 
   frc::Alert _feederHighTemperatureAlert{
     "Feeder Motor High Temperature!", frc::Alert::AlertType::kWarning};
