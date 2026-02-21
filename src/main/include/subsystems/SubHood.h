@@ -83,8 +83,14 @@ class SubHood : public frc2::SubsystemBase {
     "Hood Motor High Temperature!", frc::Alert::AlertType::kWarning};
   frc::Alert _hoodCurrentAlert{"Hood Motor Overcurrent!", frc::Alert::AlertType::kWarning};
 
-  AlertController::MotorAlertConfig _hoodAlertConfig{
-    _hoodhighTemperatureAlert, _hoodCurrentAlert, 60_degC, 20_A};
+  frc::Alert _hoodRecordedTemperatureAlert{
+    "Hood Motor max Temperature was reached !", frc::Alert::AlertType::kWarning};
+
+  frc::Alert _hoodRecordedCurrentAlert{
+    "Hood Motor max current was reached !", frc::Alert::AlertType::kWarning};
+
+  AlertController::MotorAlertConfig _hoodAlertConfig{_hoodhighTemperatureAlert, _hoodCurrentAlert,
+    _hoodRecordedTemperatureAlert, _hoodRecordedCurrentAlert, 60_degC, 20_A};
 
   wpi::interpolating_map<units::meter_t, units::degree_t> _hoodPitchTable;
 
