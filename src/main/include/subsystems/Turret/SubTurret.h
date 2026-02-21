@@ -24,6 +24,9 @@
 #include <frc2/command/SubsystemBase.h>
 #include <frc2/command/button/CommandXboxController.h>
 
+#include "subsystems/Turret/TurretThroughboreIO.h"
+#include "subsystems/Turret/TurretCancoderIO.h"
+
 #include <units/angle.h>
 
 #include "Constants.h"
@@ -72,8 +75,8 @@ class SubTurret : public frc2::SubsystemBase {
   AlertController::MotorAlertConfig _turretAlertConfig{
     _turrethighTemperatureAlert, _turretCurrentAlert, 60_degC, 20_A};
 
-  frc::DutyCycleEncoder _turretEncoder1{dio::TURRET_ENCODER_1};
-  frc::DutyCycleEncoder _turretEncoder2{dio::TURRET_ENCODER_2};
+  std::unique_ptr<TurretEncoderIO> _turretEncoder1;
+  std::unique_ptr<TurretEncoderIO> _turretEncoder2;
 
   units::degree_t getEncoder1Degrees();
   units::degree_t getEncoder2Degrees();
@@ -108,8 +111,6 @@ class SubTurret : public frc2::SubsystemBase {
   static constexpr double GEAR_RATIO = (48.0 / 12.0) * (94.0 / 10.0);
 
   static constexpr units::degree_t TOLARANCE = 2_deg;
-  static constexpr units::hertz_t ENCODER_FREQUENCY = 975.6_Hz;
-  // force set encoder frequency to avoid 1sec startup time
 
   frc::TimeInterpolatableBuffer<units::degree_t> _turretPos{1_s};
 

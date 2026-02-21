@@ -1,10 +1,11 @@
-#include "EncoderIO.h"
+#include "TurretEncoderIO.h"
 
-class TurretThroughboreIO : public EncoderIO {
+class TurretThroughboreIO : public TurretEncoderIO {
     public:
         TurretThroughboreIO(int encoderCanID);
         void ConfigEncoder();
-        units::degree_t GetPosition();
+        double GetPosition();
+        bool IsConnected();
     private:
         frc::DutyCycleEncoder _encoder;
 };

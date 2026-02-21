@@ -1,10 +1,11 @@
-#include "EncoderIO.h"
+#include "TurretEncoderIO.h"
 
-class TurretCancoderIO : public EncoderIO {
+class TurretCancoderIO : public TurretEncoderIO {
     public:
         TurretCancoderIO(int encoderCanID);
         void ConfigEncoder();
-        units::degree_t GetPosition();
+        double GetPosition();
+        bool IsConnected();
     private:
         ctre::phoenix6::hardware::CANcoder _encoder;
         ctre::phoenix6::configs::CANcoderConfiguration _encoderConfig;
