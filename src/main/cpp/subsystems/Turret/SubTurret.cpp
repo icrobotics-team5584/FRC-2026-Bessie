@@ -33,9 +33,9 @@ SubTurret::SubTurret() {
     }
 
     if (BotVars::GetRobot() == BotVars::PRACTICE) {
-        _turretEncoder2 = std::make_unique<TurretThroughboreIO>(dio::TURRET_ENCODER_1);
+        _turretEncoder2 = std::make_unique<TurretThroughboreIO>(dio::TURRET_ENCODER_2);
     } else {
-        _turretEncoder2 = std::make_unique<TurretCancoderIO>(dio::TURRET_ENCODER_1);
+        _turretEncoder2 = std::make_unique<TurretCancoderIO>(dio::TURRET_ENCODER_2);
     }
 
     _turretEncoder1.get()->ConfigEncoder();
