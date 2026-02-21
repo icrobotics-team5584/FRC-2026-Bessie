@@ -69,8 +69,6 @@ void SubIndexer::SimulationPeriodic() {
   _sim.SetInputVoltage(_indexerMotor.CalcSimVoltage());
   _sim.Update(20_ms);
   _indexerMotor.IterateSim(_sim.GetAngularVelocity());
-  auto torque = MOTOR_MODEL.Torque(_outdexerMotor.GetStatorCurrent());
-  _outdexerMotor.IterateSim(MOTOR_MODEL.Speed(torque, _outdexerMotor.CalcSimVoltage()));
 }
 
 frc2::CommandPtr SubIndexer::Index() {
