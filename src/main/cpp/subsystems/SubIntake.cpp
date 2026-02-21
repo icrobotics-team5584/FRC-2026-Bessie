@@ -10,24 +10,35 @@
 #include <utilities/Logger.h>
 
 SubIntake::SubIntake() {
-  _intakeMotorConfig.SmartCurrentLimit(60);
+  _intakeMotorConfig.SmartCurrentLimit(45);
   _intakeMotorConfig.Inverted(true);
   _intakeMotor.OverwriteConfig(_intakeMotorConfig);
 
   Logger::Log("Intake/Intake Motor", &_intakeMotor);
+
+  _intakeFollowerMotorConfig.SmartCurrentLimit(45);
+  _intakeFollowerMotorConfig.Inverted(true);
+  _intakeFollowerMotorConfig.Follow(_intakeMotor);
+  _intakeFollowerMotor.OverwriteConfig(_intakeFollowerMotorConfig);
+
+  Logger::Log("Intake/Follower Intake Motor", &_intakeFollowerMotor);
 }
 
 frc2::CommandPtr SubIntake::IntakeOn() {
-  return StartEnd([this] { _intakeMotor.Set(1.0); }, [this] { _intakeMotor.Set(0); });
+  return StartEnd([this] { _intakeMotor.Set(0.8); }, [this] { _intakeMotor.Set(0); });
 }
 
 frc2::CommandPtr SubIntake::IntakeOff() {
   return RunOnce([this] { _intakeMotor.Set(0); });
 }
 
+frc2::CommandPtr SubIntake::ReverseIntake() {
+  return StartEnd([this] { _intakeMotor.Set(-1.0); }, [this] { _intakeMotor.Set(0); });
+}
+
 // This method will be called once per scheduler run
 void SubIntake::Periodic() {
-   auto loopStart = frc::GetTime();
+  auto loopStart = frc::GetTime();
   units::celsius_t intakeTemperature = _intakeMotor.GetTemperature();
 
   units::ampere_t intakeCurrent = _intakeMotor.GetStatorCurrent();
