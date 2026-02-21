@@ -31,7 +31,7 @@ RobotContainer::RobotContainer() {
   ConfigureBindings();
   SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
   SubVision::GetInstance().SetDefaultCommand(cmd::AddVisionMeasurement());
-  SubTurret::GetInstance().SetDefaultCommand(cmd::AimAtFieldRelative([]{return cmd::CalcShootOnTheMoveAngle();}));
+  SubTurret::GetInstance().SetDefaultCommand(cmd::AimAtHub());
 
   _autoManager.AddDefaultAuton("default", AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton()));
 

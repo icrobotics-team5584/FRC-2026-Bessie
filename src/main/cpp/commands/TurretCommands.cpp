@@ -12,6 +12,7 @@
 #include "utilities/PoseHandler.h"
 #include "utilities/FieldConstants.h"
 #include "utilities/ShotPlanner.h"
+#include "utilities/ICgeometry.h"
 
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/Commands.h>
@@ -168,6 +169,16 @@ frc::Pose2d CalcFutureTurretPose() {
 frc::Translation2d GetShotTarget(){
   auto curPose = PoseHandler::GetInstance().GetPose();
   return ShotPlanner::CalculateShotTarget(curPose).targetPosition.ToTranslation2d();
+}
+
+frc2::CommandPtr AimAtHub() {
+  frc::Translation2d spot;
+  return frc2::cmd::RunOnce([] {
+    frc::Translation3d target = fieldpos::HUB_POSITION;
+    if(frc::DriverStation::GetAlliance() == frc::DriverStation::kRed) { ICgeometry::xTranslationFlip(target); }
+    Logger::FieldDisplay::GetInstance().DisplayPose("AimAtHub/target", frc::Pose2d{target.ToTranslation2d(), 0_deg});
+    return target.ToTranslation2d();
+  }).AndThen(AimAtSpot(spot));
 }
 
 }  // namespace cmd
