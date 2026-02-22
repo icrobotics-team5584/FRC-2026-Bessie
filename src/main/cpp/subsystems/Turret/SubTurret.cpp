@@ -10,6 +10,9 @@
 #include "subsystems/Turret/TurretEncoderConfig.h"
 #include <frc/RobotBase.h>
 
+#include "subsystems/Turret/TurretThroughboreIO.h"
+#include "subsystems/Turret/TurretCancoderIO.h"
+
 SubTurret::SubTurret() {
     
     _turretMotorConfig.encoder.PositionConversionFactor(1/GEAR_RATIO);
