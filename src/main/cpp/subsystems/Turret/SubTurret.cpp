@@ -30,15 +30,12 @@ SubTurret::SubTurret() {
     _turretMotor.OverwriteConfig(_turretMotorConfig);
 
     if (BotVars::GetRobot() == BotVars::PRACTICE) {
-        _turretEncoder1 = std::make_unique<TurretThroughboreIO>(dio::TURRET_ENCODER_1);
-        _turretEncoder2 = std::make_unique<TurretThroughboreIO>(dio::TURRET_ENCODER_2);
+        _encoderIO = std::make_unique<TurretThroughboreIO>(dio::TURRET_ENCODER_1, dio::TURRET_ENCODER_2);
     } else {
-        _turretEncoder1 = std::make_unique<TurretCancoderIO>(dio::TURRET_ENCODER_1);
-        _turretEncoder2 = std::make_unique<TurretCancoderIO>(dio::TURRET_ENCODER_2);
+        _encoderIO = std::make_unique<TurretCancoderIO>(dio::TURRET_ENCODER_1, dio::TURRET_ENCODER_2);
     }
 
-    _turretEncoder1->ConfigEncoder();
-    _turretEncoder2->ConfigEncoder();
+    _encoderIO->ConfigEncoder();
 
     frc::SmartDashboard::PutData("Turret/Motor", &_turretMotor);
     frc::SmartDashboard::PutData("Turret/mech2dDisplay", &_turretMech);
@@ -53,7 +50,7 @@ void SubTurret::Periodic() {
     AlertController::UpdateTemperatureAlert(_turretAlertConfig, turretTemperature);
     AlertController::UpdateCurrentAlert(_turretAlertConfig, turretCurrent);
 
-    if(_hasZeroed == false && _turretEncoder1->IsConnected() && _turretEncoder2->IsConnected()) {
+    if(_hasZeroed == false && _encoderIO->IsConnected()) {
         units::degree_t motorPosition = _turretMotor.GetPosition();
         units::degree_t crtPosition = GetTurretAngleCRT();
         Logger::Log("Turret/reset/motorPosition", motorPosition);
@@ -75,8 +72,8 @@ void SubTurret::Periodic() {
 
     Logger::Log("Turret/Field Relative Turret Angle", GetFieldRelativeTurretAngle());
     Logger::Log("Turret/CRT Positiion", GetTurretAngleCRT());
-    Logger::Log("Turret/Encoder/Encoder1", _turretEncoder1->GetPosition());
-    Logger::Log("Turret/Encoder/Encoder2", _turretEncoder2->GetPosition());
+    Logger::Log("Turret/Encoder/Encoder1ZeroedDegrees", _encoderIO->GetEncoder1Degrees());
+    Logger::Log("Turret/Encoder/Encoder2ZeroedDegrees", _encoderIO->GetEncoder2Degrees());
     Logger::Log("Turret/Encoder/ZeroedEncoder1", getEncoder1Degrees());
     Logger::Log("Turret/Encoder/ZeroedEncoder2", getEncoder2Degrees());
     Logger::Log("Turret/Encoder/e1init", encoder1ZeroOffset);
@@ -84,8 +81,7 @@ void SubTurret::Periodic() {
     Logger::Log("Turret/hasReset", _hasZeroed);
     Logger::Log("Turret/IsAtTarget", IsAtTarget());
 
-    Logger::Log("Turret/Encoder/Encoder1IsConnected", _turretEncoder1->IsConnected());
-    Logger::Log("Turret/Encoder/Encoder2IsConnected", _turretEncoder2->IsConnected());
+    Logger::Log("Turret/Encoder/EncodersAreConnected", _encoderIO->IsConnected());
 
     Logger::Log("Turret/Loop Time", (frc::GetTime() - loopStart));
     _turretPos.AddSample(frc::Timer::GetFPGATimestamp(), CalcOptimisedTurretAngle(_turretMotor.GetPosition()));
@@ -226,13 +222,11 @@ frc2::CommandPtr SubTurret::ZeroTurretCmd() {
 }
 
 units::degree_t SubTurret::getEncoder1Degrees() {
-    if (BotVars::GetRobot() == BotVars::PRACTICE) { return (_turretEncoder1->GetPosition() - TurretThroughboreConfig::encoder1ZeroOffset)*360_deg; }
-    else {return (_turretEncoder1->GetPosition() - TurretCancoderConfig::encoder1ZeroOffset)*360_deg;} 
+    return _encoderIO->GetEncoder1Degrees();
 }
 
 units::degree_t SubTurret::getEncoder2Degrees() {
-    if (BotVars::GetRobot() == BotVars::PRACTICE) { return (_turretEncoder2->GetPosition() - TurretThroughboreConfig::encoder2ZeroOffset)*360_deg; }
-    else {return (_turretEncoder2->GetPosition() - TurretCancoderConfig::encoder2ZeroOffset)*360_deg;}
+    return _encoderIO->GetEncoder2Degrees();
 }
 
 bool SubTurret::IsAtTarget() {

@@ -3,10 +3,12 @@
 
 class TurretThroughboreIO : public TurretEncoderIO {
     public:
-        TurretThroughboreIO(int encoderCanID);
+        TurretThroughboreIO(int encoder1CanID, int encoder2CanID);
         void ConfigEncoder();
-        double GetPosition();
+        units::degree_t GetEncoder1Degrees();
+        units::degree_t GetEncoder2Degrees();
         bool IsConnected();
     private:
-        frc::DutyCycleEncoder _encoder;
+        frc::DutyCycleEncoder _encoder1;
+        frc::DutyCycleEncoder _encoder2;
 };

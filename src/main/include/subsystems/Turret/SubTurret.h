@@ -81,8 +81,7 @@ class SubTurret : public frc2::SubsystemBase {
   AlertController::MotorAlertConfig _turretAlertConfig{
     _turrethighTemperatureAlert, _turretCurrentAlert, 60_degC, 20_A};
 
-  std::unique_ptr<TurretEncoderIO> _turretEncoder1;
-  std::unique_ptr<TurretEncoderIO> _turretEncoder2;
+  std::unique_ptr<TurretEncoderIO> _encoderIO;
 
   units::degree_t getEncoder1Degrees();
   units::degree_t getEncoder2Degrees();
