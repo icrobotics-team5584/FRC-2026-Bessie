@@ -1,4 +1,5 @@
 #include "TurretEncoderIO.h"
+#include <ctre/phoenix6/CANcoder.hpp>
 
 class TurretCancoderIO : public TurretEncoderIO {
     public:

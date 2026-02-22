@@ -1,4 +1,5 @@
 #include "TurretEncoderIO.h"
+#include <frc/DutyCycleEncoder.h>
 
 class TurretThroughboreIO : public TurretEncoderIO {
     public:
