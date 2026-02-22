@@ -4,6 +4,8 @@
 
 #include "subsystems/SubIndexer.h"
 
+#include "utilities/RobotVisualisation.h"
+
 #include <units/current.h>
 #include <utilities/Logger.h>
 
@@ -56,7 +58,10 @@ void SubIndexer::Periodic() {
   AlertController::UpdateCurrentAlert(_indexerAlertConfig, IndexerCurrent);
   AlertController::UpdateTemperatureAlert(_outdexerAlertConfig, IndexerOutTemp);
   AlertController::UpdateCurrentAlert(_outdexerAlertConfig, IndexerOutcurrent);
-  
+
+  RobotVisualisation::GetInstance()._indexerMechCircle.SetAngle(_indexerMotor.GetPosition());
+  RobotVisualisation::GetInstance()._outdexerMechCircle.SetAngle(_outdexerMotor.GetPosition());
+
   Logger::Log("Indexer/Loop Time", (frc::GetTime() - loopStart));
 }
 

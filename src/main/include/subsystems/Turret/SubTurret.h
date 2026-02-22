@@ -78,8 +78,14 @@ class SubTurret : public frc2::SubsystemBase {
     "Turret Motor High Temperature!", frc::Alert::AlertType::kWarning};
   frc::Alert _turretCurrentAlert{"Turret Motor Overcurrent!", frc::Alert::AlertType::kWarning};
 
-  AlertController::MotorAlertConfig _turretAlertConfig{
-    _turrethighTemperatureAlert, _turretCurrentAlert, 60_degC, 20_A};
+  frc::Alert _turretRecordedTemperatureAlert{
+    "Turret Motor max Temperature was reached !", frc::Alert::AlertType::kWarning};
+
+  frc::Alert _turretRecordedCurrentAlert{
+    "Turret Motor max current was reached !", frc::Alert::AlertType::kWarning};
+  AlertController::MotorAlertConfig _turretAlertConfig{_turrethighTemperatureAlert,
+    _turretCurrentAlert, _turretRecordedTemperatureAlert, _turretRecordedCurrentAlert, 60_degC,
+    20_A};
 
   std::unique_ptr<TurretEncoderIO> _encoderIO;
 
@@ -87,7 +93,7 @@ class SubTurret : public frc2::SubsystemBase {
   units::degree_t getEncoder2Degrees();
 
   static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::NEO();
-  static constexpr units::kilogram_square_meter_t MOI = 0.0001_kg_sq_m;
+  static constexpr units::kilogram_square_meter_t MOI = 1_kg_sq_m;
 
   frc::SimpleMotorFeedforward<units::turn> _robotRotVelFF{kS, kV, kA};
 
@@ -123,9 +129,4 @@ class SubTurret : public frc2::SubsystemBase {
   frc::LinearSystem<2, 1, 2> _turretSystem =
     frc::LinearSystemId::DCMotorSystem(MOTOR_MODEL, MOI, GEAR_RATIO);
   frc::sim::DCMotorSim _turretSim{_turretSystem, MOTOR_MODEL};
-
-  // mechanism2d
-  frc::Mechanism2d _turretMech{0.25, 0.25};
-  frc::MechanismRoot2d* _turretMechRoot = _turretMech.GetRoot("turretRoot", 0.125, 0.125);
-  MechanismCircle2d _turretMechCircle{_turretMechRoot, "turretCircle", 0.05, 0_deg};
 };
