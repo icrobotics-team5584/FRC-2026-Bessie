@@ -24,8 +24,7 @@
 #include <frc2/command/SubsystemBase.h>
 #include <frc2/command/button/CommandXboxController.h>
 
-#include "subsystems/Turret/TurretThroughboreIO.h"
-#include "subsystems/Turret/TurretCancoderIO.h"
+#include "subsystems/Turret/TurretEncoderIO.h"
 
 #include <units/angle.h>
 
