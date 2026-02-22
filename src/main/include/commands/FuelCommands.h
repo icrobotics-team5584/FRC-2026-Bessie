@@ -17,5 +17,5 @@ frc2::CommandPtr ForceShoot();
 
 bool IsReadyToShoot();
 
-bool forcingShoot = false;
+static bool forcingShoot = false;
 }
