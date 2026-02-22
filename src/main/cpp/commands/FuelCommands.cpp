@@ -62,6 +62,9 @@ frc2::CommandPtr ShootWhenReady() {
 
 bool IsReadyToShoot() {
   auto currentPose = PoseHandler::GetInstance().GetPose();
+  
+  if(forcingShoot) { return forcingShoot; }
+
   return SubHood::GetInstance().HoodIsAtTarget() && SubShooter::GetInstance().IsAtSpeed() &&
         SubTurret::GetInstance().IsAtTarget() &&
         ShotPlanner::CalculateShotTarget(currentPose).shouldShoot &&
@@ -99,6 +102,14 @@ frc2::CommandPtr DisableAllOverrides() {
   return frc2::cmd::RunOnce([] {
     ShotPlanner::SetOverride(ShotPlanner::Override::NONE);
     ShiftHandler::GetInstance().SetOverrideActive(false);
+    forcingShoot = false;
   });
 }
+
+frc2::CommandPtr ForceShoot() {
+  return frc2::cmd::RunOnce([] {
+    forcingShoot = true;
+  });
+}
+
 }  // namespace cmd
