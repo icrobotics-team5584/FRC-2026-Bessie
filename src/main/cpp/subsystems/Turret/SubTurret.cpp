@@ -223,13 +223,13 @@ frc2::CommandPtr SubTurret::ZeroTurretCmd() {
 }
 
 units::degree_t SubTurret::getEncoder1Degrees() {
-    if (BotVars::GetRobot() == BotVars::PRACTICE) { return (_turretEncoder1->GetPosition() - Throughbore::encoder1ZeroOffset)*360_deg; }
-    else {return (_turretEncoder1->GetPosition() - Cancoder::encoder1ZeroOffset)*360_deg;} 
+    if (BotVars::GetRobot() == BotVars::PRACTICE) { return (_turretEncoder1->GetPosition() - TurretThroughboreConfig::encoder1ZeroOffset)*360_deg; }
+    else {return (_turretEncoder1->GetPosition() - TurretCancoderConfig::encoder1ZeroOffset)*360_deg;} 
 }
 
 units::degree_t SubTurret::getEncoder2Degrees() {
-    if (BotVars::GetRobot() == BotVars::PRACTICE) { return (_turretEncoder2->GetPosition() - Throughbore::encoder2ZeroOffset)*360_deg; }
-    else {return (_turretEncoder2->GetPosition() - Cancoder::encoder2ZeroOffset)*360_deg;}
+    if (BotVars::GetRobot() == BotVars::PRACTICE) { return (_turretEncoder2->GetPosition() - TurretThroughboreConfig::encoder2ZeroOffset)*360_deg; }
+    else {return (_turretEncoder2->GetPosition() - TurretCancoderConfig::encoder2ZeroOffset)*360_deg;}
 }
 
 bool SubTurret::IsAtTarget() {

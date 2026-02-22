@@ -5,7 +5,7 @@
 TurretThroughboreIO::TurretThroughboreIO(int encoderCanID) : _encoder(encoderCanID) {}
 
 void TurretThroughboreIO::ConfigEncoder() {
-    _encoder.SetAssumedFrequency(Throughbore::ENCODER_FREQUENCY);
+    _encoder.SetAssumedFrequency(TurretThroughboreConfig::ENCODER_FREQUENCY);
 }
 
 double TurretThroughboreIO::GetPosition() {
