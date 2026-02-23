@@ -103,12 +103,14 @@ frc2::CommandPtr DisableAllOverrides() {
     ShotPlanner::SetOverride(ShotPlanner::Override::NONE);
     ShiftHandler::GetInstance().SetOverrideActive(false);
     forcingShoot = false;
+    Logger::Log("ForceShoot/forcingShoot", forcingShoot);
   });
 }
 
 frc2::CommandPtr ForceShoot() {
   return frc2::cmd::RunOnce([] {
     forcingShoot = true;
+    Logger::Log("ForceShoot/forcingShoot", forcingShoot);
   });
 }
 
