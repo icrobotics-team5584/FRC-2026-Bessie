@@ -10,6 +10,7 @@
 #include <ctre/phoenix6/controls/Follower.hpp>
 
 #include "frc/smartdashboard/SmartDashboard.h"
+#include "utilities/RobotVisualisation.h"
 
 SubShooter::SubShooter() {
   // Coast Mode
@@ -88,10 +89,10 @@ void SubShooter::Periodic() {
   Logger::Log("Shooter/IsAtSpeed", IsAtSpeed());
 
   units::angle::degree_t motor1Position = _shooterMotor1.GetPosition().GetValue();
-  _shooterMechTopRoller.SetAngle(motor1Position);
+  RobotVisualisation::GetInstance()._shooterMechTopRoller.SetAngle(motor1Position);
 
   units::angle::degree_t motor2Position = _shooterMotor2.GetPosition().GetValue();
-  _shooterMechBottomRoller.SetAngle(motor2Position);
+  RobotVisualisation::GetInstance()._shooterMechBottomRoller.SetAngle(motor2Position);
 
   units::celsius_t shooter1Temperature = _shooterMotor1.GetDeviceTemp().GetValue();
   units::ampere_t shooter1Current = _shooterMotor1.GetStatorCurrent().GetValue();
