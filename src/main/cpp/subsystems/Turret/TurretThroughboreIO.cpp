@@ -2,7 +2,7 @@
 #include "subsystems/Turret/TurretEncoderConfig.h"
 #include "utilities/Logger.h"
 
-TurretThroughboreIO::TurretThroughboreIO(int encoder1CanID, int encoder2CanID) : _encoder1(encoder1CanID), _encoder2(encoder2CanID) {}
+TurretThroughboreIO::TurretThroughboreIO(int encoder1ID, int encoder2ID) : _encoder1(encoder1ID), _encoder2(encoder2ID) {}
 
 void TurretThroughboreIO::ConfigEncoder() {
     _encoder1.SetAssumedFrequency(TurretThroughboreConfig::ENCODER_FREQUENCY);
