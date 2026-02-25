@@ -9,11 +9,11 @@ void TurretCancoderIO::ConfigEncoder() {
 }
 
 units::degree_t TurretCancoderIO::GetEncoder1Degrees() {
-    return (_encoder1.GetPosition().GetValueAsDouble() - TurretThroughboreConfig::encoder1ZeroOffset)*360_deg;
+    return _encoder1.GetPosition().GetValue() - TurretThroughboreConfig::encoder1ZeroOffset;
 }
 
 units::degree_t TurretCancoderIO::GetEncoder2Degrees() {
-    return (_encoder2.GetPosition().GetValueAsDouble() - TurretThroughboreConfig::encoder2ZeroOffset)*360_deg;
+    return _encoder2.GetPosition().GetValue() - TurretThroughboreConfig::encoder2ZeroOffset;
 }
 
 bool TurretCancoderIO::IsConnected() {

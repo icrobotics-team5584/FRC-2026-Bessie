@@ -10,11 +10,11 @@ void TurretThroughboreIO::ConfigEncoder() {
 }
 
 units::degree_t TurretThroughboreIO::GetEncoder1Degrees() {
-    return (_encoder1.Get() - TurretThroughboreConfig::encoder1ZeroOffset)*360_deg;
+    return _encoder1.Get() * 1_tr - TurretThroughboreConfig::encoder1ZeroOffset;
 }
 
 units::degree_t TurretThroughboreIO::GetEncoder2Degrees() {
-    return (_encoder2.Get() - TurretThroughboreConfig::encoder2ZeroOffset)*360_deg;
+    return _encoder2.Get() * 1_tr - TurretThroughboreConfig::encoder2ZeroOffset;
 }
 
 bool TurretThroughboreIO::IsConnected() {
