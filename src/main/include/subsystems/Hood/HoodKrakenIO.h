@@ -24,7 +24,7 @@ class HoodKrakenIO : public HoodMotorIO {
  private:
   ctre::phoenix6::hardware::TalonFX _motor;
 
-  units::volt_t _simVoltage = 0_V;
+  ctre::phoenix6::sim::TalonFXSimState &_motorSim;
 
   units::degree_t _desiredAngle;
 };
