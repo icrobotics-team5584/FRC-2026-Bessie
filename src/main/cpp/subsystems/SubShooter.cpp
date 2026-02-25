@@ -56,15 +56,21 @@ SubShooter::SubShooter() {
   _timeOfFlightTable.insert(4.3575_m, 1.18_s);
   _timeOfFlightTable.insert(4.6875_m, 1.28_s);
   _timeOfFlightTable.insert(5.1875_m, 1.28_s);
+  _timeOfFlightTable.insert(5.3_m, 1.3_s);
+  _timeOfFlightTable.insert(5.9_m, 1.51_s);
+  _timeOfFlightTable.insert(7_m, 1.8_s);
 
-  _flyWheelSpeedTableScoring.insert(1.8575_m, 26_tps);
-  _flyWheelSpeedTableScoring.insert(2.3575_m, 27_tps);
-  _flyWheelSpeedTableScoring.insert(2.8575_m, 29_tps);
-  _flyWheelSpeedTableScoring.insert(3.3575_m, 33_tps);
-  _flyWheelSpeedTableScoring.insert(3.8575_m, 35_tps);
-  _flyWheelSpeedTableScoring.insert(4.3575_m, 38.5_tps);
-  _flyWheelSpeedTableScoring.insert(4.6875_m, 41_tps);
-  _flyWheelSpeedTableScoring.insert(5.1875_m, 44_tps);
+  _flyWheelSpeedTableScoring.insert(1.8575_m, 27_tps);
+  _flyWheelSpeedTableScoring.insert(2.3575_m, 28_tps);
+  _flyWheelSpeedTableScoring.insert(2.8575_m, 30_tps);
+  _flyWheelSpeedTableScoring.insert(3.3575_m, 34_tps);
+  _flyWheelSpeedTableScoring.insert(3.8575_m, 36_tps);
+  _flyWheelSpeedTableScoring.insert(4.3575_m, 37_tps);
+  _flyWheelSpeedTableScoring.insert(4.6875_m, 42_tps);
+  _flyWheelSpeedTableScoring.insert(5.1875_m, 45_tps);
+  _flyWheelSpeedTableScoring.insert(5.6875_m, 49_tps);
+  _flyWheelSpeedTableScoring.insert(6.1875_m, 52_tps);
+  _flyWheelSpeedTableScoring.insert(6.6875_m, 57_tps);
 
   _flyWheelSpeedTablePassing.insert(5_m, 40_tps);
   _flyWheelSpeedTablePassing.insert(6_m, 45_tps);
