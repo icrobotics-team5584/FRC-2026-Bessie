@@ -61,12 +61,21 @@ void SubHood::SimulationPeriodic() {
 }
 
 frc2::CommandPtr SubHood::SetHoodPositionTarget(std::function<units::degree_t()> angle) {
-    return Run([this, angle] {
-        units::degree_t target = angle();
-        if(target > UPPER_LIMIT) {target = UPPER_LIMIT;}
-        if(target < LOWER_LIMIT) {target = LOWER_LIMIT;}
+  return Run([this, angle] {
+    units::degree_t target = angle();
 
-    _hoodMotor.SetPositionTarget(target);
+    if (target > UPPER_LIMIT) {
+      target = UPPER_LIMIT;
+    }
+
+    if (target < LOWER_LIMIT) {
+      target = LOWER_LIMIT;
+    }
+
+    if (_hasZeroed) {
+      _hoodMotor.SetPositionTarget(target);
+    }
+    
   });
 }
 
