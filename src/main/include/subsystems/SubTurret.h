@@ -72,6 +72,8 @@ class SubTurret : public frc2::SubsystemBase {
   ICSparkMax _turretMotor{canid::TURRET_MOTOR};
   rev::spark::SparkBaseConfig _turretMotorConfig;
 
+   frc::Alert _turretOutOfRangeAlert{"Turret out of allowed range!", frc::Alert::AlertType::kError};
+
   frc::Alert _turrethighTemperatureAlert{
     "Turret Motor High Temperature!", frc::Alert::AlertType::kWarning};
   frc::Alert _turretCurrentAlert{"Turret Motor Overcurrent!", frc::Alert::AlertType::kWarning};

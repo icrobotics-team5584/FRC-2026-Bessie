@@ -58,6 +58,14 @@ void SubTurret::Periodic() {
         }
     }
 
+    if(GetTurretAngleCRT() > NEG_LIMIT && GetTurretAngleCRT() < POS_LIMIT) {
+        _turretOutOfRangeAlert.Set(false);
+    }
+
+    else{
+        _turretOutOfRangeAlert.Set(true);
+    }
+
     RobotVisualisation::GetInstance()._turretMechCircle.SetAngle(_turretMotor.GetPosition());
 
     Logger::Log("Turret/Field Relative Turret Angle", GetFieldRelativeTurretAngle());
@@ -204,8 +212,16 @@ void SubTurret::SetTurretAngle(units::degree_t angle) {
 }
 
 void SubTurret::ZeroTurret() {
-    SetTurretAngle(GetTurretAngleCRT());
-    _turretMotor.SetPositionTarget(GetTurretAngleCRT());
+    units::degree_t turretAngle = GetTurretAngleCRT();
+    if(turretAngle > NEG_LIMIT && turretAngle < POS_LIMIT) {
+        SetTurretAngle(turretAngle);
+        _turretMotor.SetPositionTarget(GetTurretAngleCRT());
+        _turretOutOfRangeAlert.Set(false);
+    }
+
+    else{
+        _turretOutOfRangeAlert.Set(true);
+    }
 }
 
 frc2::CommandPtr SubTurret::ZeroTurretCmd() {
