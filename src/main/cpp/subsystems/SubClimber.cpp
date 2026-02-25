@@ -3,12 +3,13 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "subsystems/SubClimber.h"
+
 #include "utilities/Logger.h"
 
 SubClimber::SubClimber() {
   _climberMotorConfig.encoder.PositionConversionFactor(1 / _GEAR_RATIO);
   _climberMotorConfig.encoder.VelocityConversionFactor(1 / _GEAR_RATIO);
-  _climberMotorConfig.SmartCurrentLimit(60);                             /* Amps */
+  _climberMotorConfig.SmartCurrentLimit(60); /* Amps */
   _climberMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
   _climberMotorConfig.closedLoop.Pid(_P, _I, _D, rev::spark::ClosedLoopSlot::kSlot0);
 
@@ -20,7 +21,7 @@ SubClimber::SubClimber() {
 
 // This method will be called once per scheduler run
 void SubClimber::Periodic() {
-  if(_hasZeroed == false && _zeroing == false) {
+  if (_hasZeroed == false && _zeroing == false) {
     _climberMotor.Set(0);
   }
   Logger::Log("Climber/Has Zeroed", _hasZeroed);
@@ -89,22 +90,24 @@ frc2::CommandPtr SubClimber::RunCurrentZeroingSequence() {
     _hasZeroed = false;
     _zeroing = true;
     _climberMotor.SetVoltage(-1_V);
-  }).AndThen(frc2::cmd::WaitUntil([this] {
-    return (GetMotorCurrent() > _ZEROING_CURRENT) || (frc::RobotBase::IsSimulation() == true);
-  })).AndThen([this]{ 
-    /* Set zero seperately from FinallyDo so that it won't set the climber as 
-     * zeroed if the command was cancelled. */
-    _climberMotor.SetPosition(0_deg);
-    _hasZeroed = true;
-  }).FinallyDo([this] { 
+  })
+    .AndThen(frc2::cmd::WaitUntil([this] {
+      return (GetMotorCurrent() > _ZEROING_CURRENT) || (frc::RobotBase::IsSimulation() == true);
+    }))
+    .AndThen([this] {
+      /* Set zero seperately from FinallyDo so that it won't set the climber as
+       * zeroed if the command was cancelled. */
+      _climberMotor.SetPosition(0_deg);
+      _hasZeroed = true;
+    })
+    .FinallyDo([this] {
       _climberMotor.StopMotor();
       _zeroing = false;
-  });
+    });
 }
 
 frc2::CommandPtr SubClimber::ManualClimberUp() {
-  return StartEnd(
-    [this] { _climberMotor.SetVoltage(4_V); },
+  return StartEnd([this] { _climberMotor.SetVoltage(4_V); },
     [this] {
       auto targRot = _climberMotor.GetPosition();
       _climberMotor.SetPositionTarget(targRot);
@@ -112,8 +115,7 @@ frc2::CommandPtr SubClimber::ManualClimberUp() {
 }
 
 frc2::CommandPtr SubClimber::ManualClimberDown() {
-  return StartEnd(
-    [this] { _climberMotor.SetVoltage(-4_V); },
+  return StartEnd([this] { _climberMotor.SetVoltage(-4_V); },
     [this] {
       auto targRot = _climberMotor.GetPosition();
       _climberMotor.SetPositionTarget(targRot);
