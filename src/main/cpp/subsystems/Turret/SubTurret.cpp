@@ -4,10 +4,12 @@
 
 #include "subsystems/Turret/SubTurret.h"
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/RobotBase.h>
 #include "utilities/Logger.h"
 #include "utilities/PoseHandler.h"
 #include "utilities/BotVars.h"
 #include "subsystems/Turret/TurretEncoderConfig.h"
+#include "utilities/RobotVisualisation.h"
 #include <frc/RobotBase.h>
 
 SubTurret::SubTurret() {
@@ -42,7 +44,6 @@ SubTurret::SubTurret() {
     _turretEncoder2.get()->ConfigEncoder();
 
     frc::SmartDashboard::PutData("Turret/Motor", &_turretMotor);
-    frc::SmartDashboard::PutData("Turret/mech2dDisplay", &_turretMech);
 }
 
 // This method will be called once per scheduler run
@@ -60,7 +61,7 @@ void SubTurret::Periodic() {
         Logger::Log("Turret/reset/motorPosition", motorPosition);
         Logger::Log("Turret/reset/crtPosition", crtPosition);
 
-        bool CRTSameAsMotor = (units::math::abs(motorPosition - crtPosition) < 0.5_deg);
+        bool CRTSameAsMotor = (units::math::abs(motorPosition - crtPosition) < 0.5_deg || frc::RobotBase::IsSimulation());
         Logger::Log("Turret/reset/CRTSameAsMotor", CRTSameAsMotor);
 
         if(CRTSameAsMotor){
@@ -72,7 +73,7 @@ void SubTurret::Periodic() {
         }
     }
 
-    _turretMechCircle.SetAngle(_turretMotor.GetPosition());
+    RobotVisualisation::GetInstance()._turretMechCircle.SetAngle(_turretMotor.GetPosition());
 
     Logger::Log("Turret/Field Relative Turret Angle", GetFieldRelativeTurretAngle());
     Logger::Log("Turret/CRT Positiion", GetTurretAngleCRT());
