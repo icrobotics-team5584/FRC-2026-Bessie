@@ -55,7 +55,7 @@ class SubHood : public frc2::SubsystemBase {
 
   static constexpr units::degree_t UPPER_LIMIT = 37.5_deg;
   static constexpr units::degree_t LOWER_LIMIT = 16.5_deg;
-  static constexpr bool SIMULATE_GRAVITY = true;
+  static constexpr bool SIMULATE_GRAVITY = false;
   static constexpr units::degree_t STARTING_ANGLE = 13_deg;
   static constexpr units::degree_t STOW_ANGLE = 12.5_deg;
   static constexpr units::centimeter_t ARM_LENGTH = 20_cm;
@@ -70,8 +70,14 @@ class SubHood : public frc2::SubsystemBase {
     "Hood Motor High Temperature!", frc::Alert::AlertType::kWarning};
   frc::Alert _hoodCurrentAlert{"Hood Motor Overcurrent!", frc::Alert::AlertType::kWarning};
 
-  AlertController::MotorAlertConfig _hoodAlertConfig{
-    _hoodhighTemperatureAlert, _hoodCurrentAlert, 60_degC, 20_A};
+  frc::Alert _hoodRecordedTemperatureAlert{
+    "Hood Motor max Temperature was reached !", frc::Alert::AlertType::kWarning};
+
+  frc::Alert _hoodRecordedCurrentAlert{
+    "Hood Motor max current was reached !", frc::Alert::AlertType::kWarning};
+
+  AlertController::MotorAlertConfig _hoodAlertConfig{_hoodhighTemperatureAlert, _hoodCurrentAlert,
+    _hoodRecordedTemperatureAlert, _hoodRecordedCurrentAlert, 60_degC, 20_A};
 
   wpi::interpolating_map<units::meter_t, units::degree_t> _hoodPitchTable;
 
