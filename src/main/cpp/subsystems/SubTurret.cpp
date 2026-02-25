@@ -4,28 +4,41 @@
 
 #include "subsystems/SubTurret.h"
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/RobotBase.h>
 #include "utilities/Logger.h"
+#include "utilities/PoseHandler.h"
+#include "utilities/RobotVisualisation.h"
+#include <frc/RobotBase.h>
 
 SubTurret::SubTurret() {
     _turretMotorConfig.encoder.PositionConversionFactor(1/GEAR_RATIO);
     _turretMotorConfig.encoder.VelocityConversionFactor(1/GEAR_RATIO);
     _turretMotorConfig.closedLoop.Pid(P, I, D);
-    _turretMotorConfig.closedLoop.MaxOutput(0.5);
-    _turretMotorConfig.closedLoop.MinOutput(-0.5);
+    _turretMotorConfig.closedLoop.MaxOutput(1.0);
+    _turretMotorConfig.closedLoop.MinOutput(-1.0);
     _turretMotorConfig.closedLoop.IMaxAccum(0.05);
-    _turretMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kCoast);
+    _turretMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
     _turretMotorConfig.SmartCurrentLimit(30);
+    _turretMotorConfig.softLimit.ForwardSoftLimit(POS_LIMIT.convert<units::turns>().value());
+    _turretMotorConfig.softLimit.ForwardSoftLimitEnabled(true);
+    _turretMotorConfig.softLimit.ReverseSoftLimit(NEG_LIMIT.convert<units::turns>().value());
+    _turretMotorConfig.softLimit.ReverseSoftLimitEnabled(true);
     _turretMotor.OverwriteConfig(_turretMotorConfig);
 
     _turretEncoder1.SetAssumedFrequency(ENCODER_FREQUENCY);
     _turretEncoder2.SetAssumedFrequency(ENCODER_FREQUENCY);
 
     frc::SmartDashboard::PutData("Turret/Motor", &_turretMotor);
-    frc::SmartDashboard::PutData("Turret/mech2dDisplay", &_turretMech);
 }
 
 // This method will be called once per scheduler run
 void SubTurret::Periodic() {
+    auto loopStart = frc::GetTime();
+    units::celsius_t turretTemperature = _turretMotor.GetTemperature();
+    units::ampere_t turretCurrent = _turretMotor.GetStatorCurrent();
+
+    AlertController::UpdateTemperatureAlert(_turretAlertConfig, turretTemperature);
+    AlertController::UpdateCurrentAlert(_turretAlertConfig, turretCurrent);
 
     if(_hasZeroed == false && _turretEncoder1.IsConnected() && _turretEncoder2.IsConnected()) {
         units::degree_t motorPosition = _turretMotor.GetPosition();
@@ -33,7 +46,7 @@ void SubTurret::Periodic() {
         Logger::Log("Turret/reset/motorPosition", motorPosition);
         Logger::Log("Turret/reset/crtPosition", crtPosition);
 
-        bool CRTSameAsMotor = (units::math::abs(motorPosition - crtPosition) < 0.5_deg);
+        bool CRTSameAsMotor = (units::math::abs(motorPosition - crtPosition) < 0.5_deg || frc::RobotBase::IsSimulation());
         Logger::Log("Turret/reset/CRTSameAsMotor", CRTSameAsMotor);
 
         if(CRTSameAsMotor){
@@ -45,8 +58,9 @@ void SubTurret::Periodic() {
         }
     }
 
-    _turretMechCircle.SetAngle(_turretMotor.GetPosition());
+    RobotVisualisation::GetInstance()._turretMechCircle.SetAngle(_turretMotor.GetPosition());
 
+    Logger::Log("Turret/Field Relative Turret Angle", GetFieldRelativeTurretAngle());
     Logger::Log("Turret/CRT Positiion", GetTurretAngleCRT());
     Logger::Log("Turret/Encoder/Encoder1", _turretEncoder1.Get());
     Logger::Log("Turret/Encoder/Encoder2", _turretEncoder2.Get());
@@ -55,14 +69,15 @@ void SubTurret::Periodic() {
     Logger::Log("Turret/Encoder/e1init", encoder1ZeroOffset);
     Logger::Log("Turret/Encoder/e2init", encoder2ZeroOffset);
     Logger::Log("Turret/hasReset", _hasZeroed);
-    Logger::Log("Turret/IsAtTarget", TurretIsAtTarget());
+    Logger::Log("Turret/IsAtTarget", IsAtTarget());
 
     Logger::Log("Turret/Encoder/Encoder1IsConnected", _turretEncoder1.IsConnected());
     Logger::Log("Turret/Encoder/Encoder2IsConnected", _turretEncoder2.IsConnected());
     Logger::Log("Turret/Encoder/Encoder1Frequency", _turretEncoder1.GetFrequency());
     Logger::Log("Turret/Encoder/Encoder2Frequency", _turretEncoder2.GetFrequency());
 
-
+    Logger::Log("Turret/Loop Time", (frc::GetTime() - loopStart));
+    _turretPos.AddSample(frc::Timer::GetFPGATimestamp(), CalcOptimisedTurretAngle(_turretMotor.GetPosition()));
 }
 
 void SubTurret::SimulationPeriodic() {
@@ -72,6 +87,10 @@ void SubTurret::SimulationPeriodic() {
 }
 
 units::degree_t SubTurret::GetTurretAngleCRT() {
+
+    if(frc::RobotBase::IsSimulation()) {
+        return _turretMotor.GetPosition();
+    }
 
     // get encoder values and difference
     double e1deg = getEncoder1Degrees().value();
@@ -110,15 +129,34 @@ units::degree_t SubTurret::GetTurretAngleCRT() {
         turretAngle -= period;
     }
 
-    return turretAngle * 1_deg;
+    // Move the zero angle to point at the robot's front (Intake) 
+    return (turretAngle*1_deg) - turretZeroOffset;
 }
 
 units::degree_t SubTurret::GetTurretAngle() {
     return _turretMotor.GetPosition();
 }
 
-frc2::CommandPtr SubTurret::SetTurretTargetAngle(std::function<units::degree_t()> angle) {
-    return Run([this, angle] {_turretMotor.SetPositionTarget(CalcOptimisedTurretAngle(angle()));});
+units::degree_t SubTurret::GetTurretAngleAtTime(units::second_t time) {
+    auto sample = _turretPos.Sample(time);
+    if (sample.has_value()) {
+        return sample.value();
+    } else {
+        return GetTurretAngle();
+    }
+}
+
+frc2::CommandPtr SubTurret::SetTurretTargetAngle(std::function<units::degree_t()> angle, std::function<units::degrees_per_second_t()> angVelTarget){
+    return Run([this, angle, angVelTarget] {
+        units::degrees_per_second_t nextVel = angVelTarget(); 
+        // we want the turret to negate the robot rotation, hence the negative
+
+        units::volt_t rotationFeedforward = _robotRotVelFF.Calculate(nextVel);
+
+        Logger::Log("Turret/VelocityFeedForward/ffVolts", rotationFeedforward);
+        Logger::Log("Turret/VelocityFeedForward/angVelTarget", nextVel);
+        _turretMotor.SetPositionTarget(CalcOptimisedTurretAngle(angle()), rotationFeedforward);
+    });
 }
 
 units::degree_t SubTurret::CalcOptimisedTurretAngle(units::degree_t angle) {
@@ -145,24 +183,20 @@ units::degree_t SubTurret::CalcOptimisedTurretAngle(units::degree_t angle) {
     units::degree_t newTarget = currentAngle + closestOffset;
 
     // clamp target to limits
-    // if(newTarget > POS_LIMIT) {
-    //     newTarget -= 360_deg;
-    // }
-
-    // if(newTarget < NEG_LIMIT) {
-    //     newTarget += 360_deg;
-    // }
-
     if(newTarget > POS_LIMIT) {
-        newTarget = POS_LIMIT;
+        newTarget -= 360_deg;
     }
 
     if(newTarget < NEG_LIMIT) {
-        newTarget = NEG_LIMIT;
+        newTarget += 360_deg;
     }
 
     Logger::Log("Turret/CalcOptimisedTurretAngle/newTarget(final output)", newTarget);
     return newTarget;
+}
+
+units::degree_t SubTurret::GetTurretTargetAngle() {
+    return _turretMotor.GetPositionTarget();
 }
 
 void SubTurret::SetTurretAngle(units::degree_t angle) {
@@ -188,6 +222,27 @@ units::degree_t SubTurret::getEncoder2Degrees() {
     return (_turretEncoder2.Get()-encoder2ZeroOffset)*360_deg;
 }
 
-bool SubTurret::TurretIsAtTarget(){
-    return units::math::abs(_turretMotor.GetPosError()) < 2_deg;
+bool SubTurret::IsAtTarget() {
+    return units::math::abs(_turretMotor.GetPosError()) < TOLARANCE;
+}
+
+bool SubTurret::IsNotApproachingMax(std::function<units::millisecond_t()> time) {
+    units::degree_t futureTurretAngle = GetTurretAngle() + _turretMotor.GetVelocity() * time();
+    bool isNotApproachingMax = futureTurretAngle < POS_LIMIT || futureTurretAngle > NEG_LIMIT;
+    Logger::Log("SOTM/FutureTurretAngle", futureTurretAngle);
+    Logger::Log("SOTM/TurretIsNotApproachingMax", isNotApproachingMax);
+    return (isNotApproachingMax);
+}
+
+units::degree_t SubTurret::GetFieldRelativeTurretAngle() {
+    auto robot = PoseHandler::GetInstance().GetPose();
+    return robot.Rotation().Degrees() + GetTurretAngle();
+}
+
+units::degree_t SubTurret::GetLastFieldRelativeTarget() {
+    return _lastFieldRelativeTurretTarget;
+}
+
+void SubTurret::SetLastFieldRelativeTarget(units::degree_t angle) {
+    _lastFieldRelativeTurretTarget = angle;
 }

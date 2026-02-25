@@ -4,10 +4,10 @@
 
 #pragma once
 
+#include "utilities/AlertController.h"
 #include "utilities/ICSparkFlex.h"
 
 #include <frc/Alert.h>
-#include <frc/Timer.h>
 #include <frc/simulation/FlywheelSim.h>
 #include <frc/simulation/SingleJointedArmSim.h>
 #include <frc/system/plant/DCMotor.h>
@@ -29,13 +29,7 @@ class SubIntake : public frc2::SubsystemBase {
 
   frc2::CommandPtr IntakeOn();
   frc2::CommandPtr IntakeOff();
-
-  void IntakeCurrentHighTimer();
-
-  frc::Alert _intakeCurrentAlert{"Intake Motor Overcurrent!", frc::Alert::AlertType::kWarning};
-
-  frc::Alert _intakeHighTemperatureAlert{
-    "Intake Motor High Temperature!", frc::Alert::AlertType::kWarning};
+  frc2::CommandPtr ReverseIntake();
 
   /**
    * Will be called periodically whenever the CommandScheduler runs.
@@ -45,10 +39,39 @@ class SubIntake : public frc2::SubsystemBase {
 
  private:
   ICSparkFlex _intakeMotor{canid::INTAKE};
+  ICSparkFlex _intakeFollowerMotor{canid::INTAKE_FOLLOWER};
 
   rev::spark::SparkFlexConfig _intakeMotorConfig;
+  rev::spark::SparkFlexConfig _intakeFollowerMotorConfig;
 
-  frc::Timer _intakeHighCurrentTimer;
+  frc::Alert _intakeHighTemperatureAlert{
+    "Intake Motor High Temperature!", frc::Alert::AlertType::kWarning};
+  frc::Alert _intakeCurrentAlert{"Intake Motor Overcurrent!", frc::Alert::AlertType::kWarning};
+
+  frc::Alert _intakeRecordedTemperatureAlert{
+    "Intake Motor max Temperature was reached !", frc::Alert::AlertType::kWarning};
+
+  frc::Alert _intakeRecordedCurrentAlert{
+    "Intake Motor max current was reached !", frc::Alert::AlertType::kWarning};
+
+  AlertController::MotorAlertConfig _intakeAlertConfig{_intakeHighTemperatureAlert,
+    _intakeCurrentAlert, _intakeRecordedCurrentAlert, _intakeRecordedTemperatureAlert, 60_degC,
+    20_A};
+
+  frc::Alert _intakeFollowerHighTemperatureAlert{
+    "Intake Follower Motor High Temperature!", frc::Alert::AlertType::kWarning};
+  frc::Alert _intakeFollowerCurrentAlert{
+    "Intake Follower Motor Overcurrent!", frc::Alert::AlertType::kWarning};
+
+  frc::Alert _intakeFollowerRecordedTemperatureAlert{
+    "Intake Follower Motor max Temperature was reached !", frc::Alert::AlertType::kWarning};
+
+  frc::Alert _intakeFollowerRecordedCurrentAlert{
+    "Intake Follower Motor max current was reached !", frc::Alert::AlertType::kWarning};
+
+  AlertController::MotorAlertConfig _intakeFollowerAlertConfig{_intakeFollowerHighTemperatureAlert,
+    _intakeFollowerCurrentAlert, _intakeFollowerRecordedTemperatureAlert,
+    _intakeFollowerRecordedCurrentAlert, 60_degC, 20_A};
 
   // Simulation components
   static constexpr double GEARING = 1.0;

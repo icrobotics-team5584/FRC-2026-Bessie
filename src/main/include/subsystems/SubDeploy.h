@@ -4,11 +4,11 @@
 
 #pragma once
 
+#include "utilities/AlertController.h"
 #include "utilities/ICSparkFlex.h"
 #include "utilities/MechanismCircle2d.h"
 
 #include <frc/Alert.h>
-#include <frc/Timer.h>
 #include <frc/simulation/SingleJointedArmSim.h>
 #include <frc/system/plant/DCMotor.h>
 #include <frc/system/plant/LinearSystemId.h>
@@ -33,12 +33,6 @@ class SubDeploy : public frc2::SubsystemBase {
   frc2::CommandPtr ZeroDeploy();
   frc2::CommandPtr DeployAutoZero();
 
-  void DeployCurrentHighTimer();
-
-  frc::Alert _deployCurrentAlert{"Deploy Motor Overcurrent!", frc::Alert::AlertType::kWarning};
-  frc::Alert _deployHighTemperatureAlert{
-    "Deploy Motor High Temperature!", frc::Alert::AlertType::kWarning};
-
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */
@@ -49,7 +43,19 @@ class SubDeploy : public frc2::SubsystemBase {
   ICSparkFlex _deployMotor{canid::DEPLOY};
   rev::spark::SparkFlexConfig _deployMotorConfig;
 
-  frc::Timer _deployHighCurrentTimer;
+  frc::Alert _deployHighTemperatureAlert{
+    "Deploy Motor High Temperature!", frc::Alert::AlertType::kWarning};
+  frc::Alert _deployCurrentAlert{"Deploy Motor Overcurrent!", frc::Alert::AlertType::kWarning};
+
+  frc::Alert _deployRecordedTemperatureAlert{
+    "Deploy Motor max Temperature was reached !", frc::Alert::AlertType::kWarning};
+
+  frc::Alert _deployRecordedCurrentAlert{
+    "Deploy Motor max current was reached !", frc::Alert::AlertType::kWarning};
+
+  AlertController::MotorAlertConfig DeployAlertConfig{_deployHighTemperatureAlert,
+    _deployCurrentAlert, _deployRecordedTemperatureAlert, _deployRecordedCurrentAlert, 60_degC,
+    20_A};
 
   bool _hasZeroed = false;
   bool _currentlyZeroing = false;

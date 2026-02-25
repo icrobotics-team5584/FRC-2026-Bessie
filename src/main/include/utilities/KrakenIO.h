@@ -28,9 +28,12 @@ class KrakenIO : public SwerveIO {
     void ConfigDriveMotor() override;
     frc::SwerveModulePosition GetPosition() override;
     frc::Rotation2d GetAngle() override;
+    frc::Rotation2d GetDesiredAngle() override;
     units::meters_per_second_t GetSpeed() override;
+    units::meters_per_second_t GetDesiredSpeed() override;
     units::volt_t GetDriveVoltage() override;
     frc::SwerveModuleState GetState() override;
+    frc::SwerveModuleState GetDesiredState() override;
     units::radian_t GetDrivenRotations() override;
 
     const double TURNING_GEAR_RATIO = 150.0 / 7.0;
@@ -50,6 +53,9 @@ class KrakenIO : public SwerveIO {
     const double DRIVE_A = 0.079385;  // Units is V/1m/s^2 0.34324; left
 
   private:
+  
+    units::degree_t _desiredAngle;
+    units::meters_per_second_t _desiredSpeed;
 
     ctre::phoenix6::hardware::TalonFX _canTurnMotor;
     ctre::phoenix6::configs::TalonFXConfiguration _configTurnMotor{};

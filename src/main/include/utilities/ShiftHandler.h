@@ -1,0 +1,42 @@
+#include <frc/DriverStation.h>
+
+#include <units/time.h>
+
+enum RebuiltShift {
+  RED = 0, /* set to match frc::DriverStation::Alliance */
+  BLUE = 1,
+  AUTON = 2,
+  TRANS = 3,
+  ENDGAME = 4,
+  NONE = 5,
+};
+
+class ShiftHandler {
+ public:
+  static ShiftHandler& GetInstance() {
+    static ShiftHandler inst;
+    return inst;
+  }
+
+  /* Getters */
+  RebuiltShift GetCurrentShift();
+  RebuiltShift GetWinningShift();
+  units::second_t GetTimeLeft();
+  std::string GetShiftName(RebuiltShift shift);
+  bool GetOverrideActive();
+  bool IsShift(RebuiltShift shift);
+  bool IsActiveShift();
+
+  /* Setters */
+  void SetOverrideActive(bool isActive);
+
+  /*Delete assignment and copy so people don't accidently create copies*/
+  ShiftHandler(ShiftHandler const&) = delete;
+  void operator=(ShiftHandler const&) = delete;
+
+ private:
+  bool _overrideActive = false;
+
+  /*Private constructor to prevent creating multiple instances*/
+  ShiftHandler() {}
+};

@@ -18,14 +18,17 @@ class NeoIO : public SwerveIO{
     void ConfigDriveMotor() override;
     frc::SwerveModulePosition GetPosition() override;
     frc::Rotation2d GetAngle() override;
+    frc::Rotation2d GetDesiredAngle() override;
     units::meters_per_second_t GetSpeed() override;
+    units::meters_per_second_t GetDesiredSpeed() override;
     units::volt_t GetDriveVoltage() override;
     frc::SwerveModuleState GetState() override;
+    frc::SwerveModuleState GetDesiredState() override;
     units::radian_t GetDrivenRotations() override;
 
     const double TURNING_GEAR_RATIO = 150.0 / 7.0;
     const double DRIVE_GEAR_RATIO = 6.75; // L2 - Fast kit
-    const units::meter_t WHEEL_RADIUS = 0.0481098886_m;
+    const units::meter_t WHEEL_RADIUS = 49.5_mm;
     const units::meter_t WHEEL_CIRCUMFERENCE = 2 * std::numbers::pi * WHEEL_RADIUS;
 
     const double TURN_P = 5;
@@ -36,6 +39,8 @@ class NeoIO : public SwerveIO{
     const double DRIVE_D = 0.0;
     const double DRIVE_FF = 0.0141; 
   private:
+    units::degree_t _desiredAngle;
+    units::meters_per_second_t _desiredSpeed;
 
     ICSparkMax _canTurnMotor;
     ICSparkMax _canDriveMotor;
