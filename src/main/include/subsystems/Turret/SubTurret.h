@@ -24,8 +24,7 @@
 #include <frc2/command/SubsystemBase.h>
 #include <frc2/command/button/CommandXboxController.h>
 
-#include "subsystems/Turret/TurretThroughboreIO.h"
-#include "subsystems/Turret/TurretCancoderIO.h"
+#include "subsystems/Turret/TurretEncoderIO.h"
 
 #include <units/angle.h>
 
@@ -88,8 +87,7 @@ class SubTurret : public frc2::SubsystemBase {
     _turretCurrentAlert, _turretRecordedTemperatureAlert, _turretRecordedCurrentAlert, 60_degC,
     20_A};
 
-  std::unique_ptr<TurretEncoderIO> _turretEncoder1;
-  std::unique_ptr<TurretEncoderIO> _turretEncoder2;
+  std::unique_ptr<TurretEncoderIO> _encoderIO;
 
   units::degree_t getEncoder1Degrees();
   units::degree_t getEncoder2Degrees();
