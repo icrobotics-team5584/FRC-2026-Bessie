@@ -60,8 +60,6 @@ SubShooter::SubShooter() {
   _timeOfFlightTable.insert(5.9_m, 1.51_s);
   _timeOfFlightTable.insert(7_m, 1.8_s);
 
-  frc::SmartDashboard::PutData("Shooter/mech2dDisplay", &_shooterMech);
-
   _flyWheelSpeedTableScoring.insert(1.8575_m, 27_tps);
   _flyWheelSpeedTableScoring.insert(2.3575_m, 28_tps);
   _flyWheelSpeedTableScoring.insert(2.8575_m, 30_tps);
