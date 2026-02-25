@@ -52,6 +52,13 @@ frc2::CommandPtr StationaryShootAt(frc::Translation2d target) {
       SubFeeder::GetInstance().FeederOn(), SubIndexer::GetInstance().Index()));
 }
 
+frc2::CommandPtr BackupShoot() {
+  return SubShooter::GetInstance().SetShooterTarget([] { return 31_tps; })
+  .AlongWith(SubTurret::GetInstance().SetTurretTargetAngle([] { return 0_deg; }, [] { return 0_tps; }))
+  .AlongWith(SubHood::GetInstance().SetHoodPositionTarget([] { return 0.093056_tr; }))
+  .AlongWith(ShootWhenReady());
+}
+
 frc2::CommandPtr ShootWhenReady() {
   return frc2::cmd::WaitUntil([] { return IsReadyToShoot(); })
     .AndThen(SubFeeder::GetInstance().Feed().AlongWith(SubIndexer::GetInstance().Index()).Until([] {
