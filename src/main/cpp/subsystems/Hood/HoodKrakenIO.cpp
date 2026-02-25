@@ -6,7 +6,7 @@
 
 #include <frc/simulation/RoboRioSim.h>
 
-HoodKrakenIO::HoodKrakenIO(int motorCanID) : _motor(motorCanID), _motorSim(_motor.GetSimState()) {}
+HoodKrakenIO::HoodKrakenIO(int motorCanID) : _motor(motorCanID) {}
 
 void HoodKrakenIO::ConfigMotor() {
   ctre::phoenix6::configs::TalonFXConfiguration config;
@@ -60,8 +60,8 @@ void HoodKrakenIO::StopMotor() {
 }
 
 void HoodKrakenIO::IterateSim(units::revolutions_per_minute_t velocity, units::turn_t position) {
-  _motorSim.SetRawRotorPosition(KrakenMotorConfig::GEAR_RATIO * position);
-  _motorSim.SetRotorVelocity(KrakenMotorConfig::GEAR_RATIO * velocity);
+  _motor.GetSimState().SetRawRotorPosition(KrakenMotorConfig::GEAR_RATIO * position);
+  _motor.GetSimState().SetRotorVelocity(KrakenMotorConfig::GEAR_RATIO * velocity);
 }
 
 units::degree_t HoodKrakenIO::GetPosition() {
@@ -89,5 +89,5 @@ units::celsius_t HoodKrakenIO::GetTemperature() {
 }
 
 units::volt_t HoodKrakenIO::CalcSimVoltage() {
-  return _motorSim.GetMotorVoltage();
+  return _motor.GetSimState().GetMotorVoltage();
 }
