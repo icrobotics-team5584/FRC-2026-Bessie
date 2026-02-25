@@ -53,6 +53,7 @@ class SubShooter : public frc2::SubsystemBase {
   static constexpr units::kilogram_square_meter_t MOI = 0.05_kg_sq_m;
   static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::KrakenX60FOC();
   static constexpr double GEAR_RATIO = 1.0;
+  static constexpr units::turns_per_second_t DEFAULT_SHOOTER_OFFSET = 0_tps;
 
   double P = 0.4;
   double I = 0;

@@ -140,7 +140,7 @@ frc2::CommandPtr SubShooter::SpinShooterSlowly() {
 frc2::CommandPtr SubShooter::AdjustManualSpeedOffset(units::turns_per_second_t offset) {
   // Using frc2 cmd so we dont require subsystem
   return frc2::cmd::RunOnce([this, offset] {
-    units::turns_per_second_t oldOffset = Logger::Tune("Shooter/Speed Manual Offset", 0_tps);
+    units::turns_per_second_t oldOffset = Logger::Tune("Shooter/Speed Manual Offset", DEFAULT_SHOOTER_OFFSET);
     units::turns_per_second_t newOffset = oldOffset + offset;
     Logger::Log("Shooter/Speed Manual Offset", newOffset);
   });
@@ -154,7 +154,7 @@ bool SubShooter::IsAtSpeed() {
 frc2::CommandPtr SubShooter::SpinWithDistance(
   std::function<units::meter_t()> distance, std::function<bool()> isPassing) {
   return SetShooterTarget([this, distance, isPassing] { 
-    auto offset = Logger::Tune("Shooter/Speed Manual Offset", 0_tps);
+    auto offset = Logger::Tune("Shooter/Speed Manual Offset", DEFAULT_SHOOTER_OFFSET);
     return isPassing() ? _flyWheelSpeedTablePassing[distance()]
                        : _flyWheelSpeedTableScoring[distance()] + offset;
   });
