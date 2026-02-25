@@ -13,6 +13,8 @@
 #include "frc/RobotBase.h"
 #include "frc/smartdashboard/SmartDashboard.h"
 
+#include "utilities/RobotVisualisation.h"
+
 SubHood::SubHood() {
   if (BotVars::GetRobot() == BotVars::PRACTICE) {
     _hoodMotor = std::make_unique<HoodNeoIO>(canid::HOOD_MOTOR);
@@ -41,7 +43,7 @@ void SubHood::Periodic() {
   AlertController::UpdateCurrentAlert(_hoodAlertConfig, hoodCurrent);
   auto loopStart = frc::GetTime();
 
-  _hoodMechCircle.SetAngle(_hoodMotor->GetPosition());
+  RobotVisualisation::GetInstance()._hoodMechCircle.SetAngle(_hoodMotor->GetPosition());
   if (_hasZeroed == false && _zeroing == false) {
     _hoodMotor->StopMotor();
   }
