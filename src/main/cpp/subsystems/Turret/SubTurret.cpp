@@ -73,12 +73,8 @@ void SubTurret::Periodic() {
 
     Logger::Log("Turret/Field Relative Turret Angle", GetFieldRelativeTurretAngle());
     Logger::Log("Turret/CRT Positiion", GetTurretAngleCRT());
-    Logger::Log("Turret/Encoder/Encoder1ZeroedDegrees", _encoderIO->GetEncoder1Degrees());
-    Logger::Log("Turret/Encoder/Encoder2ZeroedDegrees", _encoderIO->GetEncoder2Degrees());
     Logger::Log("Turret/Encoder/ZeroedEncoder1", getEncoder1Degrees());
     Logger::Log("Turret/Encoder/ZeroedEncoder2", getEncoder2Degrees());
-    Logger::Log("Turret/Encoder/e1init", encoder1ZeroOffset);
-    Logger::Log("Turret/Encoder/e2init", encoder2ZeroOffset);
     Logger::Log("Turret/hasReset", _hasZeroed);
     Logger::Log("Turret/IsAtTarget", IsAtTarget());
 

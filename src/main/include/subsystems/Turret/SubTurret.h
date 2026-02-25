@@ -97,8 +97,6 @@ class SubTurret : public frc2::SubsystemBase {
 
   frc::SimpleMotorFeedforward<units::turn> _robotRotVelFF{kS, kV, kA};
 
-  const double encoder1ZeroOffset = 0.696408;
-  const double encoder2ZeroOffset = 0.120609;
   const units::turn_t turretZeroOffset = -0.5_tr;
 
   units::degree_t POS_LIMIT = 362_deg;
