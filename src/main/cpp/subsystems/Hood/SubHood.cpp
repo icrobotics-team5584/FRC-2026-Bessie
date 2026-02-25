@@ -22,8 +22,6 @@ SubHood::SubHood() {
     _hoodMotor = std::make_unique<HoodKrakenIO>(canid::HOOD_MOTOR);
   }
 
-  frc::SmartDashboard::PutData("Hood/mech2dDisplay", &_hoodMech);
-
   _hoodPitchTable.insert(1.8575_m, 0.07611_tr);
   _hoodPitchTable.insert(2.3575_m, 0.093056_tr);
   _hoodPitchTable.insert(2.8575_m, 0.093056_tr);
@@ -63,16 +61,21 @@ void SubHood::SimulationPeriodic() {
 }
 
 frc2::CommandPtr SubHood::SetHoodPositionTarget(std::function<units::degree_t()> angle) {
-  return Run([this, angle] {
+    return Run([this, angle] {
     units::degree_t target = angle();
+
     if (target > UPPER_LIMIT) {
       target = UPPER_LIMIT;
     }
+
     if (target < LOWER_LIMIT) {
       target = LOWER_LIMIT;
     }
 
-    _hoodMotor->SetPositionTarget(target);
+    if (_hasZeroed) {
+      _hoodMotor->SetPositionTarget(target);
+    }
+    
   });
 }
 
