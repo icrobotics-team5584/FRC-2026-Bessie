@@ -95,6 +95,7 @@ void RobotContainer::ConfigureBindings() {
   _operatorController.X().OnTrue(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); }));
   _operatorController.X().OnFalse(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(false); }));
   _operatorController.Y().OnTrue(cmd::DisableAllOverrides());
+  _operatorController.RightTrigger().WhileTrue(cmd::BackupShoot());
 
   //POVs
   _driverController.POVDown().OnTrue(
