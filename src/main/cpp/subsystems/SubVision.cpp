@@ -54,12 +54,8 @@ void SubVision::SimulationPeriodic() {
   _visionSim.Update(PoseHandler::GetInstance().GetSimPose());
 }
 
-std::map<std::string, std::optional<photon::EstimatedRobotPose>> SubVision::GetPose() {
-  std::map<std::string, std::optional<photon::EstimatedRobotPose>> poses = {};
-  for (ICCamera* cam : _camList) {
-    poses.insert({cam->GetCamName(), cam->GetEstPose()});
-  }
-  return poses;
+std::vector<ICCamera*> SubVision::GetCameras() {
+  return _camList;
 }
 
 double SubVision::GetDev(units::length::meter_t distance) {

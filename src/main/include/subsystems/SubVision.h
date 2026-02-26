@@ -42,7 +42,7 @@ public:
 
   std::optional<frc::Pose2d> GetAprilTagPose(int id);
 
-  std::map<std::string, std::optional<photon::EstimatedRobotPose>> GetPose();
+  std::vector<ICCamera*> GetCameras();
 
   int GetClosestTag(frc::Pose2d currentPose);
 
@@ -79,8 +79,6 @@ public:
     _rightBotToCam,
     _tagMap
   };
-
-  
 
   frc::Transform3d _turretBotToCam {{0_m, 0_m, 0.605_m}, {0_deg, -14.3_deg, 0_deg}};
 

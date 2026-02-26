@@ -7,38 +7,34 @@
 #include "utilities/Logger.h"
 #include <frc/smartdashboard/SmartDashboard.h>
 
-ICCamera::ICCamera(std::string name, frc::Transform3d botToCam, frc::AprilTagFieldLayout tagMap)
+ICCamera::ICCamera(std::string name, frc::Transform3d botToCam, frc::AprilTagFieldLayout tagMap, units::second_t lastTime)
  : _camName(name), _botToCam(botToCam), _tagMap(tagMap), _cam(name),
- _camSim(&_cam), _poseEstimator(_tagMap, _botToCam)
+ _camSim(&_cam), _poseEstimator(_tagMap, _botToCam), _lastTime(lastTime)
  {
     Logger::Log("Vision/" + _camName + "/Is Connected", _cam.IsConnected());
  }
 
-std::optional<photon::EstimatedRobotPose> ICCamera::Update() {
-    double largestArea = 0;
-    std::string targets = "";
-    _estPose.reset();
-
-     _results = _cam.GetAllUnreadResults();
-    if (_results.size() > 0) {
-        for (photon::PhotonPipelineResult result : _results) {
-            _estPose = _poseEstimator.EstimateCoprocMultiTagPose(result);
-            for (const photon::PhotonTrackedTarget& target : result.targets) {
-                targets += std::to_string(target.GetFiducialId()) + ", ";
-                double targetArea = target.GetArea();
-                if (targetArea > largestArea) {
-                    if (_estPose.has_value()) {
-                        _lastTagObservation.timestamp = _estPose.value().timestamp;
-                        _lastTagObservation.tag = target;
-                    }
-                    largestArea = targetArea;
-                }
-            }
-        }
+void ICCamera::Update() {
+    // Get results from camera
+    auto results = _cam.GetAllUnreadResults();
+    if (results.empty()) {
+        return;
     }
 
+    // Analyse the latest reading only
+    _result = results.back();
+    auto est = _poseEstimator.EstimateCoprocMultiTagPose(_result);
+    if (!est.has_value()) {
+        return;
+    }
+    _estPose = est.value();
+    
+    // Record seen tag to dashboard
+    std::string targets = "";
+    for (const photon::PhotonTrackedTarget& target : _result.targets) {
+        targets += std::to_string(target.GetFiducialId()) + ", ";
+    }
     frc::SmartDashboard::PutString("Vision/" + _camName + "/targets", targets);
-    return _estPose;
 }
 
 std::string ICCamera::GetCamName() {
@@ -53,16 +49,12 @@ photon::PhotonCameraSim* ICCamera::GetCamSim() {
     return &_camSim;
 }
 
-std::vector<photon::PhotonPipelineResult> ICCamera::GetLatestResult() {
-    return _results;
-}
-
-ICCamera::TagObservation ICCamera::GetLastTagObservation() {
-    return _lastTagObservation;
-}
-
-std::optional<photon::EstimatedRobotPose> ICCamera::GetEstPose() {
+photon::EstimatedRobotPose ICCamera::GetEstPose() {
     return _estPose;
+}
+
+bool ICCamera::CanSeeTag() {
+    return frc::Timer::GetFPGATimestamp() - _estPose.timestamp < _lastTime;
 }
 
 std::optional<frc::Transform3d> ICCamera::CalculateRobotToCamera(
@@ -80,23 +72,22 @@ std::optional<frc::Transform3d> ICCamera::CalculateRobotToCamera(
 }
 
 void ICCamera::CalibrateRobotToCamera(frc::Transform3d robotToTag) {
-    if (!_results.empty()) {
-        auto calcResult = CalculateRobotToCamera(_results.back(), robotToTag);
-        Logger::Log("Vision/RobotToCamera/"+_camName+"/Result received", calcResult.has_value());
+    Logger::Log("Vision/RobotToCamera/"+_camName+"/Result received", CanSeeTag());
 
-        if (calcResult.has_value()) {
-            auto robotToCamera = calcResult.value();
-            Logger::Log("Vision/RobotToCamera/"+_camName+"/X", robotToCamera.X());
-            Logger::Log("Vision/RobotToCamera/"+_camName+"/Y", robotToCamera.Y());
-            Logger::Log("Vision/RobotToCamera/"+_camName+"/Z", robotToCamera.Z());
-            Logger::Log("Vision/RobotToCamera/"+_camName+"/~X_Roll", robotToCamera.Rotation().X().convert<units::degree>());
-            Logger::Log("Vision/RobotToCamera/"+_camName+"/~Y_Pitch", robotToCamera.Rotation().Y().convert<units::degree>());
-            Logger::Log("Vision/RobotToCamera/"+_camName+"/~Z_Yaw", robotToCamera.Rotation().Z().convert<units::degree>());
+    if (!CanSeeTag()) { return; }
 
-            auto estimatedLeftCamPose = frc::Pose3d{PoseHandler::GetInstance().GetPose()}.TransformBy(robotToCamera);
-            Logger::FieldDisplay::GetInstance().DisplayPose("Estimated-"+_camName+"-Pose", estimatedLeftCamPose.ToPose2d());
-        }
-    } else {
-        Logger::Log("Vision/RobotToCamera/"+_camName+"/Result received", false);
+    auto calcResult = CalculateRobotToCamera(_result, robotToTag);
+
+    if (calcResult.has_value()) {
+        auto robotToCamera = calcResult.value();
+        Logger::Log("Vision/RobotToCamera/"+_camName+"/X", robotToCamera.X());
+        Logger::Log("Vision/RobotToCamera/"+_camName+"/Y", robotToCamera.Y());
+        Logger::Log("Vision/RobotToCamera/"+_camName+"/Z", robotToCamera.Z());
+        Logger::Log("Vision/RobotToCamera/"+_camName+"/~X_Roll", robotToCamera.Rotation().X().convert<units::degree>());
+        Logger::Log("Vision/RobotToCamera/"+_camName+"/~Y_Pitch", robotToCamera.Rotation().Y().convert<units::degree>());
+        Logger::Log("Vision/RobotToCamera/"+_camName+"/~Z_Yaw", robotToCamera.Rotation().Z().convert<units::degree>());
+
+        auto estimatedLeftCamPose = frc::Pose3d{PoseHandler::GetInstance().GetPose()}.TransformBy(robotToCamera);
+        Logger::FieldDisplay::GetInstance().DisplayPose("Estimated-"+_camName+"-Pose", estimatedLeftCamPose.ToPose2d());
     }
 }
