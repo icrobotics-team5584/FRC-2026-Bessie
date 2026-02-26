@@ -66,7 +66,7 @@ frc2::CommandPtr ShootWhenReady() {
 bool IsReadyToShoot() {
   auto currentPose = PoseHandler::GetInstance().GetPose();
   
-  if(forcingShoot) { return forcingShoot; }
+  if(forcingShoot) { return true; }
 
   return SubHood::GetInstance().HoodIsAtTarget() && SubShooter::GetInstance().IsAtSpeed() &&
         SubTurret::GetInstance().IsAtTarget() &&
