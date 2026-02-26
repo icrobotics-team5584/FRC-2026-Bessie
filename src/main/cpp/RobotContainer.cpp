@@ -81,9 +81,6 @@ void RobotContainer::ConfigureBindings() {
   //Bumpers
   _driverController.LeftBumper().ToggleOnTrue(SubDeploy::GetInstance().ToggleDeploy());
   _driverController.RightBumper().WhileTrue(SubDrivebase::GetInstance().LockWheelsInXShape());
-  
-  _operatorController.LeftBumper().OnTrue(frc2::cmd::RunOnce([]{return ShotPlanner::SetOverride(ShotPlanner::Override::SCORE);}));
-  _operatorController.RightBumper().OnTrue(frc2::cmd::RunOnce([]{return ShotPlanner::SetOverride(ShotPlanner::Override::PASS);}));
 
   //Letters
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
@@ -91,10 +88,15 @@ void RobotContainer::ConfigureBindings() {
   _driverController.B().WhileTrue(SubDrivebase::GetInstance().AlignToAngle(_driverController, 0_deg));
   _driverController.A().WhileTrue(cmd::EjectFuel());
 
-  /* Operator Letters */
+  /* Operator */
+  _operatorController.Back().OnTrue(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); }));
   _operatorController.X().OnTrue(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); }));
   _operatorController.X().OnFalse(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(false); }));
   _operatorController.Y().OnTrue(cmd::DisableAllOverrides());
+  _operatorController.Start().OnTrue(cmd::ForceShoot());
+
+  _operatorController.LeftBumper().OnTrue(frc2::cmd::RunOnce([]{return ShotPlanner::SetOverride(ShotPlanner::Override::SCORE);}));
+  _operatorController.RightBumper().OnTrue(frc2::cmd::RunOnce([]{return ShotPlanner::SetOverride(ShotPlanner::Override::PASS);}));
 
   // Operator POVS
   _operatorController.POVRight().OnTrue(SubShooter::GetInstance().AdjustManualSpeedOffset(1_tps));
