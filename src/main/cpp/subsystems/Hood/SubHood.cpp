@@ -106,6 +106,10 @@ units::ampere_t SubHood::GetHoodMotorCurrent() {
   return _hoodMotor->GetCurrent();
 }
 
+units::degree_t SubHood::GetHoodOffset(){
+  return Logger::Tune("Hood/Angle Manual Offset", DEFAULT_HOOD_OFFSET);
+}
+
 frc2::CommandPtr SubHood::StowHood() {
   return RunOnce([this] { _hoodMotor->SetPositionTarget(STOW_ANGLE); });
 }

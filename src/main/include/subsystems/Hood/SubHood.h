@@ -33,6 +33,7 @@ class SubHood : public frc2::SubsystemBase {
   bool HoodIsAtTarget();
 
   units::ampere_t GetHoodMotorCurrent();
+  units::degree_t GetHoodOffset();
 
   frc2::CommandPtr ManualHoodDown();
   frc2::CommandPtr StowHood();
