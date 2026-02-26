@@ -7,6 +7,7 @@ frc2::CommandPtr IntakeSequence();
 frc2::CommandPtr OuttakeSequence();
 
 frc2::CommandPtr StationaryShootAt(frc::Translation2d target);
+frc2::CommandPtr BackupShoot();
 
 frc2::CommandPtr ShootWhenReady();
 frc2::CommandPtr AimOnTheMove();

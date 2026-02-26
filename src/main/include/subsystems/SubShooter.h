@@ -37,6 +37,8 @@ class SubShooter : public frc2::SubsystemBase {
   frc2::CommandPtr SpinWithDistance(std::function<units::meter_t()> distance, std::function<bool()> isPassing);
   frc2::CommandPtr SpinShooterSlowly();
   frc2::CommandPtr AdjustManualSpeedOffset(units::turns_per_second_t offset);
+
+  units::turns_per_second_t GetShooterOffset();
   
   bool IsAtSpeed();
 
