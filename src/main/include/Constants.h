@@ -33,6 +33,9 @@ namespace canid {
 
     constexpr int OUTDEXER = 23;
 
+    constexpr int TURRET_ENCODER_1 = 24;
+    constexpr int TURRET_ENCODER_2 = 25;
+
     constexpr int PDH = 40;
 }
 

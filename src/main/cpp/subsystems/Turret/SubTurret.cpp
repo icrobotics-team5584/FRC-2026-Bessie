@@ -2,13 +2,21 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-#include "subsystems/SubTurret.h"
+#include "subsystems/Turret/SubTurret.h"
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/RobotBase.h>
 #include "utilities/Logger.h"
 #include "utilities/PoseHandler.h"
+#include "utilities/BotVars.h"
+#include "subsystems/Turret/TurretEncoderConfig.h"
+#include "utilities/RobotVisualisation.h"
 #include <frc/RobotBase.h>
 
+#include "subsystems/Turret/TurretThroughboreIO.h"
+#include "subsystems/Turret/TurretCancoderIO.h"
+
 SubTurret::SubTurret() {
+    
     _turretMotorConfig.encoder.PositionConversionFactor(1/GEAR_RATIO);
     _turretMotorConfig.encoder.VelocityConversionFactor(1/GEAR_RATIO);
     _turretMotorConfig.closedLoop.Pid(P, I, D);
@@ -23,11 +31,15 @@ SubTurret::SubTurret() {
     _turretMotorConfig.softLimit.ReverseSoftLimitEnabled(true);
     _turretMotor.OverwriteConfig(_turretMotorConfig);
 
-    _turretEncoder1.SetAssumedFrequency(ENCODER_FREQUENCY);
-    _turretEncoder2.SetAssumedFrequency(ENCODER_FREQUENCY);
+    if (BotVars::GetRobot() == BotVars::PRACTICE) {
+        _encoderIO = std::make_unique<TurretThroughboreIO>(dio::TURRET_ENCODER_1, dio::TURRET_ENCODER_2);
+    } else {
+        _encoderIO = std::make_unique<TurretCancoderIO>(canid::TURRET_ENCODER_1, canid::TURRET_ENCODER_2);
+    }
+
+    _encoderIO->ConfigEncoder();
 
     frc::SmartDashboard::PutData("Turret/Motor", &_turretMotor);
-    frc::SmartDashboard::PutData("Turret/mech2dDisplay", &_turretMech);
 }
 
 // This method will be called once per scheduler run
@@ -39,13 +51,13 @@ void SubTurret::Periodic() {
     AlertController::UpdateTemperatureAlert(_turretAlertConfig, turretTemperature);
     AlertController::UpdateCurrentAlert(_turretAlertConfig, turretCurrent);
 
-    if(_hasZeroed == false && _turretEncoder1.IsConnected() && _turretEncoder2.IsConnected()) {
+    if(_hasZeroed == false && _encoderIO->IsConnected()) {
         units::degree_t motorPosition = _turretMotor.GetPosition();
         units::degree_t crtPosition = GetTurretAngleCRT();
         Logger::Log("Turret/reset/motorPosition", motorPosition);
         Logger::Log("Turret/reset/crtPosition", crtPosition);
 
-        bool CRTSameAsMotor = (units::math::abs(motorPosition - crtPosition) < 0.5_deg);
+        bool CRTSameAsMotor = (units::math::abs(motorPosition - crtPosition) < 0.5_deg || frc::RobotBase::IsSimulation());
         Logger::Log("Turret/reset/CRTSameAsMotor", CRTSameAsMotor);
 
         if(CRTSameAsMotor){
@@ -57,23 +69,24 @@ void SubTurret::Periodic() {
         }
     }
 
-    _turretMechCircle.SetAngle(_turretMotor.GetPosition());
+    if(GetTurretAngleCRT() > NEG_LIMIT && GetTurretAngleCRT() < POS_LIMIT) {
+        _turretOutOfRangeAlert.Set(false);
+    }
+
+    else{
+        _turretOutOfRangeAlert.Set(true);
+    }
+
+    RobotVisualisation::GetInstance()._turretMechCircle.SetAngle(_turretMotor.GetPosition());
 
     Logger::Log("Turret/Field Relative Turret Angle", GetFieldRelativeTurretAngle());
     Logger::Log("Turret/CRT Positiion", GetTurretAngleCRT());
-    Logger::Log("Turret/Encoder/Encoder1", _turretEncoder1.Get());
-    Logger::Log("Turret/Encoder/Encoder2", _turretEncoder2.Get());
     Logger::Log("Turret/Encoder/ZeroedEncoder1", getEncoder1Degrees());
     Logger::Log("Turret/Encoder/ZeroedEncoder2", getEncoder2Degrees());
-    Logger::Log("Turret/Encoder/e1init", encoder1ZeroOffset);
-    Logger::Log("Turret/Encoder/e2init", encoder2ZeroOffset);
     Logger::Log("Turret/hasReset", _hasZeroed);
     Logger::Log("Turret/IsAtTarget", IsAtTarget());
 
-    Logger::Log("Turret/Encoder/Encoder1IsConnected", _turretEncoder1.IsConnected());
-    Logger::Log("Turret/Encoder/Encoder2IsConnected", _turretEncoder2.IsConnected());
-    Logger::Log("Turret/Encoder/Encoder1Frequency", _turretEncoder1.GetFrequency());
-    Logger::Log("Turret/Encoder/Encoder2Frequency", _turretEncoder2.GetFrequency());
+    Logger::Log("Turret/Encoder/EncodersAreConnected", _encoderIO->IsConnected());
 
     Logger::Log("Turret/Loop Time", (frc::GetTime() - loopStart));
     _turretPos.AddSample(frc::Timer::GetFPGATimestamp(), CalcOptimisedTurretAngle(_turretMotor.GetPosition()));
@@ -203,8 +216,16 @@ void SubTurret::SetTurretAngle(units::degree_t angle) {
 }
 
 void SubTurret::ZeroTurret() {
-    SetTurretAngle(GetTurretAngleCRT());
-    _turretMotor.SetPositionTarget(GetTurretAngleCRT());
+    units::degree_t turretAngle = GetTurretAngleCRT();
+    if(turretAngle > NEG_LIMIT && turretAngle < POS_LIMIT) {
+        SetTurretAngle(turretAngle);
+        _turretMotor.SetPositionTarget(GetTurretAngleCRT());
+        _turretOutOfRangeAlert.Set(false);
+    }
+
+    else{
+        _turretOutOfRangeAlert.Set(true);
+    }
 }
 
 frc2::CommandPtr SubTurret::ZeroTurretCmd() {
@@ -214,11 +235,11 @@ frc2::CommandPtr SubTurret::ZeroTurretCmd() {
 }
 
 units::degree_t SubTurret::getEncoder1Degrees() {
-    return (_turretEncoder1.Get()-encoder1ZeroOffset)*360_deg;
+    return _encoderIO->GetEncoder1Degrees();
 }
 
 units::degree_t SubTurret::getEncoder2Degrees() {
-    return (_turretEncoder2.Get()-encoder2ZeroOffset)*360_deg;
+    return _encoderIO->GetEncoder2Degrees();
 }
 
 bool SubTurret::IsAtTarget() {

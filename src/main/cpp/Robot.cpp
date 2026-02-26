@@ -10,23 +10,29 @@
 #include "utilities/ShotPlanner.h"
 
 #include <frc/DataLogManager.h>
+#include <frc/Filesystem.h>
 #include <frc/geometry/Transform2d.h>
 #include <frc2/command/CommandScheduler.h>
 
+#include <wpinet/WebServer.h>
+
 Robot::Robot() {
-  //USB logging
+  // USB logging
   frc::DataLogManager::Start();
   frc::SmartDashboard::PutData(&frc2::CommandScheduler::GetInstance());
   frc::DriverStation::StartDataLog(frc::DataLogManager::GetLog());
-  
+
+  wpi::WebServer::GetInstance().Start(5800, frc::filesystem::GetDeployDirectory());
 }
 
 void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();
 
   Logger::Log("RebuiltShift/Hub Active", ShiftHandler::GetInstance().IsActiveShift());
-  Logger::Log("RebuiltShift/Won Auton Shift", ShiftHandler::GetInstance().GetShiftName(ShiftHandler::GetInstance().GetWinningShift()));
-  Logger::Log("RebuiltShift/Current Shift", ShiftHandler::GetInstance().GetShiftName(ShiftHandler::GetInstance().GetCurrentShift()));
+  Logger::Log("RebuiltShift/Won Auton Shift",
+    ShiftHandler::GetInstance().GetShiftName(ShiftHandler::GetInstance().GetWinningShift()));
+  Logger::Log("RebuiltShift/Current Shift",
+    ShiftHandler::GetInstance().GetShiftName(ShiftHandler::GetInstance().GetCurrentShift()));
   Logger::Log("RebuiltShift/Seconds Left on Shift", ShiftHandler::GetInstance().GetTimeLeft());
   Logger::Log("RebuiltShift/Override Active", ShiftHandler::GetInstance().GetOverrideActive());
 
@@ -42,7 +48,7 @@ void Robot::RobotPeriodic() {
   Logger::Log("Robot/PDHInputVoltage", m_pdh.GetVoltage() * 1_V);
   Logger::Log("Robot/PDHTotalCurrent", m_pdh.GetTotalCurrent() * 1_A);
 
-   Logger::Log("Shot Planner/Should Shoot", shotTarget.shouldShoot);
+  Logger::Log("Shot Planner/Should Shoot", shotTarget.shouldShoot);
 }
 void Robot::DisabledInit() {}
 
