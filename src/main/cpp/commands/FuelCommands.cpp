@@ -19,6 +19,9 @@
 #include <frc/geometry/Transform2d.h>
 
 namespace cmd {
+
+bool forcingShoot = false;  // whether to override subsystem tolerance checks and force shooting
+
 frc2::CommandPtr IntakeSequence() {
   return SubDeploy::GetInstance()
     .DeployIntake()
