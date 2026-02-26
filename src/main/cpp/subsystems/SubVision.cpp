@@ -68,7 +68,6 @@ double SubVision::GetDev(units::length::meter_t distance) {
 
 units::length::meter_t SubVision::GetAvgDistanceFromCamera(photon::EstimatedRobotPose est) {
   units::meter_t distance = 0_m;
-  auto tagCount = est.targetsUsed.size();
   if (est.targetsUsed.size() == 0) {
     return 0_m;
   }
