@@ -19,6 +19,9 @@
 #include <frc/geometry/Transform2d.h>
 
 namespace cmd {
+
+bool forcingShoot = false;  // whether to override subsystem tolerance checks and force shooting
+
 frc2::CommandPtr IntakeSequence() {
   return SubDeploy::GetInstance()
     .DeployIntake()
@@ -77,6 +80,9 @@ frc2::CommandPtr ShootWhenReady() {
 
 bool IsReadyToShoot() {
   auto currentPose = PoseHandler::GetInstance().GetPose();
+  
+  if(forcingShoot) { return true; }
+
   return SubHood::GetInstance().HoodIsAtTarget() && SubShooter::GetInstance().IsAtSpeed() &&
         SubTurret::GetInstance().IsAtTarget() &&
         ShotPlanner::CalculateShotTarget(currentPose).shouldShoot &&
@@ -114,6 +120,16 @@ frc2::CommandPtr DisableAllOverrides() {
   return frc2::cmd::RunOnce([] {
     ShotPlanner::SetOverride(ShotPlanner::Override::NONE);
     ShiftHandler::GetInstance().SetOverrideActive(false);
+    forcingShoot = false;
+    Logger::Log("ForceShoot/forcingShoot", forcingShoot);
   });
 }
+
+frc2::CommandPtr ForceShoot() {
+  return frc2::cmd::RunOnce([] {
+    forcingShoot = true;
+    Logger::Log("ForceShoot/forcingShoot", forcingShoot);
+  });
+}
+
 }  // namespace cmd
