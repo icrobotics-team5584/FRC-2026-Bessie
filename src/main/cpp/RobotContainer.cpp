@@ -46,10 +46,15 @@ RobotContainer::RobotContainer() {
     AutonHelper::MakeCommandPtrAuto(cmd::NeutralScoreAndClimb_LeftBump()));
   _autoManager.AddAuton("NeutralScoreAndClimb_LeftTrench",
     AutonHelper::MakeCommandPtrAuto(cmd::NeutralScoreAndClimb_LeftTrench()));
+  _autoManager.AddAuton("NeutralScoreAndClimb_LeftTrench_NoBump",
+    AutonHelper::MakeCommandPtrAuto(cmd::NeutralScoreAndClimb_LeftTrench_NoBump()));
+
   _autoManager.AddAuton("NeutralScoreAndClimb_RightBump",
     AutonHelper::MakeCommandPtrAuto(cmd::NeutralScoreAndClimb_RightBump()));
   _autoManager.AddAuton("NeutralScoreAndClimb_RightTrench",
     AutonHelper::MakeCommandPtrAuto(cmd::NeutralScoreAndClimb_RightTrench()));
+  _autoManager.AddAuton("NeutralScoreAndClimb_RightTrench_NoBump",
+    AutonHelper::MakeCommandPtrAuto(cmd::NeutralScoreAndClimb_RightTrench_NoBump()));
 
   _autoManager.AddAuton("Hoard_LeftBump", AutonHelper::MakeCommandPtrAuto(cmd::Hoard_LeftBump()));
   _autoManager.AddAuton("Hoard_LeftTrench", AutonHelper::MakeCommandPtrAuto(cmd::Hoard_LeftTrench()));
@@ -60,9 +65,13 @@ RobotContainer::RobotContainer() {
     AutonHelper::MakeCommandPtrAuto(cmd::NeutralAndOutpostScore_RightBump()));
   _autoManager.AddAuton("NeutralAndOutpostScore_RightTrench",
     AutonHelper::MakeCommandPtrAuto(cmd::NeutralAndOutpostScore_RightTrench()));
+  _autoManager.AddAuton("NeutralAndOutpostScore_RightTrench_NoBump",
+    AutonHelper::MakeCommandPtrAuto(cmd::NeutralAndOutpostScore_RightTrench_NoBump()));
 
   _autoManager.AddAuton("NeutralOutpostClimb_RightTrench", 
     AutonHelper::MakeCommandPtrAuto(cmd::GASTAUTON_NeutralOutpostClimb_RightTrench()));
+  _autoManager.AddAuton("NeutralOutpostClimb_RightTrench_NoBump",
+    AutonHelper::MakeCommandPtrAuto(cmd::GASTAUTON_NeutralOutpostClimb_RightTrench_NoBump()));
 
   frc::SmartDashboard::PutData("CHOSEN AUTON", &_autoManager.GetAutonChooser());
 

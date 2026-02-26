@@ -9,8 +9,11 @@ namespace cmd {
 
     frc2::CommandPtr NeutralScoreAndClimb_LeftBump();
     frc2::CommandPtr NeutralScoreAndClimb_LeftTrench();
+    frc2::CommandPtr NeutralScoreAndClimb_LeftTrench_NoBump();
+
     frc2::CommandPtr NeutralScoreAndClimb_RightBump();
     frc2::CommandPtr NeutralScoreAndClimb_RightTrench();
+    frc2::CommandPtr NeutralScoreAndClimb_RightTrench_NoBump();
 
     frc2::CommandPtr Hoard_LeftBump();
     frc2::CommandPtr Hoard_LeftTrench();
@@ -19,6 +22,8 @@ namespace cmd {
 
     frc2::CommandPtr NeutralAndOutpostScore_RightBump();
     frc2::CommandPtr NeutralAndOutpostScore_RightTrench();
+    frc2::CommandPtr NeutralAndOutpostScore_RightTrench_NoBump();
     
     frc2::CommandPtr GASTAUTON_NeutralOutpostClimb_RightTrench();
+    frc2::CommandPtr GASTAUTON_NeutralOutpostClimb_RightTrench_NoBump();
 }

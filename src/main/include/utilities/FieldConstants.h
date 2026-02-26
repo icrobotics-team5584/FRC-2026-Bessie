@@ -30,6 +30,14 @@ constexpr frc::Pose2d START_TRENCH_LEFT{3.58_m, 7.50_m, 0_deg};
 constexpr frc::Pose2d START_BUMP_RIGHT{3.58_m, 2.27_m, 0_deg};
 constexpr frc::Pose2d START_TRENCH_RIGHT{3.58_m, 0.57_m, 0_deg};
 
+constexpr frc::Pose2d START_REENTRY_BUMP_LEFT{5.85_m, 5.40_m, 180_deg};
+constexpr frc::Pose2d START_REENTRY_TRENCH_LEFT{5.65_m, 7.50_m, 180_deg};
+constexpr frc::Pose2d START_REENTRY_BUMP_RIGHT{5.85_m, 2.64_m, 180_deg};
+constexpr frc::Pose2d START_REENTRY_TRENCH_RIGHT{5.65_m, 0.54_m, 180_deg};
+
+constexpr frc::Pose2d END_REENTRY_TRENCH_LEFT{3.50_m, 7.25_m, 180_deg};
+constexpr frc::Pose2d END_REENTRY_TRENCH_RIGHT{3.50_m, 0.79_m, 180_deg};
+
 constexpr frc::Pose2d DEPOT_IN{1.33_m, 5.96_m, 180_deg};
 constexpr frc::Pose2d DEPOT_END{0.75_m, 5.96_m, 180_deg};
 constexpr frc::Pose2d OUTPOST{0.60_m, 0.67_m, 0_deg};
