@@ -40,6 +40,7 @@ class SubHood : public frc2::SubsystemBase {
   frc2::CommandPtr HoodToEjectAngle();
   frc2::CommandPtr SetHoodPositionTarget(std::function<units::degree_t()> angle);
   frc2::CommandPtr SetHoodPositionTargetFromDist(std::function<units::meter_t()> distanceToTarget);
+  frc2::CommandPtr AdjustManualAngleOffset(units::degree_t offset);
   frc2::CommandPtr MoveHoodUp1Degree();
   frc2::CommandPtr MoveHoodDown1Degree();
 
@@ -60,6 +61,7 @@ class SubHood : public frc2::SubsystemBase {
   static constexpr units::degree_t STOW_ANGLE = 12.5_deg;
   static constexpr units::centimeter_t ARM_LENGTH = 20_cm;
   static constexpr units::degree_t TOLARANCE = 0.5_deg;
+  static constexpr units::degree_t DEFAULT_HOOD_OFFSET = 0_deg;
 
   bool _zeroing = false;
   bool _hasZeroed = false;

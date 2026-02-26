@@ -11,7 +11,7 @@
 #include "subsystems/SubIndexer.h"
 #include "subsystems/SubIntake.h"
 #include "subsystems/SubShooter.h"
-#include "subsystems/SubTurret.h"
+#include "subsystems/Turret/SubTurret.h"
 #include "subsystems/SubVision.h"
 
 #include "commands/AutonCommands.h"
@@ -91,13 +91,19 @@ void RobotContainer::ConfigureBindings() {
   _driverController.B().WhileTrue(SubDrivebase::GetInstance().AlignToAngle(_driverController, 0_deg));
   _driverController.A().WhileTrue(cmd::EjectFuel());
 
-  /* Operator */
+  /* Operator Letters */
   _operatorController.X().OnTrue(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); }));
   _operatorController.X().OnFalse(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(false); }));
   _operatorController.Y().OnTrue(cmd::DisableAllOverrides());
   _operatorController.RightTrigger().WhileTrue(cmd::BackupShoot());
 
-  //POVs
+  // Operator POVS
+  _operatorController.POVRight().OnTrue(SubShooter::GetInstance().AdjustManualSpeedOffset(1_tps));
+  _operatorController.POVLeft().OnTrue(SubShooter::GetInstance().AdjustManualSpeedOffset(-1_tps));
+  _operatorController.POVUp().OnTrue(SubHood::GetInstance().AdjustManualAngleOffset(1_deg));
+  _operatorController.POVDown().OnTrue(SubHood::GetInstance().AdjustManualAngleOffset(-1_deg));
+
+  // Driver POVs
   _driverController.POVDown().OnTrue(
     SubTurret::GetInstance().SetTurretTargetAngle([] { return 180_deg; }, [] { return 0_deg_per_s; }));
   _driverController.POVRight().OnTrue(cmd::AimAtSpot(frc::Translation2d{0_m, 0_m}));
