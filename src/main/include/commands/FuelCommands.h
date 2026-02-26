@@ -1,6 +1,6 @@
 #pragma once
-#include <frc2/command/Command.h>
 #include <frc/geometry/Translation2d.h>
+#include <frc2/command/Command.h>
 
 namespace cmd {
 frc2::CommandPtr IntakeSequence();
@@ -16,6 +16,4 @@ frc2::CommandPtr DisableAllOverrides();
 frc2::CommandPtr ForceShoot();
 
 bool IsReadyToShoot();
-
-static bool forcingShoot = false;
-}
+}  // namespace cmd
