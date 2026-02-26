@@ -83,14 +83,14 @@ void RobotContainer::ConfigureBindings() {
   _driverController.LeftBumper().ToggleOnTrue(SubDeploy::GetInstance().ToggleDeploy());
   _driverController.RightBumper().WhileTrue(SubDrivebase::GetInstance().LockWheelsInXShape());
 
-  //Bumpers
-  _driverController.RightTrigger().WhileTrue(SubClimber::GetInstance().RunCurrentZeroingSequence());
-
   //Letters
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
-  _driverController.Y().OnTrue(SubDrivebase::GetInstance().ZeroRotation());
   _driverController.B().WhileTrue(SubDrivebase::GetInstance().AlignToAngle(_driverController, 0_deg));
   _driverController.A().WhileTrue(cmd::EjectFuel());
+  _driverController.Y().ToggleOnTrue(SubClimber::GetInstance().ClimbToggle());
+
+  // Misc 
+  _driverController.Start().OnTrue(SubDrivebase::GetInstance().ZeroRotation());
 
   /* Operator */
   _operatorController.Back().OnTrue(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); }));

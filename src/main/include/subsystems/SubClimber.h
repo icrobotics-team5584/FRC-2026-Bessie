@@ -12,7 +12,6 @@
 #include <frc2/command/SubsystemBase.h>
 
 #include <rev/config/SparkFlexConfig.h>
-#include <rev/config/SparkFlexConfigAccessor.h>
 
 #include <units/angle.h>
 #include <units/current.h>
@@ -38,9 +37,7 @@ class SubClimber : public frc2::SubsystemBase {
   units::ampere_t GetMotorCurrent();
   
   /* Commands */
-  frc2::CommandPtr StowClimber();
-  frc2::CommandPtr ReadyClimber();
-  frc2::CommandPtr ClimbL1();
+  frc2::CommandPtr ClimbToggle();
 
   frc2::CommandPtr ManualClimberUp();
   frc2::CommandPtr ManualClimberDown();

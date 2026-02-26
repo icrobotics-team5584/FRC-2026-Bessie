@@ -33,16 +33,16 @@ void SubClimber::SimulationPeriodic() {
   _climberSim.SetInputVoltage(simVoltage);
   _climberSim.Update(20_ms);
 
-  units::meter_t simArmPosition = _climberSim.GetPosition();
-  units::meters_per_second_t simArmVelocity = _climberSim.GetVelocity();
+  units::meter_t simPosition = _climberSim.GetPosition();
+  units::meters_per_second_t simVelocity = _climberSim.GetVelocity();
 
-  units::turn_t simRotorPosition = (simArmPosition / _DRUM_CIRCUMFERENCE) * 1_tr;
-  units::turns_per_second_t simRotorVelocity = (simArmVelocity / _DRUM_CIRCUMFERENCE) * 1_tr;
+  units::turn_t simRotorPosition = (simPosition / _DRUM_CIRCUMFERENCE) * 1_tr;
+  units::turns_per_second_t simRotorVelocity = (simVelocity / _DRUM_CIRCUMFERENCE) * 1_tr;
   _climberMotor.IterateSim(simRotorVelocity, simRotorPosition);
 
   Logger::Log("Climber/Sim/Voltage", simVoltage);
-  Logger::Log("Climber/Sim/Arm Position", simArmPosition);
-  Logger::Log("Climber/Sim/Arm Velocity", simArmVelocity);
+  Logger::Log("Climber/Sim/Position", simPosition);
+  Logger::Log("Climber/Sim/Velocity", simVelocity);
   Logger::Log("Climber/Sim/Rotor Position", simRotorPosition);
   Logger::Log("Climber/Sim/Rotor Velocity", simRotorVelocity);
 };
@@ -73,16 +73,8 @@ units::ampere_t SubClimber::GetMotorCurrent() {
   return (units::ampere_t)_climberMotor.GetOutputCurrent();
 }
 
-frc2::CommandPtr SubClimber::StowClimber() {
-  return RunOnce([this] { _climberMotor.SetPositionTarget(_STOW_TURNS); });
-}
-
-frc2::CommandPtr SubClimber::ReadyClimber() {
-  return RunOnce([this] { _climberMotor.SetPositionTarget(_READY_TURNS); });
-}
-
-frc2::CommandPtr SubClimber::ClimbL1() {
-  return RunOnce([this] { _climberMotor.SetPositionTarget(_L1_TURNS); });
+frc2::CommandPtr SubClimber::ClimbToggle(){
+  return StartEnd([this] {_climberMotor.SetPositionTarget(_READY_TURNS);}, [this] {_climberMotor.SetPositionTarget(_STOW_TURNS);});
 }
 
 frc2::CommandPtr SubClimber::RunCurrentZeroingSequence() {
