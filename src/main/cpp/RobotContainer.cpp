@@ -9,22 +9,13 @@
 #include "subsystems/SubDrivebase.h"
 #include "subsystems/SubIntake.h"
 #include "subsystems/SubFeeder.h"
-<<<<<<< HEAD
 #include "subsystems/SubVision.h"
-#include "subsystems/SubTurret.h"
-#include "subsystems/SubHood.h"
-=======
 #include "subsystems/Hood/SubHood.h"
->>>>>>> main
 #include "subsystems/SubIndexer.h"
 #include "subsystems/SubShooter.h"
-<<<<<<< HEAD
 #include "subsystems/SubClimber.h"
 #include "subsystems/SubDeploy.h"
-=======
 #include "subsystems/Turret/SubTurret.h"
-#include "subsystems/SubVision.h"
->>>>>>> main
 
 #include "commands/AutonCommands.h"
 #include "commands/DriveCommands.h"
