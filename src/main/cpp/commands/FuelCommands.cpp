@@ -113,12 +113,14 @@ frc2::CommandPtr ToggleBrakeCoast(){
     SubDrivebase::GetInstance().SetBrakeMode(true);
     SubDeploy::GetInstance().SetBrakeMode(true);
     SubTurret::GetInstance().SetBrakeMode(true);
+    SubHood::GetInstance().SetBrakeMode(true);
   }
   ,
   []{
     SubDrivebase::GetInstance().SetBrakeMode(false);
     SubDeploy::GetInstance().SetBrakeMode(false);
     SubTurret::GetInstance().SetBrakeMode(false);
+    SubHood::GetInstance().SetBrakeMode(false);
     }
   )
   .IgnoringDisable(true)
