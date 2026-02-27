@@ -17,11 +17,11 @@ ICCamera::ICCamera(std::string name, frc::Transform3d botToCam, frc::AprilTagFie
 std::optional<photon::EstimatedRobotPose> ICCamera::Update() {
     double largestArea = 0;
     std::string targets = "";
-    _estPose.reset();
 
      _results = _cam.GetAllUnreadResults();
     if (_results.size() > 0) {
         for (photon::PhotonPipelineResult result : _results) {
+            _estPose.reset();
             _estPose = _poseEstimator.EstimateCoprocMultiTagPose(result);
             for (const photon::PhotonTrackedTarget& target : result.targets) {
                 targets += std::to_string(target.GetFiducialId()) + ", ";

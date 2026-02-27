@@ -31,7 +31,7 @@ frc2::CommandPtr AddVisionMeasurement() {
                 Logger::Log("Vision/"+name+"/Have value", hasValue);
                 if (hasValue) {
                     auto est = pose.value();
-                    if (SubVision::GetInstance().IsEstimateUsable(est)) {
+                    if (SubVision::GetInstance().IsEstimateUsable(est) && frc::Timer::GetFPGATimestamp() - est.timestamp < 1_s / 20) {
                         Logger::Log("Vision/"+name+"/Estimation Usable", true);
                     } else {
                         Logger::Log("Vision/"+name+"/Estimation Usable", false);
