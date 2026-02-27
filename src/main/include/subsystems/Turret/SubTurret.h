@@ -119,7 +119,7 @@ class SubTurret : public frc2::SubsystemBase {
   static constexpr double BIG_TEETH = 94;
   static constexpr double ENCODER1_RATIO = E1_TEETH / BIG_TEETH;
   static constexpr double ENCODER2_RATIO = E2_TEETH / BIG_TEETH;
-  static constexpr double GEAR_RATIO = (48.0 / 12.0) * (94.0 / 10.0);
+  static constexpr double GEAR_RATIO = 64.46;
 
   static constexpr units::degree_t TOLARANCE = 8_deg;
 
