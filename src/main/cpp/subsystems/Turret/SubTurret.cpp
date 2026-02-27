@@ -7,7 +7,6 @@
 #include <frc/RobotBase.h>
 #include "utilities/Logger.h"
 #include "utilities/PoseHandler.h"
-#include "utilities/BotVars.h"
 #include "subsystems/Turret/TurretEncoderConfig.h"
 #include "utilities/RobotVisualisation.h"
 #include <frc/RobotBase.h>
@@ -16,16 +15,9 @@
 #include "subsystems/Turret/TurretCancoderIO.h"
 
 SubTurret::SubTurret() {
-    if (BotVars::GetRobot() == BotVars::PRACTICE) {
-        _encoderIO = std::make_unique<TurretThroughboreIO>(dio::TURRET_ENCODER_1, dio::TURRET_ENCODER_2);
-        _turretMotorConfig.encoder.PositionConversionFactor(1/ALPHA_GEAR_RATIO);
-        _turretMotorConfig.encoder.VelocityConversionFactor(1/ALPHA_GEAR_RATIO);
-    } else {
-        _encoderIO = std::make_unique<TurretCancoderIO>(canid::TURRET_ENCODER_1, canid::TURRET_ENCODER_2);
-        _turretMotorConfig.encoder.PositionConversionFactor(1/BETA_GEAR_RATIO);
-        _turretMotorConfig.encoder.VelocityConversionFactor(1/BETA_GEAR_RATIO);
-    }
-
+    
+    _turretMotorConfig.encoder.PositionConversionFactor(1/GEAR_RATIO);
+    _turretMotorConfig.encoder.VelocityConversionFactor(1/GEAR_RATIO);
     _turretMotorConfig.closedLoop.Pid(P, I, D);
     _turretMotorConfig.closedLoop.MaxOutput(1.0);
     _turretMotorConfig.closedLoop.MinOutput(-1.0);
@@ -37,6 +29,12 @@ SubTurret::SubTurret() {
     _turretMotorConfig.softLimit.ReverseSoftLimit(NEG_LIMIT.convert<units::turns>().value());
     _turretMotorConfig.softLimit.ReverseSoftLimitEnabled(true);
     _turretMotor.OverwriteConfig(_turretMotorConfig);
+
+    if (BotVars::GetRobot() == BotVars::PRACTICE) {
+        _encoderIO = std::make_unique<TurretThroughboreIO>(dio::TURRET_ENCODER_1, dio::TURRET_ENCODER_2);
+    } else {
+        _encoderIO = std::make_unique<TurretCancoderIO>(canid::TURRET_ENCODER_1, canid::TURRET_ENCODER_2);
+    }
 
     _encoderIO->ConfigEncoder();
 
@@ -105,22 +103,6 @@ units::degree_t SubTurret::GetTurretAngleCRT() {
         return _turretMotor.GetPosition();
     }
 
-    static double e1Teeth;
-    static double e2Teeth;
-    static double bigTeeth;
-
-    if(BotVars::GetRobot() == BotVars::PRACTICE) {
-        e1Teeth = ALPHA_E1_TEETH;
-        e2Teeth = ALPHA_E2_TEETH;
-        bigTeeth = ALPHA_BIG_TEETH;
-    }
-
-    else {
-        e1Teeth = BETA_E1_TEETH;
-        e2Teeth = BETA_E2_TEETH;
-        bigTeeth = BETA_BIG_TEETH;
-    }
-
     // get encoder values and difference
     double e1deg = getEncoder1Degrees().value();
     double e2deg = getEncoder2Degrees().value();
@@ -135,22 +117,22 @@ units::degree_t SubTurret::GetTurretAngleCRT() {
 
     // find slope and multiply to difference 
     // (converting from encoder difference to turret degrees)
-    static double SLOPE = (e2Teeth * e1Teeth) / (bigTeeth);
+    static double SLOPE = (E2_TEETH * E1_TEETH) / (BIG_TEETH);
     difference *= SLOPE;
 
     // estimate encoder 1 rotation count
     // (solve for encoder 1 rotations)
-    double e1rotations = (difference * bigTeeth / e1Teeth) / 360.0;
+    double e1rotations = (difference * BIG_TEETH / E1_TEETH) / 360.0;
     double e1rotations_floored = floor(e1rotations);
 
     // solve for turret angle with encoder 1
     double turretAngle = (
         (e1rotations_floored * 360.0 + e1deg) *
-        (e1Teeth / bigTeeth)
+        (E1_TEETH / BIG_TEETH)
     );
 
     // resolve ambiguity (when encoders are the same again)
-    double period = (e1Teeth / bigTeeth) * 360.0;
+    double period = (E1_TEETH / BIG_TEETH) * 360.0;
 
     if(turretAngle - difference < -period / 2) {
         turretAngle += period;
