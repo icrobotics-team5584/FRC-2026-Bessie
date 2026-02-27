@@ -8,13 +8,13 @@ RebuiltShift ShiftHandler::GetCurrentShift(units::second_t offset) {
     return RebuiltShift::AUTON;
   }
 
-  units::second_t secondsPassed = frc::DriverStation::GetMatchTime();
-  Logger::Log("ShiftHandler/GetCurrentShift/secondsPassed", secondsPassed);
-  if (secondsPassed == -1_s) { /* Isn't in home practise mode */
+  units::second_t timeLeft = frc::DriverStation::GetMatchTime();
+  Logger::Log("ShiftHandler/GetCurrentShift/timeLeft", timeLeft);
+  if (timeLeft == -1_s) { /* Isn't in home practise mode */
     return RebuiltShift::NONE;
   }
 
-  if (secondsPassed > 130_s) {
+  if (timeLeft > 130_s - _afterShiftOffset) {
     return RebuiltShift::TRANS;
   }
 
@@ -24,16 +24,33 @@ RebuiltShift ShiftHandler::GetCurrentShift(units::second_t offset) {
   } else { /* filps RebuiltShift::BLUE to RebuiltShift::RED and vice versa*/
     losingShift = (winningShift == RebuiltShift::BLUE ? RebuiltShift::RED : RebuiltShift::BLUE);
   }
-  if (secondsPassed > 105_s) { /* Shift 1 */
+
+  units::second_t losingShiftOffset;
+  units::second_t winningShiftOffset;
+
+  RebuiltShift myShift = static_cast<RebuiltShift>(
+  frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kBlue));
+
+  if(myShift == losingShift) {
+    losingShiftOffset = - _afterShiftOffset;
+    winningShiftOffset = _beforeShiftOffset;
+  }
+
+  else {
+    losingShiftOffset = _beforeShiftOffset;
+    winningShiftOffset = - _afterShiftOffset;
+  }
+
+  if (timeLeft > 105_s + losingShiftOffset) { /* Shift 1 */
     return losingShift;
   }
-  if (secondsPassed > 80_s) { /* Shift 2 */
+  if (timeLeft > 80_s + winningShiftOffset) { /* Shift 2 */
     return winningShift;
   }
-  if (secondsPassed > 55_s) { /* Shift 3 */
+  if (timeLeft > 55_s + losingShiftOffset) { /* Shift 3 */
     return losingShift;
   }
-  if (secondsPassed > 30_s) { /* Shift 4 */
+  if (timeLeft > 30_s + winningShiftOffset) { /* Shift 4 */
     return winningShift;
   }
   return RebuiltShift::ENDGAME;
