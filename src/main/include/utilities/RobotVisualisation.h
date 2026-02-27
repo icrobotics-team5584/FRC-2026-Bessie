@@ -60,4 +60,9 @@ class RobotVisualisation {
   _shooterMechRoot->Append<frc::MechanismLigament2d>("shooterLowerConnector", 0.05, -90_deg, 0);
    MechanismCircle2d _shooterMechBottomRoller{
   _shooterMechLowerConnector, "shooterBottomRoller", 0.025, 0_deg};
+
+  // Climber Visualsation
+  frc::MechanismRoot2d* _climberMechRoot = _display.GetRoot("climberRoot", 1, 1);
+  frc::MechanismLigament2d* _climberMechArm = 
+    _climberMechRoot->Append<frc::MechanismLigament2d>("climberArm", 0, 90_deg, 1);
 };
