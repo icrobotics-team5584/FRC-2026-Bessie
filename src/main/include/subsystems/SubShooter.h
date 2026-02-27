@@ -34,9 +34,12 @@ class SubShooter : public frc2::SubsystemBase {
 
   frc2::CommandPtr SetShooterTarget(std::function<units::turns_per_second_t()> speed);
   frc2::CommandPtr StopShooter();
-  frc2::CommandPtr SpinWithDistance(
-    std::function<units::meter_t()> distance, std::function<bool()> isPassing);
+  frc2::CommandPtr SpinWithDistance(std::function<units::meter_t()> distance, std::function<bool()> isPassing);
+  frc2::CommandPtr SpinShooterSlowly();
+  frc2::CommandPtr AdjustManualSpeedOffset(units::turns_per_second_t offset);
 
+  units::turns_per_second_t GetShooterOffset();
+  
   bool IsAtSpeed();
 
   units::second_t GetTimeOfFLightWithDistance(units::meter_t distance);
@@ -52,6 +55,7 @@ class SubShooter : public frc2::SubsystemBase {
   static constexpr units::kilogram_square_meter_t MOI = 0.05_kg_sq_m;
   static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::KrakenX60FOC();
   static constexpr double GEAR_RATIO = 1.0;
+  static constexpr units::turns_per_second_t DEFAULT_SHOOTER_OFFSET = 0_tps;
 
   double P = 0.4;
   double I = 0;
@@ -65,15 +69,29 @@ class SubShooter : public frc2::SubsystemBase {
     "Shooter Motor 1 High Temperature!", frc::Alert::AlertType::kWarning};
   frc::Alert _shooter1CurrentAlert{"Shooter Motor 1 Overcurrent!", frc::Alert::AlertType::kWarning};
 
-  AlertController::MotorAlertConfig _shooter1AlertConfig{
-    _shooter1highTemperatureAlert, _shooter1CurrentAlert, 60_degC, 20_A};
+  frc::Alert _shooter1RecordedTemperatureAlert{
+    "Shooter Motor 1 max Temperature was reached !", frc::Alert::AlertType::kWarning};
+
+  frc::Alert _shooter1RecordedCurrentAlert{
+    "Shooter Motor 1 max current was reached !", frc::Alert::AlertType::kWarning};
+
+  AlertController::MotorAlertConfig _shooter1AlertConfig{_shooter1highTemperatureAlert,
+    _shooter1CurrentAlert, _shooter1RecordedTemperatureAlert, _shooter1RecordedCurrentAlert,
+    60_degC, 20_A};
 
   frc::Alert _shooter2highTemperatureAlert{
     "Shooter Motor 2 High Temperature!", frc::Alert::AlertType::kWarning};
   frc::Alert _shooter2CurrentAlert{"Shooter Motor 2 Overcurrent!", frc::Alert::AlertType::kWarning};
 
-  AlertController::MotorAlertConfig _shooter2AlertConfig{
-    _shooter2highTemperatureAlert, _shooter2CurrentAlert, 60_degC, 20_A};
+  frc::Alert _shooter2RecordedTemperatureAlert{
+    "Shooter Motor 2 max Temperature was reached !", frc::Alert::AlertType::kWarning};
+
+  frc::Alert _shooter2RecordedCurrentAlert{
+    "Shooter Motor 2 max current was reached !", frc::Alert::AlertType::kWarning};
+
+  AlertController::MotorAlertConfig _shooter2AlertConfig{_shooter2highTemperatureAlert,
+    _shooter2CurrentAlert, _shooter2RecordedTemperatureAlert, _shooter2RecordedCurrentAlert,
+    60_degC, 20_A};
 
   wpi::interpolating_map<units::meter_t, units::turns_per_second_t> _flyWheelSpeedTableScoring;
   wpi::interpolating_map<units::meter_t, units::turns_per_second_t> _flyWheelSpeedTablePassing;
@@ -87,16 +105,4 @@ class SubShooter : public frc2::SubsystemBase {
   frc::LinearSystem<1, 1, 1> _rightFlywheelSystem =
     frc::LinearSystemId::FlywheelSystem(MOTOR_MODEL, MOI, GEAR_RATIO);
   frc::sim::FlywheelSim _rightFlywheelSim{_rightFlywheelSystem, MOTOR_MODEL};
-
-  // mechanism2d
-  frc::Mechanism2d _shooterMech{0.25, 0.25};
-  frc::MechanismRoot2d* _shooterMechRoot = _shooterMech.GetRoot("shooterRoot", 0.125, 0.125);
-  frc::MechanismLigament2d* _shooterMechUpperConnector =
-    _shooterMechRoot->Append<frc::MechanismLigament2d>("shooterUpperConnector", 0.05, 90_deg, 0);
-  MechanismCircle2d _shooterMechTopRoller{
-    _shooterMechUpperConnector, "shooterTopRoller", 0.025, 0_deg};
-  frc::MechanismLigament2d* _shooterMechLowerConnector =
-    _shooterMechRoot->Append<frc::MechanismLigament2d>("shooterLowerConnector", 0.05, -90_deg, 0);
-  MechanismCircle2d _shooterMechBottomRoller{
-    _shooterMechLowerConnector, "shooterBottomRoller", 0.025, 0_deg};
 };

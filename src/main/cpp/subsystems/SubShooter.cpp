@@ -10,6 +10,7 @@
 #include <ctre/phoenix6/controls/Follower.hpp>
 
 #include "frc/smartdashboard/SmartDashboard.h"
+#include "utilities/RobotVisualisation.h"
 
 SubShooter::SubShooter() {
   // Coast Mode
@@ -42,26 +43,34 @@ SubShooter::SubShooter() {
   _shooterMotor2.GetConfigurator().Apply(_shooterMotorConfig);
 
   _shooterMotor1.GetClosedLoopReference().SetUpdateFrequency(100_Hz);
+  _shooterMotor1.GetStatorCurrent().SetUpdateFrequency(100_Hz);
 
-    _timeOfFlightTable.insert(1.8575_m, 0.8_s);
-    _timeOfFlightTable.insert(2.3575_m, 0.5_s);
-    _timeOfFlightTable.insert(2.8575_m, 0.93_s);
-    _timeOfFlightTable.insert(3.3575_m, 1.1_s);
-    _timeOfFlightTable.insert(3.8575_m, 1.18_s);
-    _timeOfFlightTable.insert(4.3575_m, 1.18_s);
-    _timeOfFlightTable.insert(4.6875_m, 1.28_s);
-    _timeOfFlightTable.insert(5.1875_m, 1.28_s);
+  _shooterMotor2.GetClosedLoopReference().SetUpdateFrequency(100_Hz);
+  _shooterMotor2.GetStatorCurrent().SetUpdateFrequency(100_Hz);
 
-  frc::SmartDashboard::PutData("Shooter/mech2dDisplay", &_shooterMech);
+  _timeOfFlightTable.insert(1.8575_m, 0.8_s);
+  _timeOfFlightTable.insert(2.3575_m, 0.5_s);
+  _timeOfFlightTable.insert(2.8575_m, 0.93_s);
+  _timeOfFlightTable.insert(3.3575_m, 1.1_s);
+  _timeOfFlightTable.insert(3.8575_m, 1.18_s);
+  _timeOfFlightTable.insert(4.3575_m, 1.18_s);
+  _timeOfFlightTable.insert(4.6875_m, 1.28_s);
+  _timeOfFlightTable.insert(5.1875_m, 1.28_s);
+  _timeOfFlightTable.insert(5.3_m, 1.3_s);
+  _timeOfFlightTable.insert(5.9_m, 1.51_s);
+  _timeOfFlightTable.insert(7_m, 1.8_s);
 
-  _flyWheelSpeedTableScoring.insert(1.8575_m, 26_tps);
-  _flyWheelSpeedTableScoring.insert(2.3575_m, 27_tps);
-  _flyWheelSpeedTableScoring.insert(2.8575_m, 29_tps);
-  _flyWheelSpeedTableScoring.insert(3.3575_m, 33_tps);
-  _flyWheelSpeedTableScoring.insert(3.8575_m, 35_tps);
-  _flyWheelSpeedTableScoring.insert(4.3575_m, 38.5_tps);
-  _flyWheelSpeedTableScoring.insert(4.6875_m, 41_tps);
-  _flyWheelSpeedTableScoring.insert(5.1875_m, 44_tps);
+  _flyWheelSpeedTableScoring.insert(1.8575_m, 27_tps);
+  _flyWheelSpeedTableScoring.insert(2.3575_m, 28_tps);
+  _flyWheelSpeedTableScoring.insert(2.8575_m, 30_tps);
+  _flyWheelSpeedTableScoring.insert(3.3575_m, 34_tps);
+  _flyWheelSpeedTableScoring.insert(3.8575_m, 36_tps);
+  _flyWheelSpeedTableScoring.insert(4.3575_m, 37_tps);
+  _flyWheelSpeedTableScoring.insert(4.6875_m, 42_tps);
+  _flyWheelSpeedTableScoring.insert(5.1875_m, 45_tps);
+  _flyWheelSpeedTableScoring.insert(5.6875_m, 49_tps);
+  _flyWheelSpeedTableScoring.insert(6.1875_m, 52_tps);
+  _flyWheelSpeedTableScoring.insert(6.6875_m, 57_tps);
 
   _flyWheelSpeedTablePassing.insert(5_m, 40_tps);
   _flyWheelSpeedTablePassing.insert(6_m, 45_tps);
@@ -78,10 +87,10 @@ void SubShooter::Periodic() {
   Logger::Log("Shooter/IsAtSpeed", IsAtSpeed());
 
   units::angle::degree_t motor1Position = _shooterMotor1.GetPosition().GetValue();
-  _shooterMechTopRoller.SetAngle(motor1Position);
+  RobotVisualisation::GetInstance()._shooterMechTopRoller.SetAngle(motor1Position);
 
   units::angle::degree_t motor2Position = _shooterMotor2.GetPosition().GetValue();
-  _shooterMechBottomRoller.SetAngle(motor2Position);
+  RobotVisualisation::GetInstance()._shooterMechBottomRoller.SetAngle(motor2Position);
 
   units::celsius_t shooter1Temperature = _shooterMotor1.GetDeviceTemp().GetValue();
   units::ampere_t shooter1Current = _shooterMotor1.GetStatorCurrent().GetValue();
@@ -130,19 +139,35 @@ frc2::CommandPtr SubShooter::StopShooter() {
     [this] { _shooterMotor1.SetControl(_flywheelTargetVelocity.WithVelocity(0_tps)); });
 }
 
+frc2::CommandPtr SubShooter::SpinShooterSlowly() {
+    return Run([this] {_shooterMotor1.SetControl(_flywheelTargetVelocity.WithVelocity(10_tps));});
+}
+
+frc2::CommandPtr SubShooter::AdjustManualSpeedOffset(units::turns_per_second_t offset) {
+  // Using frc2 cmd so we dont require subsystem
+  return frc2::cmd::RunOnce([this, offset] {
+    units::turns_per_second_t oldOffset = Logger::Tune("Shooter/Speed Manual Offset", DEFAULT_SHOOTER_OFFSET);
+    units::turns_per_second_t newOffset = oldOffset + offset;
+    Logger::Log("Shooter/Speed Manual Offset", newOffset);
+  });
+}
+
 bool SubShooter::IsAtSpeed() {
-  return units::math::abs(
-           _shooterMotor1.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 1.0_tps &&
-         units::math::abs(
-           _shooterMotor2.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 1.0_tps;
+  return units::math::abs(_shooterMotor1.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 4.0_tps &&
+  units::math::abs(_shooterMotor2.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 4.0_tps;
 }
 
 frc2::CommandPtr SubShooter::SpinWithDistance(
   std::function<units::meter_t()> distance, std::function<bool()> isPassing) {
-  return SetShooterTarget([this, distance, isPassing] {
+  return SetShooterTarget([this, distance, isPassing] { 
+    auto offset = Logger::Tune("Shooter/Speed Manual Offset", DEFAULT_SHOOTER_OFFSET);
     return isPassing() ? _flyWheelSpeedTablePassing[distance()]
-                       : _flyWheelSpeedTableScoring[distance()];
+                       : _flyWheelSpeedTableScoring[distance()] + offset;
   });
+}
+
+units::turns_per_second_t SubShooter::GetShooterOffset(){
+  return Logger::Tune("Shooter/Speed Manual Offset", DEFAULT_SHOOTER_OFFSET);
 }
 
 units::second_t SubShooter::GetTimeOfFLightWithDistance(units::meter_t distance) {

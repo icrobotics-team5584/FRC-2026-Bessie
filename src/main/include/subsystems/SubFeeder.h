@@ -31,9 +31,6 @@ class SubFeeder : public frc2::SubsystemBase {
   frc2::CommandPtr FeederOn();
   frc2::CommandPtr FeederOff();
 
-  bool FeederIsFull();
-  bool FeederIsEmpty();
-
   void Periodic() override;
 
   void SimulationPeriodic() override;
@@ -42,16 +39,20 @@ class SubFeeder : public frc2::SubsystemBase {
   ICSparkFlex _feederMotor{canid::FEEDER};
   rev::spark::SparkFlexConfig _feederMotorConfig;
 
-  frc::DigitalInput _feederFullSensor{dio::FEEDER_FULL_SENSOR};
-  frc::DigitalInput _feederEmptySensor{dio::FEEDER_EMPTY_SENSOR};
-
   frc::Alert _feederHighTemperatureAlert{
     "Feeder Motor High Temperature!", frc::Alert::AlertType::kWarning};
 
   frc::Alert _feederCurrentAlert{"Feeder Motor Overcurrent!", frc::Alert::AlertType::kWarning};
 
-  AlertController::MotorAlertConfig _feederAlertConfig{
-    _feederHighTemperatureAlert, _feederCurrentAlert, 60_degC, 20_A};
+  frc::Alert _intakeRecordedTemperatureAlert{
+    "Feeder Motor max Temperature was reached !", frc::Alert::AlertType::kWarning};
+
+  frc::Alert _intakeRecordedCurrentAlert{
+    "Feeder Motor max current was reached !", frc::Alert::AlertType::kWarning};
+
+  AlertController::MotorAlertConfig _feederAlertConfig{_feederHighTemperatureAlert,
+    _intakeRecordedTemperatureAlert, _intakeRecordedCurrentAlert, _feederCurrentAlert, 60_degC,
+    20_A};
 
   // Simulation components
   static constexpr double GEARING = 1.0;

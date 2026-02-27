@@ -7,11 +7,11 @@
 #include "subsystems/SubDeploy.h"
 #include "subsystems/SubDrivebase.h"
 #include "subsystems/SubFeeder.h"
-#include "subsystems/SubHood.h"
+#include "subsystems/Hood/SubHood.h"
 #include "subsystems/SubIndexer.h"
 #include "subsystems/SubIntake.h"
 #include "subsystems/SubShooter.h"
-#include "subsystems/SubTurret.h"
+#include "subsystems/Turret/SubTurret.h"
 #include "subsystems/SubVision.h"
 
 #include "commands/AutonCommands.h"
@@ -23,6 +23,7 @@
 #include "utilities/Logger.h"
 #include "utilities/PoseHandler.h"
 #include "utilities/ShiftHandler.h"
+#include "utilities/ShotPlanner.h"
 
 #include <frc2/command/Commands.h>
 
@@ -33,6 +34,37 @@ RobotContainer::RobotContainer() {
   SubTurret::GetInstance().SetDefaultCommand(cmd::AimAtFieldRelative([]{return cmd::CalcShootOnTheMoveAngle();}));
 
   _autoManager.AddDefaultAuton("default", AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton()));
+
+  _autoManager.AddAuton("DriveInASquare",
+    AutonHelper::MakeCommandPtrAuto(cmd::TESTDriveInASquare()));
+  _autoManager.AddAuton("Forward250cm",
+    AutonHelper::MakeCommandPtrAuto(cmd::TESTForward250cm()));
+  _autoManager.AddAuton("Forward250cmWhileTurning",
+    AutonHelper::MakeCommandPtrAuto(cmd::TESTForward250cmWhileTurning()));
+
+  _autoManager.AddAuton("NeutralScoreAndClimb_LeftBump",
+    AutonHelper::MakeCommandPtrAuto(cmd::NeutralScoreAndClimb_LeftBump()));
+  _autoManager.AddAuton("NeutralScoreAndClimb_LeftTrench",
+    AutonHelper::MakeCommandPtrAuto(cmd::NeutralScoreAndClimb_LeftTrench()));
+  _autoManager.AddAuton("NeutralScoreAndClimb_RightBump",
+    AutonHelper::MakeCommandPtrAuto(cmd::NeutralScoreAndClimb_RightBump()));
+  _autoManager.AddAuton("NeutralScoreAndClimb_RightTrench",
+    AutonHelper::MakeCommandPtrAuto(cmd::NeutralScoreAndClimb_RightTrench()));
+
+  _autoManager.AddAuton("Hoard_LeftBump", AutonHelper::MakeCommandPtrAuto(cmd::Hoard_LeftBump()));
+  _autoManager.AddAuton("Hoard_LeftTrench", AutonHelper::MakeCommandPtrAuto(cmd::Hoard_LeftTrench()));
+  _autoManager.AddAuton("Hoard_RightBump",
+  AutonHelper::MakeCommandPtrAuto(cmd::Hoard_RightBump()));
+  _autoManager.AddAuton("Hoard_RightTrench",
+  AutonHelper::MakeCommandPtrAuto(cmd::Hoard_RightTrench()));
+
+  _autoManager.AddAuton("NeutralAndOutpostScore_RightBump",
+    AutonHelper::MakeCommandPtrAuto(cmd::NeutralAndOutpostScore_RightBump()));
+  _autoManager.AddAuton("NeutralAndOutpostScore_RightTrench",
+    AutonHelper::MakeCommandPtrAuto(cmd::NeutralAndOutpostScore_RightTrench()));
+
+  //_autoManager.AddAuton("OutpostDepotClimb",
+  //AutonHelper::MakeCommandPtrAuto(cmd::OutpostDepotClimb()));
 
   frc::SmartDashboard::PutData("CHOSEN AUTON", &_autoManager.GetAutonChooser());
 
@@ -52,17 +84,28 @@ void RobotContainer::ConfigureBindings() {
 
   //Letters
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
-  _driverController.Y().OnTrue(SubDrivebase::GetInstance().ResetGyroCmd());
+  _driverController.Y().OnTrue(SubDrivebase::GetInstance().ZeroRotation());
   _driverController.B().WhileTrue(SubDrivebase::GetInstance().AlignToAngle(_driverController, 0_deg));
-  _driverController.A().OnTrue(frc2::cmd::RunOnce([] {
-    SubDrivebase::GetInstance().SetPose(frc::Pose2d{0_m, 0_m, 0_deg});
-  }));
+  _driverController.A().WhileTrue(cmd::EjectFuel());
 
-  /* Holds */
+  /* Operator */
+  _operatorController.Back().OnTrue(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); }));
   _operatorController.X().OnTrue(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); }));
   _operatorController.X().OnFalse(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(false); }));
+  _operatorController.Y().OnTrue(cmd::DisableAllOverrides());
+  _operatorController.RightTrigger().WhileTrue(cmd::BackupShoot());
+  _operatorController.Start().OnTrue(cmd::ForceShoot());
 
-  //POVs
+  _operatorController.LeftBumper().OnTrue(frc2::cmd::RunOnce([]{return ShotPlanner::SetOverride(ShotPlanner::Override::SCORE);}));
+  _operatorController.RightBumper().OnTrue(frc2::cmd::RunOnce([]{return ShotPlanner::SetOverride(ShotPlanner::Override::PASS);}));
+
+  // Operator POVS
+  _operatorController.POVRight().OnTrue(SubShooter::GetInstance().AdjustManualSpeedOffset(1_tps));
+  _operatorController.POVLeft().OnTrue(SubShooter::GetInstance().AdjustManualSpeedOffset(-1_tps));
+  _operatorController.POVUp().OnTrue(SubHood::GetInstance().AdjustManualAngleOffset(1_deg));
+  _operatorController.POVDown().OnTrue(SubHood::GetInstance().AdjustManualAngleOffset(-1_deg));
+
+  // Driver POVs
   _driverController.POVDown().OnTrue(
     SubTurret::GetInstance().SetTurretTargetAngle([] { return 180_deg; }, [] { return 0_deg_per_s; }));
   _driverController.POVRight().OnTrue(cmd::AimAtSpot(frc::Translation2d{0_m, 0_m}));

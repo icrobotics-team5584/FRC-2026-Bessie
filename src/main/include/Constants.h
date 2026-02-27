@@ -33,6 +33,9 @@ namespace canid {
 
     constexpr int OUTDEXER = 23;
 
+    constexpr int TURRET_ENCODER_1 = 24;
+    constexpr int TURRET_ENCODER_2 = 25;
+
     constexpr int PDH = 40;
 }
 
@@ -40,8 +43,6 @@ namespace dio {
     constexpr int BRAKE_COAST_BUTTON = 0;
     constexpr int TURRET_ENCODER_1 = 1;
     constexpr int TURRET_ENCODER_2 = 2;
-    constexpr int FEEDER_FULL_SENSOR = 4;
-    constexpr int FEEDER_EMPTY_SENSOR = 5;
 }
 
 namespace pwm {

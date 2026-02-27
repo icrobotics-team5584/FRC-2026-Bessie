@@ -49,8 +49,15 @@ class SubIndexer : public frc2::SubsystemBase {
     "Indexer Motor High Temperature!", frc::Alert::AlertType::kWarning};
   frc::Alert _indexerCurrentAlert{"Indexer Motor Overcurrent!", frc::Alert::AlertType::kWarning};
 
-  AlertController::MotorAlertConfig _indexerAlertConfig{
-    _indexerHighTemperatureAlert, _indexerCurrentAlert, 60_degC, 20_A};
+  frc::Alert _indexerRecordedTemperatureAlert{
+    "Indexer Motor max Temperature was reached !", frc::Alert::AlertType::kWarning};
+
+  frc::Alert _indexerRecordedCurrentAlert{
+    "Indexer Motor max current was reached !", frc::Alert::AlertType::kWarning};
+
+  AlertController::MotorAlertConfig _indexerAlertConfig{_indexerHighTemperatureAlert,
+    _indexerCurrentAlert, _indexerRecordedTemperatureAlert, _indexerRecordedCurrentAlert, 60_degC,
+    20_A};
 
   ICSparkFlex _outdexerMotor{canid::OUTDEXER};
   rev::spark::SparkFlexConfig _outdexerMotorConfig;
@@ -60,8 +67,15 @@ class SubIndexer : public frc2::SubsystemBase {
   frc::Alert _outdexerCurrentAlert{
     "IndexerOut Motor Overcurrent!", frc::Alert::AlertType::kWarning};
 
-  AlertController::MotorAlertConfig _outdexerAlertConfig{
-    _outdexerHighTemperatureAlert, _outdexerCurrentAlert, 60_degC, 20_A};
+  frc::Alert _outdexerRecordedTemperatureAlert{
+    "IndexerOut Motor max Temperature was reached !", frc::Alert::AlertType::kWarning};
+
+  frc::Alert _outdexerRecordedCurrentAlert{
+    "IndexerOut Motor max current was reached !", frc::Alert::AlertType::kWarning};
+
+  AlertController::MotorAlertConfig _outdexerAlertConfig{_outdexerHighTemperatureAlert,
+    _outdexerCurrentAlert, _outdexerRecordedTemperatureAlert, _outdexerRecordedCurrentAlert,
+    60_degC, 20_A};
 
   // Simulation components
   static constexpr double GEARING = 1.0;

@@ -5,10 +5,12 @@
 #include "subsystems/SubFeeder.h"
 
 #include <units/current.h>
-#include <utilities/Logger.h>
+#include "utilities/Logger.h"
+#include "utilities/RobotVisualisation.h"
 
 SubFeeder::SubFeeder() {
   _feederMotorConfig.SmartCurrentLimit(60);
+  _feederMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
   _feederMotor.OverwriteConfig(_feederMotorConfig);
   Logger::Log("Feeder/Feeder Motor", &_feederMotor);
 }
@@ -25,24 +27,16 @@ frc2::CommandPtr SubFeeder::FeederOff() {
   return RunOnce([this] { _feederMotor.Set(0); });
 }
 
-bool SubFeeder::FeederIsFull() {
-  return _feederFullSensor.Get();
-}
-
-bool SubFeeder::FeederIsEmpty() {
-  return _feederEmptySensor.Get();
-}
-
 // This method will be called once per scheduler run
 void SubFeeder::Periodic() {
   auto loopStart = frc::GetTime();
-
-  Logger::Log("Feeder/Feeder Is Full", FeederIsFull());
-  Logger::Log("Feeder/Feeder Is Empty", FeederIsEmpty());
   units::celsius_t feederTemperature = _feederMotor.GetTemperature();
   units::ampere_t feederCurrent = _feederMotor.GetStatorCurrent();
   AlertController::UpdateTemperatureAlert(_feederAlertConfig, feederTemperature);
   AlertController::UpdateCurrentAlert(_feederAlertConfig, feederCurrent);
+
+  RobotVisualisation::GetInstance()._feederMechTopWheel.SetAngle(_feederMotor.GetPosition());
+  RobotVisualisation::GetInstance()._feederMechBottomWheel.SetAngle(_feederMotor.GetPosition());
 
   Logger::Log("Feeder/Loop Time", (frc::GetTime() - loopStart));
 }
