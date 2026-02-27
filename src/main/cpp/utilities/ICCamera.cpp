@@ -22,7 +22,11 @@ std::optional<photon::EstimatedRobotPose> ICCamera::Update() {
     if (_results.size() > 0) {
         for (photon::PhotonPipelineResult result : _results) {
             _estPose.reset();
-            _estPose = _poseEstimator.EstimateCoprocMultiTagPose(result);
+            if (result.targets.size() == 1) {
+                _estPose = _poseEstimator.EstimateAverageBestTargetsPose(result);
+            } else {
+                _estPose = _poseEstimator.EstimateCoprocMultiTagPose(result);
+            }
             for (const photon::PhotonTrackedTarget& target : result.targets) {
                 targets += std::to_string(target.GetFiducialId()) + ", ";
                 double targetArea = target.GetArea();
