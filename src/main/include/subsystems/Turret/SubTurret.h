@@ -119,13 +119,14 @@ class SubTurret : public frc2::SubsystemBase {
   static constexpr double ALPHA_BIG_TEETH = 94;
   static constexpr double ALPHA_ENCODER1_RATIO = ALPHA_E1_TEETH / ALPHA_BIG_TEETH;
   static constexpr double ALPHA_ENCODER2_RATIO = ALPHA_E2_TEETH / ALPHA_BIG_TEETH;
-  static constexpr double GEAR_RATIO = 64.46;
+  static constexpr double ALPHA_GEAR_RATIO = (48.0 / 12.0) * (94.0 / 10.0);
 
   static constexpr double BETA_E1_TEETH = 21;
   static constexpr double BETA_E2_TEETH = 20;
   static constexpr double BETA_BIG_TEETH = 94;
   static constexpr double BETA_ENCODER1_RATIO = BETA_E1_TEETH / BETA_BIG_TEETH;
   static constexpr double BETA_ENCODER2_RATIO = BETA_E2_TEETH / BETA_BIG_TEETH;
+  static constexpr double BETA_GEAR_RATIO = 64.46;
 
   static constexpr units::degree_t TOLARANCE = 8_deg;
 
@@ -133,6 +134,6 @@ class SubTurret : public frc2::SubsystemBase {
 
   // Sim
   frc::LinearSystem<2, 1, 2> _turretSystem =
-    frc::LinearSystemId::DCMotorSystem(MOTOR_MODEL, MOI, GEAR_RATIO);
+    frc::LinearSystemId::DCMotorSystem(MOTOR_MODEL, MOI, ALPHA_GEAR_RATIO);
   frc::sim::DCMotorSim _turretSim{_turretSystem, MOTOR_MODEL};
 };

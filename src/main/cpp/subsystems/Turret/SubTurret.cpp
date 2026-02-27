@@ -16,9 +16,16 @@
 #include "subsystems/Turret/TurretCancoderIO.h"
 
 SubTurret::SubTurret() {
-    
-    _turretMotorConfig.encoder.PositionConversionFactor(1/GEAR_RATIO);
-    _turretMotorConfig.encoder.VelocityConversionFactor(1/GEAR_RATIO);
+    if (BotVars::GetRobot() == BotVars::PRACTICE) {
+        _encoderIO = std::make_unique<TurretThroughboreIO>(dio::TURRET_ENCODER_1, dio::TURRET_ENCODER_2);
+        _turretMotorConfig.encoder.PositionConversionFactor(1/ALPHA_GEAR_RATIO);
+        _turretMotorConfig.encoder.VelocityConversionFactor(1/ALPHA_GEAR_RATIO);
+    } else {
+        _encoderIO = std::make_unique<TurretCancoderIO>(canid::TURRET_ENCODER_1, canid::TURRET_ENCODER_2);
+        _turretMotorConfig.encoder.PositionConversionFactor(1/BETA_GEAR_RATIO);
+        _turretMotorConfig.encoder.VelocityConversionFactor(1/BETA_GEAR_RATIO);
+    }
+
     _turretMotorConfig.closedLoop.Pid(P, I, D);
     _turretMotorConfig.closedLoop.MaxOutput(1.0);
     _turretMotorConfig.closedLoop.MinOutput(-1.0);
@@ -30,12 +37,6 @@ SubTurret::SubTurret() {
     _turretMotorConfig.softLimit.ReverseSoftLimit(NEG_LIMIT.convert<units::turns>().value());
     _turretMotorConfig.softLimit.ReverseSoftLimitEnabled(true);
     _turretMotor.OverwriteConfig(_turretMotorConfig);
-
-    if (BotVars::GetRobot() == BotVars::PRACTICE) {
-        _encoderIO = std::make_unique<TurretThroughboreIO>(dio::TURRET_ENCODER_1, dio::TURRET_ENCODER_2);
-    } else {
-        _encoderIO = std::make_unique<TurretCancoderIO>(canid::TURRET_ENCODER_1, canid::TURRET_ENCODER_2);
-    }
 
     _encoderIO->ConfigEncoder();
 
@@ -108,7 +109,7 @@ units::degree_t SubTurret::GetTurretAngleCRT() {
     static double e2Teeth;
     static double bigTeeth;
 
-    if(BotVars::Robot == BotVars::PRACTICE) {
+    if(BotVars::GetRobot() == BotVars::PRACTICE) {
         e1Teeth = ALPHA_E1_TEETH;
         e2Teeth = ALPHA_E2_TEETH;
         bigTeeth = ALPHA_BIG_TEETH;
