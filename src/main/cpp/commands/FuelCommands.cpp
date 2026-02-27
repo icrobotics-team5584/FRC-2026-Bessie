@@ -21,6 +21,7 @@
 namespace cmd {
 
 bool forcingShoot = false;  // whether to override subsystem tolerance checks and force shooting
+bool isShooting = false;
 
 frc2::CommandPtr IntakeSequence() {
   return SubDeploy::GetInstance()
@@ -104,7 +105,8 @@ frc2::CommandPtr AimOnTheMove() {
 }
 
 frc2::CommandPtr ShootOnTheMove(){
-  return AimOnTheMove().AlongWith(ShootWhenReady()).AlongWith(SubIntake::GetInstance().IntakeOn());
+  return AimOnTheMove().AlongWith(ShootWhenReady()).AlongWith(SubIntake::GetInstance().IntakeOn())
+  .AlongWith(frc2::cmd::RunOnce([] {isShooting = true;})).FinallyDo([] {isShooting = false;});
 }
 
 frc2::CommandPtr EjectFuel() {
@@ -130,6 +132,10 @@ frc2::CommandPtr ForceShoot() {
     forcingShoot = true;
     Logger::Log("ForceShoot/forcingShoot", forcingShoot);
   });
+}
+
+bool IsShooting() {
+  return isShooting;
 }
 
 }  // namespace cmd

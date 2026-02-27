@@ -17,4 +17,5 @@ frc2::CommandPtr DisableAllOverrides();
 frc2::CommandPtr ForceShoot();
 
 bool IsReadyToShoot();
+bool IsShooting();
 }
