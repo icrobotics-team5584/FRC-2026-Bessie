@@ -75,6 +75,10 @@ frc2::CommandPtr ShootWhenReady() {
     .AndThen(SubFeeder::GetInstance().Feed().AlongWith(SubIndexer::GetInstance().Index()).Until([] {
       return !IsReadyToShoot();
     }))
+    .AlongWith(frc2::cmd::RunOnce([] {
+      ShiftHandler::GetInstance().SetTOFOffset(
+        SubShooter::GetInstance().GetTimeOfFLightWithDistance(CalcShootOnTheMoveDistance()));
+    }))
     .Repeatedly();
 };
 
