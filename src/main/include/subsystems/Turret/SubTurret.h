@@ -115,12 +115,12 @@ class SubTurret : public frc2::SubsystemBase {
   static constexpr auto kV = 3.4_V * (1_s / 1_tr);
   static constexpr auto kA = 0_V * ((1_s * 1_s) / 1_tr);
 
-  static constexpr double E1_TEETH = BotVars::Choose(15, 21);
-  static constexpr double E2_TEETH = BotVars::Choose(13, 20);
-  static constexpr double BIG_TEETH = 94;
-  static constexpr double ENCODER1_RATIO = E1_TEETH / BIG_TEETH;
-  static constexpr double ENCODER2_RATIO = E2_TEETH / BIG_TEETH;
-  static constexpr double GEAR_RATIO = BotVars::Choose(64.46, (48.0 / 12.0) * (94.0 / 10.0));
+  double E1_TEETH = BotVars::Choose(15, 21);
+  double E2_TEETH = BotVars::Choose(13, 20);
+  double BIG_TEETH = 94;
+  double ENCODER1_RATIO = E1_TEETH / BIG_TEETH;
+  double ENCODER2_RATIO = E2_TEETH / BIG_TEETH;
+  double GEAR_RATIO = BotVars::Choose(64.46, (48.0 / 12.0) * (94.0 / 10.0));
 
   static constexpr units::degree_t TOLARANCE = 8_deg;
 
