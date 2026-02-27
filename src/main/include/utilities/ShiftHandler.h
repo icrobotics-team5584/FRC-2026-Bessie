@@ -19,7 +19,7 @@ class ShiftHandler {
   }
 
   /* Getters */
-  RebuiltShift GetCurrentShift();
+  RebuiltShift GetCurrentShift(units::second_t offset = 0_s);
   RebuiltShift GetWinningShift();
   units::second_t GetTimeLeft();
   std::string GetShiftName(RebuiltShift shift);
@@ -29,6 +29,7 @@ class ShiftHandler {
 
   /* Setters */
   void SetOverrideActive(bool isActive);
+  void SetTOFOffset(units::second_t TOF);
 
   /*Delete assignment and copy so people don't accidently create copies*/
   ShiftHandler(ShiftHandler const&) = delete;
@@ -36,6 +37,10 @@ class ShiftHandler {
 
  private:
   bool _overrideActive = false;
+  units::second_t _baseOffset = 3_s;
+  units::second_t _beforeShiftOffset = 0_s;
+  units::second_t _afterShiftOffset = 0_s;
+  units::second_t _tof = 0_s;
 
   /*Private constructor to prevent creating multiple instances*/
   ShiftHandler() {}
