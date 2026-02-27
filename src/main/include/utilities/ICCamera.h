@@ -12,9 +12,9 @@
 
 class ICCamera {
 public:
-  ICCamera(std::string name, frc::Transform3d botToCam, frc::AprilTagFieldLayout tagMap, units::second_t lastTime = 0.08_s);
+  ICCamera(std::string name, frc::Transform3d botToCam, frc::AprilTagFieldLayout tagMap);
 
-  void Update();
+  std::optional<photon::EstimatedRobotPose> Update();
 
   struct TagObservation {
     photon::PhotonTrackedTarget tag;
@@ -25,10 +25,11 @@ public:
   frc::Transform3d GetBotToCam();
   photon::PhotonCameraSim* GetCamSim();
 
-  // The return object also include timestamp
-  photon::EstimatedRobotPose GetEstPose();
+  std::vector<photon::PhotonPipelineResult> GetLatestResult();
 
-  bool CanSeeTag();
+  TagObservation GetLastTagObservation();
+
+  std::optional<photon::EstimatedRobotPose> GetEstPose();
 
   std::optional<frc::Transform3d> CalculateRobotToCamera(photon::PhotonPipelineResult &result, frc::Transform3d robotToTag);
 
@@ -40,19 +41,14 @@ private:
   frc::Transform3d _botToCam;
 
   frc::AprilTagFieldLayout _tagMap;
+
   photon::PhotonCamera _cam;
   photon::PhotonCameraSim _camSim;
+
   photon::PhotonPoseEstimator _poseEstimator;
+  std::optional<photon::EstimatedRobotPose> _estPose;
 
-  units::second_t _lastTime;
-
-  photon::PhotonPipelineResult _result;
-  photon::EstimatedRobotPose _estPose { // Default pose
-    { {0_m, 0_m, 0_m}, {0_deg, 0_deg, 0_deg} },
-    -1_s,
-    {},
-    photon::PoseStrategy::MULTI_TAG_PNP_ON_COPROCESSOR
-  };
+  std::vector<photon::PhotonPipelineResult> _results;
 
   TagObservation _lastTagObservation;
 };
