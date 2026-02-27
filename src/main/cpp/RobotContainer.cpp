@@ -4,29 +4,29 @@
 
 #include "RobotContainer.h"
 
-#include <frc2/command/Commands.h>
-
-#include "subsystems/SubDrivebase.h"
-#include "subsystems/SubIntake.h"
-#include "subsystems/SubFeeder.h"
-#include "subsystems/SubVision.h"
 #include "subsystems/Hood/SubHood.h"
-#include "subsystems/SubIndexer.h"
-#include "subsystems/SubShooter.h"
 #include "subsystems/SubClimber.h"
 #include "subsystems/SubDeploy.h"
+#include "subsystems/SubDrivebase.h"
+#include "subsystems/SubFeeder.h"
+#include "subsystems/SubIndexer.h"
+#include "subsystems/SubIntake.h"
+#include "subsystems/SubShooter.h"
+#include "subsystems/SubVision.h"
 #include "subsystems/Turret/SubTurret.h"
 
 #include "commands/AutonCommands.h"
 #include "commands/DriveCommands.h"
-#include "commands/VisionCommands.h"
-#include "commands/TurretCommands.h"
 #include "commands/FuelCommands.h"
+#include "commands/TurretCommands.h"
+#include "commands/VisionCommands.h"
 
 #include "utilities/Logger.h"
 #include "utilities/PoseHandler.h"
 #include "utilities/ShiftHandler.h"
 #include "utilities/ShotPlanner.h"
+
+#include <frc2/command/Commands.h>
 
 RobotContainer::RobotContainer() {
   ConfigureBindings();

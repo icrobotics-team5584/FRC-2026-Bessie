@@ -73,8 +73,10 @@ units::ampere_t SubClimber::GetMotorCurrent() {
   return (units::ampere_t)_climberMotor.GetOutputCurrent();
 }
 
-frc2::CommandPtr SubClimber::ClimbToggle(){
-  return StartEnd([this] {_climberMotor.SetPositionTarget(_READY_TURNS);}, [this] {_climberMotor.SetPositionTarget(_STOW_TURNS);});
+frc2::CommandPtr SubClimber::ClimbToggle() {
+  return StartEnd([this] { _climberMotor.SetPositionTarget(_READY_TURNS); },
+    [this] { _climberMotor.SetPositionTarget(_STOW_TURNS); })
+    .OnlyIf([this] { return _hasZeroed; });
 }
 
 frc2::CommandPtr SubClimber::RunCurrentZeroingSequence() {
