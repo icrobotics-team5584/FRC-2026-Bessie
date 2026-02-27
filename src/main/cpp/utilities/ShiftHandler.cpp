@@ -2,14 +2,12 @@
 
 #include "utilities/Logger.h"
 
-RebuiltShift ShiftHandler::GetCurrentShift(units::second_t offset) {
-  Logger::Log("ShiftHandler/GetCurrentShift/offset", _beforeShiftOffset);
+RebuiltShift ShiftHandler::GetCurrentShift() {
   if (frc::DriverStation::IsAutonomousEnabled()) {
     return RebuiltShift::AUTON;
   }
 
   units::second_t secondsPassed = frc::DriverStation::GetMatchTime();
-  Logger::Log("ShiftHandler/GetCurrentShift/secondsPassed", secondsPassed);
   if (secondsPassed == -1_s) { /* Isn't in home practise mode */
     return RebuiltShift::NONE;
   }
@@ -110,7 +108,6 @@ bool ShiftHandler::IsShift(RebuiltShift shift) {
 
 bool ShiftHandler::IsActiveShift() {
   if (_overrideActive == true) {
-    Logger::Log("ShiftHandler/IsActiveShift/result", true);
     return true;
   }
   if (
@@ -118,28 +115,20 @@ bool ShiftHandler::IsActiveShift() {
     frc::DriverStation::GetMatchTime() == -1_s && /* Isn't home practise mode */
     frc::DriverStation::IsDisabled() == false /* Isn't disabled */
   ) {
-    Logger::Log("ShiftHandler/IsActiveShift/result", true);
     return true; /* Don't respect shifts */
   }
-  RebuiltShift currentShift = GetCurrentShift(_beforeShiftOffset);
+  RebuiltShift currentShift = GetCurrentShift();
   RebuiltShift myShift = static_cast<RebuiltShift>(
     frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kBlue));
 
   if (currentShift == RebuiltShift::AUTON || currentShift == RebuiltShift::TRANS ||
       currentShift == RebuiltShift::ENDGAME || myShift == currentShift) {
-    Logger::Log("ShiftHandler/IsActiveShift/result", true);
     return true;
   }
-  Logger::Log("ShiftHandler/IsActiveShift/result", false);
+
   return false;
 }
 
 void ShiftHandler::SetOverrideActive(bool isActive) {
   _overrideActive = isActive;
-}
-
-void ShiftHandler::SetTOFOffset(units::second_t TOF) {
-  _tof = TOF;
-  _beforeShiftOffset = TOF;
-  _afterShiftOffset = _baseOffset - TOF;
 }
