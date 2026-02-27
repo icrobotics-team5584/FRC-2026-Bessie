@@ -121,8 +121,8 @@ class SubTurret : public frc2::SubsystemBase {
   static constexpr double ALPHA_ENCODER2_RATIO = ALPHA_E2_TEETH / ALPHA_BIG_TEETH;
   static constexpr double ALPHA_GEAR_RATIO = (48.0 / 12.0) * (94.0 / 10.0);
 
-  static constexpr double BETA_E1_TEETH = 21;
-  static constexpr double BETA_E2_TEETH = 20;
+  static constexpr double BETA_E1_TEETH = 15;
+  static constexpr double BETA_E2_TEETH = 13;
   static constexpr double BETA_BIG_TEETH = 94;
   static constexpr double BETA_ENCODER1_RATIO = BETA_E1_TEETH / BETA_BIG_TEETH;
   static constexpr double BETA_ENCODER2_RATIO = BETA_E2_TEETH / BETA_BIG_TEETH;
