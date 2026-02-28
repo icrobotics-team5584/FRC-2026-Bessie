@@ -12,9 +12,6 @@
 #include "utilities/PoseHandler.h"
 
 namespace cmd {
-    frc2::CommandPtr DefaultAuton() {
-        return frc2::cmd::Print("Default Auton");
-    }
 
     /* TESTING AUTONS */
     frc2::CommandPtr TESTDriveInASquare() {
@@ -374,5 +371,11 @@ namespace cmd {
         )/*.AndThen(
             SubClimber::GetInstance().ClimbL1()
         )*/;
+    }
+    frc2::CommandPtr ShootAndStay() {
+        return frc2::cmd::Sequence(
+            SubHood::GetInstance().ZeroHood(),
+            cmd::ShootOnTheMove().WithTimeout(5_s)
+        );
     }
 }
