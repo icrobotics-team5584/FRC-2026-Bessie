@@ -258,6 +258,17 @@ units::degree_t SubTurret::GetFieldRelativeTurretAngle() {
     return robot.Rotation().Degrees() + GetTurretAngle();
 }
 
+void SubTurret::SetBrakeMode(bool brakeMode){
+    rev::spark::SparkBaseConfig _neutralModeConfig;
+    if (brakeMode == true) {
+        _neutralModeConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
+        _turretMotor.AdjustConfigNoPersist(_neutralModeConfig);
+    } else if (brakeMode == false) {
+        _neutralModeConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kCoast);
+        _turretMotor.AdjustConfigNoPersist(_neutralModeConfig);
+    }
+}
+
 units::degree_t SubTurret::GetLastFieldRelativeTarget() {
     return _lastFieldRelativeTurretTarget;
 }

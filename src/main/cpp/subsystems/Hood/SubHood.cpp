@@ -155,3 +155,12 @@ frc2::CommandPtr SubHood::MoveHoodDown1Degree() {
 frc2::CommandPtr SubHood::HoodToEjectAngle() {
   return SubHood::GetInstance().SetHoodPositionTarget([] { return LOWER_LIMIT + 5_deg; });
 }
+
+void SubHood::SetBrakeMode(bool brakeMode){
+  if (brakeMode == true){
+    _hoodMotor->SetBrakeMode(true);
+  }
+  else {
+    _hoodMotor->SetBrakeMode(false);
+  }
+}

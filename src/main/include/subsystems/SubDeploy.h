@@ -33,6 +33,8 @@ class SubDeploy : public frc2::SubsystemBase {
   frc2::CommandPtr ZeroDeploy();
   frc2::CommandPtr DeployAutoZero();
 
+  void SetBrakeMode(bool brakeMode);
+
   /**
    * Will be called periodically whenever the CommandScheduler runs.
    */

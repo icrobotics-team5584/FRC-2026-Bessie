@@ -12,6 +12,7 @@ frc2::CommandPtr BackupShoot();
 frc2::CommandPtr ShootWhenReady();
 frc2::CommandPtr AimOnTheMove();
 frc2::CommandPtr ShootOnTheMove();
+frc2::CommandPtr ToggleBrakeCoast();
 frc2::CommandPtr EjectFuel();
 frc2::CommandPtr DisableAllOverrides();
 frc2::CommandPtr ForceShoot();

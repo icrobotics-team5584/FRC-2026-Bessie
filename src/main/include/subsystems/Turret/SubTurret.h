@@ -55,6 +55,8 @@ class SubTurret : public frc2::SubsystemBase {
   void SetLastFieldRelativeTarget(units::degree_t angle);
 
   bool IsAtTarget();
+  
+  void SetBrakeMode(bool brakeMode);
   bool IsNotApproachingMax(std::function<units::millisecond_t()> time);
 
   frc2::CommandPtr SetTurretTargetAngle(std::function<units::degree_t()> angle,
