@@ -237,7 +237,7 @@ frc2::CommandPtr SubDrivebase::LockWheelsInXShape() {
   });
 }
 
-frc2::CommandPtr SubDrivebase::DriveOverBump(frc::ChassisSpeeds fieldRelativeSpeeds, frc::Translation2d endXY) {
+frc2::CommandPtr SubDrivebase::DriveOverBump(frc::ChassisSpeeds fieldRelativeSpeeds, frc::Translation2d allianceRelativeEndXY) {
   return Drive([this, fieldRelativeSpeeds] {
     return fieldRelativeSpeeds;
   }, true).WithDeadline(frc2::cmd::Sequence(
@@ -260,8 +260,9 @@ frc2::CommandPtr SubDrivebase::DriveOverBump(frc::ChassisSpeeds fieldRelativeSpe
     frc2::cmd::RunOnce([this] { Logger::Log("Drivebase/DriveOverBump/State", 5); })
   )).Unless([this] {
     return frc::RobotBase::IsSimulation();
-  }).FinallyDo([this, endXY] {
-    SetPose(frc::Pose2d(endXY, GetGyroAngle(true)));
+  }).FinallyDo([this, allianceRelativeEndXY] {
+    auto endPose = ICgeometry::GetFieldRelativePose(frc::Pose2d(allianceRelativeEndXY, GetGyroAngle(true)));
+    SetPose(endPose);
   });
 }
 
