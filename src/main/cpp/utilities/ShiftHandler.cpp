@@ -11,6 +11,7 @@ void ShiftHandler::Periodic() {
   Logger::Log("RebuiltShift/Override Active", _overrideActive);
   Logger::Log("RebuiltShift/Start shift offset", _beforeShiftOffset);
   Logger::Log("RebuiltShift/End shift offset", _afterShiftOffset);
+  Logger::Log("RebuiltShift/GetCurrentShift/timeLeft", 140_s - getTimer());
 }
 
 RebuiltShift ShiftHandler::GetCurrentShift() {
@@ -18,7 +19,8 @@ RebuiltShift ShiftHandler::GetCurrentShift() {
     return RebuiltShift::AUTON;
   }
 
-  units::second_t timeLeft = frc::DriverStation::GetMatchTime();
+  units::second_t timeLeft = 140_s - getTimer();
+
   if (timeLeft == -1_s) { /* Isn't in home practise mode */
     return RebuiltShift::NONE;
   }
@@ -162,4 +164,12 @@ void ShiftHandler::SetTOFOffset(units::second_t TOF) {
   _tof = TOF;
   _beforeShiftOffset = TOF;
   _afterShiftOffset = _baseOffset - TOF;
+}
+
+void ShiftHandler::resetTimer() {
+  _teleopTimer.Restart();
+}
+
+units::second_t ShiftHandler::getTimer() {
+  return _teleopTimer.Get();
 }

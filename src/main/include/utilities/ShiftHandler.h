@@ -1,6 +1,7 @@
 #include <frc/DriverStation.h>
 
 #include <units/time.h>
+#include <frc/Timer.h>
 
 enum RebuiltShift {
   RED = 0, /* set to match frc::DriverStation::Alliance */
@@ -18,6 +19,9 @@ class ShiftHandler {
     return inst;
   }
   
+  void resetTimer();
+  units::second_t getTimer();
+
   /* Logging */
   void Periodic();
 
@@ -44,6 +48,7 @@ class ShiftHandler {
   units::second_t _beforeShiftOffset = 0_s;
   units::second_t _afterShiftOffset = 0_s;
   units::second_t _tof = 0_s;
+  frc::Timer _teleopTimer;
 
   /*Private constructor to prevent creating multiple instances*/
   ShiftHandler() {}

@@ -70,6 +70,8 @@ void Robot::TeleopInit() {
   if (m_autonomousCommand) {
     m_autonomousCommand->Cancel();
   }
+
+  ShiftHandler::GetInstance().resetTimer();
 }
 
 void Robot::TeleopPeriodic() {}
