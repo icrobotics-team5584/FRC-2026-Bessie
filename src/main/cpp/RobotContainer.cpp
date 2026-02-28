@@ -96,8 +96,10 @@ void RobotContainer::ConfigureBindings() {
   _operatorController.RightTrigger().WhileTrue(cmd::BackupShoot());
   _operatorController.Start().OnTrue(cmd::ForceShoot());
 
-  _operatorController.LeftBumper().OnTrue(frc2::cmd::RunOnce([]{return ShotPlanner::SetOverride(ShotPlanner::Override::SCORE);}));
-  _operatorController.RightBumper().OnTrue(frc2::cmd::RunOnce([]{return ShotPlanner::SetOverride(ShotPlanner::Override::PASS);}));
+  _operatorController.LeftBumper().OnTrue(frc2::cmd::RunOnce([]{return ShotPlanner::SetOverride(ShotPlanner::Override::SCORE);})
+  .AlongWith(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); })));
+  _operatorController.RightBumper().OnTrue(frc2::cmd::RunOnce([]{return ShotPlanner::SetOverride(ShotPlanner::Override::PASS);})
+  .AlongWith(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); })));
 
   // Operator POVS
   _operatorController.POVRight().OnTrue(SubShooter::GetInstance().AdjustManualSpeedOffset(1_tps));
