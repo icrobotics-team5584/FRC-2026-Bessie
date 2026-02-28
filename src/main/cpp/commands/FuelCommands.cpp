@@ -44,7 +44,7 @@ frc2::CommandPtr StationaryShootAt(frc::Translation2d target) {
 
     return target.Distance(turretPose.Translation());};
 
-  return frc2::cmd::Parallel(cmd::AimAtSpot(target),
+  return frc2::cmd::Parallel(cmd::AimAtSpot([target] { return target; }),
     SubShooter::GetInstance().SpinWithDistance(distanceToTarget, []{return ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose()).isPassing;}),
     SubHood::GetInstance().SetHoodPositionTargetFromDist(distanceToTarget))
     .Until([] {
