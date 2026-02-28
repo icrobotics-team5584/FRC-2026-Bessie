@@ -4,7 +4,7 @@
 #include "subsystems/SubDrivebase.h"
 #include "subsystems/SubIntake.h"
 #include "subsystems/SubShooter.h"
-#include "subsystems/SubHood.h"
+#include "subsystems/Hood/SubHood.h"
 #include "utilities/PoseHandler.h"
 #include "utilities/FieldConstants.h"
 

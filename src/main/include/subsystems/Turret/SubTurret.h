@@ -7,6 +7,7 @@
 #include "utilities/AlertController.h"
 #include "utilities/ICSparkMax.h"
 #include "utilities/MechanismCircle2d.h"
+#include "utilities/BotVars.h"
 
 #include <frc/Alert.h>
 #include <frc/DutyCycleEncoder.h>
@@ -23,6 +24,8 @@
 #include <frc2/command/Commands.h>
 #include <frc2/command/SubsystemBase.h>
 #include <frc2/command/button/CommandXboxController.h>
+
+#include "subsystems/Turret/TurretEncoderIO.h"
 
 #include <units/angle.h>
 
@@ -72,6 +75,8 @@ class SubTurret : public frc2::SubsystemBase {
   ICSparkMax _turretMotor{canid::TURRET_MOTOR};
   rev::spark::SparkBaseConfig _turretMotorConfig;
 
+   frc::Alert _turretOutOfRangeAlert{"Turret out of allowed range!", frc::Alert::AlertType::kError};
+
   frc::Alert _turrethighTemperatureAlert{
     "Turret Motor High Temperature!", frc::Alert::AlertType::kWarning};
   frc::Alert _turretCurrentAlert{"Turret Motor Overcurrent!", frc::Alert::AlertType::kWarning};
@@ -85,8 +90,7 @@ class SubTurret : public frc2::SubsystemBase {
     _turretCurrentAlert, _turretRecordedTemperatureAlert, _turretRecordedCurrentAlert, 60_degC,
     20_A};
 
-  frc::DutyCycleEncoder _turretEncoder1{dio::TURRET_ENCODER_1};
-  frc::DutyCycleEncoder _turretEncoder2{dio::TURRET_ENCODER_2};
+  std::unique_ptr<TurretEncoderIO> _encoderIO;
 
   units::degree_t getEncoder1Degrees();
   units::degree_t getEncoder2Degrees();
@@ -96,8 +100,6 @@ class SubTurret : public frc2::SubsystemBase {
 
   frc::SimpleMotorFeedforward<units::turn> _robotRotVelFF{kS, kV, kA};
 
-  const double encoder1ZeroOffset = 0.696408;
-  const double encoder2ZeroOffset = 0.120609;
   const units::turn_t turretZeroOffset = -0.5_tr;
 
   units::degree_t POS_LIMIT = 362_deg;
@@ -113,16 +115,14 @@ class SubTurret : public frc2::SubsystemBase {
   static constexpr auto kV = 3.4_V * (1_s / 1_tr);
   static constexpr auto kA = 0_V * ((1_s * 1_s) / 1_tr);
 
-  static constexpr double E1_TEETH = 21;
-  static constexpr double E2_TEETH = 20;
-  static constexpr double BIG_TEETH = 94;
-  static constexpr double ENCODER1_RATIO = E1_TEETH / BIG_TEETH;
-  static constexpr double ENCODER2_RATIO = E2_TEETH / BIG_TEETH;
-  static constexpr double GEAR_RATIO = (48.0 / 12.0) * (94.0 / 10.0);
+  const double E1_TEETH = BotVars::Choose(15, 21);
+  const double E2_TEETH = BotVars::Choose(13, 20);
+  const double BIG_TEETH = 94;
+  const double ENCODER1_RATIO = E1_TEETH / BIG_TEETH;
+  const double ENCODER2_RATIO = E2_TEETH / BIG_TEETH;
+  const double GEAR_RATIO = BotVars::Choose(64.46, (48.0 / 12.0) * (94.0 / 10.0));
 
   static constexpr units::degree_t TOLARANCE = 8_deg;
-  static constexpr units::hertz_t ENCODER_FREQUENCY = 975.6_Hz;
-  // force set encoder frequency to avoid 1sec startup time
 
   frc::TimeInterpolatableBuffer<units::degree_t> _turretPos{1_s};
 
