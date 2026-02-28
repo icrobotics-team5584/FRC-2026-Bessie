@@ -397,26 +397,20 @@ frc2::CommandPtr SubDrivebase::DriveToPose(std::function<frc::Pose2d()> pose, do
   units::meter_t positionErrorTolerance, units::degree_t rotationErrorTolerance,
   bool flipForRedAlliance) {
 
-  auto flipToCorrectAlliance = [pose, flipForRedAlliance] {
-    if (flipForRedAlliance && frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kRed) {
-      Logger::Log("DriveToPose/FlippingPoseForRedAlliance", true);
-      return ICgeometry::xPoseFlip(pose());
-    } else {
-      Logger::Log("DriveToPose/FlippingPoseForRedAlliance", false);
-      return pose();
-    }
+  auto fieldRelativePose = [pose, flipForRedAlliance] {
+    return flipForRedAlliance ? ICgeometry::GetFieldRelativePose(pose()) : pose();
   };
   
   return RunOnce([this] { _rotationP2pController.Reset(GetGyroAngle(true).Degrees()); })
     .AndThen(Drive(
-      [this, flipToCorrectAlliance, speedScaling] {
-        auto pose = flipToCorrectAlliance();
+      [this, fieldRelativePose, speedScaling] {
+        auto pose = fieldRelativePose();
         Logger::FieldDisplay::GetInstance().DisplayPose("Drivebase/P2P/TargetPose", pose);
         return CalcDriveToPoseSpeeds(pose) * speedScaling;
       },
       true))
-    .Until([this, flipToCorrectAlliance, positionErrorTolerance, rotationErrorTolerance] {
-      return IsAtPose(flipToCorrectAlliance(), positionErrorTolerance, rotationErrorTolerance);
+    .Until([this, fieldRelativePose, positionErrorTolerance, rotationErrorTolerance] {
+      return IsAtPose(fieldRelativePose(), positionErrorTolerance, rotationErrorTolerance);
     });
 }
 
