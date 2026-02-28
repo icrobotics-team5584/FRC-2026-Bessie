@@ -2,6 +2,7 @@
 #include "subsystems/SubDrivebase.h"
 #include "utilities/PoseHandler.h"
 #include "utilities/Logger.h"
+#include "utilities/ICgeometry.h"
 
 SubDrivebase::SubDrivebase() {
   Logger::Log("Drivebase/P2P/Rotation Controller", &_rotationP2pController);
@@ -236,7 +237,7 @@ frc2::CommandPtr SubDrivebase::LockWheelsInXShape() {
   });
 }
 
-frc2::CommandPtr SubDrivebase::DriveOverBump(frc::ChassisSpeeds fieldRelativeSpeeds) {
+frc2::CommandPtr SubDrivebase::DriveOverBump(frc::ChassisSpeeds fieldRelativeSpeeds, frc::Translation2d endXY) {
   return Drive([this, fieldRelativeSpeeds] {
     return fieldRelativeSpeeds;
   }, true).WithDeadline(frc2::cmd::Sequence(
@@ -259,6 +260,8 @@ frc2::CommandPtr SubDrivebase::DriveOverBump(frc::ChassisSpeeds fieldRelativeSpe
     frc2::cmd::RunOnce([this] { Logger::Log("Drivebase/DriveOverBump/State", 5); })
   )).Unless([this] {
     return frc::RobotBase::IsSimulation();
+  }).FinallyDo([this, endXY] {
+    SetPose(frc::Pose2d(endXY, GetGyroAngle(true)));
   });
 }
 
@@ -390,17 +393,31 @@ bool SubDrivebase::IsAtPose(
   return atPose;
 }
 
-frc2::CommandPtr SubDrivebase::DriveToPose(std::function<frc::Pose2d()> pose,
-  double speedScaling, units::meter_t positionErrorTolerance,
-  units::degree_t rotationErrorTolerance) {
-  return RunOnce([this] {
-    _rotationP2pController.Reset(GetGyroAngle(true).Degrees());
-  }).AndThen(Drive([this, pose, speedScaling] { 
-    Logger::FieldDisplay::GetInstance().DisplayPose("Drivebase/P2P/TargetPose", pose());
-    return CalcDriveToPoseSpeeds(pose()) * speedScaling;
-  }, true)).Until([this, pose, positionErrorTolerance, rotationErrorTolerance] {
-    return IsAtPose(pose(), positionErrorTolerance, rotationErrorTolerance);
-  });
+frc2::CommandPtr SubDrivebase::DriveToPose(std::function<frc::Pose2d()> pose, double speedScaling,
+  units::meter_t positionErrorTolerance, units::degree_t rotationErrorTolerance,
+  bool flipForRedAlliance) {
+
+  auto flipToCorrectAlliance = [pose, flipForRedAlliance] {
+    if (flipForRedAlliance && frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kRed) {
+      Logger::Log("DriveToPose/FlippingPoseForRedAlliance", true);
+      return ICgeometry::xPoseFlip(pose());
+    } else {
+      Logger::Log("DriveToPose/FlippingPoseForRedAlliance", false);
+      return pose();
+    }
+  };
+  
+  return RunOnce([this] { _rotationP2pController.Reset(GetGyroAngle(true).Degrees()); })
+    .AndThen(Drive(
+      [this, flipToCorrectAlliance, speedScaling] {
+        auto pose = flipToCorrectAlliance();
+        Logger::FieldDisplay::GetInstance().DisplayPose("Drivebase/P2P/TargetPose", pose);
+        return CalcDriveToPoseSpeeds(pose) * speedScaling;
+      },
+      true))
+    .Until([this, flipToCorrectAlliance, positionErrorTolerance, rotationErrorTolerance] {
+      return IsAtPose(flipToCorrectAlliance(), positionErrorTolerance, rotationErrorTolerance);
+    });
 }
 
 frc::ChassisSpeeds SubDrivebase::CalcJoystickSpeeds(frc2::CommandXboxController& controller) {

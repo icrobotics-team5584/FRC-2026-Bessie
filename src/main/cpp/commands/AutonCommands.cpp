@@ -1,7 +1,7 @@
 #include "commands/AutonCommands.h"
 
 #include "subsystems/SubDrivebase.h"
-#include "subsystems/SubHood.h"
+#include "subsystems/Hood/SubHood.h"
 #include "subsystems/SubIntake.h"
 #include "subsystems/SubShooter.h"
 
@@ -43,10 +43,7 @@ namespace cmd {
             SubHood::GetInstance().ZeroHood(),
             cmd::ShootOnTheMove().WithTimeout(2_s)
         ).AndThen(frc2::cmd::Sequence(
-            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{3_mps, 0_mps, 0_tps}),
-            frc2::cmd::RunOnce([] {
-                SubDrivebase::GetInstance().SetPose(frc::Pose2d{5.8_m, 5.8_m, SubDrivebase::GetInstance().GetGyroAngle()});
-            }), //reset position after traversing the bump
+            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{3_mps, 0_mps, 0_tps}, frc::Translation2d{5.8_m, 5.8_m}), //drive over bump, reset position at the end of the bump
 
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_LEFT; }, 1.0, 20_cm),
  
@@ -56,10 +53,7 @@ namespace cmd {
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::START_REENTRY_BUMP_LEFT; }, 1.0, 20_cm, 5_deg)
                 .DeadlineFor(SubIntake::GetInstance().IntakeOn()), //return to bump (continue intaking)
             
-            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{-3_mps, 0_mps, 0_tps}),
-            frc2::cmd::RunOnce([] {
-                SubDrivebase::GetInstance().SetPose(frc::Pose2d{3.5_m, 5.4_m, SubDrivebase::GetInstance().GetGyroAngle()});
-            }) //reset position again
+            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{-3_mps, 0_mps, 0_tps}, frc::Translation2d{3.5_m, 5.4_m}) //drive back over bump, reset position at the end of the bump
         ).DeadlineFor(
             cmd::AimAtSpot(fieldpos::HUB_POSITION.ToTranslation2d())
         )).AndThen(frc2::cmd::Sequence(
@@ -84,10 +78,7 @@ namespace cmd {
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::START_REENTRY_BUMP_LEFT; }, 1.0, 20_cm, 5_deg)
                 .DeadlineFor(SubIntake::GetInstance().IntakeOn()), //return to bump (continue intaking)
             
-            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{-3_mps, 0_mps, 0_tps}),
-            frc2::cmd::RunOnce([] {
-                SubDrivebase::GetInstance().SetPose(frc::Pose2d{3.5_m, 5.4_m, SubDrivebase::GetInstance().GetGyroAngle()});
-            }) //reset position
+            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{-3_mps, 0_mps, 0_tps}, frc::Translation2d{3.5_m, 5.4_m}) //drive back over bump, reset position at the end of the bump
         ).DeadlineFor(
             cmd::AimAtSpot(fieldpos::HUB_POSITION.ToTranslation2d())
         )).AndThen(frc2::cmd::Sequence(
@@ -129,10 +120,7 @@ namespace cmd {
             SubHood::GetInstance().ZeroHood(),
             cmd::ShootOnTheMove().WithTimeout(2_s)
         ).AndThen(frc2::cmd::Sequence(
-            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{3_mps, 0_mps, 0_tps}),
-            frc2::cmd::RunOnce([] {
-                SubDrivebase::GetInstance().SetPose(frc::Pose2d{5.8_m, 2.27_m, SubDrivebase::GetInstance().GetGyroAngle()});
-            }), //reset position after traversing the bump
+            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{3_mps, 0_mps, 0_tps}, frc::Translation2d{5.8_m, 2.27_m}), //drive over bump, reset position at the end of the bump
 
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_RIGHT; }, 1.0, 20_cm),
  
@@ -142,10 +130,7 @@ namespace cmd {
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::START_REENTRY_BUMP_RIGHT; }, 1.0, 20_cm, 5_deg)
                 .DeadlineFor(SubIntake::GetInstance().IntakeOn()), //return to bump (continue intaking)
             
-            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{-3_mps, 0_mps, 0_tps}),
-            frc2::cmd::RunOnce([] {
-                SubDrivebase::GetInstance().SetPose(frc::Pose2d{3.5_m, 2.64_m, SubDrivebase::GetInstance().GetGyroAngle()});
-            }) //reset position again
+            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{-3_mps, 0_mps, 0_tps}, frc::Translation2d{3.5_m, 2.64_m}) //drive back over bump, reset position at the end of the bump
         ).DeadlineFor(
             cmd::AimAtSpot(fieldpos::HUB_POSITION.ToTranslation2d())
         )).AndThen(frc2::cmd::Sequence(
@@ -170,10 +155,7 @@ namespace cmd {
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::START_REENTRY_BUMP_RIGHT; }, 1.0, 20_cm, 5_deg)
                 .DeadlineFor(SubIntake::GetInstance().IntakeOn()), //return to bump (continue intaking)
             
-            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{-3_mps, 0_mps, 0_tps}),
-            frc2::cmd::RunOnce([] {
-                SubDrivebase::GetInstance().SetPose(frc::Pose2d{3.5_m, 2.64_m, SubDrivebase::GetInstance().GetGyroAngle()});
-            }) //reset position
+            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{-3_mps, 0_mps, 0_tps}, frc::Translation2d{3.5_m, 2.64_m}) //drive back over bump, reset position at the end of the bump
         ).DeadlineFor(
             cmd::AimAtSpot(fieldpos::HUB_POSITION.ToTranslation2d())
         )).AndThen(frc2::cmd::Sequence(
@@ -217,10 +199,7 @@ namespace cmd {
             SubHood::GetInstance().ZeroHood(),
             cmd::ShootOnTheMove().WithTimeout(2_s),
 
-            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{3_mps, 0_mps, 0_tps}),
-            frc2::cmd::RunOnce([] {
-                SubDrivebase::GetInstance().SetPose(frc::Pose2d{5.8_m, 5.8_m, SubDrivebase::GetInstance().GetGyroAngle()});
-            }), //reset position after traversing the bump
+            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{3_mps, 0_mps, 0_tps}, frc::Translation2d{5.8_m, 5.8_m}), //drive over bump, reset position at the end of the bump
 
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_LEFT; }, 1.0, 20_cm),
  
@@ -248,10 +227,7 @@ namespace cmd {
             SubHood::GetInstance().ZeroHood(),
             cmd::ShootOnTheMove().WithTimeout(2_s),
 
-            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{3_mps, 0_mps, 0_tps}),
-            frc2::cmd::RunOnce([] {
-                SubDrivebase::GetInstance().SetPose(frc::Pose2d{5.8_m, 2.27_m, SubDrivebase::GetInstance().GetGyroAngle()});
-            }), //reset position after traversing the bump
+            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{3_mps, 0_mps, 0_tps}, frc::Translation2d{5.8_m, 2.27_m}), //drive over bump, reset position at the end of the bump
 
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_RIGHT; }, 1.0, 20_cm),
  
@@ -281,10 +257,7 @@ namespace cmd {
             SubHood::GetInstance().ZeroHood(),
             cmd::ShootOnTheMove().WithTimeout(2_s)
         ).AndThen(frc2::cmd::Sequence(
-            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{3_mps, 0_mps, 0_tps}),
-            frc2::cmd::RunOnce([] {
-                SubDrivebase::GetInstance().SetPose(frc::Pose2d{5.8_m, 2.27_m, SubDrivebase::GetInstance().GetGyroAngle()});
-            }), //reset position after traversing the bump
+            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{3_mps, 0_mps, 0_tps}, frc::Translation2d{5.8_m, 2.27_m}), //drive over bump, reset position at the end of the bump
 
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_RIGHT; }, 1.0, 20_cm),
  
@@ -294,10 +267,7 @@ namespace cmd {
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::START_REENTRY_BUMP_RIGHT; }, 1.0, 20_cm, 5_deg)
                 .DeadlineFor(SubIntake::GetInstance().IntakeOn()), //return to bump (continue intaking)
             
-            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{-3_mps, 0_mps, 0_tps}),
-            frc2::cmd::RunOnce([] {
-                SubDrivebase::GetInstance().SetPose(frc::Pose2d{3.5_m, 2.64_m, SubDrivebase::GetInstance().GetGyroAngle()});
-            }) //reset position again
+            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{-3_mps, 0_mps, 0_tps}, frc::Translation2d{3.5_m, 2.64_m}) //drive back over bump, reset position at the end of the bump
         ).DeadlineFor(
             cmd::AimAtSpot(fieldpos::HUB_POSITION.ToTranslation2d())
         )).AndThen(
@@ -320,10 +290,7 @@ namespace cmd {
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::START_REENTRY_BUMP_RIGHT; }, 1.0, 20_cm, 5_deg)
                 .DeadlineFor(SubIntake::GetInstance().IntakeOn()), //return to bump (continue intaking)
             
-            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{-3_mps, 0_mps, 0_tps}),
-            frc2::cmd::RunOnce([] {
-                SubDrivebase::GetInstance().SetPose(frc::Pose2d{3.5_m, 2.64_m, SubDrivebase::GetInstance().GetGyroAngle()});
-            }) //reset position
+            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{-3_mps, 0_mps, 0_tps}, frc::Translation2d{3.5_m, 2.64_m}) //drive back over bump, reset position at the end of the bump
         ).DeadlineFor(
             cmd::AimAtSpot(fieldpos::HUB_POSITION.ToTranslation2d())
         )).AndThen(
@@ -367,10 +334,7 @@ namespace cmd {
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::START_REENTRY_BUMP_RIGHT; }, 1.0, 20_cm, 5_deg)
                 .DeadlineFor(SubIntake::GetInstance().IntakeOn()), //return to bump (continue intaking)
             
-            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{-3_mps, 0_mps, 0_tps}),
-            frc2::cmd::RunOnce([] {
-                SubDrivebase::GetInstance().SetPose(frc::Pose2d{3.5_m, 2.64_m, SubDrivebase::GetInstance().GetGyroAngle()});
-            }) //reset position
+            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{-3_mps, 0_mps, 0_tps}, frc::Translation2d{3.5_m, 2.64_m}) //drive back over bump, reset position at the end of the bump
         ).DeadlineFor(
             cmd::AimAtSpot(fieldpos::HUB_POSITION.ToTranslation2d())
         ).AndThen(
