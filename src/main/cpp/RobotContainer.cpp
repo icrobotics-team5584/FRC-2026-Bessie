@@ -33,7 +33,7 @@ RobotContainer::RobotContainer() {
   SubVision::GetInstance().SetDefaultCommand(cmd::AddVisionMeasurement());
   SubTurret::GetInstance().SetDefaultCommand(cmd::AimAtHub());
 
-  _autoManager.AddDefaultAuton("default", AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton()));
+  _autoManager.AddDefaultAuton("ShootAndStay", AutonHelper::MakeCommandPtrAuto(cmd::ShootAndStay()));
 
   _autoManager.AddAuton("DriveInASquare",
     AutonHelper::MakeCommandPtrAuto(cmd::TESTDriveInASquare()));
