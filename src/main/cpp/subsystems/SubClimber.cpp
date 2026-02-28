@@ -29,7 +29,8 @@ void SubClimber::Periodic() {
   Logger::Log("Climber/Zeroing", _zeroing);
   Logger::Log("Climber/Distance", GetElevatorHeight());
 
-  RobotVisualisation::GetInstance()._climberMechArm->SetLength(GetElevatorHeight().value());
+  RobotVisualisation::GetInstance()._climberMechExtension->
+    SetLength(GetElevatorHeight().value() - _ELEVATOR_MIN_HEIGHT);
 }
 
 void SubClimber::SimulationPeriodic() {
@@ -75,7 +76,7 @@ bool SubClimber::IsAtTarget() {
 
 units::meter_t SubClimber::GetElevatorHeight() {
   units::turn_t motorPos = _climberMotor.GetPosition();
-  return _ARM_MIN_HEIGHT + motorPos.value() * _DRUM_CIRCUMFERENCE;
+  return _ELEVATOR_MIN_HEIGHT + motorPos.value() * _DRUM_CIRCUMFERENCE;
 }
 
 

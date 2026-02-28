@@ -66,5 +66,5 @@ class RobotVisualisation {
   frc::MechanismLigament2d* _climberMechElevator = 
     _climberMechRoot->Append<frc::MechanismLigament2d>("climberElevator", 0, 90_deg);
   frc::MechanismLigament2d* _climberMechExtension = 
-    _climberMechElevator->Append<frc::MechanismLigament2d>("climberExtension", 0, 0_deg);
+    _climberMechElevator->Append<frc::MechanismLigament2d>("climberExtension", 0, 0_deg, {255, 255, 255});
 };
