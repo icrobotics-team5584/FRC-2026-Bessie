@@ -30,6 +30,8 @@ SubHood::SubHood() {
   _hoodPitchTable.insert(4.3575_m, 0.098611_tr);
   _hoodPitchTable.insert(4.6875_m, 0.098611_tr);
   _hoodPitchTable.insert(5.1875_m, 0.098611_tr);
+
+  _hoodMotor->ConfigMotor();
 }
 
 // This method will be called once per scheduler run

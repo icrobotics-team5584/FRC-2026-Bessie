@@ -74,8 +74,7 @@ frc2::CommandPtr ShootWhenReady() {
   return frc2::cmd::WaitUntil([] { return IsReadyToShoot(); })
     .AndThen(SubFeeder::GetInstance().Feed().AlongWith(SubIndexer::GetInstance().Index()).Until([] {
       return !IsReadyToShoot();
-    }))
-    .Repeatedly();
+    })).Repeatedly();
 };
 
 bool IsReadyToShoot() {
