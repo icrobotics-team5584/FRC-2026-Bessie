@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "commands/DriveCommands.h"
+#include "commands/FuelCommands.h"
 #include <frc2/command/Commands.h>
 #include "subsystems/SubDrivebase.h"
 #include "subsystems/SubVision.h"
@@ -11,9 +12,12 @@
 namespace cmd {
 using namespace frc2::cmd;
 
-frc2::CommandPtr TeleopDrive(frc2::CommandXboxController& controller) {
-  return SubDrivebase::GetInstance().Drive([&controller] {
+frc2::CommandPtr TeleopDrive(frc2::CommandXboxController& controller, double speedScaling) {
+  return SubDrivebase::GetInstance().Drive([&controller, speedScaling] {
     auto speeds = SubDrivebase::GetInstance().CalcJoystickSpeeds(controller);
+    speeds.vx *= speedScaling;
+    speeds.vy *= speedScaling;
+    speeds.omega *= speedScaling;
     return frc::ChassisSpeeds{speeds.vx, speeds.vy, speeds.omega};
   }, true);
 }
