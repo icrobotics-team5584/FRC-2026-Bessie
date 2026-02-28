@@ -67,7 +67,7 @@ class SubClimber : public frc2::SubsystemBase {
   static constexpr double _P = 50;
   static constexpr double _I = 0;
   static constexpr double _D = 0;
-  static constexpr double _GEAR_RATIO = 200;
+  static constexpr double _GEAR_RATIO = 45;
 
   //sim constants (these are currently very arbitrary)
   static constexpr units::kilogram_t _CARRIAGE_MASS = 50_kg;
