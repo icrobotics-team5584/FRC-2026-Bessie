@@ -34,6 +34,7 @@ class SubClimber : public frc2::SubsystemBase {
   /* Instaneous */
   void SetBrakeMode(bool isBrake);
   bool IsAtTarget();
+  units::meter_t GetArmHeight();
   units::ampere_t GetMotorCurrent();
   
   /* Commands */
@@ -49,10 +50,15 @@ class SubClimber : public frc2::SubsystemBase {
   bool _hasZeroed = false;
   bool _zeroing = false;
 
+  /* software hand measured constants */
+  static constexpr units::meter_t _DRUM_RADIUS = 15_mm;
+  static constexpr units::meter_t _DRUM_CIRCUMFERENCE = _DRUM_RADIUS * 2 * std::numbers::pi;
+  static constexpr units::meter_t _ARM_MIN_HEIGHT = 0.32_m;
+  static constexpr units::meter_t _ARM_MAX_HIEGHT = 0.56_m;
+
   /* place holder values */
   static constexpr units::degree_t _STOW_TURNS = 0_deg;
-  static constexpr units::degree_t _READY_TURNS = 20_deg;
-  static constexpr units::degree_t _L1_TURNS = 40_deg;
+  static constexpr units::degree_t _L1_TURNS = 916_deg;
 
   static constexpr units::degree_t _TOLERANCE = 1_deg;
   static constexpr units::ampere_t _ZEROING_CURRENT = 30_A;
@@ -65,8 +71,6 @@ class SubClimber : public frc2::SubsystemBase {
 
   //sim constants (these are currently very arbitrary)
   static constexpr units::kilogram_t _CARRIAGE_MASS = 50_kg;
-  static constexpr units::meter_t _DRUM_RADIUS = 1.5_cm;
-  static constexpr units::meter_t _DRUM_CIRCUMFERENCE = _DRUM_RADIUS * 2 * std::numbers::pi;
   static constexpr units::meter_t _MIN_HEIGHT = 0_m;
   static constexpr units::meter_t _MAX_HEIGHT = 0.3_m;
   static constexpr units::meter_t _START_HEIGHT = 0_m;
