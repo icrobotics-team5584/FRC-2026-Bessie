@@ -12,14 +12,12 @@
 namespace cmd {
 using namespace frc2::cmd;
 
-frc2::CommandPtr TeleopDrive(frc2::CommandXboxController& controller) {
-  return SubDrivebase::GetInstance().Drive([&controller] {
+frc2::CommandPtr TeleopDrive(frc2::CommandXboxController& controller, double speedScaling) {
+  return SubDrivebase::GetInstance().Drive([&controller, speedScaling] {
     auto speeds = SubDrivebase::GetInstance().CalcJoystickSpeeds(controller);
-    if (cmd::IsShooting()) {
-      speeds.vx = std::clamp(speeds.vx, -2.5_mps, 2.5_mps);
-      speeds.vy = std::clamp(speeds.vy, -2.5_mps, 2.5_mps);
-      speeds.omega = std::clamp(speeds.omega, -1.57_rad_per_s, 1.57_rad_per_s);
-    }
+    speeds.vx *= speedScaling;
+    speeds.vy *= speedScaling;
+    speeds.omega *= speedScaling;
     return frc::ChassisSpeeds{speeds.vx, speeds.vy, speeds.omega};
   }, true);
 }
