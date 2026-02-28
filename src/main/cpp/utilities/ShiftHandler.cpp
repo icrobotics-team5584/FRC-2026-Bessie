@@ -8,11 +8,12 @@ void ShiftHandler::Periodic() {
   Logger::Log("RebuiltShift/Current Shift", GetShiftName(GetCurrentShift()));
   Logger::Log("RebuiltShift/Seconds Left on Shift", GetTimeLeft());
   Logger::Log("RebuiltShift/Seconds Left in Match", frc::DriverStation::GetMatchTime());
-  Logger::Log("RebuiltShift/Override Active", GetOverrideActive());
+  Logger::Log("RebuiltShift/Override Active", _overrideActive);
+  Logger::Log("RebuiltShift/Start shift offset", _beforeShiftOffset);
+  Logger::Log("RebuiltShift/End shift offset", _afterShiftOffset);
 }
 
 RebuiltShift ShiftHandler::GetCurrentShift(units::second_t offset) {
-  Logger::Log("ShiftHandler/GetCurrentShift/offset", _beforeShiftOffset);
   if (frc::DriverStation::IsAutonomousEnabled()) {
     return RebuiltShift::AUTON;
   }
@@ -37,16 +38,14 @@ RebuiltShift ShiftHandler::GetCurrentShift(units::second_t offset) {
   units::second_t winningShiftOffset;
 
   RebuiltShift myShift = static_cast<RebuiltShift>(
-  frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kBlue));
+    frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kBlue));
 
-  if(myShift == losingShift) {
-    losingShiftOffset = - _afterShiftOffset;
+  if (myShift == losingShift) 
+    losingShiftOffset = -_afterShiftOffset;
     winningShiftOffset = _beforeShiftOffset;
-  }
-
-  else {
+  } else {
     losingShiftOffset = _beforeShiftOffset;
-    winningShiftOffset = - _afterShiftOffset;
+    winningShiftOffset = -_afterShiftOffset;
   }
 
   if (timeLeft > 105_s + losingShiftOffset) { /* Shift 1 */
@@ -65,8 +64,9 @@ RebuiltShift ShiftHandler::GetCurrentShift(units::second_t offset) {
 }
 
 RebuiltShift ShiftHandler::GetWinningShift() {
-  if(_overrideActive == true) {
-    return static_cast<RebuiltShift>(frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kBlue));
+  if (_overrideActive == true) {
+    return static_cast<RebuiltShift>(
+      frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kBlue));
   }
 
   std::string data = frc::DriverStation::GetGameSpecificMessage();
@@ -137,10 +137,9 @@ bool ShiftHandler::IsActiveShift() {
   if (_overrideActive == true) {
     return true;
   }
-  if (
-    frc::DriverStation::IsFMSAttached() == false && /* Isn't at comp? */
-    frc::DriverStation::GetMatchTime() == -1_s && /* Isn't home practise mode */
-    frc::DriverStation::IsDisabled() == false /* Isn't disabled */
+  if (frc::DriverStation::IsFMSAttached() == false && /* Isn't at comp? */
+      frc::DriverStation::GetMatchTime() == -1_s &&   /* Isn't home practise mode */
+      frc::DriverStation::IsDisabled() == false       /* Isn't disabled */
   ) {
     return true; /* Don't respect shifts */
   }
