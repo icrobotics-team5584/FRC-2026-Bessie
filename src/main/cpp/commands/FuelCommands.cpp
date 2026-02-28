@@ -110,22 +110,23 @@ frc2::CommandPtr ShootOnTheMove(){
 frc2::CommandPtr ToggleBrakeCoast(){
   return frc2::cmd::StartEnd(
     []{
-    SubDrivebase::GetInstance().SetBrakeMode(true);
-    SubDeploy::GetInstance().SetBrakeMode(true);
-    SubTurret::GetInstance().SetBrakeMode(true);
-    SubHood::GetInstance().SetBrakeMode(true);
-  }
-  ,
-  []{
     SubDrivebase::GetInstance().SetBrakeMode(false);
     SubDeploy::GetInstance().SetBrakeMode(false);
     SubTurret::GetInstance().SetBrakeMode(false);
     SubHood::GetInstance().SetBrakeMode(false);
+  }
+  ,
+  []{
+    SubDrivebase::GetInstance().SetBrakeMode(true);
+    SubDeploy::GetInstance().SetBrakeMode(true);
+    SubTurret::GetInstance().SetBrakeMode(true);
+    SubHood::GetInstance().SetBrakeMode(true);
     }
   )
   .IgnoringDisable(true)
   .Until([]{return frc::DriverStation::IsEnabled();});
 }
+
 frc2::CommandPtr EjectFuel() {
   return SubShooter::GetInstance().SpinShooterSlowly()
   .AlongWith(SubIntake::GetInstance().ReverseIntake())
