@@ -166,6 +166,10 @@ frc2::CommandPtr SubShooter::SpinWithDistance(
   });
 }
 
+units::turns_per_second_t SubShooter::GetShooterOffset(){
+  return Logger::Tune("Shooter/Speed Manual Offset", DEFAULT_SHOOTER_OFFSET);
+}
+
 units::second_t SubShooter::GetTimeOfFLightWithDistance(units::meter_t distance) {
   return _timeOfFlightTable[distance];
 }

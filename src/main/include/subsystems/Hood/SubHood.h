@@ -33,6 +33,7 @@ class SubHood : public frc2::SubsystemBase {
   bool HoodIsAtTarget();
 
   units::ampere_t GetHoodMotorCurrent();
+  units::degree_t GetHoodOffset();
 
   frc2::CommandPtr ManualHoodDown();
   frc2::CommandPtr StowHood();
@@ -43,6 +44,7 @@ class SubHood : public frc2::SubsystemBase {
   frc2::CommandPtr AdjustManualAngleOffset(units::degree_t offset);
   frc2::CommandPtr MoveHoodUp1Degree();
   frc2::CommandPtr MoveHoodDown1Degree();
+  void SetBrakeMode(bool brakeMode);
 
   static constexpr units::degree_t PASSING_ANGLE = 37_deg;
 

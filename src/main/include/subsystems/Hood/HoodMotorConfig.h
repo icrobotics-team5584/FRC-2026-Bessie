@@ -27,7 +27,7 @@ constexpr double I = 0;
 constexpr double D = 8;
 constexpr double S = 0.6;
 
-constexpr double GEAR_RATIO = (56.0 / 8.0) * (370.0 / 34.0);
+constexpr double GEAR_RATIO = 34.83;
 
 /* STATOR_CURRENT_LIMIT is the amount of current allowed inside the motor at
  * once. SUPPLY_CURRENT_LIMIT is true maximum current supplied to the motor
