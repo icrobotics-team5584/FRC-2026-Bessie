@@ -34,11 +34,11 @@ class SubClimber : public frc2::SubsystemBase {
   /* Instaneous */
   void SetBrakeMode(bool isBrake);
   bool IsAtTarget();
-  units::meter_t GetArmHeight();
+  units::meter_t GetElevatorHeight();
   units::ampere_t GetMotorCurrent();
   
   /* Commands */
-  frc2::CommandPtr ClimbToggle();
+  frc2::CommandPtr SetClimbPositionTarget(units::meter_t height);
 
   frc2::CommandPtr ManualClimberUp();
   frc2::CommandPtr ManualClimberDown();
@@ -53,8 +53,8 @@ class SubClimber : public frc2::SubsystemBase {
   /* software hand measured constants */
   static constexpr units::meter_t _DRUM_RADIUS = 15_mm;
   static constexpr units::meter_t _DRUM_CIRCUMFERENCE = _DRUM_RADIUS * 2 * std::numbers::pi;
-  static constexpr units::meter_t _ARM_MIN_HEIGHT = 0.32_m;
-  static constexpr units::meter_t _ARM_MAX_HIEGHT = 0.56_m;
+  static constexpr units::meter_t _ELEVATOR_MIN_HEIGHT = 0.32_m;
+  static constexpr units::meter_t _ELEVATOR_MAX_HEIGHT = 0.56_m;
 
   /* place holder values */
   static constexpr units::degree_t _STOW_TURNS = 0_deg;
@@ -71,14 +71,11 @@ class SubClimber : public frc2::SubsystemBase {
 
   //sim constants (these are currently very arbitrary)
   static constexpr units::kilogram_t _CARRIAGE_MASS = 50_kg;
-  static constexpr units::meter_t _MIN_HEIGHT = 0_m;
-  static constexpr units::meter_t _MAX_HEIGHT = 0.3_m;
-  static constexpr units::meter_t _START_HEIGHT = 0_m;
 
   ICSparkFlex _climberMotor{canid::CLIMBER};
   rev::spark::SparkBaseConfig _climberMotorConfig;
 
   //sim
   frc::sim::ElevatorSim _climberSim{frc::DCMotor::NeoVortex(1), _GEAR_RATIO, _CARRIAGE_MASS,
-    _DRUM_RADIUS, _MIN_HEIGHT, _MAX_HEIGHT, true, _START_HEIGHT};
+    _DRUM_RADIUS, _ELEVATOR_MIN_HEIGHT, _ELEVATOR_MAX_HEIGHT, true, _ELEVATOR_MIN_HEIGHT};
 };

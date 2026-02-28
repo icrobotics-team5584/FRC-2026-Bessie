@@ -27,9 +27,9 @@ void SubClimber::Periodic() {
   }
   Logger::Log("Climber/Has Zeroed", _hasZeroed);
   Logger::Log("Climber/Zeroing", _zeroing);
-  Logger::Log("Climber/Distance", GetArmHeight());
+  Logger::Log("Climber/Distance", GetElevatorHeight());
 
-  RobotVisualisation::GetInstance()._climberMechArm->SetLength(GetArmHeight().value());
+  RobotVisualisation::GetInstance()._climberMechArm->SetLength(GetElevatorHeight().value());
 }
 
 void SubClimber::SimulationPeriodic() {
@@ -73,7 +73,7 @@ bool SubClimber::IsAtTarget() {
   }
 }
 
-units::meter_t SubClimber::GetArmHeight() {
+units::meter_t SubClimber::GetElevatorHeight() {
   units::turn_t motorPos = _climberMotor.GetPosition();
   return _ARM_MIN_HEIGHT + motorPos.value() * _DRUM_CIRCUMFERENCE;
 }
@@ -83,9 +83,9 @@ units::ampere_t SubClimber::GetMotorCurrent() {
   return (units::ampere_t)_climberMotor.GetOutputCurrent();
 }
 
-frc2::CommandPtr SubClimber::ClimbToggle() {
-  return StartEnd([this] { _climberMotor.SetPositionTarget(_L1_TURNS); },
-    [this] { _climberMotor.SetPositionTarget(_STOW_TURNS); })
+frc2::CommandPtr SubClimber::SetClimbPositionTarget(units::meter_t height) {
+  return RunOnce(
+      [this] { _climberMotor.SetPositionTarget(std::clamp(height, _ELEVATOR_MIN_HEIGHT, _ELEVATOR_MAX_HEIGHT)); })
     .OnlyIf([this] { return _hasZeroed; });
 }
 
