@@ -261,7 +261,7 @@ frc2::CommandPtr SubDrivebase::DriveOverBump(frc::ChassisSpeeds fieldRelativeSpe
   )).Unless([this] {
     return frc::RobotBase::IsSimulation();
   }).FinallyDo([this, allianceRelativeEndXY] {
-    auto endPose = ICgeometry::GetFieldRelativePose(frc::Pose2d(allianceRelativeEndXY, GetGyroAngle(true)));
+    auto endPose = ICgeometry::GetFieldRelativePose(frc::Pose2d(allianceRelativeEndXY, GetGyroAngle(false)));
     SetPose(endPose);
   });
 }

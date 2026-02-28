@@ -12,7 +12,7 @@ frc::Pose2d xPoseFlip(frc::Pose2d pose) {
   units::meter_t xdiff = units::math::abs(FIELD_LENGTH / 2 - pose.X());
   units::meter_t x =
     (pose.X() < FIELD_LENGTH / 2) ? FIELD_LENGTH / 2 + xdiff : FIELD_LENGTH / 2 - xdiff;
-  return frc::Pose2d(x, pose.Y(), -pose.Rotation());
+  return frc::Pose2d(x, pose.Y(), frc::Rotation2d{180_deg}-pose.Rotation());
 }
 
 frc::Translation3d xTranslationFlip(frc::Translation3d translation3d) {
@@ -26,7 +26,7 @@ frc::Pose2d yPoseFlip(frc::Pose2d pose) {
   units::meter_t ydiff = units::math::abs(FIELD_WIDTH / 2 - pose.Y());
   units::meter_t y =
     (pose.Y() < FIELD_WIDTH / 2) ? FIELD_WIDTH / 2 + ydiff : FIELD_WIDTH / 2 - ydiff;
-  return frc::Pose2d(pose.X(), y, pose.Rotation());
+  return frc::Pose2d(pose.X(), y, -pose.Rotation());
 }
 
 frc::Pose2d xyPoseFlip(frc::Pose2d pose) {
