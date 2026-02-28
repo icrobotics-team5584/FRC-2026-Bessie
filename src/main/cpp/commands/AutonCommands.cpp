@@ -9,9 +9,6 @@
 #include "utilities/FieldConstants.h"
 
 namespace cmd {
-    frc2::CommandPtr DefaultAuton() {
-        return frc2::cmd::Print("Default Auton");
-    }
 
     /* TESTING AUTONS */
     frc2::CommandPtr TESTDriveInASquare() {
@@ -276,6 +273,13 @@ namespace cmd {
         )).AndThen(
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::OUTPOST; }, 1.0)
                 .AlongWith(cmd::ShootOnTheMove())
+        );
+    }
+
+    frc2::CommandPtr ShootAndStay() {
+        return frc2::cmd::Sequence(
+            SubHood::GetInstance().ZeroHood(),
+            cmd::ShootOnTheMove().WithTimeout(5_s)
         );
     }
 }
