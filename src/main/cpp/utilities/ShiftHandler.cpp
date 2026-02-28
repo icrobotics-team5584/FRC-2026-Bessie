@@ -40,7 +40,7 @@ RebuiltShift ShiftHandler::GetCurrentShift(units::second_t offset) {
   RebuiltShift myShift = static_cast<RebuiltShift>(
     frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kBlue));
 
-  if (myShift == losingShift) 
+  if (myShift == losingShift) {
     losingShiftOffset = -_afterShiftOffset;
     winningShiftOffset = _beforeShiftOffset;
   } else {
