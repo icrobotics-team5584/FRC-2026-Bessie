@@ -53,11 +53,11 @@ frc2::CommandPtr AimAtFieldRelative(std::function<units::degree_t()> target) {
       }));
 }
 
-frc2::CommandPtr AimAtSpot(frc::Translation2d target) {
+frc2::CommandPtr AimAtSpot(std::function<frc::Translation2d()> target) {
   return cmd::AimAtFieldRelative([target] {
     auto robotPose = PoseHandler::GetInstance().GetPose();
     units::radian_t angle =
-      atan2((target.Y() - robotPose.Y()).value(), (target.X() - robotPose.X()).value()) * 1_rad;
+      atan2((target().Y() - robotPose.Y()).value(), (target().X() - robotPose.X()).value()) * 1_rad;
     units::degree_t degrees = angle;
     return degrees;
   });
@@ -172,13 +172,12 @@ frc::Translation2d GetShotTarget(){
 }
 
 frc2::CommandPtr AimAtHub() {
-  frc::Translation2d spot;
-  return frc2::cmd::RunOnce([] {
-    frc::Translation3d target = fieldpos::HUB_POSITION;
-    if(frc::DriverStation::GetAlliance() == frc::DriverStation::kRed) { ICgeometry::xTranslationFlip(target); }
-    Logger::FieldDisplay::GetInstance().DisplayPose("AimAtHub/target", frc::Pose2d{target.ToTranslation2d(), 0_deg});
-    return target.ToTranslation2d();
-  }).AndThen(AimAtSpot(spot));
+return AimAtSpot([] {
+  frc::Translation3d target = fieldpos::HUB_POSITION;
+  if(frc::DriverStation::GetAlliance() == frc::DriverStation::kRed) { target = ICgeometry::xTranslationFlip(target); }
+  Logger::FieldDisplay::GetInstance().DisplayPose("AimAtHub/target", frc::Pose2d{target.ToTranslation2d(), 0_deg});
+  return target.ToTranslation2d();
+});
 }
 
 }  // namespace cmd
