@@ -72,7 +72,7 @@ class SubClimber : public frc2::SubsystemBase {
   //sim constants (these are currently very arbitrary)
   static constexpr units::kilogram_t _CARRIAGE_MASS = 50_kg;
 
-  ICSparkFlex _climberMotor{canid::CLIMBER};
+  ICSparkFlex _climberMotor{canid::CLIMBER_MOTOR};
   rev::spark::SparkBaseConfig _climberMotorConfig;
 
   //sim
