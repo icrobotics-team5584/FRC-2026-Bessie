@@ -174,7 +174,7 @@ frc::Translation2d GetShotTarget(){
 frc2::CommandPtr AimAtHub() {
 return AimAtSpot([] {
   frc::Translation3d target = fieldpos::HUB_POSITION;
-  if(frc::DriverStation::GetAlliance() == frc::DriverStation::kRed) { target = ICgeometry::xTranslationFlip(target); }
+  if(frc::DriverStation::GetAlliance().value_or(frc::DriverStation::kBlue) == frc::DriverStation::kRed) { target = ICgeometry::xTranslationFlip(target); }
   Logger::FieldDisplay::GetInstance().DisplayPose("AimAtHub/target", frc::Pose2d{target.ToTranslation2d(), 0_deg});
   return target.ToTranslation2d();
 });
