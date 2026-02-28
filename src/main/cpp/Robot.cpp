@@ -9,6 +9,9 @@
 #include "utilities/ShiftHandler.h"
 #include "utilities/ShotPlanner.h"
 
+#include "subsystems/SubShooter.h"
+#include "commands/TurretCommands.h"
+
 #include <frc/DataLogManager.h>
 #include <frc/Filesystem.h>
 #include <frc/geometry/Transform2d.h>
@@ -43,6 +46,9 @@ void Robot::RobotPeriodic() {
   Logger::Log("Robot/PDHTotalCurrent", m_pdh.GetTotalCurrent() * 1_A);
 
   Logger::Log("Shot Planner/Should Shoot", shotTarget.shouldShoot);
+
+  ShiftHandler::GetInstance().SetTOFOffset(
+    SubShooter::GetInstance().GetTimeOfFLightWithDistance(cmd::CalcShootOnTheMoveDistance()));
 }
 void Robot::DisabledInit() {}
 
