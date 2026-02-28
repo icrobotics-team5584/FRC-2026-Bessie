@@ -2,6 +2,15 @@
 
 #include "utilities/Logger.h"
 
+void ShiftHandler::Periodic() {
+  Logger::Log("RebuiltShift/Hub Active", IsActiveShift());
+  Logger::Log("RebuiltShift/Won Auton Shift", GetShiftName(GetWinningShift()));
+  Logger::Log("RebuiltShift/Current Shift", GetShiftName(GetCurrentShift()));
+  Logger::Log("RebuiltShift/Seconds Left on Shift", GetTimeLeft());
+  Logger::Log("RebuiltShift/Seconds Left in Match", frc::DriverStation::GetMatchTime());
+  Logger::Log("RebuiltShift/Override Active", GetOverrideActive());
+}
+
 RebuiltShift ShiftHandler::GetCurrentShift(units::second_t offset) {
   Logger::Log("ShiftHandler/GetCurrentShift/offset", _beforeShiftOffset);
   if (frc::DriverStation::IsAutonomousEnabled()) {
@@ -9,7 +18,6 @@ RebuiltShift ShiftHandler::GetCurrentShift(units::second_t offset) {
   }
 
   units::second_t timeLeft = frc::DriverStation::GetMatchTime();
-  Logger::Log("ShiftHandler/GetCurrentShift/timeLeft", timeLeft);
   if (timeLeft == -1_s) { /* Isn't in home practise mode */
     return RebuiltShift::NONE;
   }

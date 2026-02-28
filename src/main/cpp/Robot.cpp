@@ -28,13 +28,7 @@ Robot::Robot() {
 void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();
 
-  Logger::Log("RebuiltShift/Hub Active", ShiftHandler::GetInstance().IsActiveShift());
-  Logger::Log("RebuiltShift/Won Auton Shift",
-    ShiftHandler::GetInstance().GetShiftName(ShiftHandler::GetInstance().GetWinningShift()));
-  Logger::Log("RebuiltShift/Current Shift",
-    ShiftHandler::GetInstance().GetShiftName(ShiftHandler::GetInstance().GetCurrentShift()));
-  Logger::Log("RebuiltShift/Seconds Left on Shift", ShiftHandler::GetInstance().GetTimeLeft());
-  Logger::Log("RebuiltShift/Override Active", ShiftHandler::GetInstance().GetOverrideActive());
+  ShiftHandler::GetInstance().Periodic();
 
   ShotPlanner::ShotPlannerResults shotTarget =
     ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose());

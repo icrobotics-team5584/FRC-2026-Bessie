@@ -17,6 +17,9 @@ class ShiftHandler {
     static ShiftHandler inst;
     return inst;
   }
+  
+  /* Logging */
+  void Periodic();
 
   /* Getters */
   RebuiltShift GetCurrentShift(units::second_t offset = 0_s);
