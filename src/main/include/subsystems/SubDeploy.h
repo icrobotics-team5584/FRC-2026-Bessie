@@ -64,7 +64,7 @@ class SubDeploy : public frc2::SubsystemBase {
 
   // Simulation components
   static constexpr double DEPLOY_P = 0.2;
-  static constexpr double DEPLOY_GEARING = 2.0;
+  static constexpr double DEPLOY_GEARING = 55.8;
   static constexpr units::degree_t DEPLOY_MAX_ANGLE = 90_deg;
   static constexpr units::degree_t DEPLOY_MIN_ANGLE = 0_deg;
   static constexpr units::meter_t DEPLOY_ARM_LENGTH = 0.1_m;

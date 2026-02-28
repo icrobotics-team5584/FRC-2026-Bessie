@@ -7,7 +7,6 @@
 #include <frc/RobotBase.h>
 #include "utilities/Logger.h"
 #include "utilities/PoseHandler.h"
-#include "utilities/BotVars.h"
 #include "subsystems/Turret/TurretEncoderConfig.h"
 #include "utilities/RobotVisualisation.h"
 #include <frc/RobotBase.h>
