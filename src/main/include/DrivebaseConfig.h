@@ -10,7 +10,7 @@ namespace DrivebaseConfig {
   constexpr units::turns_per_second_t MAX_ANGULAR_VELOCITY = 290_deg_per_s;
 
   constexpr units::meters_per_second_t MAX_P2P_VELOCITY = 3_mps;
-  constexpr units::meters_per_second_squared_t MAX_P2P_ACCEL = 5_mps_sq;
+  constexpr units::meters_per_second_squared_t MAX_P2P_ACCEL = 10_mps_sq;
   constexpr units::turns_per_second_t MAX_P2P_ANGULAR_VELOCITY = 300_deg_per_s;
   constexpr units::turns_per_second_squared_t MAX_P2P_ANGULAR_ACCEL = 3_tr_per_s_sq;
 
