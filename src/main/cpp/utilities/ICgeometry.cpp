@@ -40,13 +40,9 @@ frc::Rotation2d PoseDirection(frc::Pose2d origin, frc::Pose2d destination) {
 }
 
 frc::Pose2d GetFieldRelativePose(frc::Pose2d allianceRelativePose) {
-  //logger lines are temporary and probably should be removed after everything works
-  Logger::FieldDisplay::GetInstance().DisplayPose("Alliance Relative Pose", allianceRelativePose);
   if(frc::DriverStation::GetAlliance().value_or(frc::DriverStation::kBlue) == frc::DriverStation::kRed) {
-    Logger::FieldDisplay::GetInstance().DisplayPose("Field Relative Pose", ICgeometry::xyPoseFlip(allianceRelativePose));
     return ICgeometry::xyPoseFlip(allianceRelativePose);
   } else {
-    Logger::FieldDisplay::GetInstance().DisplayPose("Field Relative Pose", allianceRelativePose);
     return allianceRelativePose;
   }
 };
