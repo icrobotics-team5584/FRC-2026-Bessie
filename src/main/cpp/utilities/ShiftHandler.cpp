@@ -127,7 +127,6 @@ bool ShiftHandler::IsShift(RebuiltShift shift) {
 
 bool ShiftHandler::IsActiveShift() {
   if (_overrideActive == true) {
-    Logger::Log("ShiftHandler/IsActiveShift/result", true);
     return true;
   }
   if (
@@ -135,7 +134,6 @@ bool ShiftHandler::IsActiveShift() {
     frc::DriverStation::GetMatchTime() == -1_s && /* Isn't home practise mode */
     frc::DriverStation::IsDisabled() == false /* Isn't disabled */
   ) {
-    Logger::Log("ShiftHandler/IsActiveShift/result", true);
     return true; /* Don't respect shifts */
   }
   RebuiltShift currentShift = GetCurrentShift(_beforeShiftOffset);
@@ -144,10 +142,8 @@ bool ShiftHandler::IsActiveShift() {
 
   if (currentShift == RebuiltShift::AUTON || currentShift == RebuiltShift::TRANS ||
       currentShift == RebuiltShift::ENDGAME || myShift == currentShift) {
-    Logger::Log("ShiftHandler/IsActiveShift/result", true);
     return true;
   }
-  Logger::Log("ShiftHandler/IsActiveShift/result", false);
   return false;
 }
 
