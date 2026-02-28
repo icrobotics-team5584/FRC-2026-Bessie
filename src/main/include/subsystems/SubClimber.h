@@ -64,7 +64,7 @@ class SubClimber : public frc2::SubsystemBase {
   static constexpr units::ampere_t _ZEROING_CURRENT = 30_A;
 
   /* place holder values */
-  static constexpr double _P = 50;
+  static constexpr double _P = 0;
   static constexpr double _I = 0;
   static constexpr double _D = 0;
   static constexpr double _GEAR_RATIO = 45;
