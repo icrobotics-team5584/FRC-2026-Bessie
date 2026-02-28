@@ -1,8 +1,6 @@
 #include <frc2/command/Commands.h>
 
 namespace cmd {
-    frc2::CommandPtr DefaultAuton();
-
     frc2::CommandPtr TESTDriveInASquare();
     frc2::CommandPtr TESTForward250cm();
     frc2::CommandPtr TESTForward250cmWhileTurning();
@@ -21,4 +19,6 @@ namespace cmd {
     frc2::CommandPtr NeutralAndOutpostScore_RightTrench();
     
     frc2::CommandPtr OutpostDepotClimb();
+
+    frc2::CommandPtr ShootAndStay();
 }

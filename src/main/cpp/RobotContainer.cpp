@@ -32,9 +32,9 @@ RobotContainer::RobotContainer() {
   ConfigureBindings();
   SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
   SubVision::GetInstance().SetDefaultCommand(cmd::AddVisionMeasurement());
-  SubTurret::GetInstance().SetDefaultCommand(cmd::AimAtFieldRelative([]{return cmd::CalcShootOnTheMoveAngle();}));
+  SubTurret::GetInstance().SetDefaultCommand(cmd::AimAtHub());
 
-  _autoManager.AddDefaultAuton("default", AutonHelper::MakeCommandPtrAuto(cmd::DefaultAuton()));
+  _autoManager.AddDefaultAuton("ShootAndStay", AutonHelper::MakeCommandPtrAuto(cmd::ShootAndStay()));
 
   _autoManager.AddAuton("DriveInASquare",
     AutonHelper::MakeCommandPtrAuto(cmd::TESTDriveInASquare()));
@@ -76,7 +76,7 @@ RobotContainer::RobotContainer() {
 void RobotContainer::ConfigureBindings() {
   //Triggers
   _driverController.LeftTrigger().WhileTrue(cmd::IntakeSequence());
-  _driverController.RightTrigger().WhileTrue(cmd::ShootOnTheMove());
+  _driverController.RightTrigger().WhileTrue(cmd::ShootOnTheMove().AlongWith(cmd::TeleopDrive(_driverController, 1.0)));
   _driverController.RightTrigger().OnFalse(SubFeeder::GetInstance().FeederOff());
 
   //Bumpers
@@ -100,8 +100,10 @@ void RobotContainer::ConfigureBindings() {
   _operatorController.RightTrigger().WhileTrue(cmd::BackupShoot());
   _operatorController.Start().OnTrue(cmd::ForceShoot());
 
-  _operatorController.LeftBumper().OnTrue(frc2::cmd::RunOnce([]{return ShotPlanner::SetOverride(ShotPlanner::Override::SCORE);}));
-  _operatorController.RightBumper().OnTrue(frc2::cmd::RunOnce([]{return ShotPlanner::SetOverride(ShotPlanner::Override::PASS);}));
+  _operatorController.LeftBumper().OnTrue(frc2::cmd::RunOnce([]{return ShotPlanner::SetOverride(ShotPlanner::Override::SCORE);})
+  .AlongWith(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); })));
+  _operatorController.RightBumper().OnTrue(frc2::cmd::RunOnce([]{return ShotPlanner::SetOverride(ShotPlanner::Override::PASS);})
+  .AlongWith(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); })));
 
   // Operator POVS
   _operatorController.POVRight().OnTrue(SubShooter::GetInstance().AdjustManualSpeedOffset(1_tps));
@@ -112,7 +114,7 @@ void RobotContainer::ConfigureBindings() {
   // Driver POVs
   _driverController.POVDown().OnTrue(
     SubTurret::GetInstance().SetTurretTargetAngle([] { return 180_deg; }, [] { return 0_deg_per_s; }));
-  _driverController.POVRight().OnTrue(cmd::AimAtSpot(frc::Translation2d{0_m, 0_m}));
+  _driverController.POVRight().OnTrue(cmd::AimAtSpot([] { return frc::Translation2d{0_m, 0_m}; }));
   _driverController.POVLeft().WhileTrue(SubHood::GetInstance().ZeroHood());
   _driverController.POVUp().WhileTrue(SubClimber::GetInstance().RunCurrentZeroingSequence());
 
@@ -121,6 +123,7 @@ void RobotContainer::ConfigureBindings() {
   //Other
 
   frc2::Trigger([]{return ShiftHandler::GetInstance().GetTimeLeft() < 3_s;}).OnTrue(Rumble(1, 0.5_s));
+  SubDrivebase::GetInstance().CheckCoastButton().ToggleOnTrue(cmd::ToggleBrakeCoast());
 }
 
 std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {

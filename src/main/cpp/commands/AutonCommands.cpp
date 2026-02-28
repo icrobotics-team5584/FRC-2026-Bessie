@@ -9,9 +9,6 @@
 #include "utilities/FieldConstants.h"
 
 namespace cmd {
-    frc2::CommandPtr DefaultAuton() {
-        return frc2::cmd::Print("Default Auton");
-    }
 
     /* TESTING AUTONS */
     frc2::CommandPtr TESTDriveInASquare() {
@@ -58,7 +55,7 @@ namespace cmd {
                 SubDrivebase::GetInstance().SetPose(frc::Pose2d{3.5_m, 5.3_m, SubDrivebase::GetInstance().GetGyroAngle()});
             }) //reset position again
         ).DeadlineFor(
-            cmd::AimAtSpot(fieldpos::HUB_POSITION.ToTranslation2d())
+            cmd::AimAtHub()
         )).AndThen(frc2::cmd::Sequence(
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::TOWER; }, 1.0)
                 .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s))//, 
@@ -86,7 +83,7 @@ namespace cmd {
                 SubDrivebase::GetInstance().SetPose(frc::Pose2d{3.5_m, 5.3_m, SubDrivebase::GetInstance().GetGyroAngle()});
             }) //reset position
         ).DeadlineFor(
-            cmd::AimAtSpot(fieldpos::HUB_POSITION.ToTranslation2d())
+            cmd::AimAtHub()
         )).AndThen(frc2::cmd::Sequence(
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::TOWER; }, 1.0)
                 .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s))//, 
@@ -119,7 +116,7 @@ namespace cmd {
                 SubDrivebase::GetInstance().SetPose(frc::Pose2d{3.5_m, 2.9_m, SubDrivebase::GetInstance().GetGyroAngle()});
             }) //reset position again
         ).DeadlineFor(
-            cmd::AimAtSpot(fieldpos::HUB_POSITION.ToTranslation2d())
+            cmd::AimAtHub()
         )).AndThen(frc2::cmd::Sequence(
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::TOWER; }, 1.0)
                 .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s))//, 
@@ -147,7 +144,7 @@ namespace cmd {
                 SubDrivebase::GetInstance().SetPose(frc::Pose2d{3.5_m, 2.9_m, SubDrivebase::GetInstance().GetGyroAngle()});
             }) //reset position
         ).DeadlineFor(
-            cmd::AimAtSpot(fieldpos::HUB_POSITION.ToTranslation2d())
+            cmd::AimAtHub()
         )).AndThen(frc2::cmd::Sequence(
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::TOWER; }, 1.0)
                 .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s))//, 
@@ -246,7 +243,7 @@ namespace cmd {
                 SubDrivebase::GetInstance().SetPose(frc::Pose2d{3.5_m, 2.9_m, SubDrivebase::GetInstance().GetGyroAngle()});
             }) //reset position again
         ).DeadlineFor(
-            cmd::AimAtSpot(fieldpos::HUB_POSITION.ToTranslation2d())
+            cmd::AimAtHub()
         )).AndThen(
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::OUTPOST; }, 1.0)
                 .AlongWith(cmd::ShootOnTheMove())
@@ -272,10 +269,17 @@ namespace cmd {
                 SubDrivebase::GetInstance().SetPose(frc::Pose2d{3.5_m, 2.9_m, SubDrivebase::GetInstance().GetGyroAngle()});
             }) //reset position
         ).DeadlineFor(
-            cmd::AimAtSpot(fieldpos::HUB_POSITION.ToTranslation2d())
+            cmd::AimAtHub()
         )).AndThen(
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::OUTPOST; }, 1.0)
                 .AlongWith(cmd::ShootOnTheMove())
+        );
+    }
+
+    frc2::CommandPtr ShootAndStay() {
+        return frc2::cmd::Sequence(
+            SubHood::GetInstance().ZeroHood(),
+            cmd::ShootOnTheMove().WithTimeout(5_s)
         );
     }
 }

@@ -27,10 +27,8 @@ namespace canid {
     constexpr int HOOD_MOTOR = 19; 
     constexpr int SHOOTER_MOTOR_1 = 20; 
     constexpr int SHOOTER_MOTOR_2 = 21;  
-    constexpr int TURRET_MOTOR = 22;
-    constexpr int OUTDEXER = 23;
-    constexpr int CLIMBER = 24;
-
+    constexpr int TURRET_MOTOR = 22; 
+    constexpr int CLIMBER_MOTOR = 23;
     constexpr int TURRET_ENCODER_1 = 24;
     constexpr int TURRET_ENCODER_2 = 25;
 

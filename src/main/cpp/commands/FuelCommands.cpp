@@ -44,7 +44,7 @@ frc2::CommandPtr StationaryShootAt(frc::Translation2d target) {
 
     return target.Distance(turretPose.Translation());};
 
-  return frc2::cmd::Parallel(cmd::AimAtSpot(target),
+  return frc2::cmd::Parallel(cmd::AimAtSpot([target] { return target; }),
     SubShooter::GetInstance().SpinWithDistance(distanceToTarget, []{return ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose()).isPassing;}),
     SubHood::GetInstance().SetHoodPositionTargetFromDist(distanceToTarget))
     .Until([] {
@@ -74,8 +74,7 @@ frc2::CommandPtr ShootWhenReady() {
   return frc2::cmd::WaitUntil([] { return IsReadyToShoot(); })
     .AndThen(SubFeeder::GetInstance().Feed().AlongWith(SubIndexer::GetInstance().Index()).Until([] {
       return !IsReadyToShoot();
-    }))
-    .Repeatedly();
+    })).Repeatedly();
 };
 
 bool IsReadyToShoot() {
@@ -105,6 +104,26 @@ frc2::CommandPtr AimOnTheMove() {
 
 frc2::CommandPtr ShootOnTheMove(){
   return AimOnTheMove().AlongWith(ShootWhenReady()).AlongWith(SubIntake::GetInstance().IntakeOn());
+}
+
+frc2::CommandPtr ToggleBrakeCoast(){
+  return frc2::cmd::StartEnd(
+    []{
+    SubDrivebase::GetInstance().SetBrakeMode(false);
+    SubDeploy::GetInstance().SetBrakeMode(false);
+    SubTurret::GetInstance().SetBrakeMode(false);
+    SubHood::GetInstance().SetBrakeMode(false);
+  }
+  ,
+  []{
+    SubDrivebase::GetInstance().SetBrakeMode(true);
+    SubDeploy::GetInstance().SetBrakeMode(true);
+    SubTurret::GetInstance().SetBrakeMode(true);
+    SubHood::GetInstance().SetBrakeMode(true);
+    }
+  )
+  .IgnoringDisable(true)
+  .Until([]{return frc::DriverStation::IsEnabled();});
 }
 
 frc2::CommandPtr EjectFuel() {

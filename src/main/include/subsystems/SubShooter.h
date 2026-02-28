@@ -6,6 +6,7 @@
 
 #include "utilities/AlertController.h"
 #include "utilities/MechanismCircle2d.h"
+#include "utilities/BotVars.h"
 
 #include <frc/Alert.h>
 #include <frc/simulation/FlywheelSim.h>
@@ -54,7 +55,7 @@ class SubShooter : public frc2::SubsystemBase {
   ctre::phoenix6::hardware::TalonFX _shooterMotor2{canid::SHOOTER_MOTOR_2};
   static constexpr units::kilogram_square_meter_t MOI = 0.05_kg_sq_m;
   static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::KrakenX60FOC();
-  static constexpr double GEAR_RATIO = 1.0;
+  const double GEAR_RATIO = BotVars::Choose(1.63, 1.0);
   static constexpr units::turns_per_second_t DEFAULT_SHOOTER_OFFSET = 0_tps;
 
   double P = 0.4;

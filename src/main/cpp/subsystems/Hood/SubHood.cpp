@@ -30,6 +30,8 @@ SubHood::SubHood() {
   _hoodPitchTable.insert(4.3575_m, 0.098611_tr);
   _hoodPitchTable.insert(4.6875_m, 0.098611_tr);
   _hoodPitchTable.insert(5.1875_m, 0.098611_tr);
+
+  _hoodMotor->ConfigMotor();
 }
 
 // This method will be called once per scheduler run
@@ -152,4 +154,13 @@ frc2::CommandPtr SubHood::MoveHoodDown1Degree() {
 
 frc2::CommandPtr SubHood::HoodToEjectAngle() {
   return SubHood::GetInstance().SetHoodPositionTarget([] { return LOWER_LIMIT + 5_deg; });
+}
+
+void SubHood::SetBrakeMode(bool brakeMode){
+  if (brakeMode == true){
+    _hoodMotor->SetBrakeMode(true);
+  }
+  else {
+    _hoodMotor->SetBrakeMode(false);
+  }
 }
