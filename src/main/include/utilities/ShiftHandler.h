@@ -22,7 +22,7 @@ class ShiftHandler {
   void Periodic();
 
   /* Getters */
-  RebuiltShift GetCurrentShift(units::second_t offset = 0_s);
+  RebuiltShift GetCurrentShift();
   RebuiltShift GetWinningShift();
   units::second_t GetTimeLeft();
   std::string GetShiftName(RebuiltShift shift);

@@ -13,7 +13,7 @@ void ShiftHandler::Periodic() {
   Logger::Log("RebuiltShift/End shift offset", _afterShiftOffset);
 }
 
-RebuiltShift ShiftHandler::GetCurrentShift(units::second_t offset) {
+RebuiltShift ShiftHandler::GetCurrentShift() {
   if (frc::DriverStation::IsAutonomousEnabled()) {
     return RebuiltShift::AUTON;
   }
@@ -143,7 +143,7 @@ bool ShiftHandler::IsActiveShift() {
   ) {
     return true; /* Don't respect shifts */
   }
-  RebuiltShift currentShift = GetCurrentShift(_beforeShiftOffset);
+  RebuiltShift currentShift = GetCurrentShift();
   RebuiltShift myShift = static_cast<RebuiltShift>(
     frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kBlue));
 
