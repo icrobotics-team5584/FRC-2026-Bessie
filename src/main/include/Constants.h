@@ -31,8 +31,6 @@ namespace canid {
     constexpr int SHOOTER_MOTOR_2 = 21;  
     constexpr int TURRET_MOTOR = 22; 
 
-    constexpr int OUTDEXER = 23;
-
     constexpr int TURRET_ENCODER_1 = 24;
     constexpr int TURRET_ENCODER_2 = 25;
 

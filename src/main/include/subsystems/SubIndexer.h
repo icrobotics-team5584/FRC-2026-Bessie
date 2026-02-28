@@ -29,9 +29,6 @@ class SubIndexer : public frc2::SubsystemBase {
   frc2::CommandPtr IndexerOn();
   frc2::CommandPtr IndexerOff();
 
-  frc2::CommandPtr IndexerOutOn();
-  frc2::CommandPtr IndexerOutOff();
-
   frc2::CommandPtr Index();
   frc2::CommandPtr StopIndex();
 
@@ -58,24 +55,6 @@ class SubIndexer : public frc2::SubsystemBase {
   AlertController::MotorAlertConfig _indexerAlertConfig{_indexerHighTemperatureAlert,
     _indexerCurrentAlert, _indexerRecordedTemperatureAlert, _indexerRecordedCurrentAlert, 60_degC,
     20_A};
-
-  ICSparkFlex _outdexerMotor{canid::OUTDEXER};
-  rev::spark::SparkFlexConfig _outdexerMotorConfig;
-
-  frc::Alert _outdexerHighTemperatureAlert{
-    "IndexerOut Motor High Temperature!", frc::Alert::AlertType::kWarning};
-  frc::Alert _outdexerCurrentAlert{
-    "IndexerOut Motor Overcurrent!", frc::Alert::AlertType::kWarning};
-
-  frc::Alert _outdexerRecordedTemperatureAlert{
-    "IndexerOut Motor max Temperature was reached !", frc::Alert::AlertType::kWarning};
-
-  frc::Alert _outdexerRecordedCurrentAlert{
-    "IndexerOut Motor max current was reached !", frc::Alert::AlertType::kWarning};
-
-  AlertController::MotorAlertConfig _outdexerAlertConfig{_outdexerHighTemperatureAlert,
-    _outdexerCurrentAlert, _outdexerRecordedTemperatureAlert, _outdexerRecordedCurrentAlert,
-    60_degC, 20_A};
 
   // Simulation components
   static constexpr double GEARING = 1.0;
