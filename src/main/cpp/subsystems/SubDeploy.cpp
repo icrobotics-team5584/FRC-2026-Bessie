@@ -10,7 +10,7 @@
 #include <utilities/Logger.h>
 
 SubDeploy::SubDeploy() {
-  _deployMotorConfig.SmartCurrentLimit(1);
+  _deployMotorConfig.SmartCurrentLimit(60);
   _deployMotorConfig.softLimit.ForwardSoftLimit(DEPLOY_MAX_ANGLE.value());
   _deployMotorConfig.softLimit.ReverseSoftLimit(DEPLOY_MIN_ANGLE.value());
   _deployMotorConfig.encoder.PositionConversionFactor(1.0 / DEPLOY_GEARING);
@@ -25,6 +25,10 @@ frc2::CommandPtr SubDeploy::DeployIntake() {
   return RunOnce([this] { _deployMotor.SetPositionTarget(DEPLOY_MIN_ANGLE); });
 }
 
+frc2::CommandPtr SubDeploy::RetractIntake() {
+  return RunOnce([this] { _deployMotor.SetPositionTarget(DEPLOY_MAX_ANGLE); });
+}
+
 frc2::CommandPtr SubDeploy::ToggleDeploy() {
   return RunOnce([this] {
     if (_deployMotor.GetPosition() > 45_deg) {
@@ -36,13 +40,13 @@ frc2::CommandPtr SubDeploy::ToggleDeploy() {
 }
 
 frc2::CommandPtr SubDeploy::ZeroDeploy() {
-  return RunOnce([this] { _deployMotor.SetPosition(0_deg); });
+  return RunOnce([this] { _deployMotor.SetPosition(90_deg); });
 }
 
 frc2::CommandPtr SubDeploy::DeployAutoZero() {
   return RunOnce([this] {
     EnableSoftLimit(false);
-    _deployMotor.SetVoltage(-1_V);
+    _deployMotor.SetVoltage(1_V);
     _currentlyZeroing = true;
     _hasZeroed = false;
   })

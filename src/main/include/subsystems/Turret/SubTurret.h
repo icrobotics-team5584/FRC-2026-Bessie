@@ -102,23 +102,23 @@ class SubTurret : public frc2::SubsystemBase {
 
   frc::SimpleMotorFeedforward<units::turn> _robotRotVelFF{kS, kV, kA};
 
-  const units::turn_t turretZeroOffset = -0.5_tr;
+  const units::turn_t turretZeroOffset = 0_tr; // -0.5_tr
 
   units::degree_t POS_LIMIT = 362_deg;
   units::degree_t NEG_LIMIT = -2_deg;
 
   bool _hasZeroed = false;
 
-  double P = 8.0;
-  double I = 0.01;
-  double D = 4;
+  double P = 3;
+  double I = 0.0;
+  double D = 0.0;
 
   static constexpr units::volt_t kS = 0.15_V;
   static constexpr auto kV = 3.4_V * (1_s / 1_tr);
   static constexpr auto kA = 0_V * ((1_s * 1_s) / 1_tr);
 
-  const double E1_TEETH = BotVars::Choose(15, 21);
-  const double E2_TEETH = BotVars::Choose(13, 20);
+  const double E1_TEETH = BotVars::Choose(17, 21);
+  const double E2_TEETH = BotVars::Choose(15, 20);
   const double BIG_TEETH = 94;
   const double ENCODER1_RATIO = E1_TEETH / BIG_TEETH;
   const double ENCODER2_RATIO = E2_TEETH / BIG_TEETH;

@@ -19,11 +19,11 @@ SubTurret::SubTurret() {
     _turretMotorConfig.encoder.PositionConversionFactor(1/GEAR_RATIO);
     _turretMotorConfig.encoder.VelocityConversionFactor(1/GEAR_RATIO);
     _turretMotorConfig.closedLoop.Pid(P, I, D);
-    _turretMotorConfig.closedLoop.MaxOutput(0.1);
-    _turretMotorConfig.closedLoop.MinOutput(-0.1);
+    _turretMotorConfig.closedLoop.MaxOutput(0.5);
+    _turretMotorConfig.closedLoop.MinOutput(-0.5);
     _turretMotorConfig.closedLoop.IMaxAccum(0.05);
     _turretMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
-    _turretMotorConfig.SmartCurrentLimit(1);
+    _turretMotorConfig.SmartCurrentLimit(20);
     _turretMotorConfig.softLimit.ForwardSoftLimit(POS_LIMIT.convert<units::turns>().value());
     _turretMotorConfig.softLimit.ForwardSoftLimitEnabled(true);
     _turretMotorConfig.softLimit.ReverseSoftLimit(NEG_LIMIT.convert<units::turns>().value());
@@ -82,6 +82,8 @@ void SubTurret::Periodic() {
     Logger::Log("Turret/CRT Positiion", GetTurretAngleCRT());
     Logger::Log("Turret/Encoder/ZeroedEncoder1", getEncoder1Degrees());
     Logger::Log("Turret/Encoder/ZeroedEncoder2", getEncoder2Degrees());
+    Logger::Log("Turret/Encoder/Encoder1", _encoderIO->GetRawEncoder1());
+    Logger::Log("Turret/Encoder/Encoder2", _encoderIO->GetRawEncoder2());
     Logger::Log("Turret/hasReset", _hasZeroed);
     Logger::Log("Turret/IsAtTarget", IsAtTarget());
 
@@ -106,7 +108,10 @@ units::degree_t SubTurret::GetTurretAngleCRT() {
     // get encoder values and difference
     double e1deg = getEncoder1Degrees().value();
     double e2deg = getEncoder2Degrees().value();
+
     double difference = e2deg - e1deg;
+
+    Logger::Log("GetTurretAngleCRT/variables/difference before clamp", difference);
 
     // clamp difference
     if(difference > 180) {
@@ -115,15 +120,26 @@ units::degree_t SubTurret::GetTurretAngleCRT() {
         difference += 360;
     } 
 
+    Logger::Log("GetTurretAngleCRT/variables/difference after clamp", difference);
+
     // find slope and multiply to difference 
     // (converting from encoder difference to turret degrees)
-    static double SLOPE = (E2_TEETH * E1_TEETH) / (BIG_TEETH);
+    static double SLOPE = (E2_TEETH * E1_TEETH) / (BIG_TEETH*(E1_TEETH-E2_TEETH));
+
+    Logger::Log("GetTurretAngleCRT/variables/slope", SLOPE);
+
     difference *= SLOPE;
+
+    Logger::Log("GetTurretAngleCRT/variables/difference *= slope", difference);
 
     // estimate encoder 1 rotation count
     // (solve for encoder 1 rotations)
     double e1rotations = (difference * BIG_TEETH / E1_TEETH) / 360.0;
-    double e1rotations_floored = floor(e1rotations);
+    int e1rotations_floored = floor(e1rotations);
+    // e1rotations_floored = e1rotations_floored / 2;
+
+    Logger::Log("GetTurretAngleCRT/variables/e1 rotations", e1rotations);
+    Logger::Log("GetTurretAngleCRT/variables/e1 rotations floored", e1rotations_floored);
 
     // solve for turret angle with encoder 1
     double turretAngle = (
@@ -131,14 +147,28 @@ units::degree_t SubTurret::GetTurretAngleCRT() {
         (E1_TEETH / BIG_TEETH)
     );
 
+    // solve for turret angle with encoder 1 without floored rotations
+    double turretAngleWithoutFloored = (
+        (e1rotations * 360) *
+        (E1_TEETH / BIG_TEETH)
+    );
+
+    Logger::Log("GetTurretAngleCRT/variables/turret angle", turretAngle);
+    Logger::Log("GetTurretAngleCRT/variables/turret angle with not floored e1 rotation", turretAngleWithoutFloored);
+
     // resolve ambiguity (when encoders are the same again)
     double period = (E1_TEETH / BIG_TEETH) * 360.0;
+
+    Logger::Log("GetTurretAngleCRT/variables/period", period);
+    Logger::Log("GetTurretAngleCRT/variables/turretAngle before period", turretAngle);
 
     if(turretAngle - difference < -period / 2) {
         turretAngle += period;
     } else if(turretAngle - difference > period / 2) {
         turretAngle -= period;
     }
+
+    Logger::Log("GetTurretAngleCRT/variables/turretAngle after period", turretAngle);
 
     // Move the zero angle to point at the robot's front (Intake) 
     return (turretAngle*1_deg) - turretZeroOffset;

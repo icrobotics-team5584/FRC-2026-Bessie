@@ -7,6 +7,8 @@ class TurretCancoderIO : public TurretEncoderIO {
         void ConfigEncoder();
         units::degree_t GetEncoder1Degrees();
         units::degree_t GetEncoder2Degrees();
+        units::degree_t GetRawEncoder1();
+        units::degree_t GetRawEncoder2();
         bool IsConnected();
     private:
         ctre::phoenix6::hardware::CANcoder _encoder1;

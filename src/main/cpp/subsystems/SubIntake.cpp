@@ -10,7 +10,7 @@
 #include <utilities/Logger.h>
 
 SubIntake::SubIntake() {
-  _intakeMotorConfig.SmartCurrentLimit(1);
+  _intakeMotorConfig.SmartCurrentLimit(60);
   _intakeMotorConfig.Inverted(true);
   _intakeMotor.OverwriteConfig(_intakeMotorConfig);
 

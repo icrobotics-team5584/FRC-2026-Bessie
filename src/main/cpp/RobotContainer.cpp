@@ -108,11 +108,13 @@ void RobotContainer::ConfigureBindings() {
   _operatorController.POVDown().OnTrue(SubHood::GetInstance().AdjustManualAngleOffset(-1_deg));
 
   // Driver POVs
-  _driverController.POVUp().OnTrue(SubDrivebase::GetInstance().SyncSensor());
+  // _driverController.POVUp().OnTrue(SubDrivebase::GetInstance().SyncSensor());
   _driverController.POVDown().OnTrue(
-    SubTurret::GetInstance().SetTurretTargetAngle([] { return 180_deg; }, [] { return 0_deg_per_s; }));
+     SubShooter::GetInstance().SetShooterTarget([]{return 40_tps;}));
+  _driverController.POVUp().OnTrue(
+    SubDeploy::GetInstance().ToggleDeploy());
   _driverController.POVRight().OnTrue(cmd::AimAtSpot([] { return frc::Translation2d{0_m, 0_m}; }));
-  _driverController.POVLeft().WhileTrue(SubHood::GetInstance().ZeroHood());
+  _driverController.POVLeft().WhileTrue(SubDeploy::GetInstance().DeployAutoZero());
 
   //Sticks
 

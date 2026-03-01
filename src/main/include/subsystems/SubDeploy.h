@@ -32,6 +32,7 @@ class SubDeploy : public frc2::SubsystemBase {
   void EnableSoftLimit(bool enabled);
   frc2::CommandPtr ZeroDeploy();
   frc2::CommandPtr DeployAutoZero();
+  frc2::CommandPtr RetractIntake();
 
   void SetBrakeMode(bool brakeMode);
 
@@ -62,14 +63,14 @@ class SubDeploy : public frc2::SubsystemBase {
   bool _hasZeroed = false;
   bool _currentlyZeroing = false;
 
-  static constexpr units::ampere_t ZEROINGCURRENTLIMIT = 5_A;
-
-  // Simulation components
-  static constexpr double DEPLOY_P = 0.2;
+  static constexpr units::ampere_t ZEROINGCURRENTLIMIT = 20_A;
+  static constexpr double DEPLOY_P = 5.0;
   static constexpr double DEPLOY_GEARING = 55.8;
   static constexpr units::degree_t DEPLOY_MAX_ANGLE = 90_deg;
-  static constexpr units::degree_t DEPLOY_MIN_ANGLE = 0_deg;
+  static constexpr units::degree_t DEPLOY_MIN_ANGLE = -22_deg;
   static constexpr units::meter_t DEPLOY_ARM_LENGTH = 0.1_m;
+
+  // Simulation components
   static constexpr units::degree_t DEPLOY_START_ANGLE = 0_deg;
   static constexpr units::kilogram_square_meter_t DEPLOY_MOI = 0.0000005_kg_sq_m;
   static constexpr frc::DCMotor DEPLOY_MOTOR_MODEL = frc::DCMotor::NeoVortex();

@@ -22,10 +22,12 @@ constexpr rev::spark::SparkBaseConfig::IdleMode IDLE_MODE =
 };  // namespace NeoMotorConfig
 
 namespace KrakenMotorConfig {
-constexpr double P = 16;
+constexpr double P = 100;
 constexpr double I = 0;
-constexpr double D = 8;
+constexpr double D = 0;
 constexpr double S = 0.6;
+constexpr double G = 0.25;
+
 
 constexpr double GEAR_RATIO = 34.83;
 
@@ -34,9 +36,10 @@ constexpr double GEAR_RATIO = 34.83;
  * at once. SUPPLY_CURRENT_LOWER_LIMT is the typical supply current limit.
  * However, it can exceed it, up to the true maximum for
  * SUPPLY_CURRENT_LOWER_TIME seconds. */
-constexpr units::ampere_t SUPPLY_CURRENT_LIMT = 1_A;
-constexpr units::ampere_t SUPPLY_CURRENT_LOWER_LIMIT = 1_A;
-constexpr units::ampere_t STATOR_CURRENT_LIMIT = 1_A;
+constexpr units::ampere_t SUPPLY_CURRENT_LIMT = 40_A;
+constexpr units::ampere_t SUPPLY_CURRENT_LOWER_LIMIT = 35_A;
+constexpr units::ampere_t STATOR_CURRENT_LIMIT = 60_A;
+constexpr ctre::phoenix6::signals::GravityTypeValue GRAVITY_TYPE = ctre::phoenix6::signals::GravityTypeValue::Elevator_Static;
 
 constexpr units::second_t SUPPLY_CURRENT_LOWER_TIME = 0.1_s;
 
