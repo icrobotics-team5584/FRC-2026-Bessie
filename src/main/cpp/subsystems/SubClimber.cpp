@@ -80,7 +80,7 @@ units::degree_t SubClimber::CalcMotorPosFromHeight(units::meter_t height) {
 
 units::meter_t SubClimber::GetElevatorHeight() {
   units::turn_t motorPos = _climberMotor.GetPosition();
-  return _ELEVATOR_MIN_HEIGHT + motorPos.value() * _DRUM_CIRCUMFERENCE;
+  return _ELEVATOR_MIN_HEIGHT + (motorPos.value() * _DRUM_CIRCUMFERENCE);
 }
 
 units::ampere_t SubClimber::GetMotorCurrent() {
@@ -92,15 +92,9 @@ frc2::CommandPtr SubClimber::ToggleClimb() {
   units::meter_t stow_height = std::clamp(_STOW_HEIGHT, _ELEVATOR_MIN_HEIGHT, _ELEVATOR_MAX_HEIGHT);
   units::meter_t l1_height = std::clamp(_L1_HEIGHT, _ELEVATOR_MIN_HEIGHT, _ELEVATOR_MAX_HEIGHT);
 
-  auto onTrue = [this, l1_height] {
-    _climberMotor.SetPositionTarget(CalcMotorPosFromHeight(l1_height)); 
-  };
-
-  auto onFalse = [this, stow_height] {
-    _climberMotor.SetPositionTarget(CalcMotorPosFromHeight(stow_height)); 
-  };
-
-  return StartEnd(onTrue, onFalse)
+  return StartEnd(
+      [this, l1_height] { _climberMotor.SetPositionTarget(CalcMotorPosFromHeight(l1_height)); },
+      [this, stow_height] { _climberMotor.SetPositionTarget(CalcMotorPosFromHeight(stow_height)); })
     .OnlyIf([this] {return _hasZeroed; });
 }
 
