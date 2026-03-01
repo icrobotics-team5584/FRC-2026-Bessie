@@ -93,11 +93,11 @@ frc2::CommandPtr SubClimber::ToggleClimb() {
   units::meter_t l1_height = std::clamp(_L1_HEIGHT, _ELEVATOR_MIN_HEIGHT, _ELEVATOR_MAX_HEIGHT);
 
   auto onTrue = [this, l1_height] {
-    _climberMotor.SetPositionTarget(CalcMotorPosFromHeight(std::clamp(l1_height, _ELEVATOR_MIN_HEIGHT, _ELEVATOR_MAX_HEIGHT))); 
+    _climberMotor.SetPositionTarget(CalcMotorPosFromHeight(l1_height)); 
   };
 
   auto onFalse = [this, stow_height] {
-    _climberMotor.SetPositionTarget(CalcMotorPosFromHeight(std::clamp(stow_height, _ELEVATOR_MIN_HEIGHT, _ELEVATOR_MAX_HEIGHT))); 
+    _climberMotor.SetPositionTarget(CalcMotorPosFromHeight(stow_height)); 
   };
 
   return StartEnd(onTrue, onFalse)
