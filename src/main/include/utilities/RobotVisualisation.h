@@ -62,9 +62,11 @@ class RobotVisualisation {
   _shooterMechLowerConnector, "shooterBottomRoller", 0.025, 0_deg};
 
   // Climber Visualsation
+  const frc::Color8Bit& white = {255, 255, 255};
+
   frc::MechanismRoot2d* _climberMechRoot = _display.GetRoot("climberRoot", 0.544, 0.125);
   frc::MechanismLigament2d* _climberMechElevator = 
     _climberMechRoot->Append<frc::MechanismLigament2d>("climberElevator", 0, 90_deg);
   frc::MechanismLigament2d* _climberMechExtension = 
-    _climberMechElevator->Append<frc::MechanismLigament2d>("climberExtension", 0, 0_deg, {255, 255, 255});
+    _climberMechElevator->Append<frc::MechanismLigament2d>("climberExtension", 0, 0_deg, 6, white);
 };
