@@ -34,9 +34,9 @@ constexpr double GEAR_RATIO = 34.83;
  * at once. SUPPLY_CURRENT_LOWER_LIMT is the typical supply current limit.
  * However, it can exceed it, up to the true maximum for
  * SUPPLY_CURRENT_LOWER_TIME seconds. */
-constexpr units::ampere_t SUPPLY_CURRENT_LIMT = 30_A;
-constexpr units::ampere_t SUPPLY_CURRENT_LOWER_LIMIT = 30_A;
-constexpr units::ampere_t STATOR_CURRENT_LIMIT = 30_A;
+constexpr units::ampere_t SUPPLY_CURRENT_LIMT = 1_A;
+constexpr units::ampere_t SUPPLY_CURRENT_LOWER_LIMIT = 1_A;
+constexpr units::ampere_t STATOR_CURRENT_LIMIT = 1_A;
 
 constexpr units::second_t SUPPLY_CURRENT_LOWER_TIME = 0.1_s;
 

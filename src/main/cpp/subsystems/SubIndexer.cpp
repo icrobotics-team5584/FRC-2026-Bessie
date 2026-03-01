@@ -10,7 +10,7 @@
 #include <utilities/Logger.h>
 
 SubIndexer::SubIndexer() {
-  _indexerMotorConfig.SmartCurrentLimit(60);
+  _indexerMotorConfig.SmartCurrentLimit(1);
   _indexerMotor.OverwriteConfig(_indexerMotorConfig);
   Logger::Log("Indexer/Indexer Motor", &_indexerMotor);
 }

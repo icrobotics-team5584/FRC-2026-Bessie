@@ -21,11 +21,18 @@ SubShooter::SubShooter() {
 
   // Current Limits no idea what to actually put here
   _shooterMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-  _shooterMotorConfig.CurrentLimits.SupplyCurrentLowerLimit = 20.0_A;
-  _shooterMotorConfig.CurrentLimits.SupplyCurrentLimit = 60.0_A;
+  _shooterMotorConfig.CurrentLimits.SupplyCurrentLowerLimit = 1.0_A;
+  _shooterMotorConfig.CurrentLimits.SupplyCurrentLimit = 1.0_A;
   _shooterMotorConfig.CurrentLimits.SupplyCurrentLowerTime = 0.5_s;
   _shooterMotorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-  _shooterMotorConfig.CurrentLimits.StatorCurrentLimit = 80.0_A;
+  _shooterMotorConfig.CurrentLimits.StatorCurrentLimit = 1.0_A;
+
+  //   _shooterMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+  // _shooterMotorConfig.CurrentLimits.SupplyCurrentLowerLimit = 20.0_A;
+  // _shooterMotorConfig.CurrentLimits.SupplyCurrentLimit = 60.0_A;
+  // _shooterMotorConfig.CurrentLimits.SupplyCurrentLowerTime = 0.5_s;
+  // _shooterMotorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+  // _shooterMotorConfig.CurrentLimits.StatorCurrentLimit = 80.0_A;
 
   // PIDs
   _shooterMotorConfig.Slot0.kP = P;

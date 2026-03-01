@@ -19,11 +19,11 @@ SubTurret::SubTurret() {
     _turretMotorConfig.encoder.PositionConversionFactor(1/GEAR_RATIO);
     _turretMotorConfig.encoder.VelocityConversionFactor(1/GEAR_RATIO);
     _turretMotorConfig.closedLoop.Pid(P, I, D);
-    _turretMotorConfig.closedLoop.MaxOutput(1.0);
-    _turretMotorConfig.closedLoop.MinOutput(-1.0);
+    _turretMotorConfig.closedLoop.MaxOutput(0.1);
+    _turretMotorConfig.closedLoop.MinOutput(-0.1);
     _turretMotorConfig.closedLoop.IMaxAccum(0.05);
     _turretMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
-    _turretMotorConfig.SmartCurrentLimit(30);
+    _turretMotorConfig.SmartCurrentLimit(1);
     _turretMotorConfig.softLimit.ForwardSoftLimit(POS_LIMIT.convert<units::turns>().value());
     _turretMotorConfig.softLimit.ForwardSoftLimitEnabled(true);
     _turretMotorConfig.softLimit.ReverseSoftLimit(NEG_LIMIT.convert<units::turns>().value());
