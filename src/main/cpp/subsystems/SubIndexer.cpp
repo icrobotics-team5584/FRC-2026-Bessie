@@ -11,6 +11,7 @@
 
 SubIndexer::SubIndexer() {
   _indexerMotorConfig.SmartCurrentLimit(1);
+  _indexerMotorConfig.Inverted(true);
   _indexerMotor.OverwriteConfig(_indexerMotorConfig);
   Logger::Log("Indexer/Indexer Motor", &_indexerMotor);
 }
