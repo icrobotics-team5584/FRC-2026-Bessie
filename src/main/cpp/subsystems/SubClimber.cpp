@@ -27,7 +27,7 @@ void SubClimber::Periodic() {
   }
   Logger::Log("Climber/Has Zeroed", _hasZeroed);
   Logger::Log("Climber/Zeroing", _zeroing);
-  Logger::Log("Climber/Distance", GetElevatorHeight());
+  Logger::Log("Climber/Height", GetElevatorHeight());
 
   RobotVisualisation::GetInstance()._climberMechExtension->SetLength(
     (GetElevatorHeight() - _ELEVATOR_MIN_HEIGHT).value());
