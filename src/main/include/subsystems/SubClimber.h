@@ -34,11 +34,12 @@ class SubClimber : public frc2::SubsystemBase {
   /* Instaneous */
   void SetBrakeMode(bool isBrake);
   bool IsAtTarget();
+  units::degree_t CalcMotorPosFromHeight(units::meter_t height); 
   units::meter_t GetElevatorHeight();
   units::ampere_t GetMotorCurrent();
   
   /* Commands */
-  frc2::CommandPtr SetClimbPositionTarget(units::meter_t height);
+  frc2::CommandPtr ToggleClimb();
 
   frc2::CommandPtr ManualClimberUp();
   frc2::CommandPtr ManualClimberDown();
@@ -57,8 +58,8 @@ class SubClimber : public frc2::SubsystemBase {
   static constexpr units::meter_t _ELEVATOR_MAX_HEIGHT = 0.56_m;
 
   /* place holder values */
-  static constexpr units::degree_t _STOW_TURNS = 0_deg;
-  static constexpr units::degree_t _L1_TURNS = 916_deg;
+  static constexpr units::meter_t _STOW_HEIGHT = _ELEVATOR_MIN_HEIGHT;
+  static constexpr units::meter_t _L1_HEIGHT = _ELEVATOR_MAX_HEIGHT;
 
   static constexpr units::degree_t _TOLERANCE = 1_deg;
   static constexpr units::ampere_t _ZEROING_CURRENT = 30_A;

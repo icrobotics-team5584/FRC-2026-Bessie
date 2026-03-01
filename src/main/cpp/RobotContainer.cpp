@@ -87,7 +87,7 @@ void RobotContainer::ConfigureBindings() {
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
   _driverController.B().WhileTrue(SubDrivebase::GetInstance().AlignToAngle(_driverController, 0_deg));
   _driverController.A().WhileTrue(cmd::EjectFuel());
-  _driverController.Y().ToggleOnTrue(SubClimber::GetInstance().ClimbToggle());
+  _driverController.Y().ToggleOnTrue(SubClimber::GetInstance().ToggleClimb());
 
   // Misc 
   _driverController.Start().OnTrue(SubDrivebase::GetInstance().ZeroRotation());

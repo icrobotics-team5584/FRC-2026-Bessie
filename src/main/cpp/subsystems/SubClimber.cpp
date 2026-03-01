@@ -29,8 +29,8 @@ void SubClimber::Periodic() {
   Logger::Log("Climber/Zeroing", _zeroing);
   Logger::Log("Climber/Distance", GetElevatorHeight());
 
-  RobotVisualisation::GetInstance()._climberMechExtension->
-    SetLength(GetElevatorHeight().value() - _ELEVATOR_MIN_HEIGHT);
+  RobotVisualisation::GetInstance()._climberMechExtension->SetLength(
+    (GetElevatorHeight() - _ELEVATOR_MIN_HEIGHT).value());
 }
 
 void SubClimber::SimulationPeriodic() {
@@ -74,20 +74,34 @@ bool SubClimber::IsAtTarget() {
   }
 }
 
+units::degree_t SubClimber::CalcMotorPosFromHeight(units::meter_t height) {
+  return 360_deg * ((height - _ELEVATOR_MIN_HEIGHT) / _DRUM_CIRCUMFERENCE).value();
+}
+
 units::meter_t SubClimber::GetElevatorHeight() {
   units::turn_t motorPos = _climberMotor.GetPosition();
   return _ELEVATOR_MIN_HEIGHT + motorPos.value() * _DRUM_CIRCUMFERENCE;
 }
 
-
 units::ampere_t SubClimber::GetMotorCurrent() {
   return (units::ampere_t)_climberMotor.GetOutputCurrent();
 }
 
-frc2::CommandPtr SubClimber::SetClimbPositionTarget(units::meter_t height) {
-  return RunOnce(
-      [this] { _climberMotor.SetPositionTarget(std::clamp(height, _ELEVATOR_MIN_HEIGHT, _ELEVATOR_MAX_HEIGHT)); })
-    .OnlyIf([this] { return _hasZeroed; });
+
+frc2::CommandPtr SubClimber::ToggleClimb() {
+  units::meter_t stow_height = std::clamp(_STOW_HEIGHT, _ELEVATOR_MIN_HEIGHT, _ELEVATOR_MAX_HEIGHT);
+  units::meter_t l1_height = std::clamp(_L1_HEIGHT, _ELEVATOR_MIN_HEIGHT, _ELEVATOR_MAX_HEIGHT);
+
+  auto onTrue = [this, l1_height] {
+    _climberMotor.SetPositionTarget(CalcMotorPosFromHeight(std::clamp(l1_height, _ELEVATOR_MIN_HEIGHT, _ELEVATOR_MAX_HEIGHT))); 
+  };
+
+  auto onFalse = [this, stow_height] {
+    _climberMotor.SetPositionTarget(CalcMotorPosFromHeight(std::clamp(stow_height, _ELEVATOR_MIN_HEIGHT, _ELEVATOR_MAX_HEIGHT))); 
+  };
+
+  return StartEnd(onTrue, onFalse)
+    .OnlyIf([this] {return _hasZeroed; });
 }
 
 frc2::CommandPtr SubClimber::RunCurrentZeroingSequence() {
