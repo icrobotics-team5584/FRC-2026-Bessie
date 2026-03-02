@@ -112,9 +112,9 @@ void RobotContainer::ConfigureBindings() {
   _driverController.POVDown().OnTrue(
      SubShooter::GetInstance().SetShooterTarget([]{return 40_tps;}));
   _driverController.POVUp().OnTrue(
-    SubDeploy::GetInstance().ToggleDeploy());
+    SubIndexer::GetInstance().Index());
   _driverController.POVRight().OnTrue(cmd::AimAtSpot([] { return frc::Translation2d{0_m, 0_m}; }));
-  _driverController.POVLeft().WhileTrue(SubDeploy::GetInstance().DeployAutoZero());
+  _driverController.POVLeft().WhileTrue(SubHood::GetInstance().ZeroHood());
 
   //Sticks
 
