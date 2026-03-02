@@ -4,15 +4,16 @@
 
 #include "RobotContainer.h"
 
+#include "subsystems/Hood/SubHood.h"
+#include "subsystems/SubClimber.h"
 #include "subsystems/SubDeploy.h"
 #include "subsystems/SubDrivebase.h"
 #include "subsystems/SubFeeder.h"
-#include "subsystems/Hood/SubHood.h"
 #include "subsystems/SubIndexer.h"
 #include "subsystems/SubIntake.h"
 #include "subsystems/SubShooter.h"
-#include "subsystems/Turret/SubTurret.h"
 #include "subsystems/SubVision.h"
+#include "subsystems/Turret/SubTurret.h"
 
 #include "commands/AutonCommands.h"
 #include "commands/DriveCommands.h"
@@ -84,9 +85,12 @@ void RobotContainer::ConfigureBindings() {
 
   //Letters
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
-  _driverController.Y().OnTrue(SubDrivebase::GetInstance().ZeroRotation());
   _driverController.B().WhileTrue(SubDrivebase::GetInstance().AlignToAngle(_driverController, 0_deg));
   _driverController.A().WhileTrue(cmd::EjectFuel());
+  _driverController.Y().ToggleOnTrue(SubClimber::GetInstance().ToggleClimb());
+
+  // Misc 
+  _driverController.Start().OnTrue(SubDrivebase::GetInstance().ZeroRotation());
 
   /* Operator */
   _operatorController.Back().OnTrue(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); }));
@@ -112,6 +116,7 @@ void RobotContainer::ConfigureBindings() {
     SubTurret::GetInstance().SetTurretTargetAngle([] { return 180_deg; }, [] { return 0_deg_per_s; }));
   _driverController.POVRight().OnTrue(cmd::AimAtSpot([] { return frc::Translation2d{0_m, 0_m}; }));
   _driverController.POVLeft().WhileTrue(SubHood::GetInstance().ZeroHood());
+  _driverController.POVUp().WhileTrue(SubClimber::GetInstance().RunCurrentZeroingSequence());
 
   //Sticks
 
