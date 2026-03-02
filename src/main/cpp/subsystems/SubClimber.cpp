@@ -27,9 +27,9 @@ void SubClimber::Periodic() {
   }
   Logger::Log("Climber/Has Zeroed", _hasZeroed);
   Logger::Log("Climber/Zeroing", _zeroing);
-  Logger::Log("Climber/Height", GetElevatorHeight());
+  Logger::Log("Climber/Height", GetClimberHeight());
 
-  RobotVisualisation::GetInstance()._climberMechElevator->SetLength((GetElevatorHeight()).value());
+  RobotVisualisation::GetInstance()._climberMechElevator->SetLength((GetClimberHeight()).value());
 }
 
 void SubClimber::SimulationPeriodic() {
@@ -52,9 +52,9 @@ void SubClimber::SimulationPeriodic() {
 };
 
 /* Instaneous */
-void SubClimber::SetBrakeMode(bool isbrake) {
+void SubClimber::SetBrakeMode(bool isBrake) {
   rev::spark::SparkBaseConfig neutralModeConfig;
-  if (isbrake) {
+  if (isBrake) {
     neutralModeConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
   } else {
     neutralModeConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kCoast);
@@ -77,7 +77,7 @@ units::degree_t SubClimber::CalcMotorPosFromHeight(units::meter_t height) {
   return (height / _DRUM_CIRCUMFERENCE) * 1_tr;
 }
 
-units::meter_t SubClimber::GetElevatorHeight() {
+units::meter_t SubClimber::GetClimberHeight() {
   return _climberMotor.GetPosition().value() * _DRUM_CIRCUMFERENCE;
 }
 
@@ -86,12 +86,12 @@ units::ampere_t SubClimber::GetMotorCurrent() {
 }
 
 frc2::CommandPtr SubClimber::ToggleClimb() {
-  units::meter_t stow_height = std::clamp(_STOW_HEIGHT, _ELEVATOR_MIN_HEIGHT, _ELEVATOR_MAX_HEIGHT);
-  units::meter_t l1_height = std::clamp(_L1_HEIGHT, _ELEVATOR_MIN_HEIGHT, _ELEVATOR_MAX_HEIGHT);
+  units::meter_t stowHeight = std::clamp(_STOW_HEIGHT, _CLIMBER_MIN_HEIGHT, _CLIMBER_MAX_HEIGHT);
+  units::meter_t l1Height = std::clamp(_L1_HEIGHT, _CLIMBER_MIN_HEIGHT, _CLIMBER_MAX_HEIGHT);
 
   return StartEnd(
-      [this, l1_height] { _climberMotor.SetPositionTarget(CalcMotorPosFromHeight(l1_height)); },
-      [this, stow_height] { _climberMotor.SetPositionTarget(CalcMotorPosFromHeight(stow_height)); })
+      [this, l1Height] { _climberMotor.SetPositionTarget(CalcMotorPosFromHeight(l1Height)); },
+      [this, stowHeight] { _climberMotor.SetPositionTarget(CalcMotorPosFromHeight(stowHeight)); })
     .OnlyIf([this] {return _hasZeroed; });
 }
 
@@ -107,7 +107,7 @@ frc2::CommandPtr SubClimber::RunCurrentZeroingSequence() {
     .AndThen([this] {
       /* Set zero seperately from FinallyDo so that it won't set the climber as
        * zeroed if the command was cancelled. */
-      _climberMotor.SetPosition(CalcMotorPosFromHeight(_ELEVATOR_MIN_HEIGHT));
+      _climberMotor.SetPosition(CalcMotorPosFromHeight(_CLIMBER_MIN_HEIGHT));
       _hasZeroed = true;
     })
     .FinallyDo([this] {

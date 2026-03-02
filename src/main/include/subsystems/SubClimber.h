@@ -35,7 +35,7 @@ class SubClimber : public frc2::SubsystemBase {
   void SetBrakeMode(bool isBrake);
   bool IsAtTarget();
   units::degree_t CalcMotorPosFromHeight(units::meter_t height); 
-  units::meter_t GetElevatorHeight();
+  units::meter_t GetClimberHeight();
   units::ampere_t GetMotorCurrent();
   
   /* Commands */
@@ -54,12 +54,12 @@ class SubClimber : public frc2::SubsystemBase {
   /* software hand measured constants */
   static constexpr units::meter_t _DRUM_RADIUS = 15_mm;
   static constexpr units::meter_t _DRUM_CIRCUMFERENCE = _DRUM_RADIUS * 2 * std::numbers::pi;
-  static constexpr units::meter_t _ELEVATOR_MIN_HEIGHT = 0.32_m;
-  static constexpr units::meter_t _ELEVATOR_MAX_HEIGHT = 0.56_m;
+  static constexpr units::meter_t _CLIMBER_MIN_HEIGHT = 0.32_m;
+  static constexpr units::meter_t _CLIMBER_MAX_HEIGHT = 0.56_m;
 
   /* place holder values */
-  static constexpr units::meter_t _STOW_HEIGHT = _ELEVATOR_MIN_HEIGHT;
-  static constexpr units::meter_t _L1_HEIGHT = _ELEVATOR_MAX_HEIGHT;
+  static constexpr units::meter_t _STOW_HEIGHT = _CLIMBER_MIN_HEIGHT;
+  static constexpr units::meter_t _L1_HEIGHT = _CLIMBER_MAX_HEIGHT;
 
   static constexpr units::degree_t _TOLERANCE = 1_deg;
   static constexpr units::ampere_t _ZEROING_CURRENT = 30_A;
@@ -78,5 +78,5 @@ class SubClimber : public frc2::SubsystemBase {
 
   //sim
   frc::sim::ElevatorSim _climberSim{frc::DCMotor::NeoVortex(1), _GEAR_RATIO, _CARRIAGE_MASS,
-    _DRUM_RADIUS, _ELEVATOR_MIN_HEIGHT, _ELEVATOR_MAX_HEIGHT, true, _ELEVATOR_MIN_HEIGHT};
+    _DRUM_RADIUS, _CLIMBER_MIN_HEIGHT, _CLIMBER_MAX_HEIGHT, true, _CLIMBER_MIN_HEIGHT};
 };
