@@ -1,0 +1,82 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
+#pragma once
+
+#include "utilities/ICSparkFlex.h"
+
+#include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/RobotBase.h>
+#include <frc2/command/Commands.h>
+#include <frc2/command/SubsystemBase.h>
+
+#include <rev/config/SparkFlexConfig.h>
+
+#include <units/angle.h>
+#include <units/current.h>
+
+#include "Constants.h"
+#include <frc/simulation/ElevatorSim.h>
+
+class SubClimber : public frc2::SubsystemBase {
+ public:
+  static SubClimber& GetInstance() {
+    static SubClimber instance;
+    return instance;
+  }
+  SubClimber();
+
+  /* Will be called periodically whenever the CommandScheduler runs. */
+  void Periodic() override;
+  void SimulationPeriodic() override;
+
+  /* Instaneous */
+  void SetBrakeMode(bool isBrake);
+  bool IsAtTarget();
+  units::degree_t CalcMotorPosFromHeight(units::meter_t height); 
+  units::meter_t GetElevatorHeight();
+  units::ampere_t GetMotorCurrent();
+  
+  /* Commands */
+  frc2::CommandPtr ToggleClimb();
+
+  frc2::CommandPtr ManualClimberUp();
+  frc2::CommandPtr ManualClimberDown();
+
+  frc2::CommandPtr RunCurrentZeroingSequence();
+
+
+ private:
+  bool _hasZeroed = false;
+  bool _zeroing = false;
+
+  /* software hand measured constants */
+  static constexpr units::meter_t _DRUM_RADIUS = 15_mm;
+  static constexpr units::meter_t _DRUM_CIRCUMFERENCE = _DRUM_RADIUS * 2 * std::numbers::pi;
+  static constexpr units::meter_t _ELEVATOR_MIN_HEIGHT = 0.32_m;
+  static constexpr units::meter_t _ELEVATOR_MAX_HEIGHT = 0.56_m;
+
+  /* place holder values */
+  static constexpr units::meter_t _STOW_HEIGHT = _ELEVATOR_MIN_HEIGHT;
+  static constexpr units::meter_t _L1_HEIGHT = _ELEVATOR_MAX_HEIGHT;
+
+  static constexpr units::degree_t _TOLERANCE = 1_deg;
+  static constexpr units::ampere_t _ZEROING_CURRENT = 30_A;
+
+  /* place holder values */
+  static constexpr double _P = 0;
+  static constexpr double _I = 0;
+  static constexpr double _D = 0;
+  static constexpr double _GEAR_RATIO = 45;
+
+  //sim constants (these are currently very arbitrary)
+  static constexpr units::kilogram_t _CARRIAGE_MASS = 50_kg;
+
+  ICSparkFlex _climberMotor{canid::CLIMBER_MOTOR};
+  rev::spark::SparkBaseConfig _climberMotorConfig;
+
+  //sim
+  frc::sim::ElevatorSim _climberSim{frc::DCMotor::NeoVortex(1), _GEAR_RATIO, _CARRIAGE_MASS,
+    _DRUM_RADIUS, _ELEVATOR_MIN_HEIGHT, _ELEVATOR_MAX_HEIGHT, true, _ELEVATOR_MIN_HEIGHT};
+};
