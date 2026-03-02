@@ -77,7 +77,7 @@ namespace cmd {
             
             SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{-3_mps, 0_mps, 0_tps}, frc::Translation2d{3.5_m, 5.4_m}) //drive back over bump, reset position at the end of the bump
         ).DeadlineFor(
-            cmd::AimAtSpot([] { return fieldpos::HUB_POSITION.ToTranslation2d(); })
+            cmd::AimAtHub()
         )).AndThen(frc2::cmd::Sequence(
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::TOWER; }, 1.0)
                 .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s))//, 
@@ -154,7 +154,7 @@ namespace cmd {
             
             SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{-3_mps, 0_mps, 0_tps}, frc::Translation2d{3.5_m, 2.64_m}) //drive back over bump, reset position at the end of the bump
         ).DeadlineFor(
-            cmd::AimAtSpot([] { return fieldpos::HUB_POSITION.ToTranslation2d(); })
+            cmd::AimAtHub()
         )).AndThen(frc2::cmd::Sequence(
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::TOWER; }, 1.0)
                 .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s))//, 
@@ -312,7 +312,7 @@ namespace cmd {
 
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::END_REENTRY_TRENCH_RIGHT; }, 1.0, 20_cm, 5_deg)
         ).DeadlineFor(
-            cmd::AimAtSpot([] { return fieldpos::HUB_POSITION.ToTranslation2d(); })
+            cmd::AimAtHub()
         )).AndThen(
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::OUTPOST; }, 1.0)
                 .AlongWith(cmd::ShootOnTheMove())
@@ -333,7 +333,7 @@ namespace cmd {
             
             SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{-3_mps, 0_mps, 0_tps}, frc::Translation2d{3.5_m, 2.64_m}) //drive back over bump, reset position at the end of the bump
         ).DeadlineFor(
-            cmd::AimAtSpot([] { return fieldpos::HUB_POSITION.ToTranslation2d(); })
+            cmd::AimAtHub()
         ).AndThen(
             cmd::ShootOnTheMove().WithDeadline(frc2::cmd::Sequence(
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::OUTPOST; }, 1.0, 20_cm),
@@ -360,7 +360,7 @@ namespace cmd {
             
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::END_REENTRY_TRENCH_RIGHT; }, 1.0, 20_cm, 5_deg)
         ).DeadlineFor(
-            cmd::AimAtSpot([] { return fieldpos::HUB_POSITION.ToTranslation2d(); })
+            cmd::AimAtHub()
         ).AndThen(
             cmd::ShootOnTheMove().WithDeadline(frc2::cmd::Sequence(
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::OUTPOST; }, 1.0, 20_cm),
