@@ -29,8 +29,7 @@ void SubClimber::Periodic() {
   Logger::Log("Climber/Zeroing", _zeroing);
   Logger::Log("Climber/Height", GetElevatorHeight());
 
-  RobotVisualisation::GetInstance()._climberMechExtension->SetLength(
-    (GetElevatorHeight() - _ELEVATOR_MIN_HEIGHT).value());
+  RobotVisualisation::GetInstance()._climberMechElevator->SetLength((GetElevatorHeight()).value());
 }
 
 void SubClimber::SimulationPeriodic() {
@@ -75,18 +74,16 @@ bool SubClimber::IsAtTarget() {
 }
 
 units::degree_t SubClimber::CalcMotorPosFromHeight(units::meter_t height) {
-  return 360_deg * ((height - _ELEVATOR_MIN_HEIGHT) / _DRUM_CIRCUMFERENCE).value();
+  return (height / _DRUM_CIRCUMFERENCE) * 1_tr;
 }
 
 units::meter_t SubClimber::GetElevatorHeight() {
-  units::turn_t motorPos = _climberMotor.GetPosition();
-  return _ELEVATOR_MIN_HEIGHT + (motorPos.value() * _DRUM_CIRCUMFERENCE);
+  return _climberMotor.GetPosition().value() * _DRUM_CIRCUMFERENCE;
 }
 
 units::ampere_t SubClimber::GetMotorCurrent() {
-  return (units::ampere_t)_climberMotor.GetOutputCurrent();
+  return _climberMotor.GetOutputCurrent() * 1_A;
 }
-
 
 frc2::CommandPtr SubClimber::ToggleClimb() {
   units::meter_t stow_height = std::clamp(_STOW_HEIGHT, _ELEVATOR_MIN_HEIGHT, _ELEVATOR_MAX_HEIGHT);
@@ -110,7 +107,7 @@ frc2::CommandPtr SubClimber::RunCurrentZeroingSequence() {
     .AndThen([this] {
       /* Set zero seperately from FinallyDo so that it won't set the climber as
        * zeroed if the command was cancelled. */
-      _climberMotor.SetPosition(0_deg);
+      _climberMotor.SetPosition(CalcMotorPosFromHeight(_ELEVATOR_MIN_HEIGHT));
       _hasZeroed = true;
     })
     .FinallyDo([this] {
