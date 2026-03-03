@@ -147,15 +147,8 @@ units::degree_t SubTurret::GetTurretAngleCRT() {
         (E1_TEETH / BIG_TEETH)
     );
 
-    // solve for turret angle with encoder 1 without floored rotations
-    double turretAngleWithoutFloored = (
-        (e1rotations * 360) *
-        (E1_TEETH / BIG_TEETH)
-    );
-
     Logger::Log("GetTurretAngleCRT/variables/turret angle", turretAngle);
-    Logger::Log("GetTurretAngleCRT/variables/turret angle with not floored e1 rotation", turretAngleWithoutFloored);
-
+    
     // resolve ambiguity (when encoders are the same again)
     double period = (E1_TEETH / BIG_TEETH) * 360.0;
 
