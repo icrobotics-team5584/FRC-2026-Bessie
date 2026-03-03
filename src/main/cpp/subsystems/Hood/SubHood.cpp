@@ -145,11 +145,11 @@ bool SubHood::HoodIsAtTarget() {
 }
 
 frc2::CommandPtr SubHood::MoveHoodUp1Degree() {
-  return SetHoodPositionTarget([this] { return _hoodMotor->GetPositionTarget() + 1_deg; });
+  return SetHoodPositionTarget([this] { return _hoodMotor->GetPositionTarget() + 1_deg; }).WithTimeout(1_ms);
 }
 
 frc2::CommandPtr SubHood::MoveHoodDown1Degree() {
-  return SetHoodPositionTarget([this] { return _hoodMotor->GetPositionTarget() - 1_deg; });
+  return SetHoodPositionTarget([this] { return _hoodMotor->GetPositionTarget() - 1_deg; }).WithTimeout(1_ms);
 }
 
 frc2::CommandPtr SubHood::HoodToEjectAngle() {
