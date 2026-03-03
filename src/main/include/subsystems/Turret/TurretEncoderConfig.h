@@ -13,6 +13,3 @@ namespace TurretCancoderConfig {
     const units::turn_t encoder1ZeroOffset = 0.923828_tr;
     const units::turn_t encoder2ZeroOffset = 0.680908_tr;
 }
-
-    // const units::turn_t encoder1ZeroOffset = 0.294922_tr;
-    // const units::turn_t encoder2ZeroOffset = 0.066162_tr;
