@@ -15,6 +15,7 @@
 namespace cmd {
 
     /* TESTING AUTONS */
+    
     frc2::CommandPtr TESTDriveInASquare() {
         return frc2::cmd::Sequence(
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{0_m, 0_m, 0_deg}; }, 1.0),
@@ -33,7 +34,7 @@ namespace cmd {
         return SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{2.5_m, 0.0_m, 180_deg}; }, 1.0);
     }
     
-    /* NEUTRAL SCORE AND CLIMB AUTONS */
+    /* NEUTRAL ONE PASS AND CLIMB AUTONS */
 
     frc2::CommandPtr NeutralOnePassAndClimb_LeftBump() {
         return frc2::cmd::Sequence(
@@ -189,7 +190,7 @@ namespace cmd {
         ));
     }
 
-    /* HOARDING AUTONS */
+    /* HOARD AUTONS */
 
     frc2::CommandPtr Hoard_LeftBump() {
         return frc2::cmd::Sequence(
@@ -247,7 +248,7 @@ namespace cmd {
         );
     }
 
-    /* NEUTRAL AND OUTPOST SCORE AUTONS */
+    /* NEUTRAL ONE PASS AND OUTPOST AUTONS */
 
     frc2::CommandPtr NeutralOnePassAndOutpost_RightBump() {
         return frc2::cmd::Sequence(
@@ -319,6 +320,8 @@ namespace cmd {
                 .AlongWith(cmd::ShootOnTheMove())
         );
     }
+
+    /* NEUTRAL ONE PASS, OUTPOST AND CLIMB AUTONS */
 
     frc2::CommandPtr GASTAUTON_NeutralOnePassOutpostClimb_RightTrench() {
         return frc2::cmd::Sequence(
