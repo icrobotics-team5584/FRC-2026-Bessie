@@ -85,7 +85,7 @@ frc2::CommandPtr SubHood::SetHoodPositionTarget(std::function<units::degree_t()>
 frc2::CommandPtr SubHood::ZeroHood() {
   return RunOnce([this] { _zeroing = true; })
     .AndThen(ManualHoodDown())
-    .Until([this] { return (HoodCurrentCheck() || frc::RobotBase::IsSimulation()); })
+    .Until([this] { return (HoodCurrentCheck());})
     .AndThen([this] { _hoodMotor->SetPosition(LOWER_LIMIT); })
     .FinallyDo([this] {
       _hoodMotor->StopMotor();
@@ -96,7 +96,7 @@ frc2::CommandPtr SubHood::ZeroHood() {
 
 bool SubHood::HoodCurrentCheck() {
   _hasZeroed = false;
-  if (units::math::abs(GetHoodMotorCurrent()) > zeroingCurrentLimit) {
+  if (units::math::abs(GetHoodMotorCurrent()) > zeroingCurrentLimit || frc::RobotBase::IsSimulation()) {
     _hasZeroed = true;
     return true;
   }
