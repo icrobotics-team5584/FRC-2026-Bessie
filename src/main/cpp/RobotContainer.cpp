@@ -4,15 +4,15 @@
 
 #include "RobotContainer.h"
 
+#include "subsystems/Hood/SubHood.h"
 #include "subsystems/SubDeploy.h"
 #include "subsystems/SubDrivebase.h"
 #include "subsystems/SubFeeder.h"
-#include "subsystems/Hood/SubHood.h"
 #include "subsystems/SubIndexer.h"
 #include "subsystems/SubIntake.h"
 #include "subsystems/SubShooter.h"
-#include "subsystems/Turret/SubTurret.h"
 #include "subsystems/SubVision.h"
+#include "subsystems/Turret/SubTurret.h"
 
 #include "commands/AutonCommands.h"
 #include "commands/DriveCommands.h"
@@ -73,7 +73,6 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureBindings() {
-
   //Triggers
   _driverController.LeftTrigger().WhileTrue(cmd::IntakeSequence());
   _driverController.RightTrigger().WhileTrue(cmd::ShootOnTheMove().AlongWith(cmd::TeleopDrive(_driverController, 1.0)));
@@ -85,9 +84,11 @@ void RobotContainer::ConfigureBindings() {
 
   //Letters
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
-  _driverController.Y().OnTrue(SubDrivebase::GetInstance().ZeroRotation());
   _driverController.B().WhileTrue(SubDrivebase::GetInstance().AlignToAngle(_driverController, 0_deg));
   _driverController.A().WhileTrue(cmd::EjectFuel());
+
+  // Misc 
+  _driverController.Start().OnTrue(SubDrivebase::GetInstance().ZeroRotation());
 
   /* Operator */
   _operatorController.Back().OnTrue(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); }));
@@ -109,12 +110,7 @@ void RobotContainer::ConfigureBindings() {
   _operatorController.POVDown().OnTrue(SubHood::GetInstance().AdjustManualAngleOffset(-1_deg));
 
   // Driver POVs
-  // _driverController.POVUp().OnTrue(SubDrivebase::GetInstance().SyncSensor());
-  _driverController.POVDown().OnTrue(
-     SubShooter::GetInstance().SetShooterTarget([]{return 40_tps;}));
-  _driverController.POVUp().OnTrue(
-    SubIndexer::GetInstance().Index());
-  _driverController.POVRight().OnTrue(cmd::AimAtSpot([] { return frc::Translation2d{0_m, 0_m}; }));
+  _driverController.POVRight().WhileTrue(SubDeploy::GetInstance().DeployAutoZero());
   _driverController.POVLeft().WhileTrue(SubHood::GetInstance().ZeroHood());
 
   //Sticks
