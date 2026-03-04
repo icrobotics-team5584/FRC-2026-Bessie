@@ -32,9 +32,12 @@ constexpr frc::Pose2d NEUTRAL_FIRSTPASS_IN_RIGHT{8.70_m, 1.07_m, 90_deg};
 constexpr frc::Pose2d NEUTRAL_FIRSTPASS_END_RIGHT{8.70_m, 3.07_m, 90_deg};
 constexpr frc::Pose2d NEUTRAL_FIRSTPASS_TRANS_RIGHT{7.80_m, 1.07_m, 150_deg};
 
-constexpr frc::Pose2d NEUTRAL_SECONDPASS_IN_LEFT{5.75_m, 7.30_m, 270_deg};
-constexpr frc::Pose2d NEUTRAL_SECONDPASS_END_LEFT{5.75_m, 4.00_m, 270_deg};
-constexpr frc::Pose2d NEUTRAL_SECONDPASS_TRANS_LEFT{}
+constexpr frc::Pose2d NEUTRAL_SECONDPASS_IN_LEFT{5.80_m, 7.30_m, 270_deg};
+constexpr frc::Pose2d NEUTRAL_SECONDPASS_END_LEFT{5.80_m, 3.50_m, 270_deg};
+constexpr frc::Pose2d NEUTRAL_SECONDPASS_TRANS_LEFT{6.40_m, 4.70_m, 180_deg};
+constexpr frc::Pose2d NEUTRAL_SECONDPASS_IN_RIGHT{5.80_m, 0.77_m, 90_deg};
+constexpr frc::Pose2d NEUTRAL_SECONDPASS_END_RIGHT{5.80_m, 4.57_m, 90_deg};
+constexpr frc::Pose2d NEUTRAL_SECONDPASS_TRANS_RIGHT{6.40_m, 3.37_m, 180_deg};
 
 constexpr frc::Pose2d START_BUMP_LEFT{3.58_m, 5.80_m, 0_deg};
 constexpr frc::Pose2d START_TRENCH_LEFT{3.58_m, 7.50_m, 0_deg};
@@ -42,9 +45,9 @@ constexpr frc::Pose2d START_BUMP_RIGHT{3.58_m, 2.27_m, 0_deg};
 constexpr frc::Pose2d START_TRENCH_RIGHT{3.58_m, 0.57_m, 0_deg};
 
 constexpr frc::Pose2d START_REENTRY_BUMP_LEFT{5.85_m, 5.40_m, 180_deg};
-constexpr frc::Pose2d START_REENTRY_TRENCH_LEFT{5.65_m, 7.50_m, 180_deg};
+constexpr frc::Pose2d START_REENTRY_TRENCH_LEFT{5.70_m, 7.50_m, 180_deg};
 constexpr frc::Pose2d START_REENTRY_BUMP_RIGHT{5.85_m, 2.64_m, 180_deg};
-constexpr frc::Pose2d START_REENTRY_TRENCH_RIGHT{5.65_m, 0.54_m, 180_deg};
+constexpr frc::Pose2d START_REENTRY_TRENCH_RIGHT{5.70_m, 0.54_m, 180_deg};
 
 constexpr frc::Pose2d END_REENTRY_TRENCH_LEFT{3.50_m, 7.25_m, 180_deg};
 constexpr frc::Pose2d END_REENTRY_TRENCH_RIGHT{3.50_m, 0.79_m, 180_deg};

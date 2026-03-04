@@ -25,7 +25,7 @@ namespace cmd {
     frc2::CommandPtr GASTAUTON_NeutralOnePassOutpostClimb_RightTrench();
     frc2::CommandPtr GASTAUTON_NeutralOnePassOutpostClimb_RightTrench_NoBump();
 
-    frc2::CommandPtr NeutralTwoPassToOutpost_LeftTrench();
+    frc2::CommandPtr NeutralTwoPass_LeftTrench();
     frc2::CommandPtr NeutralTwoPassToOutpost_RightTrench();
 
     frc2::CommandPtr ShootAndStay();

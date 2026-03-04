@@ -57,7 +57,7 @@ namespace cmd {
             cmd::AimAtHub()
         )).AndThen(frc2::cmd::Sequence(
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::TOWER; }, 1.0)
-                .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s)),
+                .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s))
             
             // SubClimber::GetInstance().ToggleClimb()
         ));
@@ -82,7 +82,7 @@ namespace cmd {
             cmd::AimAtHub()
         )).AndThen(frc2::cmd::Sequence(
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::TOWER; }, 1.0)
-                .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s)),
+                .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s))
             
             // SubClimber::GetInstance().ToggleClimb()
         ));
@@ -107,7 +107,7 @@ namespace cmd {
             cmd::AimAtHub()
         )).AndThen(frc2::cmd::Sequence(
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::TOWER; }, 1.0)
-                .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s)),
+                .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s))
                         
             // SubClimber::GetInstance().ToggleClimb()
         ));
@@ -134,7 +134,7 @@ namespace cmd {
             cmd::AimAtHub()
         )).AndThen(frc2::cmd::Sequence(
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::TOWER; }, 1.0)
-                .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s)),
+                .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s))
             
             // SubClimber::GetInstance().ToggleClimb()
         ));
@@ -159,7 +159,7 @@ namespace cmd {
             cmd::AimAtHub()
         )).AndThen(frc2::cmd::Sequence(
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::TOWER; }, 1.0)
-                .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s)),
+                .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s))
             
             // SubClimber::GetInstance().ToggleClimb()
         ));
@@ -184,7 +184,7 @@ namespace cmd {
             cmd::AimAtHub()
         )).AndThen(frc2::cmd::Sequence(
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::TOWER; }, 1.0)
-                .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s)), 
+                .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s)) 
             
             // SubClimber::GetInstance().ToggleClimb()
         ));
@@ -345,9 +345,9 @@ namespace cmd {
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{1.7_m, 2.8_m, 0_deg}; }, 1.0, 40_cm, 5_deg), //so we don't crash into the tower
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::TOWER; }, 1.0)
             ))
-        ).AndThen(
+        );//.AndThen(
             // SubClimber::GetInstance().ToggleClimb()
-        );
+        //);
     }
 
     frc2::CommandPtr GASTAUTON_NeutralOnePassOutpostClimb_RightTrench_NoBump() {
@@ -372,13 +372,71 @@ namespace cmd {
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{1.7_m, 2.8_m, 0_deg}; }, 1.0, 40_cm, 5_deg), //so we don't crash into the tower
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::TOWER; }, 1.0)
             ))
-        ).AndThen(
+        );//.AndThen(
             // SubClimber::GetInstance().ToggleClimb()
+        //);
+    }
+
+    frc2::CommandPtr NeutralTwoPass_LeftTrench() {
+        return frc2::cmd::Sequence(
+            // STARTING POSITION: START_TRENCH_LEFT (X 3.58m, Y 7.50m, heading 0 degrees)
+            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_FIRSTPASS_IN_LEFT; }, 1.0, 30_cm, 3_deg)
+                .AlongWith(SubHood::GetInstance().ZeroHood()),
+ 
+            SubIntake::GetInstance().IntakeOn().AlongWith(
+                cmd::AimAtHub()
+            ).WithDeadline(frc2::cmd::Sequence(
+                SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_FIRSTPASS_END_LEFT; }, 0.5, 20_cm, 3_deg),
+                SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_FIRSTPASS_TRANS_LEFT; }, 1.0, 20_cm, 5_deg),
+                SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::START_TRENCH_LEFT; }, 1.0, 20_cm, 5_deg)
+            )),
+
+            cmd::ShootOnTheMove().WithTimeout(5_s),
+
+            SubIntake::GetInstance().IntakeOn().AlongWith(
+                cmd::AimAtHub()
+            ).WithDeadline(frc2::cmd::Sequence(
+                SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_SECONDPASS_IN_LEFT; }, 1.0, 20_cm, 3_deg),
+                SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_SECONDPASS_END_LEFT; }, 0.5, 20_cm, 3_deg),
+                SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_SECONDPASS_TRANS_LEFT; }, 1.0, 20_cm, 5_deg),
+                SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::START_REENTRY_TRENCH_LEFT; }, 1.0, 20_cm, 5_deg),
+                SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::END_REENTRY_TRENCH_LEFT; }, 1.0, 20_cm, 5_deg)
+            )),
+
+            cmd::ShootOnTheMove()
         );
     }
 
-    frc2::CommandPtr NeutralTwoPassToOutpost_LeftTrench() {
+    frc2::CommandPtr NeutralTwoPassToOutpost_RightTrench() {
+        return frc2::cmd::Sequence(
+            // STARTING POSITION: START_TRENCH_RIGHT (X 3.58m, Y 0.57m, heading 0 degrees)
+            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_FIRSTPASS_IN_RIGHT; }, 1.0, 30_cm, 3_deg)
+                .AlongWith(SubHood::GetInstance().ZeroHood()),
+ 
+            SubIntake::GetInstance().IntakeOn().AlongWith(
+                cmd::AimAtHub()
+            ).WithDeadline(frc2::cmd::Sequence(
+                SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_FIRSTPASS_END_RIGHT; }, 0.5, 20_cm, 3_deg),
+                SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_FIRSTPASS_TRANS_RIGHT; }, 1.0, 20_cm, 5_deg),
+                SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::START_TRENCH_RIGHT; }, 1.0, 20_cm, 5_deg)
+            )),
 
+            cmd::ShootOnTheMove().WithTimeout(5_s),
+
+            SubIntake::GetInstance().IntakeOn().AlongWith(
+                cmd::AimAtHub()
+            ).WithDeadline(frc2::cmd::Sequence(
+                SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_SECONDPASS_IN_RIGHT; }, 1.0, 20_cm, 3_deg),
+                SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_SECONDPASS_END_RIGHT; }, 0.5, 20_cm, 3_deg),
+                SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_SECONDPASS_TRANS_RIGHT; }, 1.0, 20_cm, 5_deg),
+                SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::START_REENTRY_TRENCH_RIGHT; }, 1.0, 20_cm, 5_deg),
+                SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::END_REENTRY_TRENCH_RIGHT; }, 1.0, 20_cm, 5_deg)
+            )),
+
+            cmd::ShootOnTheMove().AlongWith(
+                SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::OUTPOST; }, 1.0, 10_cm)
+            )
+        );
     }
     
     frc2::CommandPtr ShootAndStay() {
