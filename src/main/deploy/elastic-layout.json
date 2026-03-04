@@ -160,23 +160,6 @@
             }
           },
           {
-            "title": "IntakeZeroed",
-            "x": 128.0,
-            "y": 160.0,
-            "width": 128.0,
-            "height": 144.0,
-            "type": "Boolean Box",
-            "properties": {
-              "topic": "/SmartDashboard/Hood/haszeroed",
-              "period": 0.06,
-              "data_type": "boolean",
-              "true_color": 4283215696,
-              "false_color": 4294198070,
-              "true_icon": "None",
-              "false_icon": "None"
-            }
-          },
-          {
             "title": "LHasTarg",
             "x": 0.0,
             "y": 432.0,
@@ -237,6 +220,40 @@
             "properties": {
               "topic": "/SmartDashboard/Alerts",
               "period": 0.06
+            }
+          },
+          {
+            "title": "ClimberZeroed",
+            "x": 0.0,
+            "y": 304.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/SmartDashboard/Climber/Has Zeroed",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "DeployZeroed",
+            "x": 128.0,
+            "y": 160.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/SmartDashboard/Deploy/HasZeroed",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
             }
           }
         ]
