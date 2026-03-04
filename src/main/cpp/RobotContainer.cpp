@@ -73,62 +73,56 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureBindings() {
-  _driverController.POVUp().OnTrue(SubHood::GetInstance().MoveHoodUp1Degree());
-  _driverController.POVDown().OnTrue(SubHood::GetInstance().MoveHoodDown1Degree());
-  _driverController.POVLeft().OnTrue(SubHood::GetInstance().ZeroHood());
 
-  _driverController.RightTrigger().WhileTrue(SubIndexer::GetInstance().Index().AlongWith(SubFeeder::GetInstance().Feed()));
+  //Triggers
+  _driverController.LeftTrigger().WhileTrue(cmd::IntakeSequence());
+  _driverController.RightTrigger().WhileTrue(cmd::ShootOnTheMove().AlongWith(cmd::TeleopDrive(_driverController, 1.0)));
+  _driverController.RightTrigger().OnFalse(SubFeeder::GetInstance().FeederOff());
 
-  // //Triggers
-  // _driverController.LeftTrigger().WhileTrue(cmd::IntakeSequence());
-  // _driverController.RightTrigger().WhileTrue(cmd::ShootOnTheMove().AlongWith(cmd::TeleopDrive(_driverController, 1.0)));
-  // _driverController.RightTrigger().OnFalse(SubFeeder::GetInstance().FeederOff());
+  //Bumpers
+  _driverController.LeftBumper().ToggleOnTrue(SubDeploy::GetInstance().ToggleDeploy());
+  _driverController.RightBumper().WhileTrue(SubDrivebase::GetInstance().LockWheelsInXShape());
 
-  // //Bumpers
-  // _driverController.LeftBumper().ToggleOnTrue(SubDeploy::GetInstance().ToggleDeploy());
-  // _driverController.RightBumper().WhileTrue(SubDrivebase::GetInstance().LockWheelsInXShape());
-
-  // //Letters
-  // _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
+  //Letters
+  _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
   _driverController.Y().OnTrue(SubDrivebase::GetInstance().ZeroRotation());
-  _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
-  // _driverController.B().WhileTrue(SubDrivebase::GetInstance().AlignToAngle(_driverController, 0_deg));
-  // _driverController.A().WhileTrue(cmd::EjectFuel());
+  _driverController.B().WhileTrue(SubDrivebase::GetInstance().AlignToAngle(_driverController, 0_deg));
+  _driverController.A().WhileTrue(cmd::EjectFuel());
 
-  // /* Operator */
-  // _operatorController.Back().OnTrue(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); }));
-  // _operatorController.X().OnTrue(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); }));
-  // _operatorController.X().OnFalse(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(false); }));
-  // _operatorController.Y().OnTrue(cmd::DisableAllOverrides());
-  // _operatorController.RightTrigger().WhileTrue(cmd::BackupShoot());
-  // _operatorController.Start().OnTrue(cmd::ForceShoot());
+  /* Operator */
+  _operatorController.Back().OnTrue(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); }));
+  _operatorController.X().OnTrue(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); }));
+  _operatorController.X().OnFalse(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(false); }));
+  _operatorController.Y().OnTrue(cmd::DisableAllOverrides());
+  _operatorController.RightTrigger().WhileTrue(cmd::BackupShoot());
+  _operatorController.Start().OnTrue(cmd::ForceShoot());
 
-  // _operatorController.LeftBumper().OnTrue(frc2::cmd::RunOnce([]{return ShotPlanner::SetOverride(ShotPlanner::Override::SCORE);})
-  // .AlongWith(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); })));
-  // _operatorController.RightBumper().OnTrue(frc2::cmd::RunOnce([]{return ShotPlanner::SetOverride(ShotPlanner::Override::PASS);})
-  // .AlongWith(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); })));
+  _operatorController.LeftBumper().OnTrue(frc2::cmd::RunOnce([]{return ShotPlanner::SetOverride(ShotPlanner::Override::SCORE);})
+  .AlongWith(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); })));
+  _operatorController.RightBumper().OnTrue(frc2::cmd::RunOnce([]{return ShotPlanner::SetOverride(ShotPlanner::Override::PASS);})
+  .AlongWith(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); })));
 
-  // // Operator POVS
-  // _operatorController.POVRight().OnTrue(SubShooter::GetInstance().AdjustManualSpeedOffset(1_tps));
-  // _operatorController.POVLeft().OnTrue(SubShooter::GetInstance().AdjustManualSpeedOffset(-1_tps));
-  // _operatorController.POVUp().OnTrue(SubHood::GetInstance().AdjustManualAngleOffset(1_deg));
-  // _operatorController.POVDown().OnTrue(SubHood::GetInstance().AdjustManualAngleOffset(-1_deg));
+  // Operator POVS
+  _operatorController.POVRight().OnTrue(SubShooter::GetInstance().AdjustManualSpeedOffset(1_tps));
+  _operatorController.POVLeft().OnTrue(SubShooter::GetInstance().AdjustManualSpeedOffset(-1_tps));
+  _operatorController.POVUp().OnTrue(SubHood::GetInstance().AdjustManualAngleOffset(1_deg));
+  _operatorController.POVDown().OnTrue(SubHood::GetInstance().AdjustManualAngleOffset(-1_deg));
 
-  // // Driver POVs
-  // // _driverController.POVUp().OnTrue(SubDrivebase::GetInstance().SyncSensor());
-  // _driverController.POVDown().OnTrue(
-  //    SubShooter::GetInstance().SetShooterTarget([]{return 40_tps;}));
-  // _driverController.POVUp().OnTrue(
-  //   SubIndexer::GetInstance().Index());
-  // _driverController.POVRight().OnTrue(cmd::AimAtSpot([] { return frc::Translation2d{0_m, 0_m}; }));
-  // _driverController.POVLeft().WhileTrue(SubHood::GetInstance().ZeroHood());
+  // Driver POVs
+  // _driverController.POVUp().OnTrue(SubDrivebase::GetInstance().SyncSensor());
+  _driverController.POVDown().OnTrue(
+     SubShooter::GetInstance().SetShooterTarget([]{return 40_tps;}));
+  _driverController.POVUp().OnTrue(
+    SubIndexer::GetInstance().Index());
+  _driverController.POVRight().OnTrue(cmd::AimAtSpot([] { return frc::Translation2d{0_m, 0_m}; }));
+  _driverController.POVLeft().WhileTrue(SubHood::GetInstance().ZeroHood());
 
-  // //Sticks
+  //Sticks
 
-  // //Other
+  //Other
 
-  // frc2::Trigger([]{return ShiftHandler::GetInstance().GetTimeLeft() < 3_s;}).OnTrue(Rumble(1, 0.5_s));
-  // SubDrivebase::GetInstance().CheckCoastButton().ToggleOnTrue(cmd::ToggleBrakeCoast());
+  frc2::Trigger([]{return ShiftHandler::GetInstance().GetTimeLeft() < 3_s;}).OnTrue(Rumble(1, 0.5_s));
+  SubDrivebase::GetInstance().CheckCoastButton().ToggleOnTrue(cmd::ToggleBrakeCoast());
 }
 
 std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {
