@@ -73,52 +73,62 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureBindings() {
-  //Triggers
-  _driverController.LeftTrigger().WhileTrue(cmd::IntakeSequence());
-  _driverController.RightTrigger().WhileTrue(cmd::ShootOnTheMove().AlongWith(cmd::TeleopDrive(_driverController, 1.0)));
-  _driverController.RightTrigger().OnFalse(SubFeeder::GetInstance().FeederOff());
+  _driverController.POVUp().OnTrue(SubHood::GetInstance().MoveHoodUp1Degree());
+  _driverController.POVDown().OnTrue(SubHood::GetInstance().MoveHoodDown1Degree());
+  _driverController.POVLeft().OnTrue(SubHood::GetInstance().ZeroHood());
 
-  //Bumpers
-  _driverController.LeftBumper().ToggleOnTrue(SubDeploy::GetInstance().ToggleDeploy());
-  _driverController.RightBumper().WhileTrue(SubDrivebase::GetInstance().LockWheelsInXShape());
+  _driverController.RightTrigger().WhileTrue(SubIndexer::GetInstance().Index().AlongWith(SubFeeder::GetInstance().Feed()));
 
-  //Letters
-  _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
-  _driverController.B().WhileTrue(SubDrivebase::GetInstance().AlignToAngle(_driverController, 0_deg));
-  _driverController.A().WhileTrue(cmd::EjectFuel());
+  _driverController.Y().OnTrue(SubDrivebase::GetInstance().ZeroRotation());
+  _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
 
-  // Misc 
-  _driverController.Start().OnTrue(SubDrivebase::GetInstance().ZeroRotation());
 
-  /* Operator */
-  _operatorController.Back().OnTrue(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); }));
-  _operatorController.X().OnTrue(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); }));
-  _operatorController.X().OnFalse(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(false); }));
-  _operatorController.Y().OnTrue(cmd::DisableAllOverrides());
-  _operatorController.RightTrigger().WhileTrue(cmd::BackupShoot());
-  _operatorController.Start().OnTrue(cmd::ForceShoot());
+  // //Triggers
+  // _driverController.LeftTrigger().WhileTrue(cmd::IntakeSequence());
+  // _driverController.RightTrigger().WhileTrue(cmd::ShootOnTheMove().AlongWith(cmd::TeleopDrive(_driverController, 1.0)));
+  // _driverController.RightTrigger().OnFalse(SubFeeder::GetInstance().FeederOff());
 
-  _operatorController.LeftBumper().OnTrue(frc2::cmd::RunOnce([]{return ShotPlanner::SetOverride(ShotPlanner::Override::SCORE);})
-  .AlongWith(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); })));
-  _operatorController.RightBumper().OnTrue(frc2::cmd::RunOnce([]{return ShotPlanner::SetOverride(ShotPlanner::Override::PASS);})
-  .AlongWith(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); })));
+  // //Bumpers
+  // _driverController.LeftBumper().ToggleOnTrue(SubDeploy::GetInstance().ToggleDeploy());
+  // _driverController.RightBumper().WhileTrue(SubDrivebase::GetInstance().LockWheelsInXShape());
 
-  // Operator POVS
-  _operatorController.POVRight().OnTrue(SubShooter::GetInstance().AdjustManualSpeedOffset(1_tps));
-  _operatorController.POVLeft().OnTrue(SubShooter::GetInstance().AdjustManualSpeedOffset(-1_tps));
-  _operatorController.POVUp().OnTrue(SubHood::GetInstance().AdjustManualAngleOffset(1_deg));
-  _operatorController.POVDown().OnTrue(SubHood::GetInstance().AdjustManualAngleOffset(-1_deg));
+  // //Letters
+  // _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
+  // _driverController.B().WhileTrue(SubDrivebase::GetInstance().AlignToAngle(_driverController, 0_deg));
+  // _driverController.A().WhileTrue(cmd::EjectFuel());
 
-  // Driver POVs
-  _driverController.POVRight().WhileTrue(SubDeploy::GetInstance().DeployAutoZero());
-  _driverController.POVLeft().WhileTrue(SubHood::GetInstance().ZeroHood());
+  // // Misc 
+  // _driverController.Start().OnTrue(SubDrivebase::GetInstance().ZeroRotation());
 
-  //Sticks
+  // /* Operator */
+  // _operatorController.Back().OnTrue(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); }));
+  // _operatorController.X().OnTrue(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); }));
+  // _operatorController.X().OnFalse(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(false); }));
+  // _operatorController.Y().OnTrue(cmd::DisableAllOverrides());
+  // _operatorController.RightTrigger().WhileTrue(cmd::BackupShoot());
+  // _operatorController.Start().OnTrue(cmd::ForceShoot());
 
-  //Other
+  // _operatorController.LeftBumper().OnTrue(frc2::cmd::RunOnce([]{return ShotPlanner::SetOverride(ShotPlanner::Override::SCORE);})
+  // .AlongWith(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); })));
+  // _operatorController.RightBumper().OnTrue(frc2::cmd::RunOnce([]{return ShotPlanner::SetOverride(ShotPlanner::Override::PASS);})
+  // .AlongWith(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); })));
 
-  frc2::Trigger([]{return ShiftHandler::GetInstance().GetTimeLeft() < 3_s;}).OnTrue(Rumble(1, 0.5_s));
-  SubDrivebase::GetInstance().CheckCoastButton().ToggleOnTrue(cmd::ToggleBrakeCoast());
+  // // Operator POVS
+  // _operatorController.POVRight().OnTrue(SubShooter::GetInstance().AdjustManualSpeedOffset(1_tps));
+  // _operatorController.POVLeft().OnTrue(SubShooter::GetInstance().AdjustManualSpeedOffset(-1_tps));
+  // _operatorController.POVUp().OnTrue(SubHood::GetInstance().AdjustManualAngleOffset(1_deg));
+  // _operatorController.POVDown().OnTrue(SubHood::GetInstance().AdjustManualAngleOffset(-1_deg));
+
+  // // Driver POVs
+  // _driverController.POVRight().WhileTrue(SubDeploy::GetInstance().DeployAutoZero());
+  // _driverController.POVLeft().WhileTrue(SubHood::GetInstance().ZeroHood());
+
+  // //Sticks
+
+  // //Other
+
+  // frc2::Trigger([]{return ShiftHandler::GetInstance().GetTimeLeft() < 3_s;}).OnTrue(Rumble(1, 0.5_s));
+  // SubDrivebase::GetInstance().CheckCoastButton().ToggleOnTrue(cmd::ToggleBrakeCoast());
 }
 
 std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {

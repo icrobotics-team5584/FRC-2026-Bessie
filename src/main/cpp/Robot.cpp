@@ -49,6 +49,7 @@ void Robot::RobotPeriodic() {
 
   ShiftHandler::GetInstance().SetTOFOffset(
     SubShooter::GetInstance().GetTimeOfFLightWithDistance(cmd::CalcShootOnTheMoveDistance()));
+  cmd::CalcFutureTurretPose(); //remove after shooter tuning
 }
 void Robot::DisabledInit() {}
 
