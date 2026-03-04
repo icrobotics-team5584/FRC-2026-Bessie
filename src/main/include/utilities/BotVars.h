@@ -17,7 +17,7 @@ Robot GetRobot();
 
 template <typename T>
 T Choose(T compBotValue, T practiceBotValue) {
-  return GetRobot() == COMP ? compBotValue : practiceBotValue;
+  return compBotValue;//GetRobot() == COMP ? compBotValue : practiceBotValue;
 }
 
 }  // namespace BotVars

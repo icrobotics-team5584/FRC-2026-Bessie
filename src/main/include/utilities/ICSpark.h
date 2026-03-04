@@ -431,7 +431,7 @@ class ICSpark : public wpi::Sendable {
   void TuneFeedforwardCosineRatio(double ratio);
 
   rev::spark::SparkBase* _spark;
-  rev::spark::SparkBaseConfigAccessor& _configAccessor;
+  rev::spark::SparkBaseConfigAccessor _configAccessor;
   struct ConfigCache {
     double feedbackP = 0.0;
     double feedbackI = 0.0;
