@@ -43,36 +43,40 @@ RobotContainer::RobotContainer() {
   _autoManager.AddAuton("Forward250cmWhileTurning",
     AutonHelper::MakeCommandPtrAuto(cmd::TESTForward250cmWhileTurning()));
 
-  _autoManager.AddAuton("NeutralScoreAndClimb_LeftBump",
-    AutonHelper::MakeCommandPtrAuto(cmd::NeutralScoreAndClimb_LeftBump()));
-  _autoManager.AddAuton("NeutralScoreAndClimb_LeftTrench",
-    AutonHelper::MakeCommandPtrAuto(cmd::NeutralScoreAndClimb_LeftTrench()));
-  _autoManager.AddAuton("NeutralScoreAndClimb_LeftTrench_NoBump",
-    AutonHelper::MakeCommandPtrAuto(cmd::NeutralScoreAndClimb_LeftTrench_NoBump()));
+  _autoManager.AddAuton("NeutralOnePassAndClimb_LeftBump",
+    AutonHelper::MakeCommandPtrAuto(cmd::NeutralOnePassAndClimb_LeftBump()));
+  _autoManager.AddAuton("NeutralOnePassAndClimb_LeftTrench",
+    AutonHelper::MakeCommandPtrAuto(cmd::NeutralOnePassAndClimb_LeftTrench()));
+  _autoManager.AddAuton("NeutralOnePassAndClimb_LeftTrench_NoBump",
+    AutonHelper::MakeCommandPtrAuto(cmd::NeutralOnePassAndClimb_LeftTrench_NoBump()));
 
-  _autoManager.AddAuton("NeutralScoreAndClimb_RightBump",
-    AutonHelper::MakeCommandPtrAuto(cmd::NeutralScoreAndClimb_RightBump()));
-  _autoManager.AddAuton("NeutralScoreAndClimb_RightTrench",
-    AutonHelper::MakeCommandPtrAuto(cmd::NeutralScoreAndClimb_RightTrench()));
-  _autoManager.AddAuton("NeutralScoreAndClimb_RightTrench_NoBump",
-    AutonHelper::MakeCommandPtrAuto(cmd::NeutralScoreAndClimb_RightTrench_NoBump()));
+  _autoManager.AddAuton("NeutralOnePassAndClimb_RightBump",
+    AutonHelper::MakeCommandPtrAuto(cmd::NeutralOnePassAndClimb_RightBump()));
+  _autoManager.AddAuton("NeutralOnePassAndClimb_RightTrench",
+    AutonHelper::MakeCommandPtrAuto(cmd::NeutralOnePassAndClimb_RightTrench()));
+  _autoManager.AddAuton("NeutralOnePassAndClimb_RightTrench_NoBump",
+    AutonHelper::MakeCommandPtrAuto(cmd::NeutralOnePassAndClimb_RightTrench_NoBump()));
 
-  _autoManager.AddAuton("Hoard_LeftBump", AutonHelper::MakeCommandPtrAuto(cmd::Hoard_LeftBump()));
-  _autoManager.AddAuton("Hoard_LeftTrench", AutonHelper::MakeCommandPtrAuto(cmd::Hoard_LeftTrench()));
-  _autoManager.AddAuton("Hoard_RightBump", AutonHelper::MakeCommandPtrAuto(cmd::Hoard_RightBump()));
-  _autoManager.AddAuton("Hoard_RightTrench", AutonHelper::MakeCommandPtrAuto(cmd::Hoard_RightTrench()));
+  _autoManager.AddAuton("Hoard_LeftBump",
+    AutonHelper::MakeCommandPtrAuto(cmd::Hoard_LeftBump()));
+  _autoManager.AddAuton("Hoard_LeftTrench",
+    AutonHelper::MakeCommandPtrAuto(cmd::Hoard_LeftTrench()));
+  _autoManager.AddAuton("Hoard_RightBump",
+    AutonHelper::MakeCommandPtrAuto(cmd::Hoard_RightBump()));
+  _autoManager.AddAuton("Hoard_RightTrench",
+    AutonHelper::MakeCommandPtrAuto(cmd::Hoard_RightTrench()));
 
-  _autoManager.AddAuton("NeutralAndOutpostScore_RightBump",
-    AutonHelper::MakeCommandPtrAuto(cmd::NeutralAndOutpostScore_RightBump()));
-  _autoManager.AddAuton("NeutralAndOutpostScore_RightTrench",
-    AutonHelper::MakeCommandPtrAuto(cmd::NeutralAndOutpostScore_RightTrench()));
-  _autoManager.AddAuton("NeutralAndOutpostScore_RightTrench_NoBump",
-    AutonHelper::MakeCommandPtrAuto(cmd::NeutralAndOutpostScore_RightTrench_NoBump()));
+  _autoManager.AddAuton("NeutralOnePassAndOutpost_RightBump",
+    AutonHelper::MakeCommandPtrAuto(cmd::NeutralOnePassAndOutpost_RightBump()));
+  _autoManager.AddAuton("NeutralOnePassAndOutpost_RightTrench",
+    AutonHelper::MakeCommandPtrAuto(cmd::NeutralOnePassAndOutpost_RightTrench()));
+  _autoManager.AddAuton("NeutralOnePassAndOutpost_RightTrench_NoBump",
+    AutonHelper::MakeCommandPtrAuto(cmd::NeutralOnePassAndOutpost_RightTrench_NoBump()));
 
-  _autoManager.AddAuton("NeutralOutpostClimb_RightTrench", 
-    AutonHelper::MakeCommandPtrAuto(cmd::GASTAUTON_NeutralOutpostClimb_RightTrench()));
-  _autoManager.AddAuton("NeutralOutpostClimb_RightTrench_NoBump",
-    AutonHelper::MakeCommandPtrAuto(cmd::GASTAUTON_NeutralOutpostClimb_RightTrench_NoBump()));
+  _autoManager.AddAuton("NeutralOnePassOutpostClimb_RightTrench", 
+    AutonHelper::MakeCommandPtrAuto(cmd::GASTAUTON_NeutralOnePassOutpostClimb_RightTrench()));
+  _autoManager.AddAuton("NeutralOnePassOutpostClimb_RightTrench_NoBump",
+    AutonHelper::MakeCommandPtrAuto(cmd::GASTAUTON_NeutralOnePassOutpostClimb_RightTrench_NoBump()));
 
   frc::SmartDashboard::PutData("CHOSEN AUTON", &_autoManager.GetAutonChooser());
 

@@ -5,25 +5,25 @@ namespace cmd {
     frc2::CommandPtr TESTForward250cm();
     frc2::CommandPtr TESTForward250cmWhileTurning();
 
-    frc2::CommandPtr NeutralScoreAndClimb_LeftBump();
-    frc2::CommandPtr NeutralScoreAndClimb_LeftTrench();
-    frc2::CommandPtr NeutralScoreAndClimb_LeftTrench_NoBump();
+    frc2::CommandPtr NeutralOnePassAndClimb_LeftBump();
+    frc2::CommandPtr NeutralOnePassAndClimb_LeftTrench();
+    frc2::CommandPtr NeutralOnePassAndClimb_LeftTrench_NoBump();
 
-    frc2::CommandPtr NeutralScoreAndClimb_RightBump();
-    frc2::CommandPtr NeutralScoreAndClimb_RightTrench();
-    frc2::CommandPtr NeutralScoreAndClimb_RightTrench_NoBump();
+    frc2::CommandPtr NeutralOnePassAndClimb_RightBump();
+    frc2::CommandPtr NeutralOnePassAndClimb_RightTrench();
+    frc2::CommandPtr NeutralOnePassAndClimb_RightTrench_NoBump();
 
     frc2::CommandPtr Hoard_LeftBump();
     frc2::CommandPtr Hoard_LeftTrench();
     frc2::CommandPtr Hoard_RightBump();
     frc2::CommandPtr Hoard_RightTrench();
 
-    frc2::CommandPtr NeutralAndOutpostScore_RightBump();
-    frc2::CommandPtr NeutralAndOutpostScore_RightTrench();
-    frc2::CommandPtr NeutralAndOutpostScore_RightTrench_NoBump();
+    frc2::CommandPtr NeutralOnePassAndOutpost_RightBump();
+    frc2::CommandPtr NeutralOnePassAndOutpost_RightTrench();
+    frc2::CommandPtr NeutralOnePassAndOutpost_RightTrench_NoBump();
     
-    frc2::CommandPtr GASTAUTON_NeutralOutpostClimb_RightTrench();
-    frc2::CommandPtr GASTAUTON_NeutralOutpostClimb_RightTrench_NoBump();
+    frc2::CommandPtr GASTAUTON_NeutralOnePassOutpostClimb_RightTrench();
+    frc2::CommandPtr GASTAUTON_NeutralOnePassOutpostClimb_RightTrench_NoBump();
 
     frc2::CommandPtr ShootAndStay();
 }

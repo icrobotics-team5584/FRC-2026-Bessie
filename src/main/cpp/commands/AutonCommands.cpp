@@ -35,7 +35,7 @@ namespace cmd {
     
     /* NEUTRAL SCORE AND CLIMB AUTONS */
 
-    frc2::CommandPtr NeutralScoreAndClimb_LeftBump() {
+    frc2::CommandPtr NeutralOnePassAndClimb_LeftBump() {
         return frc2::cmd::Sequence(
             // STARTING POSITION: START_BUMP_LEFT (X 3.58m, Y 5.80m, heading 0 degrees)
             SubHood::GetInstance().ZeroHood(),
@@ -62,7 +62,7 @@ namespace cmd {
         ));
     }
 
-    frc2::CommandPtr NeutralScoreAndClimb_LeftTrench() {
+    frc2::CommandPtr NeutralOnePassAndClimb_LeftTrench() {
         return frc2::cmd::Sequence(
             // STARTING POSITION: START_TRENCH_LEFT (X 3.58m, Y 7.50m, heading 0 degrees)
             SubHood::GetInstance().ZeroHood(),
@@ -87,7 +87,7 @@ namespace cmd {
         ));
     }
 
-    frc2::CommandPtr NeutralScoreAndClimb_LeftTrench_NoBump() {
+    frc2::CommandPtr NeutralOnePassAndClimb_LeftTrench_NoBump() {
         return frc2::cmd::Sequence(
             // STARTING POSITION: START_TRENCH_LEFT (X 3.58m, Y 7.50m, heading 0 degrees)
             SubHood::GetInstance().ZeroHood(),
@@ -112,7 +112,7 @@ namespace cmd {
         ));
     }
 
-    frc2::CommandPtr NeutralScoreAndClimb_RightBump() {
+    frc2::CommandPtr NeutralOnePassAndClimb_RightBump() {
         return frc2::cmd::Sequence(
             // STARTING POSITION: START_BUMP_RIGHT (X 3.58m, Y 2.27m, heading 0 degrees)
             SubHood::GetInstance().ZeroHood(),
@@ -139,7 +139,7 @@ namespace cmd {
         ));
     }
 
-    frc2::CommandPtr NeutralScoreAndClimb_RightTrench() {
+    frc2::CommandPtr NeutralOnePassAndClimb_RightTrench() {
         return frc2::cmd::Sequence(
             // STARTING POSITION: START_TRENCH_RIGHT (X 3.58m, Y 0.57m, heading 0 degrees)
             SubHood::GetInstance().ZeroHood(),
@@ -164,7 +164,7 @@ namespace cmd {
         ));
     }
 
-    frc2::CommandPtr NeutralScoreAndClimb_RightTrench_NoBump() {
+    frc2::CommandPtr NeutralOnePassAndClimb_RightTrench_NoBump() {
         return frc2::cmd::Sequence(
             // STARTING POSITION: START_TRENCH_RIGHT (X 3.58m, Y 0.57m, heading 0 degrees)
             SubHood::GetInstance().ZeroHood(),
@@ -249,7 +249,7 @@ namespace cmd {
 
     /* NEUTRAL AND OUTPOST SCORE AUTONS */
 
-    frc2::CommandPtr NeutralAndOutpostScore_RightBump() {
+    frc2::CommandPtr NeutralOnePassAndOutpost_RightBump() {
         return frc2::cmd::Sequence(
             // STARTING POSITION: START_BUMP_RIGHT (X 3.58m, Y 2.27m, heading 0 degrees)
             SubHood::GetInstance().ZeroHood(),
@@ -274,7 +274,7 @@ namespace cmd {
         );
     }
 
-    frc2::CommandPtr NeutralAndOutpostScore_RightTrench() {
+    frc2::CommandPtr NeutralOnePassAndOutpost_RightTrench() {
         return frc2::cmd::Sequence(
             // STARTING POSITION: START_TRENCH_RIGHT (X 3.58m, Y 0.57m, heading 0 degrees)
             SubHood::GetInstance().ZeroHood(),
@@ -297,7 +297,7 @@ namespace cmd {
         );
     }
 
-    frc2::CommandPtr NeutralAndOutpostScore_RightTrench_NoBump() {
+    frc2::CommandPtr NeutralOnePassAndOutpost_RightTrench_NoBump() {
         return frc2::cmd::Sequence(
             // STARTING POSITION: START_TRENCH_RIGHT (X 3.58m, Y 0.57m, heading 0 degrees)
             SubHood::GetInstance().ZeroHood(),
@@ -320,7 +320,7 @@ namespace cmd {
         );
     }
 
-    frc2::CommandPtr GASTAUTON_NeutralOutpostClimb_RightTrench() {
+    frc2::CommandPtr GASTAUTON_NeutralOnePassOutpostClimb_RightTrench() {
         return frc2::cmd::Sequence(
             // STARTING POSITION: START_TRENCH_RIGHT (X 3.58m, Y 0.57m, heading 0 degrees)
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_RIGHT; }, 1.0, 30_cm, 3_deg)
@@ -347,7 +347,7 @@ namespace cmd {
         );
     }
 
-    frc2::CommandPtr GASTAUTON_NeutralOutpostClimb_RightTrench_NoBump() {
+    frc2::CommandPtr GASTAUTON_NeutralOnePassOutpostClimb_RightTrench_NoBump() {
         return frc2::cmd::Sequence(
             // STARTING POSITION: START_TRENCH_RIGHT (X 3.58m, Y 0.57m, heading 0 degrees)
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_IN_RIGHT; }, 1.0, 30_cm, 3_deg)
