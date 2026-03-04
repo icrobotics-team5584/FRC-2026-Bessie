@@ -16,7 +16,7 @@ SubIntake::SubIntake() {
 
   Logger::Log("Intake/Intake Motor", &_intakeMotor);
 
-  _intakeFollowerMotorConfig.SmartCurrentLimit(1);
+  _intakeFollowerMotorConfig.SmartCurrentLimit(60);
   _intakeFollowerMotorConfig.Inverted(true);
   _intakeFollowerMotorConfig.Follow(_intakeMotor, true);
   _intakeFollowerMotor.OverwriteConfig(_intakeFollowerMotorConfig);
