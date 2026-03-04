@@ -9,8 +9,9 @@
 #include "utilities/RobotVisualisation.h"
 
 SubFeeder::SubFeeder() {
-  _feederMotorConfig.SmartCurrentLimit(60);
+  _feederMotorConfig.SmartCurrentLimit(40);
   _feederMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
+  _feederMotorConfig.Inverted(true);
   _feederMotor.OverwriteConfig(_feederMotorConfig);
   Logger::Log("Feeder/Feeder Motor", &_feederMotor);
 }

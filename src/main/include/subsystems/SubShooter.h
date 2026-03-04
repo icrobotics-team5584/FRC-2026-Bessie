@@ -51,8 +51,8 @@ class SubShooter : public frc2::SubsystemBase {
   void Periodic() override;
 
  private:
-  ctre::phoenix6::hardware::TalonFX _shooterMotor1{canid::SHOOTER_MOTOR_1};
-  ctre::phoenix6::hardware::TalonFX _shooterMotor2{canid::SHOOTER_MOTOR_2};
+  ctre::phoenix6::hardware::TalonFX _shooterMotor1{canid::SHOOTER_MOTOR_1, ctre::phoenix6::CANBus{"Canivore"}};
+  ctre::phoenix6::hardware::TalonFX _shooterMotor2{canid::SHOOTER_MOTOR_2, ctre::phoenix6::CANBus{"Canivore"}};
   static constexpr units::kilogram_square_meter_t MOI = 0.05_kg_sq_m;
   static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::KrakenX60FOC();
   const double GEAR_RATIO = BotVars::Choose(1.63, 1.0);
@@ -61,7 +61,7 @@ class SubShooter : public frc2::SubsystemBase {
   double P = 0.4;
   double I = 0;
   double D = 0;
-  double V = 0.12;
+  double V = 0.2;
 
   ctre::phoenix6::configs::TalonFXConfiguration _shooterMotorConfig;
   ctre::phoenix6::controls::VelocityVoltage _flywheelTargetVelocity{0_tps};

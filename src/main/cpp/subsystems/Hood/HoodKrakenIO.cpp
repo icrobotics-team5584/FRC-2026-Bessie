@@ -6,7 +6,7 @@
 
 #include <frc/simulation/RoboRioSim.h>
 
-HoodKrakenIO::HoodKrakenIO(int motorCanID) : _motor(motorCanID) {}
+HoodKrakenIO::HoodKrakenIO(int motorCanID) : _motor(motorCanID, ctre::phoenix6::CANBus{"Canivore"}) {}
 
 void HoodKrakenIO::ConfigMotor() {
   ctre::phoenix6::configs::TalonFXConfiguration config;
@@ -15,7 +15,10 @@ void HoodKrakenIO::ConfigMotor() {
   config.Slot0.kI = KrakenMotorConfig::I;
   config.Slot0.kD = KrakenMotorConfig::D;
   config.Slot0.kS = KrakenMotorConfig::S;
+  config.Slot0.kG = KrakenMotorConfig::G;
+  config.Slot0.GravityType = KrakenMotorConfig::GRAVITY_TYPE;
   config.MotorOutput.Inverted = KrakenMotorConfig::INVERTED;
+
   config.MotorOutput.NeutralMode = KrakenMotorConfig::IDLE_MODE;
 
   config.CurrentLimits.SupplyCurrentLimitEnable = KrakenMotorConfig::ENABLE_SUPPLY_CURRENT_LIMIT;

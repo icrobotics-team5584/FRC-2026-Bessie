@@ -5,7 +5,6 @@
 #include "RobotContainer.h"
 
 #include "subsystems/Hood/SubHood.h"
-#include "subsystems/SubClimber.h"
 #include "subsystems/SubDeploy.h"
 #include "subsystems/SubDrivebase.h"
 #include "subsystems/SubFeeder.h"
@@ -98,7 +97,6 @@ void RobotContainer::ConfigureBindings() {
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
   _driverController.B().WhileTrue(SubDrivebase::GetInstance().AlignToAngle(_driverController, 0_deg));
   _driverController.A().WhileTrue(cmd::EjectFuel());
-  _driverController.Y().ToggleOnTrue(SubClimber::GetInstance().ToggleClimb());
 
   // Misc 
   _driverController.Start().OnTrue(SubDrivebase::GetInstance().ZeroRotation());
@@ -125,7 +123,6 @@ void RobotContainer::ConfigureBindings() {
   // Driver POVs
   _driverController.POVRight().WhileTrue(SubDeploy::GetInstance().DeployAutoZero());
   _driverController.POVLeft().WhileTrue(SubHood::GetInstance().ZeroHood());
-  _driverController.POVUp().WhileTrue(SubClimber::GetInstance().RunCurrentZeroingSequence());
 
   //Sticks
 
