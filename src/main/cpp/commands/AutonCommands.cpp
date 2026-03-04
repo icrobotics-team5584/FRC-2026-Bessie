@@ -4,7 +4,8 @@
 #include "subsystems/Hood/SubHood.h"
 #include "subsystems/SubIntake.h"
 #include "subsystems/SubShooter.h"
-#include "subsystems/SubClimber.h"
+#include "subsystems/SubDeploy.h"
+//#include "subsystems/SubClimber.h"
 
 #include "commands/FuelCommands.h"
 #include "commands/TurretCommands.h"
@@ -379,13 +380,17 @@ namespace cmd {
 
     frc2::CommandPtr NeutralTwoPass_LeftTrench() {
         return frc2::cmd::Sequence(
-            // STARTING POSITION: START_TRENCH_LEFT (X 3.58m, Y 7.50m, heading 0 degrees)
-            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_FIRSTPASS_IN_LEFT; }, 1.0, 30_cm, 3_deg)
+            // STARTING POSITION: START_TRENCH_LEFT (X 3.58m, Y 7.50m, heading 270 degrees)
+            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::START_REENTRY_TRENCH_LEFT; }, 1.0, 10_cm, 3_deg)
                 .AlongWith(SubHood::GetInstance().ZeroHood()),
  
             SubIntake::GetInstance().IntakeOn().AlongWith(
                 cmd::AimAtHub()
             ).WithDeadline(frc2::cmd::Sequence(
+                SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_FIRSTPASS_IN_LEFT; }, 1.0, 30_cm, 3_deg)
+                .AlongWith(
+                    SubDeploy::GetInstance().DeployAutoZero().AndThen(SubDeploy::GetInstance().DeployIntake())
+                ),
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_FIRSTPASS_END_LEFT; }, 0.5, 20_cm, 3_deg),
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_FIRSTPASS_TRANS_LEFT; }, 1.0, 20_cm, 5_deg),
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::START_TRENCH_LEFT; }, 1.0, 20_cm, 5_deg)
@@ -396,7 +401,7 @@ namespace cmd {
             SubIntake::GetInstance().IntakeOn().AlongWith(
                 cmd::AimAtHub()
             ).WithDeadline(frc2::cmd::Sequence(
-                SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_SECONDPASS_IN_LEFT; }, 1.0, 20_cm, 3_deg),
+                SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_SECONDPASS_IN_LEFT; }, 1.0, 10_cm, 3_deg),
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_SECONDPASS_END_LEFT; }, 0.5, 20_cm, 3_deg),
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_SECONDPASS_TRANS_LEFT; }, 1.0, 20_cm, 5_deg),
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::START_REENTRY_TRENCH_LEFT; }, 1.0, 20_cm, 5_deg),
@@ -410,12 +415,16 @@ namespace cmd {
     frc2::CommandPtr NeutralTwoPassToOutpost_RightTrench() {
         return frc2::cmd::Sequence(
             // STARTING POSITION: START_TRENCH_RIGHT (X 3.58m, Y 0.57m, heading 0 degrees)
-            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_FIRSTPASS_IN_RIGHT; }, 1.0, 30_cm, 3_deg)
+            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::START_REENTRY_TRENCH_RIGHT; }, 1.0, 10_cm, 3_deg)
                 .AlongWith(SubHood::GetInstance().ZeroHood()),
  
             SubIntake::GetInstance().IntakeOn().AlongWith(
                 cmd::AimAtHub()
             ).WithDeadline(frc2::cmd::Sequence(
+                SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_FIRSTPASS_IN_RIGHT; }, 1.0, 30_cm, 3_deg)
+                .AlongWith(
+                    SubDeploy::GetInstance().DeployAutoZero().AndThen(SubDeploy::GetInstance().DeployIntake())
+                ),
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_FIRSTPASS_END_RIGHT; }, 0.5, 20_cm, 3_deg),
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_FIRSTPASS_TRANS_RIGHT; }, 1.0, 20_cm, 5_deg),
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::START_TRENCH_RIGHT; }, 1.0, 20_cm, 5_deg)
@@ -426,7 +435,7 @@ namespace cmd {
             SubIntake::GetInstance().IntakeOn().AlongWith(
                 cmd::AimAtHub()
             ).WithDeadline(frc2::cmd::Sequence(
-                SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_SECONDPASS_IN_RIGHT; }, 1.0, 20_cm, 3_deg),
+                SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_SECONDPASS_IN_RIGHT; }, 1.0, 10_cm, 3_deg),
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_SECONDPASS_END_RIGHT; }, 0.5, 20_cm, 3_deg),
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_SECONDPASS_TRANS_RIGHT; }, 1.0, 20_cm, 5_deg),
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::START_REENTRY_TRENCH_RIGHT; }, 1.0, 20_cm, 5_deg),

@@ -77,6 +77,11 @@ RobotContainer::RobotContainer() {
   // _autoManager.AddAuton("NeutralOnePassOutpostClimb_RightTrench_NoBump",
   //   AutonHelper::MakeCommandPtrAuto(cmd::GASTAUTON_NeutralOnePassOutpostClimb_RightTrench_NoBump()));
 
+  _autoManager.AddAuton("NeutralTwoPass_LeftTrench",
+    AutonHelper::MakeCommandPtrAuto(cmd::NeutralTwoPass_LeftTrench()));
+  _autoManager.AddAuton("NeutralTwoPassToOutpost_RightTrench",
+    AutonHelper::MakeCommandPtrAuto(cmd::NeutralTwoPassToOutpost_RightTrench()));
+
   frc::SmartDashboard::PutData("CHOSEN AUTON", &_autoManager.GetAutonChooser());
 
   SubHood::GetInstance();
