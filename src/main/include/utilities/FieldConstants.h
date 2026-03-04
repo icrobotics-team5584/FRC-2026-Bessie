@@ -19,11 +19,22 @@ constexpr frc::Translation3d HUB_POSITION{4.625_m, 4.018_m, 0_m};
 constexpr frc::Translation3d TOP_ALLIANCE_ZONE_POSITION{2.5_m, 5.5_m, 0_m};
 constexpr frc::Translation3d BOTTOM_ALLIANCE_ZONE_POSITION{2.5_m, 2.75_m, 0_m};
 
-//auton positions (assuming robot with bumpers is 91cm by 91cm; blue alliance only)
-constexpr frc::Pose2d NEUTRAL_IN_LEFT{7.80_m, 7.00_m, 270_deg};
-constexpr frc::Pose2d NEUTRAL_END_LEFT{7.80_m, 4.75_m, 270_deg};
-constexpr frc::Pose2d NEUTRAL_IN_RIGHT{7.80_m, 1.07_m, 90_deg};
-constexpr frc::Pose2d NEUTRAL_END_RIGHT{7.80_m, 3.32_m, 90_deg};
+//auton positions
+constexpr frc::Pose2d NEUTRAL_ONEPASS_IN_LEFT{7.80_m, 7.00_m, 270_deg};
+constexpr frc::Pose2d NEUTRAL_ONEPASS_END_LEFT{7.80_m, 4.75_m, 270_deg};
+constexpr frc::Pose2d NEUTRAL_ONEPASS_IN_RIGHT{7.80_m, 1.07_m, 90_deg};
+constexpr frc::Pose2d NEUTRAL_ONEPASS_END_RIGHT{7.80_m, 3.32_m, 90_deg};
+
+constexpr frc::Pose2d NEUTRAL_FIRSTPASS_IN_LEFT{8.70_m, 7.00_m, 270_deg};
+constexpr frc::Pose2d NEUTRAL_FIRSTPASS_END_LEFT{8.70_m, 4.50_m, 270_deg};
+constexpr frc::Pose2d NEUTRAL_FIRSTPASS_TRANS_LEFT{7.80_m, 7.00_m, 210_deg};
+constexpr frc::Pose2d NEUTRAL_FIRSTPASS_IN_RIGHT{8.70_m, 1.07_m, 90_deg};
+constexpr frc::Pose2d NEUTRAL_FIRSTPASS_END_RIGHT{8.70_m, 3.07_m, 90_deg};
+constexpr frc::Pose2d NEUTRAL_FIRSTPASS_TRANS_RIGHT{7.80_m, 1.07_m, 150_deg};
+
+constexpr frc::Pose2d NEUTRAL_SECONDPASS_IN_LEFT{5.75_m, 7.30_m, 270_deg};
+constexpr frc::Pose2d NEUTRAL_SECONDPASS_END_LEFT{5.75_m, 4.00_m, 270_deg};
+constexpr frc::Pose2d NEUTRAL_SECONDPASS_TRANS_LEFT{}
 
 constexpr frc::Pose2d START_BUMP_LEFT{3.58_m, 5.80_m, 0_deg};
 constexpr frc::Pose2d START_TRENCH_LEFT{3.58_m, 7.50_m, 0_deg};
