@@ -136,7 +136,6 @@ units::degree_t SubTurret::GetTurretAngleCRT() {
     // (solve for encoder 1 rotations)
     double e1rotations = (difference * BIG_TEETH / E1_TEETH) / 360.0;
     int e1rotations_floored = floor(e1rotations);
-    // e1rotations_floored = e1rotations_floored / 2;
 
     Logger::Log("GetTurretAngleCRT/variables/e1 rotations", e1rotations);
     Logger::Log("GetTurretAngleCRT/variables/e1 rotations floored", e1rotations_floored);

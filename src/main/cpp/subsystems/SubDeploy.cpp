@@ -22,11 +22,11 @@ SubDeploy::SubDeploy() {
 }
 
 frc2::CommandPtr SubDeploy::DeployIntake() {
-  return RunOnce([this] { _deployMotor.SetPositionTarget(DEPLOY_MIN_ANGLE); });
+  return RunOnce([this] { _deployMotor.SetPositionTarget(DEPLOY_MIN_ANGLE); }).OnlyIf([this] {return _hasZeroed; });
 }
 
 frc2::CommandPtr SubDeploy::RetractIntake() {
-  return RunOnce([this] { _deployMotor.SetPositionTarget(DEPLOY_MAX_ANGLE); });
+  return RunOnce([this] { _deployMotor.SetPositionTarget(DEPLOY_MAX_ANGLE); }).OnlyIf([this] {return _hasZeroed; });
 }
 
 frc2::CommandPtr SubDeploy::ToggleDeploy() {
@@ -102,6 +102,10 @@ void SubDeploy::Periodic() {
   Logger::Log("Deploy/Loop Time", (frc::GetTime() - loopStart));
   Logger::Log("Deploy/IsZeroing", _currentlyZeroing);
   Logger::Log("Deploy/HasZeroed", _hasZeroed);
+
+  if(_hasZeroed == false && _currentlyZeroing == false) {
+    frc2::CommandScheduler::GetInstance().Schedule(Idle());
+  }
 }
 
 void SubDeploy::SimulationPeriodic() {
