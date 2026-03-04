@@ -10,15 +10,15 @@
 #include <utilities/Logger.h>
 
 SubIntake::SubIntake() {
-  _intakeMotorConfig.SmartCurrentLimit(45);
+  _intakeMotorConfig.SmartCurrentLimit(60);
   _intakeMotorConfig.Inverted(true);
   _intakeMotor.OverwriteConfig(_intakeMotorConfig);
 
   Logger::Log("Intake/Intake Motor", &_intakeMotor);
 
-  _intakeFollowerMotorConfig.SmartCurrentLimit(45);
+  _intakeFollowerMotorConfig.SmartCurrentLimit(60);
   _intakeFollowerMotorConfig.Inverted(true);
-  _intakeFollowerMotorConfig.Follow(_intakeMotor);
+  _intakeFollowerMotorConfig.Follow(_intakeMotor, true);
   _intakeFollowerMotor.OverwriteConfig(_intakeFollowerMotorConfig);
 
   Logger::Log("Intake/Follower Intake Motor", &_intakeFollowerMotor);

@@ -11,13 +11,14 @@
 
 SubIndexer::SubIndexer() {
   _indexerMotorConfig.SmartCurrentLimit(60);
+  _indexerMotorConfig.Inverted(true);
   _indexerMotor.OverwriteConfig(_indexerMotorConfig);
   Logger::Log("Indexer/Indexer Motor", &_indexerMotor);
 }
 
 // Spindexer motor
 frc2::CommandPtr SubIndexer::IndexerOn() {
-  return StartEnd([this] { _indexerMotor.Set(0.3); }, [this] { _indexerMotor.Set(0); });
+  return StartEnd([this] { _indexerMotor.Set(1); }, [this] { _indexerMotor.Set(0); });
 }
 
 frc2::CommandPtr SubIndexer::IndexerOff() {
@@ -52,7 +53,7 @@ void SubIndexer::SimulationPeriodic() {
 frc2::CommandPtr SubIndexer::Index() {
   return StartEnd(
     [this] {
-      _indexerMotor.Set(0.3);
+      _indexerMotor.Set(1);
     },
     [this] {
       _indexerMotor.Set(0);
