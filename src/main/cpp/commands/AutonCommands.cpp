@@ -389,7 +389,7 @@ namespace cmd {
             ).WithDeadline(frc2::cmd::Sequence(
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_FIRSTPASS_IN_LEFT; }, 1.0, 30_cm, 3_deg)
                 .AlongWith(
-                    SubDeploy::GetInstance().DeployAutoZero().AndThen(SubDeploy::GetInstance().DeployIntake())
+                    SubDeploy::GetInstance().DeployAutoZero().AndThen(SubDeploy::GetInstance().DeployIntake()).AsProxy()
                 ),
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_FIRSTPASS_END_LEFT; }, 0.5, 20_cm, 3_deg),
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_FIRSTPASS_TRANS_LEFT; }, 1.0, 20_cm, 5_deg),
@@ -423,7 +423,7 @@ namespace cmd {
             ).WithDeadline(frc2::cmd::Sequence(
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_FIRSTPASS_IN_RIGHT; }, 1.0, 30_cm, 3_deg)
                 .AlongWith(
-                    SubDeploy::GetInstance().DeployAutoZero().AndThen(SubDeploy::GetInstance().DeployIntake())
+                    SubDeploy::GetInstance().DeployAutoZero().AndThen(SubDeploy::GetInstance().DeployIntake()).AsProxy()
                 ),
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_FIRSTPASS_END_RIGHT; }, 0.5, 20_cm, 3_deg),
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_FIRSTPASS_TRANS_RIGHT; }, 1.0, 20_cm, 5_deg),
@@ -459,7 +459,7 @@ namespace cmd {
             ).WithDeadline(frc2::cmd::Sequence(
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_FIRSTPASS_IN_LEFT; }, 1.0, 30_cm, 3_deg)
                 .AlongWith(
-                    SubDeploy::GetInstance().DeployAutoZero().AndThen(SubDeploy::GetInstance().DeployIntake())
+                    SubDeploy::GetInstance().DeployAutoZero().AndThen(SubDeploy::GetInstance().DeployIntake()).AsProxy()
                 ),
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_FIRSTPASS_END_LEFT; }, 0.5, 20_cm, 3_deg),
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_FIRSTPASS_TRANS_LEFT; }, 1.0, 20_cm, 5_deg),
@@ -495,7 +495,7 @@ namespace cmd {
             ).WithDeadline(frc2::cmd::Sequence(
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_FIRSTPASS_IN_RIGHT; }, 1.0, 30_cm, 3_deg)
                 .AlongWith(
-                    SubDeploy::GetInstance().DeployAutoZero().AndThen(SubDeploy::GetInstance().DeployIntake())
+                    SubDeploy::GetInstance().DeployAutoZero().AndThen(SubDeploy::GetInstance().DeployIntake()).AsProxy()
                 ),
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_FIRSTPASS_END_RIGHT; }, 0.5, 20_cm, 3_deg),
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_FIRSTPASS_TRANS_RIGHT; }, 1.0, 20_cm, 5_deg),
