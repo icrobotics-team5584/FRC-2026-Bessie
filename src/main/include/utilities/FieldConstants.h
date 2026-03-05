@@ -27,10 +27,10 @@ constexpr frc::Pose2d NEUTRAL_ONEPASS_END_RIGHT{7.80_m, 3.32_m, 90_deg};
 
 constexpr frc::Pose2d NEUTRAL_FIRSTPASS_IN_LEFT{8.70_m, 7.00_m, 270_deg};
 constexpr frc::Pose2d NEUTRAL_FIRSTPASS_END_LEFT{8.70_m, 4.50_m, 270_deg};
-constexpr frc::Pose2d NEUTRAL_FIRSTPASS_TRANS_LEFT{7.80_m, 7.00_m, 210_deg};
+constexpr frc::Pose2d NEUTRAL_FIRSTPASS_TRANS_LEFT{7.80_m, 7.00_m, 225_deg};
 constexpr frc::Pose2d NEUTRAL_FIRSTPASS_IN_RIGHT{8.70_m, 1.07_m, 90_deg};
 constexpr frc::Pose2d NEUTRAL_FIRSTPASS_END_RIGHT{8.70_m, 3.07_m, 90_deg};
-constexpr frc::Pose2d NEUTRAL_FIRSTPASS_TRANS_RIGHT{7.80_m, 1.07_m, 150_deg};
+constexpr frc::Pose2d NEUTRAL_FIRSTPASS_TRANS_RIGHT{7.80_m, 1.07_m, 135_deg};
 
 constexpr frc::Pose2d NEUTRAL_SECONDPASS_IN_LEFT{5.90_m, 7.30_m, 270_deg};
 constexpr frc::Pose2d NEUTRAL_SECONDPASS_END_LEFT{5.90_m, 3.50_m, 270_deg};
