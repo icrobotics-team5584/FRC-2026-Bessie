@@ -22,7 +22,11 @@ SubDeploy::SubDeploy() {
 }
 
 frc2::CommandPtr SubDeploy::DeployIntake() {
-  return RunOnce([this] { _deployMotor.SetPositionTarget(DEPLOY_MIN_ANGLE); });
+  return RunOnce([this] { _deployMotor.SetPositionTarget(DEPLOY_MIN_ANGLE); }).OnlyIf([this] {return _hasZeroed; });
+}
+
+frc2::CommandPtr SubDeploy::RetractIntake() {
+  return RunOnce([this] { _deployMotor.SetPositionTarget(DEPLOY_MAX_ANGLE); }).OnlyIf([this] {return _hasZeroed; });
 }
 
 frc2::CommandPtr SubDeploy::ToggleDeploy() {
@@ -36,13 +40,13 @@ frc2::CommandPtr SubDeploy::ToggleDeploy() {
 }
 
 frc2::CommandPtr SubDeploy::ZeroDeploy() {
-  return RunOnce([this] { _deployMotor.SetPosition(0_deg); });
+  return RunOnce([this] { _deployMotor.SetPosition(90_deg); });
 }
 
 frc2::CommandPtr SubDeploy::DeployAutoZero() {
   return RunOnce([this] {
     EnableSoftLimit(false);
-    _deployMotor.SetVoltage(-1_V);
+    _deployMotor.SetVoltage(1_V);
     _currentlyZeroing = true;
     _hasZeroed = false;
   })
@@ -71,6 +75,17 @@ void SubDeploy::EnableSoftLimit(bool enabled) {
   }
 }
 
+void SubDeploy::SetBrakeMode(bool brakeMode){
+    rev::spark::SparkBaseConfig _neutralModeConfig;
+    if (brakeMode == true) {
+      _neutralModeConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
+      _deployMotor.AdjustConfigNoPersist(_neutralModeConfig);
+    } else if (brakeMode == false) {
+      _neutralModeConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kCoast);
+      _deployMotor.AdjustConfigNoPersist(_neutralModeConfig);
+    }
+}
+
 // This method will be called once per scheduler run
 void SubDeploy::Periodic() {
   auto loopStart = frc::GetTime();
@@ -85,6 +100,12 @@ void SubDeploy::Periodic() {
   RobotVisualisation::GetInstance()._deployLigament->SetAngle(_deployMotor.GetPosition());
 
   Logger::Log("Deploy/Loop Time", (frc::GetTime() - loopStart));
+  Logger::Log("Deploy/IsZeroing", _currentlyZeroing);
+  Logger::Log("Deploy/HasZeroed", _hasZeroed);
+
+  if(_hasZeroed == false && _currentlyZeroing == false) {
+    frc2::CommandScheduler::GetInstance().Schedule(Idle());
+  }
 }
 
 void SubDeploy::SimulationPeriodic() {

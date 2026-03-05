@@ -18,23 +18,19 @@ namespace canid {
     constexpr int DRIVEBASE_BACK_LEFT_ENCODER = 12; 
 
     constexpr int PIGEON_2 = 13; 
-    
+
     constexpr int INTAKE = 14;
     constexpr int INTAKE_FOLLOWER = 15;
     constexpr int INDEXER = 16;
     constexpr int FEEDER = 17;
     constexpr int DEPLOY = 18;
-   
-
     constexpr int HOOD_MOTOR = 19; 
     constexpr int SHOOTER_MOTOR_1 = 20; 
     constexpr int SHOOTER_MOTOR_2 = 21;  
     constexpr int TURRET_MOTOR = 22; 
 
-    constexpr int OUTDEXER = 23;
-
-    constexpr int TURRET_ENCODER_1 = 24;
-    constexpr int TURRET_ENCODER_2 = 25;
+    constexpr int TURRET_ENCODER_1 = 25;
+    constexpr int TURRET_ENCODER_2 = 24;
 
     constexpr int PDH = 40;
 }

@@ -30,6 +30,8 @@ SubHood::SubHood() {
   _hoodPitchTable.insert(4.3575_m, 0.098611_tr);
   _hoodPitchTable.insert(4.6875_m, 0.098611_tr);
   _hoodPitchTable.insert(5.1875_m, 0.098611_tr);
+
+  _hoodMotor->ConfigMotor();
 }
 
 // This method will be called once per scheduler run
@@ -83,7 +85,7 @@ frc2::CommandPtr SubHood::SetHoodPositionTarget(std::function<units::degree_t()>
 frc2::CommandPtr SubHood::ZeroHood() {
   return RunOnce([this] { _zeroing = true; })
     .AndThen(ManualHoodDown())
-    .Until([this] { return (HoodCurrentCheck() || frc::RobotBase::IsSimulation()); })
+    .Until([this] { return (HoodCurrentCheck());})
     .AndThen([this] { _hoodMotor->SetPosition(LOWER_LIMIT); })
     .FinallyDo([this] {
       _hoodMotor->StopMotor();
@@ -94,7 +96,7 @@ frc2::CommandPtr SubHood::ZeroHood() {
 
 bool SubHood::HoodCurrentCheck() {
   _hasZeroed = false;
-  if (units::math::abs(GetHoodMotorCurrent()) > zeroingCurrentLimit) {
+  if (units::math::abs(GetHoodMotorCurrent()) > zeroingCurrentLimit || frc::RobotBase::IsSimulation()) {
     _hasZeroed = true;
     return true;
   }
@@ -104,6 +106,10 @@ bool SubHood::HoodCurrentCheck() {
 
 units::ampere_t SubHood::GetHoodMotorCurrent() {
   return _hoodMotor->GetCurrent();
+}
+
+units::degree_t SubHood::GetHoodOffset(){
+  return Logger::Tune("Hood/Angle Manual Offset", DEFAULT_HOOD_OFFSET);
 }
 
 frc2::CommandPtr SubHood::StowHood() {
@@ -139,13 +145,22 @@ bool SubHood::HoodIsAtTarget() {
 }
 
 frc2::CommandPtr SubHood::MoveHoodUp1Degree() {
-  return SetHoodPositionTarget([this] { return _hoodMotor->GetPositionTarget() + 1_deg; });
+  return SetHoodPositionTarget([this] { return _hoodMotor->GetPositionTarget() + 1_deg; }).WithTimeout(1_ms);
 }
 
 frc2::CommandPtr SubHood::MoveHoodDown1Degree() {
-  return SetHoodPositionTarget([this] { return _hoodMotor->GetPositionTarget() - 1_deg; });
+  return SetHoodPositionTarget([this] { return _hoodMotor->GetPositionTarget() - 1_deg; }).WithTimeout(1_ms);
 }
 
 frc2::CommandPtr SubHood::HoodToEjectAngle() {
   return SubHood::GetInstance().SetHoodPositionTarget([] { return LOWER_LIMIT + 5_deg; });
+}
+
+void SubHood::SetBrakeMode(bool brakeMode){
+  if (brakeMode == true){
+    _hoodMotor->SetBrakeMode(true);
+  }
+  else {
+    _hoodMotor->SetBrakeMode(false);
+  }
 }

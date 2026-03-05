@@ -19,6 +19,9 @@
 #include <frc/geometry/Transform2d.h>
 
 namespace cmd {
+
+bool forcingShoot = false;  // whether to override subsystem tolerance checks and force shooting
+
 frc2::CommandPtr IntakeSequence() {
   return SubDeploy::GetInstance()
     .DeployIntake()
@@ -41,7 +44,7 @@ frc2::CommandPtr StationaryShootAt(frc::Translation2d target) {
 
     return target.Distance(turretPose.Translation());};
 
-  return frc2::cmd::Parallel(cmd::AimAtSpot(target),
+  return frc2::cmd::Parallel(cmd::AimAtSpot([target] { return target; }),
     SubShooter::GetInstance().SpinWithDistance(distanceToTarget, []{return ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose()).isPassing;}),
     SubHood::GetInstance().SetHoodPositionTargetFromDist(distanceToTarget))
     .Until([] {
@@ -52,16 +55,33 @@ frc2::CommandPtr StationaryShootAt(frc::Translation2d target) {
       SubFeeder::GetInstance().FeederOn(), SubIndexer::GetInstance().Index()));
 }
 
+frc2::CommandPtr BackupShoot() {
+  return SubShooter::GetInstance()
+    .SetShooterTarget([] {
+      units::turns_per_second_t offset = SubShooter::GetInstance().GetShooterOffset();
+      return offset + 31_tps;
+    })
+    .AlongWith(
+      SubTurret::GetInstance().SetTurretTargetAngle([] { return 0_deg; }, [] { return 0_tps; }))
+    .AlongWith(SubHood::GetInstance().SetHoodPositionTarget([] {
+      units::degree_t offset = SubHood::GetInstance().GetHoodOffset();
+      return offset + 0.093056_tr;
+    }))
+    .AlongWith(ShootWhenReady());
+}
+
 frc2::CommandPtr ShootWhenReady() {
   return frc2::cmd::WaitUntil([] { return IsReadyToShoot(); })
     .AndThen(SubFeeder::GetInstance().Feed().AlongWith(SubIndexer::GetInstance().Index()).Until([] {
       return !IsReadyToShoot();
-    }))
-    .Repeatedly();
-}
+    })).Repeatedly();
+};
 
 bool IsReadyToShoot() {
   auto currentPose = PoseHandler::GetInstance().GetPose();
+  
+  if(forcingShoot) { return true; }
+
   return SubHood::GetInstance().HoodIsAtTarget() && SubShooter::GetInstance().IsAtSpeed() &&
         SubTurret::GetInstance().IsAtTarget() &&
         ShotPlanner::CalculateShotTarget(currentPose).shouldShoot &&
@@ -86,6 +106,26 @@ frc2::CommandPtr ShootOnTheMove(){
   return AimOnTheMove().AlongWith(ShootWhenReady()).AlongWith(SubIntake::GetInstance().IntakeOn());
 }
 
+frc2::CommandPtr ToggleBrakeCoast(){
+  return frc2::cmd::StartEnd(
+    []{
+    SubDrivebase::GetInstance().SetBrakeMode(false);
+    SubDeploy::GetInstance().SetBrakeMode(false);
+    SubTurret::GetInstance().SetBrakeMode(false);
+    SubHood::GetInstance().SetBrakeMode(false);
+  }
+  ,
+  []{
+    SubDrivebase::GetInstance().SetBrakeMode(true);
+    SubDeploy::GetInstance().SetBrakeMode(true);
+    SubTurret::GetInstance().SetBrakeMode(true);
+    SubHood::GetInstance().SetBrakeMode(true);
+    }
+  )
+  .IgnoringDisable(true)
+  .Until([]{return frc::DriverStation::IsEnabled();});
+}
+
 frc2::CommandPtr EjectFuel() {
   return SubShooter::GetInstance().SpinShooterSlowly()
   .AlongWith(SubIntake::GetInstance().ReverseIntake())
@@ -99,6 +139,16 @@ frc2::CommandPtr DisableAllOverrides() {
   return frc2::cmd::RunOnce([] {
     ShotPlanner::SetOverride(ShotPlanner::Override::NONE);
     ShiftHandler::GetInstance().SetOverrideActive(false);
+    forcingShoot = false;
+    Logger::Log("ForceShoot/forcingShoot", forcingShoot);
   });
 }
+
+frc2::CommandPtr ForceShoot() {
+  return frc2::cmd::RunOnce([] {
+    forcingShoot = true;
+    Logger::Log("ForceShoot/forcingShoot", forcingShoot);
+  });
+}
+
 }  // namespace cmd

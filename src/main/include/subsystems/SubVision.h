@@ -52,7 +52,7 @@ public:
 
   double GetDev(units::length::meter_t distance);
 
-  static constexpr frc::Transform2d TURRET_TO_CAM = frc::Transform2d{0.083_m, -0.147_m, 0_deg};
+  static constexpr frc::Transform2d TURRET_TO_CAM = frc::Transform2d{-40.629_mm, 151.5_mm, 0_deg};
 
   const std::string TURRET_CAM_NAME = "Turret";
   const std::string LEFT_CAM_NAME = "Left";
@@ -81,8 +81,9 @@ public:
   };
 
   
-
-  frc::Transform3d _turretBotToCam {{0_m, 0_m, 0.605_m}, {0_deg, -14.3_deg, 0_deg}};
+  // x and y offset is taken from subturret.h turret offset
+  frc::Transform3d _turretBotToCam {{0_m, 0_m, 335_mm + 112.768_mm}, {0_deg, -20_deg, 0_deg}}; // positive pitch is down
+  // 335mm from robot to turret, 112.768mm from turret to cam
 
   ICCamera _turretCam {
     TURRET_CAM_NAME,    

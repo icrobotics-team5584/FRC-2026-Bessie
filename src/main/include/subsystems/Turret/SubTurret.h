@@ -7,6 +7,7 @@
 #include "utilities/AlertController.h"
 #include "utilities/ICSparkMax.h"
 #include "utilities/MechanismCircle2d.h"
+#include "utilities/BotVars.h"
 
 #include <frc/Alert.h>
 #include <frc/DutyCycleEncoder.h>
@@ -54,13 +55,15 @@ class SubTurret : public frc2::SubsystemBase {
   void SetLastFieldRelativeTarget(units::degree_t angle);
 
   bool IsAtTarget();
+  
+  void SetBrakeMode(bool brakeMode);
   bool IsNotApproachingMax(std::function<units::millisecond_t()> time);
 
   frc2::CommandPtr SetTurretTargetAngle(std::function<units::degree_t()> angle,
     std::function<units::degrees_per_second_t()> robotAngVel);
   frc2::CommandPtr ZeroTurretCmd();
 
-  static constexpr frc::Transform2d ROBOT_TO_TURRET = frc::Transform2d{-235_mm, 0_mm, 0_deg};
+  static constexpr frc::Transform2d ROBOT_TO_TURRET = frc::Transform2d{-140_mm, -140_mm, 0_deg};
 
   /**
    * Will be called periodically whenever the CommandScheduler runs.
@@ -99,27 +102,27 @@ class SubTurret : public frc2::SubsystemBase {
 
   frc::SimpleMotorFeedforward<units::turn> _robotRotVelFF{kS, kV, kA};
 
-  const units::turn_t turretZeroOffset = -0.5_tr;
+  const units::turn_t turretZeroOffset = 0_tr; // -0.5_tr
 
   units::degree_t POS_LIMIT = 362_deg;
   units::degree_t NEG_LIMIT = -2_deg;
 
   bool _hasZeroed = false;
 
-  double P = 8.0;
-  double I = 0.01;
-  double D = 4;
+  double P = 3;
+  double I = 0.0;
+  double D = 0.0;
 
   static constexpr units::volt_t kS = 0.15_V;
   static constexpr auto kV = 3.4_V * (1_s / 1_tr);
   static constexpr auto kA = 0_V * ((1_s * 1_s) / 1_tr);
 
-  static constexpr double E1_TEETH = 21;
-  static constexpr double E2_TEETH = 20;
-  static constexpr double BIG_TEETH = 94;
-  static constexpr double ENCODER1_RATIO = E1_TEETH / BIG_TEETH;
-  static constexpr double ENCODER2_RATIO = E2_TEETH / BIG_TEETH;
-  static constexpr double GEAR_RATIO = (48.0 / 12.0) * (94.0 / 10.0);
+  const double E1_TEETH = BotVars::Choose(17, 21);
+  const double E2_TEETH = BotVars::Choose(15, 20);
+  const double BIG_TEETH = 94;
+  const double ENCODER1_RATIO = E1_TEETH / BIG_TEETH;
+  const double ENCODER2_RATIO = E2_TEETH / BIG_TEETH;
+  const double GEAR_RATIO = BotVars::Choose(64.46, (48.0 / 12.0) * (94.0 / 10.0));
 
   static constexpr units::degree_t TOLARANCE = 8_deg;
 

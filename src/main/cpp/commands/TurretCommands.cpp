@@ -12,6 +12,7 @@
 #include "utilities/PoseHandler.h"
 #include "utilities/FieldConstants.h"
 #include "utilities/ShotPlanner.h"
+#include "utilities/ICgeometry.h"
 
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/Commands.h>
@@ -52,11 +53,11 @@ frc2::CommandPtr AimAtFieldRelative(std::function<units::degree_t()> target) {
       }));
 }
 
-frc2::CommandPtr AimAtSpot(frc::Translation2d target) {
+frc2::CommandPtr AimAtSpot(std::function<frc::Translation2d()> target) {
   return cmd::AimAtFieldRelative([target] {
     auto robotPose = PoseHandler::GetInstance().GetPose();
     units::radian_t angle =
-      atan2((target.Y() - robotPose.Y()).value(), (target.X() - robotPose.X()).value()) * 1_rad;
+      atan2((target().Y() - robotPose.Y()).value(), (target().X() - robotPose.X()).value()) * 1_rad;
     units::degree_t degrees = angle;
     return degrees;
   });
@@ -152,7 +153,8 @@ frc::Pose2d CalcFutureTurretPose() {
 
   // Account for Robot Angular Velocity (Turret Whip)
   units::meter_t turretVelocityMagnitude = ( robotVelRot.value()/360 * 2 * 3.14159 * SubTurret::ROBOT_TO_TURRET.Translation().Norm() / 1_s ) * TOF;
-  units::degree_t turretVelocityDirection = -90_deg; 
+  units::degree_t robotToTurretAngle = SubTurret::ROBOT_TO_TURRET.Translation().Angle().Degrees();
+  units::degree_t turretVelocityDirection = robotToTurretAngle + 90_deg;
   frc::Translation2d turretVelocity = frc::Translation2d{ turretVelocityMagnitude, turretVelocityDirection };
   frc::Transform2d turretVelocityTransform = frc::Transform2d{ turretVelocity, 0_deg};
 
@@ -168,6 +170,15 @@ frc::Pose2d CalcFutureTurretPose() {
 frc::Translation2d GetShotTarget(){
   auto curPose = PoseHandler::GetInstance().GetPose();
   return ShotPlanner::CalculateShotTarget(curPose).targetPosition.ToTranslation2d();
+}
+
+frc2::CommandPtr AimAtHub() {
+return AimAtSpot([] {
+  frc::Translation3d target = fieldpos::HUB_POSITION;
+  if(frc::DriverStation::GetAlliance().value_or(frc::DriverStation::kBlue) == frc::DriverStation::kRed) { target = ICgeometry::xTranslationFlip(target); }
+  Logger::FieldDisplay::GetInstance().DisplayPose("AimAtHub/target", frc::Pose2d{target.ToTranslation2d(), 0_deg});
+  return target.ToTranslation2d();
+});
 }
 
 }  // namespace cmd

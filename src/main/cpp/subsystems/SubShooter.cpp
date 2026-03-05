@@ -17,9 +17,10 @@ SubShooter::SubShooter() {
   _shooterMotorConfig.MotorOutput.NeutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
 
   // invert motors if needed
-  _shooterMotorConfig.MotorOutput.Inverted = true;
+  _shooterMotorConfig.MotorOutput.Inverted = false;
 
-  // Current Limits no idea what to actually put here
+
+  // Current limits
   _shooterMotorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
   _shooterMotorConfig.CurrentLimits.SupplyCurrentLowerLimit = 20.0_A;
   _shooterMotorConfig.CurrentLimits.SupplyCurrentLimit = 60.0_A;
@@ -164,6 +165,10 @@ frc2::CommandPtr SubShooter::SpinWithDistance(
     return isPassing() ? _flyWheelSpeedTablePassing[distance()]
                        : _flyWheelSpeedTableScoring[distance()] + offset;
   });
+}
+
+units::turns_per_second_t SubShooter::GetShooterOffset(){
+  return Logger::Tune("Shooter/Speed Manual Offset", DEFAULT_SHOOTER_OFFSET);
 }
 
 units::second_t SubShooter::GetTimeOfFLightWithDistance(units::meter_t distance) {
