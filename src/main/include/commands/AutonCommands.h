@@ -27,6 +27,8 @@ namespace cmd {
 
     frc2::CommandPtr NeutralTwoPass_LeftTrench();
     frc2::CommandPtr NeutralTwoPassToOutpost_RightTrench();
+    frc2::CommandPtr NeutralTwoPassToMid_LeftTrench();
+    frc2::CommandPtr NeutralTwoPassToMid_RightTrench();
 
     frc2::CommandPtr ShootAndStay();
 }
