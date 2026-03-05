@@ -402,7 +402,9 @@ frc2::CommandPtr SubDrivebase::DriveToPose(std::function<frc::Pose2d()> pose, do
     return flipForRedAlliance ? ICgeometry::GetFieldRelativePose(pose()) : pose();
   };
   
-  return RunOnce([this] { _rotationP2pController.Reset(GetGyroAngle(true).Degrees()); })
+  return RunOnce([this] { 
+      _rotationP2pController.Reset(GetGyroAngle(true).Degrees());
+      _translationP2pController.Reset(0_m); })
     .AndThen(Drive(
       [this, fieldRelativePose, speedScaling] {
         auto pose = fieldRelativePose();
