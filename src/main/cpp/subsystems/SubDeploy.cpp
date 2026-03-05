@@ -45,11 +45,16 @@ frc2::CommandPtr SubDeploy::Zero() {
     _deployMotor.SetVoltage(-3_V);
     _currentlyZeroing = true;
     _hasZeroed = false;
+    _zeroingTimer.Restart();
   })
-    .AndThen(frc2::cmd::WaitUntil(
-      [this] { return abs(_deployMotor.GetOutputCurrent()) * 1_A > ZEROINGCURRENTLIMIT; }))
+    .AndThen(frc2::cmd::WaitUntil([this] {
+      return (abs(_deployMotor.GetOutputCurrent()) * 1_A > ZEROINGCURRENTLIMIT) &&
+             (_zeroingTimer.Get() > 1_s);  // Ensure that we have been trying to zero for at least 1
+                                           // second to prevent false positives
+    }))
     .AndThen([this] {
-      _deployMotor.SetPosition(-1_deg);  // pushes into the bumpers about 1 degree when zeroing
+      _zeroingTimer.Stop();
+      _deployMotor.SetPosition(-1_deg);  // Pushes into the bumpers about 1 degree when zeroing
       _deployMotor.StopMotor();
       _hasZeroed = true;
     })
@@ -98,6 +103,7 @@ void SubDeploy::Periodic() {
   Logger::Log("Deploy/Loop Time", (frc::GetTime() - loopStart));
   Logger::Log("Deploy/IsZeroing", _currentlyZeroing);
   Logger::Log("Deploy/HasZeroed", _hasZeroed);
+  Logger::Log("Deploy/ZeroingTimer", _zeroingTimer.Get());
 
   if(_hasZeroed == false && _currentlyZeroing == false) {
     frc2::CommandScheduler::GetInstance().Schedule(Idle());

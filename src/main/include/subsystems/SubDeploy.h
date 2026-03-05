@@ -61,6 +61,7 @@ class SubDeploy : public frc2::SubsystemBase {
 
   bool _hasZeroed = false;
   bool _currentlyZeroing = false;
+  frc::Timer _zeroingTimer;
 
   static constexpr units::ampere_t ZEROINGCURRENTLIMIT = 40_A;
   static constexpr double DEPLOY_P = 5.0;
