@@ -40,13 +40,13 @@ frc2::CommandPtr SubDeploy::ToggleDeploy() {
 }
 
 frc2::CommandPtr SubDeploy::ZeroDeploy() {
-  return RunOnce([this] { _deployMotor.SetPosition(90_deg); });
+  return RunOnce([this] { _deployMotor.SetPosition(0_deg); });
 }
 
 frc2::CommandPtr SubDeploy::DeployAutoZero() {
   return RunOnce([this] {
     EnableSoftLimit(false);
-    _deployMotor.SetVoltage(1_V);
+    _deployMotor.SetVoltage(-3_V);
     _currentlyZeroing = true;
     _hasZeroed = false;
   })
