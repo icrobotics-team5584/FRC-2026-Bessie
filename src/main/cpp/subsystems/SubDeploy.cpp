@@ -11,8 +11,8 @@
 
 SubDeploy::SubDeploy() {
   _deployMotorConfig.SmartCurrentLimit(60);
-  _deployMotorConfig.softLimit.ForwardSoftLimit(DEPLOY_MAX_ANGLE.value());
-  _deployMotorConfig.softLimit.ReverseSoftLimit(DEPLOY_MIN_ANGLE.value());
+  _deployMotorConfig.softLimit.ForwardSoftLimit(RETRACTED_ANGLE.value());
+  _deployMotorConfig.softLimit.ReverseSoftLimit(DEPLOYED_ANGLE.value());
   _deployMotorConfig.encoder.PositionConversionFactor(1.0 / DEPLOY_GEARING);
   _deployMotorConfig.encoder.VelocityConversionFactor(1.0 / DEPLOY_GEARING);
   _deployMotorConfig.closedLoop.P(DEPLOY_P);
@@ -22,25 +22,25 @@ SubDeploy::SubDeploy() {
 }
 
 frc2::CommandPtr SubDeploy::DeployIntake() {
-  return RunOnce([this] { _deployMotor.SetPositionTarget(DEPLOY_MIN_ANGLE); }).OnlyIf([this] {return _hasZeroed; });
+  return RunOnce([this] { _deployMotor.SetPositionTarget(DEPLOYED_ANGLE); }).OnlyIf([this] {return _hasZeroed; });
 }
 
 frc2::CommandPtr SubDeploy::RetractIntake() {
-  return RunOnce([this] { _deployMotor.SetPositionTarget(DEPLOY_MAX_ANGLE); }).OnlyIf([this] {return _hasZeroed; });
+  return RunOnce([this] { _deployMotor.SetPositionTarget(RETRACTED_ANGLE); }).OnlyIf([this] {return _hasZeroed; });
 }
 
 frc2::CommandPtr SubDeploy::ToggleDeploy() {
   return RunOnce([this] {
-    if (_deployMotor.GetPosition() > 45_deg) {
-      _deployMotor.SetPositionTarget(DEPLOY_MIN_ANGLE);
+    if (_deployMotor.GetPosition() > RETRACTED_ANGLE/2.0) {
+      _deployMotor.SetPositionTarget(DEPLOYED_ANGLE);
     } else {
-      _deployMotor.SetPositionTarget(DEPLOY_MAX_ANGLE);
+      _deployMotor.SetPositionTarget(RETRACTED_ANGLE);
     }
   });
 }
 
 frc2::CommandPtr SubDeploy::ZeroDeploy() {
-  return RunOnce([this] { _deployMotor.SetPosition(0_deg); });
+  return RunOnce([this] { _deployMotor.SetPosition(-1_deg); }); // pushes into the bumpers about 1 degree when zeroing
 }
 
 frc2::CommandPtr SubDeploy::DeployAutoZero() {
