@@ -73,9 +73,9 @@ RobotContainer::RobotContainer() {
     AutonHelper::MakeCommandPtrAuto(cmd::NeutralOnePassAndOutpost_RightTrench_NoBump()));
 
   // _autoManager.AddAuton("NeutralOnePassOutpostClimb_RightTrench", 
-  //   AutonHelper::MakeCommandPtrAuto(cmd::GASTAUTON_NeutralOnePassOutpostClimb_RightTrench()));
+  //   AutonHelper::MakeCommandPtrAuto(cmd::NeutralOnePassOutpostClimb_RightTrench()));
   // _autoManager.AddAuton("NeutralOnePassOutpostClimb_RightTrench_NoBump",
-  //   AutonHelper::MakeCommandPtrAuto(cmd::GASTAUTON_NeutralOnePassOutpostClimb_RightTrench_NoBump()));
+  //   AutonHelper::MakeCommandPtrAuto(cmd::NeutralOnePassOutpostClimb_RightTrench_NoBump()));
 
   _autoManager.AddAuton("NeutralTwoPass_LeftTrench",
     AutonHelper::MakeCommandPtrAuto(cmd::NeutralTwoPass_LeftTrench()));
