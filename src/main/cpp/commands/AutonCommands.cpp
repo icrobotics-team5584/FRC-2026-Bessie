@@ -4,7 +4,6 @@
 #include "subsystems/Hood/SubHood.h"
 #include "subsystems/SubIntake.h"
 #include "subsystems/SubShooter.h"
-#include "subsystems/SubClimber.h"
 
 #include "commands/FuelCommands.h"
 #include "commands/TurretCommands.h"
@@ -34,7 +33,8 @@ namespace cmd {
         return SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{2.5_m, 0.0_m, 180_deg}; }, 1.0);
     }
     
-    /* NEUTRAL ONE PASS AND CLIMB AUTONS */
+    /* NEUTRAL ONE PASS AND CLIMB AUTONS; note: climber is now deprecated, don't
+     * add these autons to autonchooser. */
 
     frc2::CommandPtr NeutralOnePassAndClimb_LeftBump() {
         return frc2::cmd::Sequence(
@@ -57,9 +57,9 @@ namespace cmd {
             cmd::AimAtHub()
         )).AndThen(frc2::cmd::Sequence(
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::TOWER; }, 1.0)
-                .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s)),
+                .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s))
             
-            SubClimber::GetInstance().ToggleClimb()
+            /* SubClimber::GetInstance().ToggleClimb(); Might bring back for MRT */
         ));
     }
 
@@ -82,9 +82,9 @@ namespace cmd {
             cmd::AimAtHub()
         )).AndThen(frc2::cmd::Sequence(
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::TOWER; }, 1.0)
-                .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s)),
+                .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s))
             
-            SubClimber::GetInstance().ToggleClimb()
+            /* SubClimber::GetInstance().ToggleClimb(); Might bring back for MRT */
         ));
     }
 
@@ -107,9 +107,9 @@ namespace cmd {
             cmd::AimAtHub()
         )).AndThen(frc2::cmd::Sequence(
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::TOWER; }, 1.0)
-                .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s)),
+                .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s))
                         
-            SubClimber::GetInstance().ToggleClimb()
+            /* SubClimber::GetInstance().ToggleClimb(); Might bring back for MRT */
         ));
     }
 
@@ -134,9 +134,9 @@ namespace cmd {
             cmd::AimAtHub()
         )).AndThen(frc2::cmd::Sequence(
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::TOWER; }, 1.0)
-                .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s)),
+                .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s))
             
-            SubClimber::GetInstance().ToggleClimb()
+            /* SubClimber::GetInstance().ToggleClimb(); Might bring back for MRT */
         ));
     }
 
@@ -159,9 +159,9 @@ namespace cmd {
             cmd::AimAtHub()
         )).AndThen(frc2::cmd::Sequence(
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::TOWER; }, 1.0)
-                .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s)),
+                .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s))
             
-            SubClimber::GetInstance().ToggleClimb()
+            /* SubClimber::GetInstance().ToggleClimb(); Might bring back for MRT */
         ));
     }
 
@@ -184,9 +184,9 @@ namespace cmd {
             cmd::AimAtHub()
         )).AndThen(frc2::cmd::Sequence(
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::TOWER; }, 1.0)
-                .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s)), 
+                .AlongWith(cmd::ShootOnTheMove().WithTimeout(6_s))
             
-            SubClimber::GetInstance().ToggleClimb()
+            /* SubClimber::GetInstance().ToggleClimb(); Might bring back for MRT */
         ));
     }
 
@@ -345,9 +345,9 @@ namespace cmd {
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{1.7_m, 2.8_m, 0_deg}; }, 1.0, 40_cm, 5_deg), //so we don't crash into the tower
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::TOWER; }, 1.0)
             ))
-        ).AndThen(
-            SubClimber::GetInstance().ToggleClimb()
-        );
+        ); /*.AndThen(
+            SubClimber::GetInstance().ToggleClimb(); Might bring back for MRT
+        );*/
     }
 
     frc2::CommandPtr GASTAUTON_NeutralOnePassOutpostClimb_RightTrench_NoBump() {
@@ -372,9 +372,9 @@ namespace cmd {
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{1.7_m, 2.8_m, 0_deg}; }, 1.0, 40_cm, 5_deg), //so we don't crash into the tower
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::TOWER; }, 1.0)
             ))
-        ).AndThen(
-            SubClimber::GetInstance().ToggleClimb()
-        );
+        ); /*.AndThen(
+            SubClimber::GetInstance().ToggleClimb(); Might bring back for MRT
+        );*/
     }
     
     frc2::CommandPtr ShootAndStay() {
