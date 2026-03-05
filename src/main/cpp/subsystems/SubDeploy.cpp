@@ -39,11 +39,7 @@ frc2::CommandPtr SubDeploy::ToggleDeploy() {
   });
 }
 
-frc2::CommandPtr SubDeploy::ZeroDeploy() {
-  return RunOnce([this] { _deployMotor.SetPosition(-1_deg); }); // pushes into the bumpers about 1 degree when zeroing
-}
-
-frc2::CommandPtr SubDeploy::DeployAutoZero() {
+frc2::CommandPtr SubDeploy::Zero() {
   return RunOnce([this] {
     EnableSoftLimit(false);
     _deployMotor.SetVoltage(-3_V);
@@ -52,8 +48,8 @@ frc2::CommandPtr SubDeploy::DeployAutoZero() {
   })
     .AndThen(frc2::cmd::WaitUntil(
       [this] { return abs(_deployMotor.GetOutputCurrent()) * 1_A > ZEROINGCURRENTLIMIT; }))
-    .AndThen(ZeroDeploy())
     .AndThen([this] {
+      _deployMotor.SetPosition(-1_deg);  // pushes into the bumpers about 1 degree when zeroing
       _deployMotor.StopMotor();
       _hasZeroed = true;
     })

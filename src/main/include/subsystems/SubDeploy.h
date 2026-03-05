@@ -30,8 +30,7 @@ class SubDeploy : public frc2::SubsystemBase {
   frc2::CommandPtr ToggleDeploy();
 
   void EnableSoftLimit(bool enabled);
-  frc2::CommandPtr ZeroDeploy();
-  frc2::CommandPtr DeployAutoZero();
+  frc2::CommandPtr Zero();
   frc2::CommandPtr RetractIntake();
 
   void SetBrakeMode(bool brakeMode);
@@ -63,7 +62,7 @@ class SubDeploy : public frc2::SubsystemBase {
   bool _hasZeroed = false;
   bool _currentlyZeroing = false;
 
-  static constexpr units::ampere_t ZEROINGCURRENTLIMIT = 20_A;
+  static constexpr units::ampere_t ZEROINGCURRENTLIMIT = 40_A;
   static constexpr double DEPLOY_P = 5.0;
   static constexpr double DEPLOY_GEARING = 55.8;
   static constexpr units::degree_t RETRACTED_ANGLE = 0.29_tr;
