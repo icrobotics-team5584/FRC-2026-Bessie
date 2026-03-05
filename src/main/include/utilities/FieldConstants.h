@@ -41,7 +41,7 @@ constexpr frc::Pose2d TWOPASS_TRENCH_RETURN_LEFT{3.58_m, 7.50_m, 225_deg};
 
 constexpr frc::Pose2d NEUTRAL_SECONDPASS_IN_LEFT{5.90_m, 7.30_m, 270_deg};
 constexpr frc::Pose2d NEUTRAL_SECONDPASS_END_LEFT{5.90_m, 3.50_m, 270_deg};
-constexpr frc::Pose2d NEUTRAL_SECONDPASS_TRANS_LEFT{6.40_m, 4.70_m, 180_deg};
+constexpr frc::Pose2d NEUTRAL_SECONDPASS_TRANS_LEFT{6.40_m, 4.70_m, 90_deg};
 
 // Neutral zone two pass positions, right side
 constexpr frc::Pose2d NEUTRAL_FIRSTPASS_IN_RIGHT{8.70_m, 1.07_m, 90_deg};
@@ -56,11 +56,11 @@ constexpr frc::Pose2d NEUTRAL_SECONDPASS_TRANS_RIGHT{6.40_m, 3.37_m, 270_deg};
 
 // Alliance zone re-entry positions
 constexpr frc::Pose2d START_REENTRY_BUMP_LEFT{5.85_m, 5.40_m, 180_deg};
-constexpr frc::Pose2d START_REENTRY_TRENCH_LEFT{5.70_m, 7.50_m, 270_deg};
+constexpr frc::Pose2d START_REENTRY_TRENCH_LEFT{5.70_m, 7.50_m, 90_deg};
 constexpr frc::Pose2d START_REENTRY_BUMP_RIGHT{5.85_m, 2.64_m, 180_deg};
 constexpr frc::Pose2d START_REENTRY_TRENCH_RIGHT{5.70_m, 0.54_m, 270_deg};
 
-constexpr frc::Pose2d END_REENTRY_TRENCH_LEFT{3.50_m, 7.25_m, 270_deg};
+constexpr frc::Pose2d END_REENTRY_TRENCH_LEFT{3.50_m, 7.25_m, 90_deg};
 constexpr frc::Pose2d END_REENTRY_TRENCH_RIGHT{3.50_m, 0.79_m, 270_deg};
 
 // Alliance zone positions
