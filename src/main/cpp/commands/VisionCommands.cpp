@@ -13,7 +13,10 @@ namespace cmd {
 using namespace frc2::cmd;
 
 frc2::CommandPtr AddVisionMeasurement() {
-    return Run([] {
+    auto timestampRange = 0.1_s;
+    Logger::Log("Vision/Timestamp range", timestampRange);
+
+    return Run([timestampRange] {
         if (Logger::Tune("Vision/Add pose measurement", !frc::RobotBase::IsSimulation())){
             auto poses = SubVision::GetInstance().GetPose();
 
@@ -31,7 +34,9 @@ frc2::CommandPtr AddVisionMeasurement() {
                 Logger::Log("Vision/"+name+"/Have value", hasValue);
                 if (hasValue) {
                     auto est = pose.value();
-                    if (SubVision::GetInstance().IsEstimateUsable(est) && frc::Timer::GetFPGATimestamp() - est.timestamp < 1_s / 20) {
+
+                    Logger::Log("Vision/"+name+"/Time", frc::Timer::GetFPGATimestamp() - est.timestamp);
+                    if (SubVision::GetInstance().IsEstimateUsable(est) && frc::Timer::GetFPGATimestamp() - est.timestamp < 0.1_s) {
                         Logger::Log("Vision/"+name+"/Estimation Usable", true);
                     } else {
                         Logger::Log("Vision/"+name+"/Estimation Usable", false);
