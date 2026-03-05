@@ -49,17 +49,14 @@ SubShooter::SubShooter() {
   _shooterMotor2.GetClosedLoopReference().SetUpdateFrequency(100_Hz);
   _shooterMotor2.GetStatorCurrent().SetUpdateFrequency(100_Hz);
 
-  _timeOfFlightTable.insert(1.8575_m, 0.8_s);
-  _timeOfFlightTable.insert(2.3575_m, 0.5_s);
-  _timeOfFlightTable.insert(2.8575_m, 0.93_s);
-  _timeOfFlightTable.insert(3.3575_m, 1.1_s);
-  _timeOfFlightTable.insert(3.8575_m, 1.18_s);
-  _timeOfFlightTable.insert(4.3575_m, 1.18_s);
-  _timeOfFlightTable.insert(4.6875_m, 1.28_s);
-  _timeOfFlightTable.insert(5.1875_m, 1.28_s);
-  _timeOfFlightTable.insert(5.3_m, 1.3_s);
-  _timeOfFlightTable.insert(5.9_m, 1.51_s);
-  _timeOfFlightTable.insert(7_m, 1.8_s);
+  _timeOfFlightTable.insert(1.37_m, 1.1_s);
+  _timeOfFlightTable.insert(2.2_m, 1.23_s);
+  _timeOfFlightTable.insert(3.145_m, 1.37_s);
+  _timeOfFlightTable.insert(4.026_m, 1.31_s);
+  _timeOfFlightTable.insert(4.68_m, 1.2_s);
+  _timeOfFlightTable.insert(5.6_m, 1.35_s);
+  _timeOfFlightTable.insert(7.6_m, 1.64_s);
+
 
   _flyWheelSpeedTableScoring.insert(1.37_m, 27_tps);
   _flyWheelSpeedTableScoring.insert(2.2_m, 30_tps);
