@@ -43,6 +43,7 @@ constexpr frc::Pose2d START_BUMP_LEFT{3.58_m, 5.80_m, 0_deg};
 constexpr frc::Pose2d START_TRENCH_LEFT{3.58_m, 7.50_m, 270_deg};
 constexpr frc::Pose2d START_BUMP_RIGHT{3.58_m, 2.27_m, 0_deg};
 constexpr frc::Pose2d START_TRENCH_RIGHT{3.58_m, 0.57_m, 90_deg};
+constexpr frc::Pose2d START_TRENCH_RIGHT_RETURN{3.58_m, 0.57_m, 135_deg};
 
 constexpr frc::Pose2d START_REENTRY_BUMP_LEFT{5.85_m, 5.40_m, 180_deg};
 constexpr frc::Pose2d START_REENTRY_TRENCH_LEFT{5.70_m, 7.50_m, 270_deg};

@@ -427,7 +427,7 @@ namespace cmd {
                 ),
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_FIRSTPASS_END_RIGHT; }, 0.5, 20_cm, 3_deg),
                 SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_FIRSTPASS_TRANS_RIGHT; }, 1.0, 20_cm, 5_deg),
-                SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::START_TRENCH_RIGHT; }, 1.0, 20_cm, 5_deg)
+                SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::START_TRENCH_RIGHT_RETURN; }, 1.0, 20_cm, 5_deg)
             )),
 
             cmd::ShootOnTheMove().WithTimeout(5_s),
