@@ -22,7 +22,7 @@ constexpr rev::spark::SparkBaseConfig::IdleMode IDLE_MODE =
 };  // namespace NeoMotorConfig
 
 namespace KrakenMotorConfig {
-constexpr double P = 100;
+constexpr double P = 200;
 constexpr double I = 0;
 constexpr double D = 0;
 constexpr double S = 0.6;
