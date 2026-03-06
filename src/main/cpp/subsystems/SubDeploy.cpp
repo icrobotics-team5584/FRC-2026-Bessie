@@ -22,11 +22,13 @@ SubDeploy::SubDeploy() {
 }
 
 frc2::CommandPtr SubDeploy::DeployIntake() {
-  return RunOnce([this] { _deployMotor.SetPositionTarget(DEPLOYED_ANGLE); }).OnlyIf([this] {return _hasZeroed; });
+  return RunOnce([this] { _deployMotor.SetPositionTarget(DEPLOYED_ANGLE); }).OnlyIf([this] {return _hasZeroed; })
+  .OnlyIf([this]{return _hasZeroed;});
 }
 
 frc2::CommandPtr SubDeploy::RetractIntake() {
-  return RunOnce([this] { _deployMotor.SetPositionTarget(RETRACTED_ANGLE); }).OnlyIf([this] {return _hasZeroed; });
+  return RunOnce([this] { _deployMotor.SetPositionTarget(RETRACTED_ANGLE); }).OnlyIf([this] {return _hasZeroed; })
+  .OnlyIf([this]{return _hasZeroed;});
 }
 
 frc2::CommandPtr SubDeploy::ToggleDeploy() {
@@ -36,7 +38,7 @@ frc2::CommandPtr SubDeploy::ToggleDeploy() {
     } else {
       _deployMotor.SetPositionTarget(RETRACTED_ANGLE);
     }
-  });
+  }).OnlyIf([this]{return _hasZeroed;});
 }
 
 frc2::CommandPtr SubDeploy::Zero() {
@@ -103,11 +105,6 @@ void SubDeploy::Periodic() {
   Logger::Log("Deploy/IsZeroing", _currentlyZeroing);
   Logger::Log("Deploy/HasZeroed", _hasZeroed);
   Logger::Log("Deploy/ZeroingTimer", _zeroingTimer.Get());
-  
-  if(_hasZeroed == false && _currentlyZeroing == false) {
-    _deployMotor.Set(0);
-  }
-
   Logger::Log("Deploy/Loop Time", (frc::GetTime() - loopStart));
 }
 
