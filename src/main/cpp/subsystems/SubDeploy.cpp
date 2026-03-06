@@ -100,14 +100,15 @@ void SubDeploy::Periodic() {
 
   RobotVisualisation::GetInstance()._deployLigament->SetAngle(_deployMotor.GetPosition());
 
-  Logger::Log("Deploy/Loop Time", (frc::GetTime() - loopStart));
   Logger::Log("Deploy/IsZeroing", _currentlyZeroing);
   Logger::Log("Deploy/HasZeroed", _hasZeroed);
   Logger::Log("Deploy/ZeroingTimer", _zeroingTimer.Get());
-
+  
   if(_hasZeroed == false && _currentlyZeroing == false) {
-    frc2::CommandScheduler::GetInstance().Schedule(Idle());
+    _deployMotor.Set(0);
   }
+
+  Logger::Log("Deploy/Loop Time", (frc::GetTime() - loopStart));
 }
 
 void SubDeploy::SimulationPeriodic() {
