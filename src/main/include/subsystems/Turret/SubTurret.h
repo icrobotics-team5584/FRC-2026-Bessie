@@ -104,8 +104,8 @@ class SubTurret : public frc2::SubsystemBase {
 
   const units::turn_t turretZeroOffset = 0_tr; // -0.5_tr
 
-  units::degree_t POS_LIMIT = 362_deg;
-  units::degree_t NEG_LIMIT = -2_deg;
+  units::degree_t POS_LIMIT = 270_deg;
+  units::degree_t NEG_LIMIT = -90_deg;
 
   bool _hasZeroed = false;
 
