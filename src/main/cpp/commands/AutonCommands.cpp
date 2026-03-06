@@ -36,8 +36,8 @@ namespace cmd {
     }
 
     frc2::CommandPtr TESTLShapeWithEndVel() {
-        return SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{2.5_m, 0.0_m, 0_deg}; }, 1.0, 5_cm, 2_deg, 2_mps)
-            .AndThen(SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{2.5_m, 2.5_m, 90_deg}; }, 1.0, 5_cm, 2_deg));
+        return SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{2.9_m, 0.42_m, 0_deg}; }, 1.0, 5_cm, 2_deg, 2_mps)
+            .AndThen(SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{2.9_m, 1.42_m, 90_deg}; }, 1.0, 5_cm, 2_deg));
     }
     
     /* NEUTRAL ONE PASS AND CLIMB AUTONS */
