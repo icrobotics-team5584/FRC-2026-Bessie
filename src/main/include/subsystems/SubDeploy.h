@@ -30,8 +30,7 @@ class SubDeploy : public frc2::SubsystemBase {
   frc2::CommandPtr ToggleDeploy();
 
   void EnableSoftLimit(bool enabled);
-  frc2::CommandPtr ZeroDeploy();
-  frc2::CommandPtr DeployAutoZero();
+  frc2::CommandPtr Zero();
   frc2::CommandPtr RetractIntake();
 
   void SetBrakeMode(bool brakeMode);
@@ -62,12 +61,13 @@ class SubDeploy : public frc2::SubsystemBase {
 
   bool _hasZeroed = false;
   bool _currentlyZeroing = false;
+  frc::Timer _zeroingTimer;
 
-  static constexpr units::ampere_t ZEROINGCURRENTLIMIT = 20_A;
+  static constexpr units::ampere_t ZEROINGCURRENTLIMIT = 40_A;
   static constexpr double DEPLOY_P = 5.0;
   static constexpr double DEPLOY_GEARING = 55.8;
-  static constexpr units::degree_t DEPLOY_MAX_ANGLE = 90_deg;
-  static constexpr units::degree_t DEPLOY_MIN_ANGLE = -22_deg;
+  static constexpr units::degree_t RETRACTED_ANGLE = 0.29_tr;
+  static constexpr units::degree_t DEPLOYED_ANGLE = 0_deg;
   static constexpr units::meter_t DEPLOY_ARM_LENGTH = 0.1_m;
 
   // Simulation components
@@ -77,6 +77,6 @@ class SubDeploy : public frc2::SubsystemBase {
   frc::LinearSystem<2, 1, 2> _deployFlywheelSystem =
     frc::LinearSystemId::SingleJointedArmSystem(DEPLOY_MOTOR_MODEL, DEPLOY_MOI, DEPLOY_GEARING);
   frc::sim::SingleJointedArmSim _deploySim{_deployFlywheelSystem, DEPLOY_MOTOR_MODEL,
-    DEPLOY_GEARING, DEPLOY_ARM_LENGTH, DEPLOY_MIN_ANGLE, DEPLOY_MAX_ANGLE, false,
+    DEPLOY_GEARING, DEPLOY_ARM_LENGTH, DEPLOYED_ANGLE, RETRACTED_ANGLE, false,
     DEPLOY_START_ANGLE};
 };
