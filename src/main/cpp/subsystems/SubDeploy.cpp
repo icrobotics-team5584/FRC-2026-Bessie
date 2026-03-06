@@ -22,13 +22,11 @@ SubDeploy::SubDeploy() {
 }
 
 frc2::CommandPtr SubDeploy::DeployIntake() {
-  return RunOnce([this] { _deployMotor.SetPositionTarget(DEPLOYED_ANGLE); }).OnlyIf([this] {return _hasZeroed; })
-  .OnlyIf([this]{return _hasZeroed;});
+  return RunOnce([this] { _deployMotor.SetPositionTarget(DEPLOYED_ANGLE); }).OnlyIf([this] {return _hasZeroed; });
 }
 
 frc2::CommandPtr SubDeploy::RetractIntake() {
-  return RunOnce([this] { _deployMotor.SetPositionTarget(RETRACTED_ANGLE); }).OnlyIf([this] {return _hasZeroed; })
-  .OnlyIf([this]{return _hasZeroed;});
+  return RunOnce([this] { _deployMotor.SetPositionTarget(RETRACTED_ANGLE); }).OnlyIf([this] {return _hasZeroed; });
 }
 
 frc2::CommandPtr SubDeploy::ToggleDeploy() {
