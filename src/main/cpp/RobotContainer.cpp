@@ -110,7 +110,7 @@ void RobotContainer::ConfigureBindings() {
   _operatorController.POVDown().OnTrue(SubHood::GetInstance().AdjustManualAngleOffset(-1_deg));
 
   // Driver POVs
-  _driverController.POVRight().WhileTrue(SubDeploy::GetInstance().DeployAutoZero());
+  _driverController.POVRight().WhileTrue(SubDeploy::GetInstance().Zero());
   _driverController.POVLeft().WhileTrue(SubHood::GetInstance().ZeroHood());
 
   //Sticks
