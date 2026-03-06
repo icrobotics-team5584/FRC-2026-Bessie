@@ -22,14 +22,13 @@ SubHood::SubHood() {
     _hoodMotor = std::make_unique<HoodKrakenIO>(canid::HOOD_MOTOR);
   }
 
-  _hoodPitchTable.insert(1.8575_m, 0.07611_tr);
-  _hoodPitchTable.insert(2.3575_m, 0.093056_tr);
-  _hoodPitchTable.insert(2.8575_m, 0.093056_tr);
-  _hoodPitchTable.insert(3.3575_m, 0.093056_tr);
-  _hoodPitchTable.insert(3.8575_m, 0.098611_tr);
-  _hoodPitchTable.insert(4.3575_m, 0.098611_tr);
-  _hoodPitchTable.insert(4.6875_m, 0.098611_tr);
-  _hoodPitchTable.insert(5.1875_m, 0.098611_tr);
+  _hoodPitchTable.insert(1.37_m, 17.2_deg);
+  _hoodPitchTable.insert(2.2_m, 21.18_deg);
+  _hoodPitchTable.insert(3.145_m, 26.19_deg);
+  _hoodPitchTable.insert(4.026_m, 30.1_deg);
+  _hoodPitchTable.insert(4.68_m, 38.2_deg);
+  _hoodPitchTable.insert(5.6_m, 37.2_deg);
+  _hoodPitchTable.insert(7.6_m, 38.2_deg);
 
   _hoodMotor->ConfigMotor();
 }
