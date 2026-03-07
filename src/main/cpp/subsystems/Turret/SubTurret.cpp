@@ -19,8 +19,8 @@ SubTurret::SubTurret() {
     _turretMotorConfig.encoder.PositionConversionFactor(1/GEAR_RATIO);
     _turretMotorConfig.encoder.VelocityConversionFactor(1/GEAR_RATIO);
     _turretMotorConfig.closedLoop.Pid(P, I, D);
-    _turretMotorConfig.closedLoop.MaxOutput(0.5);
-    _turretMotorConfig.closedLoop.MinOutput(-0.5);
+    _turretMotorConfig.closedLoop.MaxOutput(1.0);
+    _turretMotorConfig.closedLoop.MinOutput(-1.0);
     _turretMotorConfig.closedLoop.IMaxAccum(0.05);
     _turretMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
     _turretMotorConfig.SmartCurrentLimit(40);
@@ -182,9 +182,14 @@ units::degree_t SubTurret::GetTurretAngleAtTime(units::second_t time) {
 frc2::CommandPtr SubTurret::SetTurretTargetAngle(std::function<units::degree_t()> angle, std::function<units::degrees_per_second_t()> angVelTarget){
     return Run([this, angle, angVelTarget] {
         units::degrees_per_second_t nextVel = angVelTarget(); 
-        // we want the turret to negate the robot rotation, hence the negative
 
         units::volt_t rotationFeedforward = _robotRotVelFF.Calculate(nextVel);
+
+        // If the error is larger than 60_deg we do not use any rotationFeedforward (angular velocity FF)
+        // This is so that we dont counteract our wraparound with rotationFF (so we can wrap quicker)
+        if(units::math::abs( GetTurretAngle() - angle() ) > 60_deg) {
+            rotationFeedforward = 0_V;
+        }
 
         Logger::Log("Turret/VelocityFeedForward/ffVolts", rotationFeedforward);
         Logger::Log("Turret/VelocityFeedForward/angVelTarget", nextVel);
