@@ -54,12 +54,13 @@ class SubDrivebase : public frc2::SubsystemBase {
   frc2::Trigger CheckCoastButton();
 
   units::turns_per_second_t CalcRotateSpeed(units::turn_t rotationError);
-  frc::ChassisSpeeds CalcDriveToPoseSpeeds(frc::Pose2d targetPose, units::meters_per_second_t endVelocity = 0_mps);
+  frc::ChassisSpeeds CalcDriveToPoseSpeeds(frc::Pose2d targetPose, units::meters_per_second_t endVelocity = 0_mps, units::turns_per_second_t endAngularVelocity = 0_rad_per_s);
   frc::ChassisSpeeds CalcJoystickSpeeds(frc2::CommandXboxController& controller);
 
   frc2::CommandPtr DriveToPose(std::function<frc::Pose2d()> pose, double speedScaling = 1,
     units::meter_t posErrorTolerance = 2_cm, units::degree_t rotErrorTolerance = 2_deg,
-    units::meters_per_second_t endVelocity = 0_mps, bool flipForRedAlliance = true);
+    units::meters_per_second_t endVelocity = 0_mps,
+    units::turns_per_second_t endAngularVelocity = 0_rad_per_s, bool flipForRedAlliance = true);
   void SetPose(frc::Pose2d pose);
   bool IsAtPose(frc::Pose2d pose, units::meter_t posErrorTolerance = 2_cm,
     units::degree_t rotErrorTolerance = 2_deg);
