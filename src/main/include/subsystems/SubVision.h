@@ -105,5 +105,5 @@ public:
 
 
 // Link to photon vision
-// http://static-camera-pi.local:5800/ for left and right camera
-// http://turret-camera-pi.local:5800/ for turret camera
+// http://static-camera-pi.local:5800/ or http://10.55.84.11:5800 for left and right camera
+// http://turret-camera-pi.local:5800/ or http://10.55.84.12:5800 for turret camera
