@@ -34,6 +34,6 @@ namespace DrivebaseConfig {
   const units::turn_t BACK_LEFT_MAG_OFFSET = BotVars::Choose(-0.464111328125_tr - 0.25_tr, -0.824951171875_tr);
 
   // PID constants for translation and rotation controllers
-  const frc::PIDController P2P_TRANSLATION_PID{6, 0, 0};
-  const frc::PIDController P2P_ROTATION_PID{8, 0, 0};
+  const frc::PIDController P2P_TRANSLATION_PID{6.5, 0, 0};
+  const frc::PIDController P2P_ROTATION_PID{45, 0, 0};
 }
