@@ -11,8 +11,8 @@
 
 SubDeploy::SubDeploy() {
   _deployMotorConfig.SmartCurrentLimit(60);
-  _deployMotorConfig.softLimit.ForwardSoftLimit(DEPLOY_MAX_ANGLE.value());
-  _deployMotorConfig.softLimit.ReverseSoftLimit(DEPLOY_MIN_ANGLE.value());
+  _deployMotorConfig.softLimit.ForwardSoftLimit(RETRACTED_ANGLE.value());
+  _deployMotorConfig.softLimit.ReverseSoftLimit(DEPLOYED_ANGLE.value());
   _deployMotorConfig.encoder.PositionConversionFactor(1.0 / DEPLOY_GEARING);
   _deployMotorConfig.encoder.VelocityConversionFactor(1.0 / DEPLOY_GEARING);
   _deployMotorConfig.closedLoop.P(DEPLOY_P);
@@ -22,38 +22,39 @@ SubDeploy::SubDeploy() {
 }
 
 frc2::CommandPtr SubDeploy::DeployIntake() {
-  return RunOnce([this] { _deployMotor.SetPositionTarget(DEPLOY_MIN_ANGLE); }).OnlyIf([this] {return _hasZeroed; });
+  return RunOnce([this] { _deployMotor.SetPositionTarget(DEPLOYED_ANGLE); }).OnlyIf([this] {return _hasZeroed; });
 }
 
 frc2::CommandPtr SubDeploy::RetractIntake() {
-  return RunOnce([this] { _deployMotor.SetPositionTarget(DEPLOY_MAX_ANGLE); }).OnlyIf([this] {return _hasZeroed; });
+  return RunOnce([this] { _deployMotor.SetPositionTarget(RETRACTED_ANGLE); }).OnlyIf([this] {return _hasZeroed; });
 }
 
 frc2::CommandPtr SubDeploy::ToggleDeploy() {
   return RunOnce([this] {
-    if (_deployMotor.GetPosition() > 45_deg) {
-      _deployMotor.SetPositionTarget(DEPLOY_MIN_ANGLE);
+    if (_deployMotor.GetPosition() > RETRACTED_ANGLE/2.0) {
+      _deployMotor.SetPositionTarget(DEPLOYED_ANGLE);
     } else {
-      _deployMotor.SetPositionTarget(DEPLOY_MAX_ANGLE);
+      _deployMotor.SetPositionTarget(RETRACTED_ANGLE);
     }
-  });
+  }).OnlyIf([this]{return _hasZeroed;});
 }
 
-frc2::CommandPtr SubDeploy::ZeroDeploy() {
-  return RunOnce([this] { _deployMotor.SetPosition(90_deg); });
-}
-
-frc2::CommandPtr SubDeploy::DeployAutoZero() {
+frc2::CommandPtr SubDeploy::Zero() {
   return RunOnce([this] {
     EnableSoftLimit(false);
-    _deployMotor.SetVoltage(1_V);
+    _deployMotor.SetVoltage(-3_V);
     _currentlyZeroing = true;
     _hasZeroed = false;
+    _zeroingTimer.Restart();
   })
-    .AndThen(frc2::cmd::WaitUntil(
-      [this] { return abs(_deployMotor.GetOutputCurrent()) * 1_A > ZEROINGCURRENTLIMIT; }))
-    .AndThen(ZeroDeploy())
+    .AndThen(frc2::cmd::WaitUntil([this] {
+      return (abs(_deployMotor.GetOutputCurrent()) * 1_A > ZEROINGCURRENTLIMIT) &&
+             (_zeroingTimer.Get() > 1_s);  // Ensure that we have been trying to zero for at least 1
+                                           // second to prevent false positives
+    }))
     .AndThen([this] {
+      _zeroingTimer.Stop();
+      _deployMotor.SetPosition(-1_deg);  // Pushes into the bumpers about 1 degree when zeroing
       _deployMotor.StopMotor();
       _hasZeroed = true;
     })
@@ -99,13 +100,10 @@ void SubDeploy::Periodic() {
 
   RobotVisualisation::GetInstance()._deployLigament->SetAngle(_deployMotor.GetPosition());
 
-  Logger::Log("Deploy/Loop Time", (frc::GetTime() - loopStart));
   Logger::Log("Deploy/IsZeroing", _currentlyZeroing);
   Logger::Log("Deploy/HasZeroed", _hasZeroed);
-
-  if(_hasZeroed == false && _currentlyZeroing == false) {
-    frc2::CommandScheduler::GetInstance().Schedule(Idle());
-  }
+  Logger::Log("Deploy/ZeroingTimer", _zeroingTimer.Get());
+  Logger::Log("Deploy/Loop Time", (frc::GetTime() - loopStart));
 }
 
 void SubDeploy::SimulationPeriodic() {

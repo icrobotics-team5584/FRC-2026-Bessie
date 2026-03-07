@@ -21,7 +21,9 @@ SubVision::SubVision() {
   _devTable.insert(1_m, 0.006);
   _devTable.insert(1.5_m, 0.02);
   _devTable.insert(2_m, 0.068);
-  _devTable.insert(3_m, 0.230);
+  _devTable.insert(3_m, 0.060);
+  _devTable.insert(4_m, 0.330);
+  _devTable.insert(5_m, 0.850);
 
   // Sim set up
   _visionSim.AddAprilTags(_tagMap);

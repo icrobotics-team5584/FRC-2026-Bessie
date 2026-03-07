@@ -10,7 +10,8 @@
 #include <frc/RobotBase.h>
 
 void StableCameraProcess(std::string name, photon::EstimatedRobotPose pose) {
-    double d = SubVision::GetInstance().GetDev(pose);
+    auto distance = pose.targetsUsed.front().bestCameraToTarget.Translation().Norm();
+    double d = SubVision::GetInstance().GetDev(distance);
     wpi::array<double,3> dev = {d, d, 0.9};
     PoseHandler::GetInstance().AddVisionMeasurement(
         pose.estimatedPose.ToPose2d(), pose.timestamp, dev);
@@ -33,7 +34,8 @@ void TurretCameraProcess(std::string name, photon::EstimatedRobotPose pose) {
                                 .TransformBy(t_turret_to_cam.Inverse())
                                 .TransformBy(t_bot_to_turret.Inverse());
 
-    double d = SubVision::GetInstance().GetDev(pose);
+    auto distance = pose.targetsUsed.front().bestCameraToTarget.Translation().Norm();
+    double d = SubVision::GetInstance().GetDev(distance);
     wpi::array<double,3> dev = {d, d, 0.9};
     PoseHandler::GetInstance().AddVisionMeasurement(
         orig_bot_pose, pose.timestamp, dev);
