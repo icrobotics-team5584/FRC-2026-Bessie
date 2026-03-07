@@ -8,7 +8,7 @@ SubDrivebase::SubDrivebase() {
   Logger::Log("Drivebase/P2P/Rotation Controller", &_rotationP2pController);
   Logger::Log("Drivebase/P2P/Translation Controller", &_translationP2pController);
 
-  _rotationP2pController.EnableContinuousInput(0_deg, 360_deg);
+  _rotationP2pController.EnableContinuousInput(0, 1);
 
   ctre::phoenix6::configs::Pigeon2Configuration gyroConfig;
   gyroConfig.MountPose.MountPosePitch = 0_deg;
@@ -101,11 +101,6 @@ void SubDrivebase::LogDrivebaseStates() {
     (blRotations) * (0.04121451348939883 * 2 * std::numbers::pi));
   Logger::Log("Drivebase/DistanceDriven/br",
     (brRotations) * (0.04121451348939883 * 2 * std::numbers::pi));
-
-  Logger::Log("Drivebase/P2P/Translation setpoint/Position", _translationP2pController.GetSetpoint().position);
-  Logger::Log("Drivebase/P2P/Translation setpoint/Velocity", _translationP2pController.GetSetpoint().velocity);
-  Logger::Log("Drivebase/P2P/Rotation setpoint/Position", _rotationP2pController.GetSetpoint().position);
-  Logger::Log("Drivebase/P2P/Rotation setpoint/Velocity", _rotationP2pController.GetSetpoint().velocity);
 
   _frontLeft.SendSensorsToDash();
   _frontRight.SendSensorsToDash();
@@ -333,7 +328,7 @@ frc2::Trigger SubDrivebase::CheckCoastButton() {
 }
 
 units::turns_per_second_t SubDrivebase::CalcRotateSpeed(units::turn_t rotationError) {
-  auto omega = _rotationP2pController.Calculate(rotationError, 0_deg) * 1_rad_per_s;
+  auto omega = _rotationP2pController.Calculate(rotationError.value(), 0) * 1_rad_per_s;
   return omega;
 }
 
@@ -352,8 +347,8 @@ frc::ChassisSpeeds SubDrivebase::CalcDriveToPoseSpeeds(frc::Pose2d targetPose, u
   frc::Translation2d translationVector = frc::Translation2d(targetXMeters - currentXMeters, targetYMeters - currentYMeters);
 
   // Use PID controllers to calculate speeds
-  auto translationSpeed = _translationP2pController.Calculate(0_m, {translationVector.Norm(), endVelocity}) * 1_mps;
-  auto rotationSpeed = _rotationP2pController.Calculate(currentRotation, {targetRotation, endAngularVelocity}) * 1_rad_per_s;
+  auto translationSpeed = _translationP2pController.Calculate(0, translationVector.Norm().value()) * 1_mps;
+  auto rotationSpeed = _rotationP2pController.Calculate(currentRotation.value(), targetRotation.value()) * 1_rad_per_s;
 
   // Clamp translation speed to max velocity
   translationSpeed = std::clamp(
@@ -363,6 +358,11 @@ frc::ChassisSpeeds SubDrivebase::CalcDriveToPoseSpeeds(frc::Pose2d targetPose, u
   frc::Translation2d translationSpeedVector = frc::Translation2d((translationSpeed.value()*1_m), translationVector.Angle());
   units::meters_per_second_t xSpeed = translationSpeedVector.X().value() * 1_mps;
   units::meters_per_second_t ySpeed = translationSpeedVector.Y().value() * 1_mps;
+
+  //Limit acceleration
+  xSpeed = _xP2pLimiter.Calculate(xSpeed);
+  ySpeed = _yP2pLimiter.Calculate(ySpeed);
+  rotationSpeed = _rotP2pLimiter.Calculate(rotationSpeed);
 
   if (frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kRed) {
     xSpeed *= -1;
@@ -408,15 +408,12 @@ frc2::CommandPtr SubDrivebase::DriveToPose(std::function<frc::Pose2d()> pose, do
     return flipForRedAlliance ? ICgeometry::GetFieldRelativePose(pose()) : pose();
   };
   
-  return RunOnce([this] { 
-      _rotationP2pController.Reset(GetGyroAngle(true).Degrees());
-      _translationP2pController.Reset(0_m); })
-    .AndThen(Drive(
+  return Drive(
       [this, fieldRelativePose, speedScaling, endVelocity, endAngularVelocity] {
         auto pose = fieldRelativePose();
         return CalcDriveToPoseSpeeds(pose, endVelocity, endAngularVelocity) * speedScaling;
       },
-      true))
+      true)
     .Until([this, fieldRelativePose, posErrorTolerance, rotErrorTolerance] {
       return IsAtPose(fieldRelativePose(), posErrorTolerance, rotErrorTolerance);
     });
