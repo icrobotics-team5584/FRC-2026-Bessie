@@ -23,7 +23,7 @@ SubTurret::SubTurret() {
     _turretMotorConfig.closedLoop.MinOutput(-0.5);
     _turretMotorConfig.closedLoop.IMaxAccum(0.05);
     _turretMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
-    _turretMotorConfig.SmartCurrentLimit(20);
+    _turretMotorConfig.SmartCurrentLimit(40);
     _turretMotorConfig.softLimit.ForwardSoftLimit(POS_LIMIT.convert<units::turns>().value());
     _turretMotorConfig.softLimit.ForwardSoftLimitEnabled(true);
     _turretMotorConfig.softLimit.ReverseSoftLimit(NEG_LIMIT.convert<units::turns>().value());
