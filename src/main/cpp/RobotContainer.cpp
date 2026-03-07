@@ -24,6 +24,7 @@
 #include "utilities/PoseHandler.h"
 #include "utilities/ShiftHandler.h"
 #include "utilities/ShotPlanner.h"
+#include "utilities/FieldConstants.h"
 
 #include <frc2/command/Commands.h>
 
@@ -132,6 +133,9 @@ void RobotContainer::ConfigureBindings() {
   // Driver POVs
   _driverController.POVRight().WhileTrue(SubDeploy::GetInstance().Zero());
   _driverController.POVLeft().WhileTrue(SubHood::GetInstance().ZeroHood());
+  _driverController.POVDown().OnTrue(frc2::cmd::RunOnce([this] {
+    SubDrivebase::GetInstance().SetPose(frc::Pose2d{0_m, 0_m, 0_deg});
+  }));
 
   //Sticks
 
