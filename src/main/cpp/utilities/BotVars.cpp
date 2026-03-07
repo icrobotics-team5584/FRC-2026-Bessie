@@ -1,31 +1,35 @@
 #include "utilities/BotVars.h"
+
+#include <frc/RobotBase.h>
+#include <frc/RobotController.h>
+
 #include <iostream>
 
 BotVars::Robot BotVars::DetermineRobot() {
-  std::string filePath = "/sys/class/net/eth0/address";
-  std::cout << "Running DetermineRobot()\n";
-  frc::SmartDashboard::PutString("botVars/comp bot MAC address", COMP_BOT_MAC_ADDRESS);
-  frc::SmartDashboard::PutString("botVars/prac bot MAC address", PRACTICE_BOT_MAC_ADDRESS);
-  if (std::filesystem::exists(filePath)) {
-    std::ifstream file(filePath);
-    std::string macAddress;
-    file >> macAddress;
-    frc::SmartDashboard::PutString("botVars/MAC address", macAddress);
-    if (macAddress == COMP_BOT_MAC_ADDRESS) {
-      frc::SmartDashboard::PutString("botVars/active robot", "COMP");
-      return Robot::COMP;
-    } else if (macAddress == PRACTICE_BOT_MAC_ADDRESS) {
-      frc::SmartDashboard::PutString("botVars/active robot", "PRACTICE");
-      return Robot::PRACTICE;
-    }
+  std::string serial = "";
+  if (frc::RobotBase::IsSimulation()) {
+    serial = "Simulation";
+  } else {
+    serial = frc::RobotController::GetSerialNumber();
   }
-  frc::SmartDashboard::PutString("botVars/active robot",
-                                 "ERROR! Could not match MAC address. Defaulting to COMP Bot.");
+  frc::SmartDashboard::PutString("botVars/Detected serial", serial);
+  frc::SmartDashboard::PutString("botVars/comp bot serial", COMP_BOT_SERIAL);
+  frc::SmartDashboard::PutString("botVars/prac bot serial", PRACTICE_BOT_SERIAL);
+
+  if (serial == COMP_BOT_SERIAL) {
+    frc::SmartDashboard::PutString("botVars/Active robot", "COMP");
+    return Robot::COMP;
+  } else if (serial == PRACTICE_BOT_SERIAL) {
+    frc::SmartDashboard::PutString("botVars/Active robot", "PRACTICE");
+    return Robot::PRACTICE;
+  }
+
+  frc::SmartDashboard::PutString(
+    "botVars/Active robot", "ERROR! Could not match serial. Defaulting to COMP.");
   return Robot::COMP;
 }
 
-
-BotVars::Robot BotVars::GetRobot(){
+BotVars::Robot BotVars::GetRobot() {
   static Robot activeRobot = DetermineRobot();
   return activeRobot;
 }
