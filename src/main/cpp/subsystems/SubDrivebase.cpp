@@ -332,7 +332,7 @@ units::turns_per_second_t SubDrivebase::CalcRotateSpeed(units::turn_t rotationEr
   return omega;
 }
 
-frc::ChassisSpeeds SubDrivebase::CalcDriveToPoseSpeeds(frc::Pose2d targetPose, units::meters_per_second_t endVelocity, units::turns_per_second_t endAngularVelocity) {
+frc::ChassisSpeeds SubDrivebase::CalcDriveToPoseSpeeds(frc::Pose2d targetPose) {
   // Find target and current values
   units::meter_t targetXMeters = targetPose.X();
   units::meter_t targetYMeters = targetPose.Y();
@@ -401,17 +401,15 @@ bool SubDrivebase::IsAtPose(
 }
 
 frc2::CommandPtr SubDrivebase::DriveToPose(std::function<frc::Pose2d()> pose, double speedScaling,
-  units::meter_t posErrorTolerance, units::degree_t rotErrorTolerance,
-  units::meters_per_second_t endVelocity, units::turns_per_second_t endAngularVelocity,
-  bool flipForRedAlliance) {
+  units::meter_t posErrorTolerance, units::degree_t rotErrorTolerance, bool flipForRedAlliance) {
   auto fieldRelativePose = [pose, flipForRedAlliance] {
     return flipForRedAlliance ? ICgeometry::GetFieldRelativePose(pose()) : pose();
   };
   
   return Drive(
-      [this, fieldRelativePose, speedScaling, endVelocity, endAngularVelocity] {
+      [this, fieldRelativePose, speedScaling] {
         auto pose = fieldRelativePose();
-        return CalcDriveToPoseSpeeds(pose, endVelocity, endAngularVelocity) * speedScaling;
+        return CalcDriveToPoseSpeeds(pose) * speedScaling;
       },
       true)
     .Until([this, fieldRelativePose, posErrorTolerance, rotErrorTolerance] {
