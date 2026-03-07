@@ -421,7 +421,7 @@ frc::ChassisSpeeds SubDrivebase::CalcJoystickSpeeds(frc2::CommandXboxController&
   std::string configPath = "Drivebase/Config/";
   auto deadband = Logger::Tune(configPath + "Joystick Deadband", DrivebaseConfig::JOYSTICK_DEADBAND);
   auto maxVelocity = Logger::Tune(configPath + "Max Velocity", DrivebaseConfig::MAX_VELOCITY);
-  auto maxAngularVelocity = Logger::Tune(configPath + "Max Angular Velocity", DrivebaseConfig::MAX_ANGULAR_VELOCITY);
+  auto maxAngularVelocity = Logger::Tune(configPath + "Max Angular Velocity", DrivebaseConfig::MAX_TELEOP_ANGULAR_VELOCITY);
   auto maxJoystickAccel = Logger::Tune(configPath + "Max Joystick Accel", DrivebaseConfig::MAX_JOYSTICK_ACCEL);
   auto maxAngularJoystickAccel = Logger::Tune(
     configPath + "Max Joystick Angular Accel", DrivebaseConfig::MAX_ANGULAR_JOYSTICK_ACCEL);
