@@ -41,8 +41,6 @@ RobotContainer::RobotContainer() {
     AutonHelper::MakeCommandPtrAuto(cmd::TESTForward250cm()));
   _autoManager.AddAuton("Forward250cmWhileTurning",
     AutonHelper::MakeCommandPtrAuto(cmd::TESTForward250cmWhileTurning()));
-  _autoManager.AddAuton("LShapeWithEndVel",
-    AutonHelper::MakeCommandPtrAuto(cmd::TESTLShapeWithEndVel()));
 
   // _autoManager.AddAuton("NeutralOnePassAndClimb_LeftBump",
   //   AutonHelper::MakeCommandPtrAuto(cmd::NeutralOnePassAndClimb_LeftBump()));

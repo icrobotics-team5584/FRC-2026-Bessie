@@ -4,7 +4,6 @@ namespace cmd {
     frc2::CommandPtr TESTDriveInASquare();
     frc2::CommandPtr TESTForward250cm();
     frc2::CommandPtr TESTForward250cmWhileTurning();
-    frc2::CommandPtr TESTLShapeWithEndVel();
 
     // frc2::CommandPtr NeutralOnePassAndClimb_LeftBump();
     // frc2::CommandPtr NeutralOnePassAndClimb_LeftTrench();
