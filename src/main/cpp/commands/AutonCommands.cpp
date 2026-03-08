@@ -392,8 +392,8 @@ namespace cmd {
                     SubDeploy::GetInstance().Zero().AndThen(SubDeploy::GetInstance().DeployIntake()).AsProxy()
                 ),
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.50_m, 4.04_m, 235_deg}; }, 0.7, 50_cm, 10_deg), //first pass end
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.80_m, 7.45_m, 225_deg}; }, 1.0, 40_cm, 25_deg), //transition
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{4.0_m, 7.45_m, 180_deg}; }, 1.0, 15_cm, 10_deg) //back to alliance zone
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.80_m, 7.45_m, 225_deg}; }, 1.0, 30_cm, 20_deg), //transition
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.60_m, 7.45_m, 180_deg}; }, 1.0, 15_cm, 10_deg) //back to alliance zone
             )),
 
             cmd::ShootOnTheMove().WithTimeout(5_s),
@@ -407,8 +407,8 @@ namespace cmd {
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.20_m, 3.47_m, 110_deg}; }, 1.0, 20_cm, 75_deg), //transition
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.95_m, 3.47_m, 110_deg}; }, 1.0, 20_cm, 15_deg), //second pass hub-side start
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.95_m, 6.50_m, 110_deg}; }, 1.0, 20_cm, 20_deg), //second pass hub-side end
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.95_m, 7.45_m, 0_deg}; }, 1.0, 30_cm, 25_deg), //transition to trench
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.50_m, 7.45_m, 0_deg}; }, 1.0, 20_cm, 5_deg) //drive under trench
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.95_m, 7.45_m, 0_deg}; }, 1.0, 30_cm, 20_deg), //transition to trench
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.60_m, 7.45_m, 0_deg}; }, 1.0, 20_cm, 10_deg) //drive under trench
             )),
 
             cmd::ShootOnTheMove()
@@ -429,8 +429,8 @@ namespace cmd {
                     SubDeploy::GetInstance().Zero().AndThen(SubDeploy::GetInstance().DeployIntake()).AsProxy()
                 ),
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.50_m, 4.0_m, 125_deg}; }, 0.7, 50_cm, 10_deg), //first pass end
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.80_m, 0.59_m, 135_deg}; }, 1.0, 30_cm, 25_deg), //transition
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{4.0_m, 0.59_m, 180_deg}; }, 1.0, 15_cm, 10_deg) //back to alliance zone
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.80_m, 0.59_m, 135_deg}; }, 1.0, 30_cm, 20_deg), //transition
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.60_m, 0.59_m, 180_deg}; }, 1.0, 15_cm, 10_deg) //back to alliance zone
             )),
 
             cmd::ShootOnTheMove().WithTimeout(5_s),
@@ -444,8 +444,8 @@ namespace cmd {
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.20_m, 4.57_m, 250_deg}; }, 1.0, 20_cm, 75_deg), //transition
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.95_m, 4.57_m, 250_deg}; }, 1.0, 20_cm, 15_deg), //second pass hub-side start
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.95_m, 1.54_m, 250_deg}; }, 1.0, 20_cm, 20_deg), //second pass hub-side end
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.95_m, 0.59_m, 0_deg}; }, 1.0, 30_cm, 25_deg), //transition to trench
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.50_m, 0.59_m, 0_deg}; }, 1.0, 20_cm, 5_deg) //drive under trench
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.95_m, 0.59_m, 0_deg}; }, 1.0, 30_cm, 20_deg), //transition to trench
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.60_m, 0.59_m, 0_deg}; }, 1.0, 20_cm, 10_deg) //drive under trench
             )),
 
             cmd::ShootOnTheMove().AlongWith(
@@ -468,8 +468,8 @@ namespace cmd {
                     SubDeploy::GetInstance().Zero().AndThen(SubDeploy::GetInstance().DeployIntake()).AsProxy()
                 ),
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.50_m, 4.04_m, 235_deg}; }, 0.7, 50_cm, 10_deg), //first pass end
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.80_m, 7.45_m, 225_deg}; }, 1.0, 40_cm, 25_deg), //transition
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{4.0_m, 7.45_m, 180_deg}; }, 1.0, 15_cm, 10_deg) //back to alliance zone
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.80_m, 7.45_m, 225_deg}; }, 1.0, 30_cm, 20_deg), //transition
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.60_m, 7.45_m, 180_deg}; }, 1.0, 15_cm, 10_deg) //back to alliance zone
             )),
 
             cmd::ShootOnTheMove().WithTimeout(5_s),
@@ -483,8 +483,8 @@ namespace cmd {
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.20_m, 3.47_m, 110_deg}; }, 1.0, 20_cm, 75_deg), //transition
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.95_m, 3.47_m, 110_deg}; }, 1.0, 20_cm, 15_deg), //second pass hub-side start
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.95_m, 6.50_m, 110_deg}; }, 1.0, 20_cm, 20_deg), //second pass hub-side end
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.95_m, 7.45_m, 180_deg}; }, 1.0, 30_cm, 25_deg), //transition to trench
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.50_m, 7.45_m, 180_deg}; }, 1.0, 20_cm, 5_deg) //drive under trench
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.95_m, 7.45_m, 180_deg}; }, 1.0, 30_cm, 20_deg), //transition to trench
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.60_m, 7.45_m, 180_deg}; }, 1.0, 20_cm, 10_deg) //drive under trench
             )),
 
             cmd::ShootOnTheMove().WithTimeout(4_s),
@@ -507,8 +507,8 @@ namespace cmd {
                     SubDeploy::GetInstance().Zero().AndThen(SubDeploy::GetInstance().DeployIntake()).AsProxy()
                 ),
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.50_m, 4.0_m, 125_deg}; }, 0.7, 50_cm, 10_deg), //first pass end
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.80_m, 0.59_m, 135_deg}; }, 1.0, 40_cm, 25_deg), //transition
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{4.0_m, 0.59_m, 180_deg}; }, 1.0, 15_cm, 10_deg) //back to alliance zone
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.80_m, 0.59_m, 135_deg}; }, 1.0, 30_cm, 20_deg), //transition
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.60_m, 0.59_m, 180_deg}; }, 1.0, 15_cm, 10_deg) //back to alliance zone
             )),
 
             cmd::ShootOnTheMove().WithTimeout(5_s),
@@ -523,12 +523,12 @@ namespace cmd {
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.95_m, 4.57_m, 250_deg}; }, 1.0, 20_cm, 15_deg), //second pass hub-side start
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.95_m, 1.54_m, 250_deg}; }, 1.0, 20_cm, 20_deg), //second pass hub-side end
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.95_m, 0.59_m, 180_deg}; }, 1.0, 30_cm, 25_deg), //transition to trench
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.50_m, 0.59_m, 180_deg}; }, 1.0, 20_cm, 5_deg) //drive under trench
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.60_m, 0.59_m, 180_deg}; }, 1.0, 20_cm, 5_deg) //drive under trench
             )),
 
             cmd::ShootOnTheMove().WithTimeout(4_s),
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.10_m, 0.59_m, 180_deg}; }, 1.0, 30_cm, 20_deg), //neutral side of trench
-            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_ONEPASS_IN_RIGHT; }, 1.0, 20_cm, 5_deg)
+            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_ONEPASS_IN_RIGHT; }, 1.0, 20_cm, 10_deg)
         );
     }
     
