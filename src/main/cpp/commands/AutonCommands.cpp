@@ -392,7 +392,7 @@ namespace cmd {
                     SubDeploy::GetInstance().Zero().AndThen(SubDeploy::GetInstance().DeployIntake()).AsProxy()
                 ),
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.50_m, 5.04_m, 235_deg}; }, 0.7, 50_cm, 10_deg), //first pass end
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.80_m, 7.27_m, 225_deg}; }, 1.0, 40_cm, 25_deg), //transition
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.80_m, 7.50_m, 225_deg}; }, 1.0, 40_cm, 25_deg), //transition
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{4.0_m, 7.50_m, 180_deg}; }, 1.0, 15_cm, 10_deg) //back to alliance zone
             )),
 
@@ -429,7 +429,7 @@ namespace cmd {
                     SubDeploy::GetInstance().Zero().AndThen(SubDeploy::GetInstance().DeployIntake()).AsProxy()
                 ),
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.50_m, 3.0_m, 125_deg}; }, 0.7, 50_cm, 10_deg), //first pass end
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.80_m, 0.77_m, 135_deg}; }, 1.0, 40_cm, 25_deg), //transition
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.80_m, 0.54_m, 135_deg}; }, 1.0, 30_cm, 25_deg), //transition
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{4.0_m, 0.54_m, 180_deg}; }, 1.0, 15_cm, 10_deg) //back to alliance zone
             )),
 
@@ -468,7 +468,7 @@ namespace cmd {
                     SubDeploy::GetInstance().Zero().AndThen(SubDeploy::GetInstance().DeployIntake()).AsProxy()
                 ),
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.50_m, 5.04_m, 235_deg}; }, 0.7, 50_cm, 10_deg), //first pass end
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.80_m, 7.27_m, 225_deg}; }, 1.0, 40_cm, 25_deg), //transition
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.80_m, 7.50_m, 225_deg}; }, 1.0, 40_cm, 25_deg), //transition
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{4.0_m, 7.50_m, 180_deg}; }, 1.0, 15_cm, 10_deg) //back to alliance zone
             )),
 
@@ -488,7 +488,7 @@ namespace cmd {
             )),
 
             cmd::ShootOnTheMove().WithTimeout(4_s),
-
+            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.10_m, 7.50_m, 0_deg}; }, 1.0, 30_cm, 20_deg), //neutral side of trench
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_ONEPASS_IN_LEFT; }, 1.0, 20_cm, 5_deg)
         );
     }
@@ -507,7 +507,7 @@ namespace cmd {
                     SubDeploy::GetInstance().Zero().AndThen(SubDeploy::GetInstance().DeployIntake()).AsProxy()
                 ),
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.50_m, 3.0_m, 125_deg}; }, 0.7, 50_cm, 10_deg), //first pass end
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.80_m, 0.77_m, 135_deg}; }, 1.0, 40_cm, 25_deg), //transition
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.80_m, 0.54_m, 135_deg}; }, 1.0, 40_cm, 25_deg), //transition
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{4.0_m, 0.54_m, 180_deg}; }, 1.0, 15_cm, 10_deg) //back to alliance zone
             )),
 
@@ -527,7 +527,7 @@ namespace cmd {
             )),
 
             cmd::ShootOnTheMove().WithTimeout(4_s),
-
+            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.10_m, 0.54_m, 0_deg}; }, 1.0, 30_cm, 20_deg), //neutral side of trench
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_ONEPASS_IN_RIGHT; }, 1.0, 20_cm, 5_deg)
         );
     }
