@@ -5,7 +5,7 @@
 #pragma once
 
 #include "utilities/AlertController.h"
-#include "utilities/ICSparkMax.h"
+#include "utilities/ICSparkFlex.h"
 #include "utilities/MechanismCircle2d.h"
 #include "utilities/BotVars.h"
 
@@ -74,7 +74,7 @@ class SubTurret : public frc2::SubsystemBase {
 
   units::degree_t _lastFieldRelativeTurretTarget = 0_deg;
 
-  ICSparkMax _turretMotor{canid::TURRET_MOTOR};
+  ICSparkFlex _turretMotor{canid::TURRET_MOTOR}; 
   rev::spark::SparkBaseConfig _turretMotorConfig;
 
    frc::Alert _turretOutOfRangeAlert{"Turret out of allowed range!", frc::Alert::AlertType::kError};
@@ -102,19 +102,19 @@ class SubTurret : public frc2::SubsystemBase {
 
   frc::SimpleMotorFeedforward<units::turn> _robotRotVelFF{kS, kV, kA};
 
-  const units::turn_t turretZeroOffset = 0_tr; // -0.5_tr
+  const units::turn_t turretZeroOffset = 0_tr;
 
-  units::degree_t POS_LIMIT = 270_deg;
-  units::degree_t NEG_LIMIT = -90_deg;
+  units::degree_t POS_LIMIT = 340_deg;
+  units::degree_t NEG_LIMIT = -160_deg;
 
   bool _hasZeroed = false;
 
-  double P = 3;
+  double P = 10.0;
   double I = 0.0;
-  double D = 0.0;
+  double D = 2.0;
 
   static constexpr units::volt_t kS = 0.15_V;
-  static constexpr auto kV = 3.4_V * (1_s / 1_tr);
+  static constexpr auto kV = 6.0_V * (1_s / 1_tr); //3.4_V
   static constexpr auto kA = 0_V * ((1_s * 1_s) / 1_tr);
 
   const double E1_TEETH = BotVars::Choose(17, 21);
@@ -124,7 +124,7 @@ class SubTurret : public frc2::SubsystemBase {
   const double ENCODER2_RATIO = E2_TEETH / BIG_TEETH;
   const double GEAR_RATIO = BotVars::Choose(64.46, (48.0 / 12.0) * (94.0 / 10.0));
 
-  static constexpr units::degree_t TOLARANCE = 8_deg;
+  static constexpr units::degree_t TOLARANCE = 10_deg;
 
   frc::TimeInterpolatableBuffer<units::degree_t> _turretPos{1_s};
 
