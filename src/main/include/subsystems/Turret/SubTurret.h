@@ -109,9 +109,9 @@ class SubTurret : public frc2::SubsystemBase {
 
   bool _hasZeroed = false;
 
-  double P = 10.0; //10
+  double P = 10.0;
   double I = 0.0;
-  double D = 2.0; //2
+  double D = 2.0;
 
   static constexpr units::volt_t kS = 0.15_V;
   static constexpr auto kV = 6.0_V * (1_s / 1_tr); //3.4_V
