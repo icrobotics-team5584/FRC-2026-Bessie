@@ -83,12 +83,9 @@ void RobotContainer::ConfigureBindings() {
   _driverController.RightBumper().WhileTrue(SubDrivebase::GetInstance().LockWheelsInXShape());
 
   //Letters
-  _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
-  _driverController.B().WhileTrue(SubDrivebase::GetInstance().AlignToAngle(_driverController, 0_deg));
+  _driverController.Y().OnTrue(SubDrivebase::GetInstance().ZeroRotation());
+  _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
   _driverController.A().WhileTrue(cmd::EjectFuel());
-
-  // Misc 
-  _driverController.Start().OnTrue(SubDrivebase::GetInstance().ZeroRotation());
 
   /* Operator */
   _operatorController.Back().OnTrue(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); }));
