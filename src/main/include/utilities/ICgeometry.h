@@ -11,4 +11,5 @@ frc::Pose2d yPoseFlip(frc::Pose2d pose);
 frc::Pose2d xyPoseFlip(frc::Pose2d pose);
 
 frc::Rotation2d PoseDirection(frc::Pose2d origin, frc::Pose2d destination);
+frc::Pose2d GetFieldRelativePose(frc::Pose2d allianceRelativePose);
 }  // namespace ICgeometry

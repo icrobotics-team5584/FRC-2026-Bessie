@@ -8,13 +8,12 @@
 namespace DrivebaseConfig {
   // Drive controls
   constexpr units::meters_per_second_t MAX_VELOCITY = 4_mps;
-  constexpr units::turns_per_second_t MAX_ANGULAR_VELOCITY = 290_deg_per_s;
+  constexpr units::turns_per_second_t MAX_TELEOP_ANGULAR_VELOCITY = 290_deg_per_s;
 
-  constexpr units::meters_per_second_t MAX_P2P_VELOCITY = 3_mps;
-  constexpr units::meters_per_second_squared_t MAX_P2P_ACCEL = 10_mps_sq;
+  constexpr units::meters_per_second_t MAX_P2P_VELOCITY = 4_mps;
+  constexpr units::meters_per_second_squared_t MAX_P2P_ACCEL = 15_mps_sq;
   constexpr units::turns_per_second_t MAX_P2P_ANGULAR_VELOCITY = 300_deg_per_s;
-  constexpr units::turns_per_second_squared_t MAX_P2P_ANGULAR_ACCEL = 3_tr_per_s_sq;
-
+  constexpr units::turns_per_second_squared_t MAX_P2P_ANGULAR_ACCEL = 6_tr_per_s_sq;
 
   constexpr double MAX_JOYSTICK_ACCEL = 5;
   constexpr double MAX_ANGULAR_JOYSTICK_ACCEL = 3;
@@ -34,8 +33,6 @@ namespace DrivebaseConfig {
   const units::turn_t BACK_LEFT_MAG_OFFSET = BotVars::Choose(-0.464111328125_tr - 0.25_tr, -0.824951171875_tr);
 
   // PID constants for translation and rotation controllers
-  const frc::ProfiledPIDController<units::meters> P2P_TRANSLATION_PID{
-    3, 0, 0, {MAX_P2P_VELOCITY, MAX_P2P_ACCEL}};
-  const frc::ProfiledPIDController<units::radian> P2P_ROTATION_PID{
-    3.5, 0, 0, {MAX_ANGULAR_VELOCITY, MAX_P2P_ANGULAR_ACCEL}};
+  const frc::PIDController P2P_TRANSLATION_PID{5, 0, 0};
+  const frc::PIDController P2P_ROTATION_PID{33, 0, 0};
 }

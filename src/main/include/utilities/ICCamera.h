@@ -14,22 +14,15 @@ class ICCamera {
 public:
   ICCamera(std::string name, frc::Transform3d botToCam, frc::AprilTagFieldLayout tagMap);
 
-  std::optional<photon::EstimatedRobotPose> Update();
-
-  struct TagObservation {
-    photon::PhotonTrackedTarget tag;
-    units::time::second_t timestamp;
-  };
+  void Update();
 
   std::string GetCamName();
   frc::Transform3d GetBotToCam();
   photon::PhotonCameraSim* GetCamSim();
 
-  std::vector<photon::PhotonPipelineResult> GetLatestResult();
+  std::vector<photon::PhotonPipelineResult> GetLatestResults();
 
-  TagObservation GetLastTagObservation();
-
-  std::optional<photon::EstimatedRobotPose> GetEstPose();
+  std::optional<photon::EstimatedRobotPose> GetLatestEstPose();
 
   std::optional<frc::Transform3d> CalculateRobotToCamera(photon::PhotonPipelineResult &result, frc::Transform3d robotToTag);
 
@@ -46,9 +39,7 @@ private:
   photon::PhotonCameraSim _camSim;
 
   photon::PhotonPoseEstimator _poseEstimator;
-  std::optional<photon::EstimatedRobotPose> _estPose;
+  std::optional<photon::EstimatedRobotPose> _latestEstPose;
 
-  std::vector<photon::PhotonPipelineResult> _results;
-
-  TagObservation _lastTagObservation;
+  std::vector<photon::PhotonPipelineResult> _latestResults;
 };
