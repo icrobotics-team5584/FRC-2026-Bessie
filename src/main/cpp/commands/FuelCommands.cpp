@@ -106,6 +106,24 @@ frc2::CommandPtr ShootOnTheMove(){
   return AimOnTheMove().AlongWith(ShootWhenReady());
 }
 
+frc2::CommandPtr ShootOnTheMoveWithoutTurret(frc2::CommandXboxController& controller) {
+  return AimOnTheMoveWithoutTurret(controller).AlongWith(ShootWhenReady());
+}
+
+frc2::CommandPtr AimOnTheMoveWithoutTurret(frc2::CommandXboxController& controller) {
+  return SubShooter::GetInstance()
+    .SpinWithDistance([] { return CalcShootOnTheMoveDistance(); },
+      [] {
+        return ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose()).isPassing;
+      })
+    .AlongWith(frc2::cmd::Either(
+      SubHood::GetInstance().SetHoodPositionTarget([] { return SubHood::PASSING_ANGLE; }),
+      SubHood::GetInstance().SetHoodPositionTargetFromDist(
+        [] { return CalcShootOnTheMoveDistance();}),
+      []{return ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose()).isPassing;}))
+    .AlongWith(SubDrivebase::GetInstance().AlignToAngle(controller, [] { return CalcShootOnTheMoveAngle() - SubTurret::GetInstance().GetTurretAngle(); }));  
+}
+
 frc2::CommandPtr ToggleBrakeCoast(){
   return frc2::cmd::StartEnd(
     []{

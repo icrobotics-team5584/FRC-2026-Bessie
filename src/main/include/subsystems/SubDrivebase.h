@@ -76,7 +76,7 @@ class SubDrivebase : public frc2::SubsystemBase {
   frc2::CommandPtr DriveOverBump(frc::ChassisSpeeds fieldRelativeSpeeds);
 
   // Rotations
-  frc2::CommandPtr AlignToAngle(frc2::CommandXboxController& controller, units::angle::degree_t angle);
+  frc2::CommandPtr AlignToAngle(frc2::CommandXboxController& controller, std::function<units::degree_t()> target);
 
   // Gyro and sensor
   frc2::CommandPtr SyncSensor();

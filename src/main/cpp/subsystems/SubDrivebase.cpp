@@ -208,13 +208,13 @@ frc2::CommandPtr SubDrivebase::Drive(std::function<frc::ChassisSpeeds()> speeds,
 
 /* aligns to an a arbitrary while allowing joystick driving */
 frc2::CommandPtr SubDrivebase::AlignToAngle(
-  frc2::CommandXboxController& controller, units::angle::degree_t target) {
+  frc2::CommandXboxController& controller, std::function<units::degree_t()> target) {
   return SubDrivebase::GetInstance().Drive(
     [&controller, target] {
       units::angle::degree_t currentAngle =
         SubDrivebase::GetInstance().GetGyroAngle(true).Degrees();
       units::turns_per_second_t rotationSpeeds =
-        SubDrivebase::GetInstance().CalcRotateSpeed(currentAngle - target);
+        SubDrivebase::GetInstance().CalcRotateSpeed(currentAngle - target());
       frc::ChassisSpeeds joystickSpeeds =
         SubDrivebase::GetInstance().CalcJoystickSpeeds(controller);
       return frc::ChassisSpeeds(joystickSpeeds.vx, joystickSpeeds.vy, rotationSpeeds);

@@ -93,6 +93,7 @@ void RobotContainer::ConfigureBindings() {
   _operatorController.X().OnFalse(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(false); }));
   _operatorController.Y().OnTrue(cmd::DisableAllOverrides());
   _operatorController.RightTrigger().WhileTrue(cmd::BackupShoot());
+  _operatorController.LeftTrigger().WhileTrue(cmd::ShootOnTheMoveWithoutTurret(_driverController));
   _operatorController.Start().OnTrue(cmd::ForceShoot());
   _operatorController.Back().OnTrue(frc2::cmd::RunOnce([]{ SubTurret::GetInstance().LockTurret(); }));
 
