@@ -58,10 +58,11 @@ class SubDrivebase : public frc2::SubsystemBase {
   frc::ChassisSpeeds CalcJoystickSpeeds(frc2::CommandXboxController& controller);
 
   frc2::CommandPtr DriveToPose(std::function<frc::Pose2d()> pose, double speedScaling = 1,
-    units::meter_t positionErrorTolerance = 2_cm, units::degree_t rotationErrorTolerance = 2_deg);
+    units::meter_t posErrorTolerance = 2_cm, units::degree_t rotErrorTolerance = 2_deg,
+    bool flipForRedAlliance = true);
   void SetPose(frc::Pose2d pose);
-  bool IsAtPose(frc::Pose2d pose, units::meter_t positionErrorTolerance = 2_cm,
-    units::degree_t rotationErrorTolerance = 2_deg);
+  bool IsAtPose(frc::Pose2d pose, units::meter_t posErrorTolerance = 2_cm,
+    units::degree_t rotErrorTolerance = 2_deg);
   wpi::array<frc::SwerveModulePosition, 4U> GetSwerveStates();
 
   /* ------------------------------------------------------------------------------------------------------------- */
@@ -73,14 +74,14 @@ class SubDrivebase : public frc2::SubsystemBase {
 
   // Pose drive
   frc2::CommandPtr Drive(std::function<frc::ChassisSpeeds()> speeds, bool fieldOriented);
-  frc2::CommandPtr DriveOverBump(frc::ChassisSpeeds fieldRelativeSpeeds);
+  frc2::CommandPtr DriveOverBump(frc::ChassisSpeeds fieldRelativeSpeeds, frc::Translation2d allianceRelativeEndXY);
 
   // Rotations
   frc2::CommandPtr AlignToAngle(frc2::CommandXboxController& controller, std::function<units::degree_t()> target);
 
   // Gyro and sensor
   frc2::CommandPtr SyncSensor();
-  frc2::CommandPtr ZeroRotation();
+  frc2::CommandPtr ZeroRotation(std::function<units::degree_t()> startingAngle);
 
   // Testing
   frc2::CommandPtr CharacteriseWheels();
@@ -124,8 +125,11 @@ class SubDrivebase : public frc2::SubsystemBase {
       DrivebaseConfig::BR_POSITION
   };
 
-  frc::ProfiledPIDController<units::meters> _translationP2pController = DrivebaseConfig::P2P_TRANSLATION_PID;
-  frc::ProfiledPIDController<units::radian> _rotationP2pController = DrivebaseConfig::P2P_ROTATION_PID;
+  frc::PIDController _translationP2pController = DrivebaseConfig::P2P_TRANSLATION_PID;
+  frc::PIDController _rotationP2pController = DrivebaseConfig::P2P_ROTATION_PID;
+  frc::SlewRateLimiter<units::meters_per_second> _xP2pLimiter{DrivebaseConfig::MAX_P2P_ACCEL};
+  frc::SlewRateLimiter<units::meters_per_second> _yP2pLimiter{DrivebaseConfig::MAX_P2P_ACCEL};
+  frc::SlewRateLimiter<units::turns_per_second> _rotP2pLimiter{DrivebaseConfig::MAX_P2P_ANGULAR_ACCEL};
 
   // P2P
   units::meters_per_second_squared_t _tunedMaxP2pAccel = DrivebaseConfig::MAX_P2P_ACCEL;

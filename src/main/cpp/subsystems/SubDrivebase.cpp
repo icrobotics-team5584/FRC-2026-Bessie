@@ -2,12 +2,13 @@
 #include "subsystems/SubDrivebase.h"
 #include "utilities/PoseHandler.h"
 #include "utilities/Logger.h"
+#include "utilities/ICgeometry.h"
 
 SubDrivebase::SubDrivebase() {
   Logger::Log("Drivebase/P2P/Rotation Controller", &_rotationP2pController);
   Logger::Log("Drivebase/P2P/Translation Controller", &_translationP2pController);
 
-  _rotationP2pController.EnableContinuousInput(0_deg, 360_deg);
+  _rotationP2pController.EnableContinuousInput(0, 1);
 
   ctre::phoenix6::configs::Pigeon2Configuration gyroConfig;
   gyroConfig.MountPose.MountPosePitch = 0_deg;
@@ -147,10 +148,10 @@ void SubDrivebase::ResetGyroHeading(units::degree_t startingAngle) {
   _gyro.SetYaw(startingAngle);
 }
 
-frc2::CommandPtr SubDrivebase::ZeroRotation() {
-  return RunOnce([this] { ResetGyroHeading(0_deg); 
+frc2::CommandPtr SubDrivebase::ZeroRotation(std::function<units::degree_t()> startingAngle) {
+  return RunOnce([this, startingAngle] { ResetGyroHeading(startingAngle()); 
   frc::Pose2d oldPose = PoseHandler::GetInstance().GetPose();
-  frc::Pose2d newPose{oldPose.X(), oldPose.Y(), 0_deg};
+  frc::Pose2d newPose{oldPose.X(), oldPose.Y(), startingAngle()};
  
   PoseHandler::GetInstance().SetPose(newPose, GetSwerveStates());
   });
@@ -236,7 +237,7 @@ frc2::CommandPtr SubDrivebase::LockWheelsInXShape() {
   });
 }
 
-frc2::CommandPtr SubDrivebase::DriveOverBump(frc::ChassisSpeeds fieldRelativeSpeeds) {
+frc2::CommandPtr SubDrivebase::DriveOverBump(frc::ChassisSpeeds fieldRelativeSpeeds, frc::Translation2d allianceRelativeEndXY) {
   return Drive([this, fieldRelativeSpeeds] {
     return fieldRelativeSpeeds;
   }, true).WithDeadline(frc2::cmd::Sequence(
@@ -259,6 +260,9 @@ frc2::CommandPtr SubDrivebase::DriveOverBump(frc::ChassisSpeeds fieldRelativeSpe
     frc2::cmd::RunOnce([this] { Logger::Log("Drivebase/DriveOverBump/State", 5); })
   )).Unless([this] {
     return frc::RobotBase::IsSimulation();
+  }).FinallyDo([this, allianceRelativeEndXY] {
+    auto endPose = ICgeometry::GetFieldRelativePose(frc::Pose2d(allianceRelativeEndXY, GetGyroAngle(false)));
+    SetPose(endPose);
   });
 }
 
@@ -324,7 +328,7 @@ frc2::Trigger SubDrivebase::CheckCoastButton() {
 }
 
 units::turns_per_second_t SubDrivebase::CalcRotateSpeed(units::turn_t rotationError) {
-  auto omega = _rotationP2pController.Calculate(rotationError, 0_deg) * 1_rad_per_s;
+  auto omega = _rotationP2pController.Calculate(rotationError.value(), 0) * 1_rad_per_s;
   return omega;
 }
 
@@ -334,17 +338,17 @@ frc::ChassisSpeeds SubDrivebase::CalcDriveToPoseSpeeds(frc::Pose2d targetPose) {
   units::meter_t targetYMeters = targetPose.Y();
   units::turn_t targetRotation = targetPose.Rotation().Radians();
 
-  frc::Pose2d currentPosition = PoseHandler::GetInstance().GetPose();
-  units::meter_t currentXMeters = currentPosition.X();
-  units::meter_t currentYMeters = currentPosition.Y();
+  frc::Pose2d currentPose = PoseHandler::GetInstance().GetPose();
+  units::meter_t currentXMeters = currentPose.X();
+  units::meter_t currentYMeters = currentPose.Y();
   units::turn_t currentRotation = frc::InputModulus(GetGyroAngle(true).Degrees(), 0_deg, 360_deg);
 
   //Create a vector between current position and target position
   frc::Translation2d translationVector = frc::Translation2d(targetXMeters - currentXMeters, targetYMeters - currentYMeters);
 
   // Use PID controllers to calculate speeds
-  auto translationSpeed = _translationP2pController.Calculate(0_m, translationVector.Norm()) * 1_mps;
-  auto rotationSpeed = _rotationP2pController.Calculate(currentRotation, targetRotation) * 1_rad_per_s;
+  auto translationSpeed = _translationP2pController.Calculate(0, translationVector.Norm().value()) * 1_mps;
+  auto rotationSpeed = _rotationP2pController.Calculate(currentRotation.value(), targetRotation.value()) * 1_rad_per_s;
 
   // Clamp translation speed to max velocity
   translationSpeed = std::clamp(
@@ -355,59 +359,69 @@ frc::ChassisSpeeds SubDrivebase::CalcDriveToPoseSpeeds(frc::Pose2d targetPose) {
   units::meters_per_second_t xSpeed = translationSpeedVector.X().value() * 1_mps;
   units::meters_per_second_t ySpeed = translationSpeedVector.Y().value() * 1_mps;
 
+  //Limit acceleration
+  xSpeed = _xP2pLimiter.Calculate(xSpeed);
+  ySpeed = _yP2pLimiter.Calculate(ySpeed);
+  rotationSpeed = _rotP2pLimiter.Calculate(rotationSpeed);
+
   if (frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kRed) {
     xSpeed *= -1;
     ySpeed *= -1;
   }
 
   //Logging
-  Logger::Log("CalcDriveLogs/xSpeed", xSpeed);
-  Logger::Log("CalcDriveLogs/ySpeed", ySpeed);
-  Logger::Log("CalcDriveLogs/rotationSpeed", rotationSpeed);
-  Logger::Log("CalcDriveLogs/targetYMeters", targetYMeters);
-  Logger::Log("CalcDriveLogs/targetXMeters", targetXMeters);
-  Logger::Log("CalcDriveLogs/targetRotation", targetRotation);
-  Logger::Log("CalcDriveLogs/currentXMeters", currentXMeters);
-  Logger::Log("CalcDriveLogs/currentYMeters", currentYMeters);
-  Logger::Log("CalcDriveLogs/currentRotation", currentRotation);
-
+  std::string logPath = "Drivebase/DriveToPose/";
+  Logger::Log(logPath + "Calc x speed", xSpeed);
+  Logger::Log(logPath + "Calc y speed", ySpeed);
+  Logger::Log(logPath + "Calc rot speed", rotationSpeed);
+  Logger::Log(logPath + "Target pose Y", targetYMeters);
+  Logger::Log(logPath + "Target pose X", targetXMeters);
+  Logger::Log(logPath + "Target rotation", targetRotation);
+  Logger::Log(logPath + "Current pose X", currentXMeters);
+  Logger::Log(logPath + "Current pose Y", currentYMeters);
+  Logger::Log(logPath + "Current rotation", currentRotation);
   return frc::ChassisSpeeds{xSpeed, ySpeed, rotationSpeed};
 }
 
 bool SubDrivebase::IsAtPose(
-  frc::Pose2d pose, units::meter_t positionErrorTolerance, units::degree_t rotationErrorTolerance) {
+  frc::Pose2d pose, units::meter_t posErrorTolerance, units::degree_t rotErrorTolerance) {
   auto currentPose = PoseHandler::GetInstance().GetPose();
   auto rotError = GetGyroAngle(true) - pose.Rotation();
   auto posError = currentPose.Translation().Distance(pose.Translation());
-  Logger::FieldDisplay::GetInstance().DisplayPose("Drivebase/IsAtPose/current pose", currentPose);
-  Logger::FieldDisplay::GetInstance().DisplayPose("Drivebase/IsAtPose/target pose", pose);
 
-  Logger::Log("Drivebase/rotError", rotError.Degrees());
-  Logger::Log("Drivebase/posError", posError);
+  Logger::FieldDisplay::GetInstance().DisplayPose("Drivebase/IsAtPose/Current pose", currentPose);
+  Logger::FieldDisplay::GetInstance().DisplayPose("Drivebase/IsAtPose/Target pose", pose);
 
-  bool atPose = (units::math::abs(rotError.Degrees()) < rotationErrorTolerance) && (posError < positionErrorTolerance);
-  Logger::Log("Drivebase/IsAtPose", atPose);
+  Logger::Log("Drivebase/IsAtPose/rotError", rotError.Degrees());
+  Logger::Log("Drivebase/IsAtPose/posError", posError);
+
+  bool atPose = (units::math::abs(rotError.Degrees()) < rotErrorTolerance) && (posError < posErrorTolerance);
+  Logger::Log("Drivebase/IsAtPose/IsAtPose", atPose);
   return atPose;
 }
 
-frc2::CommandPtr SubDrivebase::DriveToPose(std::function<frc::Pose2d()> pose,
-  double speedScaling, units::meter_t positionErrorTolerance,
-  units::degree_t rotationErrorTolerance) {
-  return RunOnce([this] {
-    _rotationP2pController.Reset(GetGyroAngle(true).Degrees());
-  }).AndThen(Drive([this, pose, speedScaling] { 
-    Logger::FieldDisplay::GetInstance().DisplayPose("Drivebase/P2P/TargetPose", pose());
-    return CalcDriveToPoseSpeeds(pose()) * speedScaling;
-  }, true)).Until([this, pose, positionErrorTolerance, rotationErrorTolerance] {
-    return IsAtPose(pose(), positionErrorTolerance, rotationErrorTolerance);
-  });
+frc2::CommandPtr SubDrivebase::DriveToPose(std::function<frc::Pose2d()> pose, double speedScaling,
+  units::meter_t posErrorTolerance, units::degree_t rotErrorTolerance, bool flipForRedAlliance) {
+  auto fieldRelativePose = [pose, flipForRedAlliance] {
+    return flipForRedAlliance ? ICgeometry::GetFieldRelativePose(pose()) : pose();
+  };
+  
+  return Drive(
+      [this, fieldRelativePose, speedScaling] {
+        auto pose = fieldRelativePose();
+        return CalcDriveToPoseSpeeds(pose) * speedScaling;
+      },
+      true)
+    .Until([this, fieldRelativePose, posErrorTolerance, rotErrorTolerance] {
+      return IsAtPose(fieldRelativePose(), posErrorTolerance, rotErrorTolerance);
+    });
 }
 
 frc::ChassisSpeeds SubDrivebase::CalcJoystickSpeeds(frc2::CommandXboxController& controller) {
   std::string configPath = "Drivebase/Config/";
   auto deadband = Logger::Tune(configPath + "Joystick Deadband", DrivebaseConfig::JOYSTICK_DEADBAND);
   auto maxVelocity = Logger::Tune(configPath + "Max Velocity", DrivebaseConfig::MAX_VELOCITY);
-  auto maxAngularVelocity = Logger::Tune(configPath + "Max Angular Velocity", DrivebaseConfig::MAX_ANGULAR_VELOCITY);
+  auto maxAngularVelocity = Logger::Tune(configPath + "Max Angular Velocity", DrivebaseConfig::MAX_TELEOP_ANGULAR_VELOCITY);
   auto maxJoystickAccel = Logger::Tune(configPath + "Max Joystick Accel", DrivebaseConfig::MAX_JOYSTICK_ACCEL);
   auto maxAngularJoystickAccel = Logger::Tune(
     configPath + "Max Joystick Angular Accel", DrivebaseConfig::MAX_ANGULAR_JOYSTICK_ACCEL);
