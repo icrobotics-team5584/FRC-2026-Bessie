@@ -73,8 +73,8 @@ class SubDeploy : public frc2::SubsystemBase {
   static constexpr double DEPLOY_GEARING = 55.8;
   static constexpr units::degree_t RETRACTED_ANGLE = 0.29_tr;
   static constexpr units::degree_t DEPLOYED_ANGLE = 0_deg;
-  static constexpr units::degree_t AGITATE_ANGLE_HIGHER = 65_deg;
-  static constexpr units::degree_t AGITATE_ANGLE_LOWER = 55_deg;
+  static constexpr units::degree_t AGITATE_ANGLE_HIGHER = 70_deg;
+  static constexpr units::degree_t AGITATE_ANGLE_LOWER = 30_deg;
   static constexpr units::meter_t DEPLOY_ARM_LENGTH = 0.1_m;
 
   // Simulation components

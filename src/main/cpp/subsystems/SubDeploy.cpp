@@ -56,13 +56,13 @@ frc2::CommandPtr SubDeploy::MoveIntake(){
 
 frc2::CommandPtr SubDeploy::AgitateHopper(){
   return Run([this] {
-    int currentTimeInt = static_cast<int>(floor(_agitateTimer.Get().value()));
-    if (currentTimeInt % 2 == 0) {
+    if (_agitateTimer.HasElapsed(0.6_s)) {
       _deployMotor.SetPositionTarget(AGITATE_ANGLE_HIGHER);
-    } else {
+      _agitateTimer.Restart();
+    } else if (_agitateTimer.HasElapsed(0.3_s)){
       _deployMotor.SetPositionTarget(AGITATE_ANGLE_LOWER);
     }
-  }).OnlyIf([this] { return _hasZeroed; });
+  }).OnlyIf([this] { return _hasZeroed;});
 }
 
 frc2::CommandPtr SubDeploy::Zero() {
@@ -130,7 +130,7 @@ void SubDeploy::Periodic() {
   Logger::Log("Deploy/IsZeroing", _currentlyZeroing);
   Logger::Log("Deploy/HasZeroed", _hasZeroed);
   Logger::Log("Deploy/ZeroingTimer", _zeroingTimer.Get());
-  Logger::Log("Deploy/AgitateTimer", _agitateTimer.Get())
+  Logger::Log("Deploy/AgitateTimer", _agitateTimer.Get());
   Logger::Log("Deploy/IntakeDeployed", _intakeDeployed);
   Logger::Log("Deploy/Loop Time", (frc::GetTime() - loopStart));
 }
