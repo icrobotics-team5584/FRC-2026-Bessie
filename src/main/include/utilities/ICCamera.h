@@ -20,7 +20,7 @@ public:
   frc::Transform3d GetBotToCam();
   photon::PhotonCameraSim* GetCamSim();
 
-  std::vector<photon::PhotonPipelineResult> GetResult();
+  std::vector<photon::PhotonPipelineResult> GetLatestResults();
 
   std::optional<photon::EstimatedRobotPose> GetLatestEstPose();
 
@@ -41,5 +41,5 @@ private:
   photon::PhotonPoseEstimator _poseEstimator;
   std::optional<photon::EstimatedRobotPose> _latestEstPose;
 
-  std::vector<photon::PhotonPipelineResult> _results;
+  std::vector<photon::PhotonPipelineResult> _latestResults;
 };

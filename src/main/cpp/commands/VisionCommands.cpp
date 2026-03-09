@@ -15,7 +15,7 @@ using namespace frc2::cmd;
 frc2::CommandPtr AddVisionMeasurement() {
     Logger::Log("Vision/Timestamp limit", 0.2_s);
     return Run([] {
-        if (Logger::Tune("Vision/Add pose measurement", frc::RobotBase::IsSimulation())) {return;}
+        if (!Logger::Tune("Vision/Add pose measurement", frc::RobotBase::IsReal())) {return;}
 
         auto poses = SubVision::GetInstance().GetPose();
 
@@ -23,18 +23,21 @@ frc2::CommandPtr AddVisionMeasurement() {
 
         for (auto [name,pose] : poses) {
             Logger::FieldDisplay::GetInstance().DisplayPose("Vision/"+name+"/Est pose" , {});
+            Logger::Log("Vision/"+name+"/Est pose usable", false);
+            Logger::Log("Vision/"+name+"/Timestamp difference", 0_s);
+            Logger::Log("Vision/"+name+"/Vaild timestamp", false);
 
             // If the pose has value
             Logger::Log("Vision/"+name+"/Have value" , pose.has_value());
             if (!pose.has_value()) {continue;}
 
-            // If the pose is useable, or the 
-            bool poseUseable = SubVision::GetInstance().IsEstimateUsable(pose.value());
+            // If the pose is usable, or the timestamp is recent
+            bool poseUsable = SubVision::GetInstance().IsEstimateUsable(pose.value());
             bool timestampVaild = frc::Timer::GetFPGATimestamp() - pose.value().timestamp < 0.2_s;
-            Logger::Log("Vision/"+name+"/Est pose useable", poseUseable);
+            Logger::Log("Vision/"+name+"/Est pose usable", poseUsable);
             Logger::Log("Vision/"+name+"/Timestamp difference", frc::Timer::GetFPGATimestamp() - pose.value().timestamp);
             Logger::Log("Vision/"+name+"/Vaild timestamp", timestampVaild);
-            if (!poseUseable || !timestampVaild) {continue;}
+            if (!poseUsable || !timestampVaild) {continue;}
             
             // Calculate real robot pose if using turret camera
             frc::Pose2d botPose;
