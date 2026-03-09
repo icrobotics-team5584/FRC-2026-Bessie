@@ -84,7 +84,7 @@ void RobotContainer::ConfigureBindings() {
   _driverController.RightBumper().WhileTrue(SubDeploy::GetInstance().AgitateHopper());
 
   //Letters
-  _driverController.X().OnTrue(SubDrivebase::GetInstance().LockWheelsInXShape());
+  _driverController.X().WhileTrue(SubDrivebase::GetInstance().LockWheelsInXShape());
   _driverController.B().WhileTrue(SubDrivebase::GetInstance().AlignToAngle(_driverController, 0_deg));
   _driverController.A().WhileTrue(cmd::EjectFuel());
 
