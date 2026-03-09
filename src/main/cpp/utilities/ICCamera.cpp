@@ -17,14 +17,15 @@ ICCamera::ICCamera(std::string name, frc::Transform3d botToCam, frc::AprilTagFie
 void ICCamera::Update() {
     std::string targets = "";
     _results = _cam.GetAllUnreadResults();
+    Logger::Log("Vision/"+_camName+"/Results count", int(_results.size()));
     if (_results.empty()) {return;}
 
     auto result = _results.back();
     std::optional<photon::EstimatedRobotPose> poseEst;
     if (result.targets.size() == 1) {
-        _estPose = _poseEstimator.EstimateLowestAmbiguityPose(result);
+        _latestEstPose = _poseEstimator.EstimateLowestAmbiguityPose(result);
     } else {
-        _estPose = _poseEstimator.EstimateCoprocMultiTagPose(result);
+        _latestEstPose = _poseEstimator.EstimateCoprocMultiTagPose(result);
     }
     
     for (const photon::PhotonTrackedTarget& target : result.targets) {
@@ -45,12 +46,12 @@ photon::PhotonCameraSim* ICCamera::GetCamSim() {
     return &_camSim;
 }
 
-std::vector<photon::PhotonPipelineResult> ICCamera::GetLatestResult() {
+std::vector<photon::PhotonPipelineResult> ICCamera::GetResult() {
     return _results;
 }
 
-std::optional<photon::EstimatedRobotPose> ICCamera::GetEstPose() {
-    return _estPose;
+std::optional<photon::EstimatedRobotPose> ICCamera::GetLatestEstPose() {
+    return _latestEstPose;
 }
 
 std::optional<frc::Transform3d> ICCamera::CalculateRobotToCamera(

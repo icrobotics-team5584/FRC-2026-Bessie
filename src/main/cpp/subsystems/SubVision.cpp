@@ -59,7 +59,7 @@ void SubVision::SimulationPeriodic() {
 std::map<std::string, std::optional<photon::EstimatedRobotPose>> SubVision::GetPose() {
   std::map<std::string, std::optional<photon::EstimatedRobotPose>> poses = {};
   for (ICCamera* cam : _camList) {
-    poses.insert({cam->GetCamName(), cam->GetEstPose()});
+    poses.insert({cam->GetCamName(), cam->GetLatestEstPose()});
   }
   return poses;
 }
