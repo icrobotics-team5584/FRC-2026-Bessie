@@ -12,20 +12,22 @@ SubFeeder::SubFeeder() {
   _feederMotorConfig.SmartCurrentLimit(40);
   _feederMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
   _feederMotorConfig.Inverted(true);
+  _feederMotorConfig.closedLoop.Pid(P, I, D);
+  _feederMotorConfig.closedLoop.feedForward.kV(F);
   _feederMotor.OverwriteConfig(_feederMotorConfig);
   Logger::Log("Feeder/Feeder Motor", &_feederMotor);
 }
 
 frc2::CommandPtr SubFeeder::Feed() {
-  return StartEnd([this] { _feederMotor.Set(1.0); }, [this] { _feederMotor.Set(0); });
+  return StartEnd([this] { _feederMotor.SetVelocityTarget(100_tps); }, [this] { _feederMotor.Set(0); });
 };
 
 frc2::CommandPtr SubFeeder::FeedBackwards() {
-  return StartEnd([this] { _feederMotor.Set(-0.5); }, [this] { _feederMotor.Set(0); });
+  return StartEnd([this] { _feederMotor.SetVelocityTarget(-50_tps); }, [this] { _feederMotor.Set(0); });
 }
 
 frc2::CommandPtr SubFeeder::FeederOn() {
-  return RunOnce([this] { _feederMotor.Set(1.0); });
+  return RunOnce([this] { _feederMotor.SetVelocityTarget(100_tps); });
 };
 
 frc2::CommandPtr SubFeeder::FeederOff() {
