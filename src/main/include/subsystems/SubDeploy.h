@@ -27,11 +27,13 @@ class SubDeploy : public frc2::SubsystemBase {
   SubDeploy();
 
   frc2::CommandPtr DeployIntake();
-  frc2::CommandPtr ToggleDeploy();
+  frc2::CommandPtr ToggleDeployState();
 
   void EnableSoftLimit(bool enabled);
   frc2::CommandPtr Zero();
   frc2::CommandPtr RetractIntake();
+  frc2::CommandPtr MoveIntake();
+  frc2::CommandPtr AgitateHopper();
 
   void SetBrakeMode(bool brakeMode);
 
@@ -61,13 +63,18 @@ class SubDeploy : public frc2::SubsystemBase {
 
   bool _hasZeroed = false;
   bool _currentlyZeroing = false;
+  bool _intakeDeployed = false;
   frc::Timer _zeroingTimer;
+  frc::Timer _agitateTimer;
+
 
   static constexpr units::ampere_t ZEROINGCURRENTLIMIT = 40_A;
   static constexpr double DEPLOY_P = 5.0;
   static constexpr double DEPLOY_GEARING = 55.8;
   static constexpr units::degree_t RETRACTED_ANGLE = 0.29_tr;
   static constexpr units::degree_t DEPLOYED_ANGLE = 0_deg;
+  static constexpr units::degree_t AGITATE_ANGLE_HIGHER = 70_deg;
+  static constexpr units::degree_t AGITATE_ANGLE_LOWER = 30_deg;
   static constexpr units::meter_t DEPLOY_ARM_LENGTH = 0.1_m;
 
   // Simulation components

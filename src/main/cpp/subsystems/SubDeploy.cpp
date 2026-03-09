@@ -16,7 +16,10 @@ SubDeploy::SubDeploy() {
   _deployMotorConfig.encoder.PositionConversionFactor(1.0 / DEPLOY_GEARING);
   _deployMotorConfig.encoder.VelocityConversionFactor(1.0 / DEPLOY_GEARING);
   _deployMotorConfig.closedLoop.P(DEPLOY_P);
+  _deployMotorConfig.closedLoop.MaxOutput(1);
+  _deployMotorConfig.closedLoop.MinOutput(-1);
   _deployMotor.OverwriteConfig(_deployMotorConfig);
+  _agitateTimer.Start();
 
   Logger::Log("Deploy/DeployMotor", &_deployMotor);
 }
@@ -29,14 +32,37 @@ frc2::CommandPtr SubDeploy::RetractIntake() {
   return RunOnce([this] { _deployMotor.SetPositionTarget(RETRACTED_ANGLE); }).OnlyIf([this] {return _hasZeroed; });
 }
 
-frc2::CommandPtr SubDeploy::ToggleDeploy() {
+frc2::CommandPtr SubDeploy::ToggleDeployState() {
   return RunOnce([this] {
-    if (_deployMotor.GetPosition() > RETRACTED_ANGLE/2.0) {
-      _deployMotor.SetPositionTarget(DEPLOYED_ANGLE);
+    if (_intakeDeployed) {
+      _intakeDeployed = false;
     } else {
+      _intakeDeployed = true;
+    }
+});
+}
+
+frc2::CommandPtr SubDeploy::MoveIntake(){
+  return Run([this]{
+    if (_intakeDeployed){
+      _deployMotor.SetPositionTarget(DEPLOYED_ANGLE);
+    }
+
+    if(!_intakeDeployed) {
       _deployMotor.SetPositionTarget(RETRACTED_ANGLE);
     }
   }).OnlyIf([this]{return _hasZeroed;});
+}
+
+frc2::CommandPtr SubDeploy::AgitateHopper(){
+  return Run([this] {
+    if (_agitateTimer.HasElapsed(0.6_s)) {
+      _deployMotor.SetPositionTarget(AGITATE_ANGLE_HIGHER);
+      _agitateTimer.Restart();
+    } else if (_agitateTimer.HasElapsed(0.3_s)){
+      _deployMotor.SetPositionTarget(AGITATE_ANGLE_LOWER);
+    }
+  }).OnlyIf([this] { return _hasZeroed;});
 }
 
 frc2::CommandPtr SubDeploy::Zero() {
@@ -57,6 +83,7 @@ frc2::CommandPtr SubDeploy::Zero() {
       _deployMotor.SetPosition(-1_deg);  // Pushes into the bumpers about 1 degree when zeroing
       _deployMotor.StopMotor();
       _hasZeroed = true;
+      _intakeDeployed = true;
     })
     .FinallyDo([this] {
       _currentlyZeroing = false;
@@ -103,6 +130,8 @@ void SubDeploy::Periodic() {
   Logger::Log("Deploy/IsZeroing", _currentlyZeroing);
   Logger::Log("Deploy/HasZeroed", _hasZeroed);
   Logger::Log("Deploy/ZeroingTimer", _zeroingTimer.Get());
+  Logger::Log("Deploy/AgitateTimer", _agitateTimer.Get());
+  Logger::Log("Deploy/IntakeDeployed", _intakeDeployed);
   Logger::Log("Deploy/Loop Time", (frc::GetTime() - loopStart));
 }
 
