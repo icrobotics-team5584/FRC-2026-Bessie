@@ -104,7 +104,7 @@ void RobotContainer::ConfigureBindings() {
   _driverController.RightBumper().WhileTrue(SubDrivebase::GetInstance().LockWheelsInXShape());
 
   //Letters
-  _driverController.Y().OnTrue(SubDrivebase::GetInstance().ZeroRotation());
+  _driverController.Y().OnTrue(SubDrivebase::GetInstance().ZeroRotation([]{return 0_deg;}));
   _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
   _driverController.A().WhileTrue(cmd::EjectFuel());
 

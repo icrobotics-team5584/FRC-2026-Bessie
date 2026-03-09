@@ -148,10 +148,10 @@ void SubDrivebase::ResetGyroHeading(units::degree_t startingAngle) {
   _gyro.SetYaw(startingAngle);
 }
 
-frc2::CommandPtr SubDrivebase::ZeroRotation() {
-  return RunOnce([this] { ResetGyroHeading(0_deg); 
+frc2::CommandPtr SubDrivebase::ZeroRotation(std::function<units::degree_t()> startingAngle) {
+  return RunOnce([this, startingAngle] { ResetGyroHeading(startingAngle()); 
   frc::Pose2d oldPose = PoseHandler::GetInstance().GetPose();
-  frc::Pose2d newPose{oldPose.X(), oldPose.Y(), 0_deg};
+  frc::Pose2d newPose{oldPose.X(), oldPose.Y(), startingAngle()};
  
   PoseHandler::GetInstance().SetPose(newPose, GetSwerveStates());
   });

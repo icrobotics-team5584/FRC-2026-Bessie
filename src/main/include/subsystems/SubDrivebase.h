@@ -81,7 +81,7 @@ class SubDrivebase : public frc2::SubsystemBase {
 
   // Gyro and sensor
   frc2::CommandPtr SyncSensor();
-  frc2::CommandPtr ZeroRotation();
+  frc2::CommandPtr ZeroRotation(std::function<units::degree_t()> startingAngle);
 
   // Testing
   frc2::CommandPtr CharacteriseWheels();

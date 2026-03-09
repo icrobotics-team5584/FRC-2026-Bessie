@@ -31,4 +31,6 @@ namespace cmd {
     frc2::CommandPtr NeutralTwoPassToMid_RightTrench();
 
     frc2::CommandPtr ShootAndStay();
+
+    frc2::CommandPtr AutoZeroGyroFromVision();
 }
