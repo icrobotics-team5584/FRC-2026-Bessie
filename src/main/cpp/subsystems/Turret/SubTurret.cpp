@@ -196,9 +196,11 @@ frc2::CommandPtr SubTurret::SetTurretTargetAngle(std::function<units::degree_t()
 
         if(!_isLocked) {
             _turretMotor.SetPositionTarget(CalcOptimisedTurretAngle(angle()), rotationFeedforward);
+            Logger::Log("Turret/SetTargetAngleWhileLocked", false);
         }
         if(_isLocked) {
             _turretMotor.SetPositionTarget(_turretMotor.GetPosition());
+            Logger::Log("Turret/SetTargetAngleWhileLocked", true);
         }
         
     });
@@ -250,6 +252,7 @@ void SubTurret::SetTurretAngle(units::degree_t angle) {
 
 void SubTurret::ZeroTurret() {
     if(!_isLocked) {
+        Logger::Log("Turret/ZeroWhileLocked", false);
         units::degree_t turretAngle = GetTurretAngleCRT();
         if(turretAngle > NEG_LIMIT && turretAngle < POS_LIMIT) {
             SetTurretAngle(turretAngle);
@@ -260,6 +263,10 @@ void SubTurret::ZeroTurret() {
         else{
             _turretOutOfRangeAlert.Set(true);
         }
+    }
+
+    if(_isLocked) {
+        Logger::Log("Turret/ZeroWhileLocked", true);
     }
 }
 
