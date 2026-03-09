@@ -55,6 +55,11 @@ class SubFeeder : public frc2::SubsystemBase {
     _intakeRecordedTemperatureAlert, _intakeRecordedCurrentAlert, _feederCurrentAlert, 60_degC,
     20_A};
 
+  static constexpr double P = 0.06;
+  static constexpr double I = 0.0;
+  static constexpr double D = 0.0;
+  static constexpr double F = 0.12;
+
   // Simulation components
   static constexpr double GEARING = 1.0;
   static constexpr units::kilogram_square_meter_t MOI = 0.0000001_kg_sq_m;
