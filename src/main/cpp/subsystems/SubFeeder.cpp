@@ -20,6 +20,10 @@ frc2::CommandPtr SubFeeder::Feed() {
   return StartEnd([this] { _feederMotor.Set(1.0); }, [this] { _feederMotor.Set(0); });
 };
 
+frc2::CommandPtr SubFeeder::FeedBackwards() {
+  return StartEnd([this] { _feederMotor.Set(-0.5); }, [this] { _feederMotor.Set(0); });
+}
+
 frc2::CommandPtr SubFeeder::FeederOn() {
   return RunOnce([this] { _feederMotor.Set(1.0); });
 };
