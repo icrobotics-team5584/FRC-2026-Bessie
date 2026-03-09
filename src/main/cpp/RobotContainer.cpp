@@ -35,13 +35,9 @@ RobotContainer::RobotContainer() {
   SubTurret::GetInstance().SetDefaultCommand(cmd::AimAtHub());
 
   _autoManager.AddDefaultAuton("ShootAndStay", AutonHelper::MakeCommandPtrAuto(cmd::ShootAndStay()));
-  _autoManager.AddAuton("NeutralTwoPass_LeftTrench",
-    AutonHelper::MakeCommandPtrAuto(cmd::NeutralTwoPass_LeftTrench()));
-  _autoManager.AddAuton("NeutralTwoPassToOutpost_RightTrench",
-    AutonHelper::MakeCommandPtrAuto(cmd::NeutralTwoPassToOutpost_RightTrench()));
-  _autoManager.AddAuton("NeutralTwoPassToMid_LeftTrench",
+  _autoManager.AddAuton("LeftTrench",
     AutonHelper::MakeCommandPtrAuto(cmd::NeutralTwoPassToMid_LeftTrench()));
-  _autoManager.AddAuton("NeutralTwoPassToMid_RightTrench",
+  _autoManager.AddAuton("RightTrench",
     AutonHelper::MakeCommandPtrAuto(cmd::NeutralTwoPassToMid_RightTrench()));
 
   frc::SmartDashboard::PutData("CHOSEN AUTON", &_autoManager.GetAutonChooser());
