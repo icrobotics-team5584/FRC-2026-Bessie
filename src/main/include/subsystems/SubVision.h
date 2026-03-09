@@ -55,8 +55,8 @@ public:
   static constexpr frc::Transform2d TURRET_TO_CAM = frc::Transform2d{-40.629_mm, 151.5_mm, 0_deg};
 
   const std::string TURRET_CAM_NAME = "Turret";
-  const std::string LEFT_CAM_NAME = "Left";
-  const std::string RIGHT_CAM_NAME = "Right";
+  const std::string LEFT_CAM_NAME = "left";
+  const std::string RIGHT_CAM_NAME = "right";
 
  private:
 
