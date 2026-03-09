@@ -14,10 +14,6 @@ struct ProcessedPose {
     units::length::meter_t distance;
 };
 
-void StableCameraProcess(std::string name, photon::EstimatedRobotPose pose);
-
-void TurretCameraProcess(std::string name, photon::EstimatedRobotPose pose);
-
 namespace cmd {
 frc2::CommandPtr AddVisionMeasurement();
 }
