@@ -16,8 +16,8 @@ SubDeploy::SubDeploy() {
   _deployMotorConfig.encoder.PositionConversionFactor(1.0 / DEPLOY_GEARING);
   _deployMotorConfig.encoder.VelocityConversionFactor(1.0 / DEPLOY_GEARING);
   _deployMotorConfig.closedLoop.P(DEPLOY_P);
-  _deployMotorConfig.closedLoop.MaxOutput(0.2);
-  _deployMotorConfig.closedLoop.MinOutput(-0.2);
+  _deployMotorConfig.closedLoop.MaxOutput(1);
+  _deployMotorConfig.closedLoop.MinOutput(-1);
   _deployMotor.OverwriteConfig(_deployMotorConfig);
   _agitateTimer.Start();
 
