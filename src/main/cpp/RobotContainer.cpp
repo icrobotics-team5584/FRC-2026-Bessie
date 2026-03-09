@@ -51,7 +51,7 @@ void RobotContainer::ConfigureBindings() {
   //Triggers
   _driverController.LeftTrigger().WhileTrue(cmd::IntakeSequence());
   _driverController.RightTrigger().WhileTrue(
-    cmd::ShootOnTheMove().AlongWith(cmd::TeleopDrive(_driverController, 1.0)));
+    cmd::ShootOnTheMove().AlongWith(cmd::TeleopDrive(_driverController, 1.0).AsProxy()));
   _driverController.RightTrigger().OnFalse(SubFeeder::GetInstance().FeederOff());
 
   //Bumpers
