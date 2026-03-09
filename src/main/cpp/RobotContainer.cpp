@@ -32,6 +32,7 @@ RobotContainer::RobotContainer() {
   SubDrivebase::GetInstance().SetDefaultCommand(cmd::TeleopDrive(_driverController));
   SubVision::GetInstance().SetDefaultCommand(cmd::AddVisionMeasurement());
   SubTurret::GetInstance().SetDefaultCommand(cmd::AimAtHub());
+  SubDeploy::GetInstance().SetDefaultCommand(SubDeploy::GetInstance().MoveIntake());
 
   _autoManager.AddDefaultAuton("ShootAndStay", AutonHelper::MakeCommandPtrAuto(cmd::ShootAndStay()));
 
@@ -79,8 +80,8 @@ void RobotContainer::ConfigureBindings() {
   _driverController.RightTrigger().OnFalse(SubFeeder::GetInstance().FeederOff());
 
   //Bumpers
-  _driverController.LeftBumper().ToggleOnTrue(SubDeploy::GetInstance().ToggleDeploy());
-  _driverController.RightBumper().WhileTrue(SubDrivebase::GetInstance().LockWheelsInXShape());
+  _driverController.LeftBumper().ToggleOnTrue(SubDeploy::GetInstance().ToggleDeployState());
+  _driverController.RightBumper().WhileTrue(SubDeploy::GetInstance().AgitateHopper());
 
   //Letters
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().CharacteriseWheels());
