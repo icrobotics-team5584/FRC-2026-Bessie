@@ -115,6 +115,7 @@ void RobotContainer::ConfigureBindings() {
   _operatorController.Y().OnTrue(cmd::DisableAllOverrides());
   _operatorController.RightTrigger().WhileTrue(cmd::BackupShoot());
   _operatorController.Start().OnTrue(cmd::ForceShoot());
+  _operatorController.Back().OnTrue(frc2::cmd::RunOnce([]{ SubTurret::GetInstance().LockTurret(); }));
 
   _operatorController.LeftBumper().OnTrue(frc2::cmd::RunOnce([]{return ShotPlanner::SetOverride(ShotPlanner::Override::SCORE);})
   .AlongWith(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); })));
@@ -130,9 +131,8 @@ void RobotContainer::ConfigureBindings() {
   // Driver POVs
   _driverController.POVRight().WhileTrue(SubDeploy::GetInstance().Zero());
   _driverController.POVLeft().WhileTrue(SubHood::GetInstance().ZeroHood());
-  _driverController.POVDown().OnTrue(frc2::cmd::RunOnce([this] {
-    SubDrivebase::GetInstance().SetPose(frc::Pose2d{0_m, 0_m, 0_deg});
-  }));
+  _driverController.POVDown().WhileTrue(
+    SubIndexer::GetInstance().IndexBackwards().AlongWith(SubFeeder::GetInstance().FeedBackwards()));
 
   //Sticks
 

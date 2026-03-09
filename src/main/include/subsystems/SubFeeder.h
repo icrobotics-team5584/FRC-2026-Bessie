@@ -28,6 +28,7 @@ class SubFeeder : public frc2::SubsystemBase {
   SubFeeder();
 
   frc2::CommandPtr Feed();
+  frc2::CommandPtr FeedBackwards();
   frc2::CommandPtr FeederOn();
   frc2::CommandPtr FeederOff();
 

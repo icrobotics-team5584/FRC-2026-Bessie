@@ -103,7 +103,7 @@ frc2::CommandPtr AimOnTheMove() {
 }
 
 frc2::CommandPtr ShootOnTheMove(){
-  return AimOnTheMove().AlongWith(ShootWhenReady()).AlongWith(SubIntake::GetInstance().IntakeOn());
+  return AimOnTheMove().AlongWith(ShootWhenReady());
 }
 
 frc2::CommandPtr ToggleBrakeCoast(){
@@ -140,6 +140,7 @@ frc2::CommandPtr DisableAllOverrides() {
     ShotPlanner::SetOverride(ShotPlanner::Override::NONE);
     ShiftHandler::GetInstance().SetOverrideActive(false);
     forcingShoot = false;
+    SubTurret::GetInstance().UnlockTurret();
     Logger::Log("ForceShoot/forcingShoot", forcingShoot);
   });
 }

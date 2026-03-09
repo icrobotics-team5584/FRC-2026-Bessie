@@ -59,35 +59,30 @@ void SubVision::SimulationPeriodic() {
 std::map<std::string, std::optional<photon::EstimatedRobotPose>> SubVision::GetPose() {
   std::map<std::string, std::optional<photon::EstimatedRobotPose>> poses = {};
   for (ICCamera* cam : _camList) {
-    poses.insert({cam->GetCamName(), cam->GetEstPose()});
+    poses.insert({cam->GetCamName(), cam->GetLatestEstPose()});
   }
   return poses;
 }
 
-double SubVision::GetDev(photon::EstimatedRobotPose pose) {
-  units::meter_t distance = 0_m;
-  if (pose.targetsUsed.size() == 0) {
-    return 0;
-  }
-  for (auto target : pose.targetsUsed) {
-    distance += target.GetBestCameraToTarget().Translation().Norm();
-  }
-  distance /= pose.targetsUsed.size();
+double SubVision::GetDev(units::length::meter_t distance) {
   return _devTable[distance];
 }
 
-bool SubVision::IsEstimateUsable(photon::EstimatedRobotPose pose) {
+units::length::meter_t SubVision::GetAvgDistanceFromCamera(photon::EstimatedRobotPose est) {
   units::meter_t distance = 0_m;
-  auto tagCount = pose.targetsUsed.size();
-  if (pose.targetsUsed.size() == 0) {
-    return 0;
+  if (est.targetsUsed.size() == 0) {
+    return 0_m;
   }
-  for (auto target : pose.targetsUsed) {
+  for (auto target : est.targetsUsed) {
     distance += target.GetBestCameraToTarget().Translation().Norm();
   }
-  distance /= pose.targetsUsed.size();
+  distance /= est.targetsUsed.size();
 
-  return ((distance < 5_m) || (tagCount > 1));
+  return distance;
+}
+
+bool SubVision::IsEstimateUsable(photon::EstimatedRobotPose est) {
+  return ((GetAvgDistanceFromCamera(est) < 5_m) || (est.targetsUsed.size() > 1));
 }
 
 std::optional<frc::Pose2d> SubVision::GetAprilTagPose(int id) {
