@@ -53,6 +53,8 @@ class SubTurret : public frc2::SubsystemBase {
   void SetTurretAngle(units::degree_t angle);
   void ZeroTurret();
   void SetLastFieldRelativeTarget(units::degree_t angle);
+  void LockTurret();
+  void UnlockTurret();
 
   bool IsAtTarget();
   
@@ -108,6 +110,7 @@ class SubTurret : public frc2::SubsystemBase {
   units::degree_t NEG_LIMIT = -160_deg;
 
   bool _hasZeroed = false;
+  bool _isLocked = false;
 
   double P = 10.0;
   double I = 0.0;
