@@ -109,7 +109,6 @@ void RobotContainer::ConfigureBindings() {
   _driverController.A().WhileTrue(cmd::EjectFuel());
 
   /* Operator */
-  _operatorController.Back().OnTrue(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); }));
   _operatorController.X().OnTrue(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); }));
   _operatorController.X().OnFalse(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(false); }));
   _operatorController.Y().OnTrue(cmd::DisableAllOverrides());

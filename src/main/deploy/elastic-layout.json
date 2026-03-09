@@ -8,11 +8,11 @@
         "layouts": [],
         "containers": [
           {
-            "title": "HoodOnTarg",
-            "x": 640.0,
-            "y": 160.0,
-            "width": 256.0,
-            "height": 144.0,
+            "title": "Hood At Target",
+            "x": 656.0,
+            "y": 0.0,
+            "width": 304.0,
+            "height": 128.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/SmartDashboard/Hood/IsAtTarget",
@@ -25,11 +25,11 @@
             }
           },
           {
-            "title": "HoodZeroed",
-            "x": 0.0,
-            "y": 160.0,
-            "width": 128.0,
-            "height": 144.0,
+            "title": "Hood Zeroed",
+            "x": 16.0,
+            "y": 0.0,
+            "width": 144.0,
+            "height": 80.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/SmartDashboard/Hood/haszeroed",
@@ -43,10 +43,10 @@
           },
           {
             "title": "Hub Active",
-            "x": 448.0,
-            "y": 384.0,
-            "width": 320.0,
-            "height": 368.0,
+            "x": 352.0,
+            "y": 128.0,
+            "width": 288.0,
+            "height": 256.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/SmartDashboard/RebuiltShift/Hub Active",
@@ -59,27 +59,27 @@
             }
           },
           {
-            "title": "Seconds Left on Shift (s)",
-            "x": 768.0,
-            "y": 384.0,
-            "width": 304.0,
-            "height": 368.0,
+            "title": "Seconds Left on Shift",
+            "x": 640.0,
+            "y": 128.0,
+            "width": 336.0,
+            "height": 256.0,
             "type": "Match Time",
             "properties": {
               "topic": "/SmartDashboard/RebuiltShift/Seconds Left on Shift (s)",
               "period": 0.06,
               "data_type": "double",
               "time_display_mode": "Minutes and Seconds",
-              "red_start_time": 20,
-              "yellow_start_time": 30
+              "red_start_time": 10,
+              "yellow_start_time": 20
             }
           },
           {
-            "title": "FlywheelsOnTarg",
-            "x": 384.0,
-            "y": 160.0,
-            "width": 256.0,
-            "height": 144.0,
+            "title": "Flywheels At Speed",
+            "x": 352.0,
+            "y": 0.0,
+            "width": 304.0,
+            "height": 128.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/SmartDashboard/Shooter/IsAtSpeed",
@@ -92,11 +92,11 @@
             }
           },
           {
-            "title": "TurretOnTarg",
-            "x": 896.0,
-            "y": 160.0,
-            "width": 256.0,
-            "height": 144.0,
+            "title": "Turret At Target",
+            "x": 960.0,
+            "y": 0.0,
+            "width": 304.0,
+            "height": 128.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/SmartDashboard/Turret/IsAtTarget",
@@ -109,11 +109,11 @@
             }
           },
           {
-            "title": "TurretCamOn",
-            "x": 128.0,
-            "y": 688.0,
-            "width": 128.0,
-            "height": 128.0,
+            "title": "Turret Cam On",
+            "x": 16.0,
+            "y": 288.0,
+            "width": 144.0,
+            "height": 96.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/SmartDashboard/Vision/Turret/Is Connected",
@@ -126,11 +126,11 @@
             }
           },
           {
-            "title": "RCamOn",
-            "x": 128.0,
-            "y": 560.0,
-            "width": 128.0,
-            "height": 128.0,
+            "title": "Right Cam On",
+            "x": 16.0,
+            "y": 192.0,
+            "width": 144.0,
+            "height": 96.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/SmartDashboard/Vision/Right/Is Connected",
@@ -143,11 +143,11 @@
             }
           },
           {
-            "title": "LCamOn",
-            "x": 128.0,
-            "y": 432.0,
-            "width": 128.0,
-            "height": 128.0,
+            "title": "Left Cam On",
+            "x": 16.0,
+            "y": 96.0,
+            "width": 144.0,
+            "height": 96.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/SmartDashboard/Vision/Left/Is Connected",
@@ -160,11 +160,11 @@
             }
           },
           {
-            "title": "LHasTarg",
-            "x": 0.0,
-            "y": 432.0,
-            "width": 128.0,
-            "height": 128.0,
+            "title": "Left Has Target",
+            "x": 160.0,
+            "y": 96.0,
+            "width": 144.0,
+            "height": 96.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/photonvision/Left/hasTargets",
@@ -177,11 +177,11 @@
             }
           },
           {
-            "title": "RHasTarg",
-            "x": 0.0,
-            "y": 560.0,
-            "width": 128.0,
-            "height": 128.0,
+            "title": "Right Has Target",
+            "x": 160.0,
+            "y": 192.0,
+            "width": 144.0,
+            "height": 96.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/photonvision/Right/hasTargets",
@@ -194,11 +194,11 @@
             }
           },
           {
-            "title": "TurretHasTarg",
-            "x": 0.0,
-            "y": 688.0,
-            "width": 128.0,
-            "height": 128.0,
+            "title": "Turret Has Target",
+            "x": 160.0,
+            "y": 288.0,
+            "width": 144.0,
+            "height": 96.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/photonvision/Turret/hasTargets",
@@ -212,10 +212,10 @@
           },
           {
             "title": "Alerts",
-            "x": 1184.0,
-            "y": 384.0,
-            "width": 256.0,
-            "height": 384.0,
+            "x": 976.0,
+            "y": 128.0,
+            "width": 288.0,
+            "height": 256.0,
             "type": "Alerts",
             "properties": {
               "topic": "/SmartDashboard/Alerts",
@@ -223,28 +223,11 @@
             }
           },
           {
-            "title": "ClimberZeroed",
-            "x": 0.0,
-            "y": 304.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Boolean Box",
-            "properties": {
-              "topic": "/SmartDashboard/Climber/Has Zeroed",
-              "period": 0.06,
-              "data_type": "boolean",
-              "true_color": 4283215696,
-              "false_color": 4294198070,
-              "true_icon": "None",
-              "false_icon": "None"
-            }
-          },
-          {
-            "title": "DeployZeroed",
-            "x": 128.0,
-            "y": 160.0,
-            "width": 128.0,
-            "height": 128.0,
+            "title": "Deploy Zeroed",
+            "x": 160.0,
+            "y": 0.0,
+            "width": 144.0,
+            "height": 80.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/SmartDashboard/Deploy/HasZeroed",
@@ -266,23 +249,23 @@
         "containers": [
           {
             "title": "Choose your auto",
-            "x": 224.0,
-            "y": 208.0,
-            "width": 480.0,
-            "height": 528.0,
+            "x": 640.0,
+            "y": 16.0,
+            "width": 624.0,
+            "height": 112.0,
             "type": "ComboBox Chooser",
             "properties": {
               "topic": "/SmartDashboard/CHOSEN AUTON",
               "period": 0.06,
-              "sort_options": true
+              "sort_options": false
             }
           },
           {
-            "title": "LCamConnected",
-            "x": 32.0,
-            "y": 208.0,
-            "width": 192.0,
-            "height": 160.0,
+            "title": "LeftCamConnected",
+            "x": 16.0,
+            "y": 16.0,
+            "width": 176.0,
+            "height": 112.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/SmartDashboard/Vision/Left/Is Connected",
@@ -295,11 +278,11 @@
             }
           },
           {
-            "title": "RCamConnected",
-            "x": 32.0,
-            "y": 384.0,
-            "width": 192.0,
-            "height": 176.0,
+            "title": "RightCamConnected",
+            "x": 16.0,
+            "y": 144.0,
+            "width": 176.0,
+            "height": 112.0,
             "type": "Boolean Box",
             "properties": {
               "topic": "/SmartDashboard/Vision/Right/Is Connected",
@@ -312,28 +295,11 @@
             }
           },
           {
-            "title": "TurretCamConnected",
-            "x": 32.0,
-            "y": 576.0,
-            "width": 192.0,
-            "height": 160.0,
-            "type": "Boolean Box",
-            "properties": {
-              "topic": "/SmartDashboard/Vision/Turret/Is Connected",
-              "period": 0.06,
-              "data_type": "boolean",
-              "true_color": 4283215696,
-              "false_color": 4294198070,
-              "true_icon": "None",
-              "false_icon": "None"
-            }
-          },
-          {
             "title": "TurretCam",
-            "x": 704.0,
-            "y": 208.0,
-            "width": 464.0,
-            "height": 528.0,
+            "x": 640.0,
+            "y": 144.0,
+            "width": 208.0,
+            "height": 240.0,
             "type": "Multi Color View",
             "properties": {
               "topic": "/CameraPublisher/Turret-processed/streams",
@@ -343,10 +309,10 @@
           },
           {
             "title": "LeftCam",
-            "x": 1168.0,
-            "y": 208.0,
-            "width": 368.0,
-            "height": 272.0,
+            "x": 848.0,
+            "y": 144.0,
+            "width": 208.0,
+            "height": 240.0,
             "type": "Multi Color View",
             "properties": {
               "topic": "/CameraPublisher/Left-processed/streams",
@@ -356,15 +322,91 @@
           },
           {
             "title": "RightCam",
-            "x": 1168.0,
-            "y": 480.0,
-            "width": 368.0,
-            "height": 256.0,
+            "x": 1056.0,
+            "y": 144.0,
+            "width": 208.0,
+            "height": 240.0,
             "type": "Multi Color View",
             "properties": {
               "topic": "/CameraPublisher/Right-processed/streams",
               "period": 0.06,
               "data_type": "string[]"
+            }
+          },
+          {
+            "title": "Turret CRT Positon (deg)",
+            "x": 208.0,
+            "y": 16.0,
+            "width": 208.0,
+            "height": 240.0,
+            "type": "Radial Gauge",
+            "properties": {
+              "topic": "/SmartDashboard/Turret/CRT Positiion (deg)",
+              "period": 0.033,
+              "data_type": "double",
+              "start_angle": 0.0,
+              "end_angle": 360.0,
+              "min_value": 0.0,
+              "max_value": 360.0,
+              "number_of_labels": 4,
+              "wrap_value": false,
+              "show_pointer": true,
+              "show_ticks": true
+            }
+          },
+          {
+            "title": "Turret Motor Position (tr)",
+            "x": 416.0,
+            "y": 16.0,
+            "width": 208.0,
+            "height": 240.0,
+            "type": "Radial Gauge",
+            "properties": {
+              "topic": "/SmartDashboard/Turret/Motor/Position (tr)",
+              "period": 0.06,
+              "data_type": "double",
+              "start_angle": 0.0,
+              "end_angle": 360.0,
+              "min_value": 0.0,
+              "max_value": 1.0,
+              "number_of_labels": 4,
+              "wrap_value": false,
+              "show_pointer": true,
+              "show_ticks": true
+            }
+          },
+          {
+            "title": "TurretEncodersConnected",
+            "x": 208.0,
+            "y": 272.0,
+            "width": 416.0,
+            "height": 112.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/SmartDashboard/Turret/Encoder/EncodersAreConnected",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "TurretCamConnected",
+            "x": 16.0,
+            "y": 272.0,
+            "width": 176.0,
+            "height": 112.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/SmartDashboard/Vision/Turret/Is Connected",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
             }
           }
         ]
@@ -377,10 +419,10 @@
         "containers": [
           {
             "title": "LeftCam",
-            "x": 1120.0,
-            "y": 0.0,
-            "width": 416.0,
-            "height": 272.0,
+            "x": 656.0,
+            "y": 144.0,
+            "width": 304.0,
+            "height": 192.0,
             "type": "Multi Color View",
             "properties": {
               "topic": "/CameraPublisher/Left-processed/streams",
@@ -390,10 +432,10 @@
           },
           {
             "title": "RightCam",
-            "x": 1120.0,
-            "y": 272.0,
-            "width": 416.0,
-            "height": 272.0,
+            "x": 960.0,
+            "y": 144.0,
+            "width": 320.0,
+            "height": 192.0,
             "type": "Multi Color View",
             "properties": {
               "topic": "/CameraPublisher/Right-processed/streams",
@@ -403,10 +445,10 @@
           },
           {
             "title": "TurretCam",
-            "x": 1120.0,
-            "y": 544.0,
-            "width": 416.0,
-            "height": 256.0,
+            "x": 960.0,
+            "y": 336.0,
+            "width": 320.0,
+            "height": 208.0,
             "type": "Multi Color View",
             "properties": {
               "topic": "/CameraPublisher/Turret-processed/streams",
@@ -416,10 +458,10 @@
           },
           {
             "title": "warnings",
-            "x": 816.0,
-            "y": 0.0,
-            "width": 304.0,
-            "height": 256.0,
+            "x": 656.0,
+            "y": 16.0,
+            "width": 624.0,
+            "height": 128.0,
             "type": "Text Display",
             "properties": {
               "topic": "/SmartDashboard/Alerts/warnings",
@@ -433,7 +475,7 @@
             "x": 160.0,
             "y": 320.0,
             "width": 160.0,
-            "height": 80.0,
+            "height": 96.0,
             "type": "Text Display",
             "properties": {
               "topic": "/SmartDashboard/Deploy/DeployMotor/Position (tr)",
@@ -447,7 +489,7 @@
             "x": 320.0,
             "y": 320.0,
             "width": 160.0,
-            "height": 80.0,
+            "height": 96.0,
             "type": "Text Display",
             "properties": {
               "topic": "/SmartDashboard/Deploy/DeployMotor/Position Target (tr)",
@@ -461,7 +503,7 @@
             "x": 0.0,
             "y": 320.0,
             "width": 160.0,
-            "height": 80.0,
+            "height": 96.0,
             "type": "Text Display",
             "properties": {
               "topic": "/SmartDashboard/Deploy/DeployMotor/Current (A)",
@@ -601,7 +643,7 @@
             "x": 160.0,
             "y": 432.0,
             "width": 160.0,
-            "height": 80.0,
+            "height": 96.0,
             "type": "Text Display",
             "properties": {
               "topic": "/SmartDashboard/Turret/Motor/Position (tr)",
@@ -615,7 +657,7 @@
             "x": 320.0,
             "y": 432.0,
             "width": 160.0,
-            "height": 80.0,
+            "height": 96.0,
             "type": "Text Display",
             "properties": {
               "topic": "/SmartDashboard/Turret/Motor/Position Target (tr)",
@@ -629,7 +671,7 @@
             "x": 0.0,
             "y": 432.0,
             "width": 160.0,
-            "height": 80.0,
+            "height": 96.0,
             "type": "Text Display",
             "properties": {
               "topic": "/SmartDashboard/Turret/Motor/Current (A)",
@@ -643,7 +685,7 @@
             "x": 496.0,
             "y": 432.0,
             "width": 144.0,
-            "height": 80.0,
+            "height": 96.0,
             "type": "Text Display",
             "properties": {
               "topic": "/SmartDashboard/Turret/CRT Positiion (deg)",
@@ -654,8 +696,8 @@
           },
           {
             "title": "ShotplanShoot?",
-            "x": 576.0,
-            "y": 0.0,
+            "x": 496.0,
+            "y": 16.0,
             "width": 144.0,
             "height": 128.0,
             "type": "Boolean Box",
@@ -671,8 +713,8 @@
           },
           {
             "title": "ShiftOverride",
-            "x": 576.0,
-            "y": 128.0,
+            "x": 496.0,
+            "y": 144.0,
             "width": 144.0,
             "height": 128.0,
             "type": "Boolean Box",
