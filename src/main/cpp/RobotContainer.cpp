@@ -110,6 +110,8 @@ void RobotContainer::ConfigureBindings() {
   // Driver POVs
   _driverController.POVRight().WhileTrue(SubDeploy::GetInstance().Zero());
   _driverController.POVLeft().WhileTrue(SubHood::GetInstance().ZeroHood());
+  _driverController.POVDown().WhileTrue(
+    SubIndexer::GetInstance().IndexBackwards().AlongWith(SubFeeder::GetInstance().FeedBackwards()));
 
   //Sticks
 
