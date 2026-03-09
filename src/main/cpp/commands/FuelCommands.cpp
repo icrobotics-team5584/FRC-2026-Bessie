@@ -140,6 +140,7 @@ frc2::CommandPtr DisableAllOverrides() {
     ShotPlanner::SetOverride(ShotPlanner::Override::NONE);
     ShiftHandler::GetInstance().SetOverrideActive(false);
     forcingShoot = false;
+    SubTurret::GetInstance().UnlockTurret();
     Logger::Log("ForceShoot/forcingShoot", forcingShoot);
   });
 }

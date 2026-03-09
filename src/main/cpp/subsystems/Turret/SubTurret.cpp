@@ -193,7 +193,14 @@ frc2::CommandPtr SubTurret::SetTurretTargetAngle(std::function<units::degree_t()
 
         Logger::Log("Turret/VelocityFeedForward/ffVolts", rotationFeedforward);
         Logger::Log("Turret/VelocityFeedForward/angVelTarget", nextVel);
-        _turretMotor.SetPositionTarget(CalcOptimisedTurretAngle(angle()), rotationFeedforward);
+
+        if(!_isLocked) {
+            _turretMotor.SetPositionTarget(CalcOptimisedTurretAngle(angle()), rotationFeedforward);
+        }
+        if(_isLocked) {
+            _turretMotor.SetPositionTarget(_turretMotor.GetPosition());
+        }
+        
     });
 }
 
@@ -242,16 +249,26 @@ void SubTurret::SetTurretAngle(units::degree_t angle) {
 }
 
 void SubTurret::ZeroTurret() {
-    units::degree_t turretAngle = GetTurretAngleCRT();
-    if(turretAngle > NEG_LIMIT && turretAngle < POS_LIMIT) {
-        SetTurretAngle(turretAngle);
-        _turretMotor.SetPositionTarget(GetTurretAngleCRT());
-        _turretOutOfRangeAlert.Set(false);
-    }
+    if(!_isLocked) {
+        units::degree_t turretAngle = GetTurretAngleCRT();
+        if(turretAngle > NEG_LIMIT && turretAngle < POS_LIMIT) {
+            SetTurretAngle(turretAngle);
+            _turretMotor.SetPositionTarget(GetTurretAngleCRT());
+            _turretOutOfRangeAlert.Set(false);
+        }
 
-    else{
-        _turretOutOfRangeAlert.Set(true);
+        else{
+            _turretOutOfRangeAlert.Set(true);
+        }
     }
+}
+
+void SubTurret::LockTurret() {
+    _isLocked = true;
+}
+
+void SubTurret::UnlockTurret() {
+    _isLocked = false;
 }
 
 frc2::CommandPtr SubTurret::ZeroTurretCmd() {
