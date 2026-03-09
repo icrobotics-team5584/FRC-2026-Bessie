@@ -7,6 +7,13 @@
 #include <frc2/command/Commands.h>
 #include <photon/PhotonPoseEstimator.h>
 
+struct ProcessedPose {
+    std::string camName;
+    frc::Pose2d pose;
+    units::time::second_t timestamp;
+    units::length::meter_t distance;
+};
+
 void StableCameraProcess(std::string name, photon::EstimatedRobotPose pose);
 
 void TurretCameraProcess(std::string name, photon::EstimatedRobotPose pose);
