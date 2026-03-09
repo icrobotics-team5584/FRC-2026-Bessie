@@ -22,7 +22,7 @@ void ICCamera::Update() {
     auto result = _results.back();
     std::optional<photon::EstimatedRobotPose> poseEst;
     if (result.targets.size() == 1) {
-        _estPose = _poseEstimator.EstimateAverageBestTargetsPose(result);
+        _estPose = _poseEstimator.EstimateLowestAmbiguityPose(result);
     } else {
         _estPose = _poseEstimator.EstimateCoprocMultiTagPose(result);
     }

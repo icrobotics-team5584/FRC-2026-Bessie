@@ -13,6 +13,7 @@ namespace cmd {
 using namespace frc2::cmd;
 
 frc2::CommandPtr AddVisionMeasurement() {
+    Logger::Log("Vision/Timestamp limit", 0.2_s);
     return Run([] {
         if (Logger::Tune("Vision/Add pose measurement", frc::RobotBase::IsSimulation())) {return;}
 
@@ -29,8 +30,9 @@ frc2::CommandPtr AddVisionMeasurement() {
 
             // If the pose is useable, or the 
             bool poseUseable = SubVision::GetInstance().IsEstimateUsable(pose.value());
-            bool timestampVaild = frc::Timer::GetFPGATimestamp() - pose.value().timestamp < 0.1_s;
+            bool timestampVaild = frc::Timer::GetFPGATimestamp() - pose.value().timestamp < 0.2_s;
             Logger::Log("Vision/"+name+"/Est pose useable", poseUseable);
+            Logger::Log("Vision/"+name+"/Timestamp difference", frc::Timer::GetFPGATimestamp() - pose.value().timestamp);
             Logger::Log("Vision/"+name+"/Vaild timestamp", timestampVaild);
             if (!poseUseable || !timestampVaild) {continue;}
             
@@ -45,13 +47,15 @@ frc2::CommandPtr AddVisionMeasurement() {
                 frc::Translation2d r_turret_to_cam = turret_to_cam.RotateBy(turr_ang);
                 frc::Transform2d t_turret_to_cam {r_turret_to_cam.X(), r_turret_to_cam.Y(), turr_ang};
 
-                frc::Pose2d botPose = pose.value().estimatedPose.ToPose2d()
+                botPose = pose.value().estimatedPose.ToPose2d()
                                             .TransformBy(t_turret_to_cam.Inverse())
                                             .TransformBy(t_bot_to_turret.Inverse());
             } else {
                 // Static camera
                 botPose = pose.value().estimatedPose.ToPose2d();
             }
+
+            Logger::FieldDisplay::GetInstance().DisplayPose("Vision/"+name+"/Est pose", botPose);
             
             // Distance between tag and camera
             units::length::meter_t distance = SubVision::GetInstance().GetAvgDistanceFromCamera(pose.value());
