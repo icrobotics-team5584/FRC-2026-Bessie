@@ -466,6 +466,9 @@ class ICSpark : public wpi::Sendable {
   bool InMotionMode();
 
   // Alerts - Text added later
+  /* Please Note: Enabling []All Exceptions will cause VScode to breakpoint on a
+   * exception that purposefully thrown and caught by WPIlib. The exception is 
+   * thrown when adding an alert for the first time. */
   frc::Alert _configErrorAlert{"", frc::Alert::AlertType::kError};
   frc::Alert _temperatureAlert{"", frc::Alert::AlertType::kWarning};
   frc::Alert _currentAlert{"", frc::Alert::AlertType::kWarning};

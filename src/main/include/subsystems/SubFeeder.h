@@ -28,6 +28,7 @@ class SubFeeder : public frc2::SubsystemBase {
   SubFeeder();
 
   frc2::CommandPtr Feed();
+  frc2::CommandPtr FeedBackwards();
   frc2::CommandPtr FeederOn();
   frc2::CommandPtr FeederOff();
 
@@ -53,6 +54,11 @@ class SubFeeder : public frc2::SubsystemBase {
   AlertController::MotorAlertConfig _feederAlertConfig{_feederHighTemperatureAlert,
     _intakeRecordedTemperatureAlert, _intakeRecordedCurrentAlert, _feederCurrentAlert, 60_degC,
     20_A};
+
+  static constexpr double P = 0.06;
+  static constexpr double I = 0.0;
+  static constexpr double D = 0.0;
+  static constexpr double F = 0.12;
 
   // Simulation components
   static constexpr double GEARING = 1.0;

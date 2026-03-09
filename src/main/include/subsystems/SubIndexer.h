@@ -30,6 +30,7 @@ class SubIndexer : public frc2::SubsystemBase {
   frc2::CommandPtr IndexerOff();
 
   frc2::CommandPtr Index();
+  frc2::CommandPtr IndexBackwards();
   frc2::CommandPtr StopIndex();
 
   /**

@@ -46,15 +46,17 @@ public:
 
   int GetClosestTag(frc::Pose2d currentPose);
 
-  bool IsEstimateUsable(photon::EstimatedRobotPose pose);
+  units::length::meter_t GetAvgDistanceFromCamera(photon::EstimatedRobotPose est);
 
-  double GetDev(photon::EstimatedRobotPose pose);
+  bool IsEstimateUsable(photon::EstimatedRobotPose est);
+
+  double GetDev(units::length::meter_t distance);
 
   static constexpr frc::Transform2d TURRET_TO_CAM = frc::Transform2d{-40.629_mm, 151.5_mm, 0_deg};
 
   const std::string TURRET_CAM_NAME = "Turret";
-  const std::string LEFT_CAM_NAME = "Left";
-  const std::string RIGHT_CAM_NAME = "Right";
+  const std::string LEFT_CAM_NAME = "left";
+  const std::string RIGHT_CAM_NAME = "right";
 
  private:
 
@@ -62,7 +64,7 @@ public:
   std::string _tagMapFilePath = frc::filesystem::GetDeployDirectory() + "/2026-rebuilt.json";
   frc::AprilTagFieldLayout _tagMap{_tagMapFilePath};
 
-  frc::Transform3d _leftBotToCam{{-295.779_mm,-252.927_mm,320.249_mm},{0_deg,-30_deg,90_deg}};
+  frc::Transform3d _leftBotToCam{{-295.779_mm,252.927_mm,320.249_mm},{0_deg,-30_deg, 90_deg}};
 
   ICCamera _leftCam {
     LEFT_CAM_NAME,
@@ -70,7 +72,7 @@ public:
     _tagMap
   };
 
-  frc::Transform3d _rightBotToCam{{-350_mm,350_mm,470_mm},{0_deg,-16_deg,-190.54_deg}};
+  frc::Transform3d _rightBotToCam{{69.480_mm,-312.197_mm,311.090_mm},{0_deg,-25.61_deg,-90_deg}};
 
   ICCamera _rightCam {
     RIGHT_CAM_NAME,
@@ -91,7 +93,7 @@ public:
 
   std::vector<ICCamera*> _camList {
     &_leftCam,
-    // &_rightCam,
+    &_rightCam,
     &_turretCam
   };
 
@@ -100,3 +102,8 @@ public:
   //Deviation table for further distances from tag
   wpi::interpolating_map<units::meter_t, double> _devTable;
 };
+
+
+// Link to photon vision
+// http://static-camera-pi.local:5800/ or http://10.55.84.11:5800 for left and right camera
+// http://turret-camera-pi.local:5800/ or http://10.55.84.12:5800 for turret camera
