@@ -12,7 +12,7 @@ frc2::CommandPtr BackupShoot();
 
 frc2::CommandPtr ShootWhenReady();
 frc2::CommandPtr AimOnTheMove();
-frc2::CommandPtr AimOnTheMoveWithoutRotation(frc2::CommandXboxController& controller);
+frc2::CommandPtr AimOnTheMoveWithoutTurret(frc2::CommandXboxController& controller);
 frc2::CommandPtr ShootOnTheMove();
 frc2::CommandPtr ShootOnTheMoveWithoutTurret(frc2::CommandXboxController& controller);
 frc2::CommandPtr ToggleBrakeCoast();

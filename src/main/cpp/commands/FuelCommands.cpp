@@ -107,10 +107,10 @@ frc2::CommandPtr ShootOnTheMove(){
 }
 
 frc2::CommandPtr ShootOnTheMoveWithoutTurret(frc2::CommandXboxController& controller) {
-
+  return AimOnTheMoveWithoutTurret(controller).AlongWith(ShootWhenReady());
 }
 
-frc2::CommandPtr AimOnTheMoveWithoutRotation(frc2::CommandXboxController& controller) {
+frc2::CommandPtr AimOnTheMoveWithoutTurret(frc2::CommandXboxController& controller) {
   return SubShooter::GetInstance()
     .SpinWithDistance([] { return CalcShootOnTheMoveDistance(); },
       [] {
