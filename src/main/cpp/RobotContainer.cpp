@@ -50,7 +50,7 @@ RobotContainer::RobotContainer() {
 void RobotContainer::ConfigureBindings() {
   //Triggers
   _driverController.LeftTrigger().WhileTrue(cmd::IntakeSequence());
-  _driverController.RightTrigger().WhileTrue(cmd::ShootOnTheMove().AlongWith(cmd::TeleopDrive(_driverController, 1.0)));
+  _driverController.RightTrigger().WhileTrue(cmd::ShootOnTheMove().AlongWith(cmd::TeleopDrive(_driverController, 1.0, 1.0)));
   _driverController.RightTrigger().OnFalse(SubFeeder::GetInstance().FeederOff());
 
   //Bumpers
@@ -61,6 +61,7 @@ void RobotContainer::ConfigureBindings() {
   _driverController.X().WhileTrue(SubDrivebase::GetInstance().LockWheelsInXShape());
   _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
   _driverController.A().WhileTrue(cmd::EjectFuel());
+  _driverController.Y().OnTrue(SubDrivebase::GetInstance().ZeroRotation([] { return 0_deg; }));
 
   /* Operator */
   _operatorController.X().OnTrue(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); }));

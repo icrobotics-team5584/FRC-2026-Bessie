@@ -19,9 +19,10 @@ SubTurret::SubTurret() {
     _turretMotorConfig.encoder.PositionConversionFactor(1/GEAR_RATIO);
     _turretMotorConfig.encoder.VelocityConversionFactor(1/GEAR_RATIO);
     _turretMotorConfig.closedLoop.Pid(P, I, D);
+    _turretMotorConfig.closedLoop.feedForward.kS(kS.value());
     _turretMotorConfig.closedLoop.MaxOutput(1.0);
     _turretMotorConfig.closedLoop.MinOutput(-1.0);
-    _turretMotorConfig.closedLoop.IMaxAccum(0.05);
+    _turretMotorConfig.closedLoop.IMaxAccum(0.1);
     _turretMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
     _turretMotorConfig.SmartCurrentLimit(40);
     _turretMotorConfig.softLimit.ForwardSoftLimit(POS_LIMIT.convert<units::turns>().value());
@@ -186,6 +187,9 @@ frc2::CommandPtr SubTurret::SetTurretTargetAngle(std::function<units::degree_t()
         units::volt_t rotationFeedforward = _robotRotVelFF.Calculate(nextVel);
 
         units::degree_t turretAngle = GetTurretAngle();
+        Logger::Log("Turret/SetTurretTargetAngle/turretAngle", turretAngle);
+
+        units::volt_t cableSpringFF = Logger::Tune("Turret/CableSpringFFVoltage", _cableSpringkS);
 
         // If the error is larger than 60_deg we do not use any rotationFeedforward (angular velocity FF)
         // This is so that we dont counteract our wraparound with rotationFF (so we can wrap quicker)
@@ -193,8 +197,12 @@ frc2::CommandPtr SubTurret::SetTurretTargetAngle(std::function<units::degree_t()
             rotationFeedforward = 0_V;
         }
 
-        if(turretAngle < 45_deg || turretAngle > 135_deg) {
-            rotationFeedforward += cableSpringkS;
+        if(turretAngle > 155_deg) {
+            rotationFeedforward += cableSpringFF;
+        }
+
+        if(turretAngle < 20_deg) {
+            rotationFeedforward -= cableSpringFF;
         }
 
         Logger::Log("Turret/VelocityFeedForward/ffVolts", rotationFeedforward);

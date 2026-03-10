@@ -9,5 +9,5 @@
 #include <frc2/command/button/CommandXboxController.h>
 
 namespace cmd {
-frc2::CommandPtr TeleopDrive(frc2::CommandXboxController& controller, double speedScaling = 1.0);
+frc2::CommandPtr TeleopDrive(frc2::CommandXboxController& controller, double speedScaling = 1.0, double rotationScaling = 1.0);
 }  // namespace cmd
