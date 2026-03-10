@@ -18,7 +18,7 @@ SubIndexer::SubIndexer() {
 
 // Spindexer motor
 frc2::CommandPtr SubIndexer::IndexerOn() {
-  return StartEnd([this] { _indexerMotor.Set(1); }, [this] { _indexerMotor.Set(0); });
+  return StartEnd([this] { _indexerMotor.Set(0.9); }, [this] { _indexerMotor.Set(0); });
 }
 
 frc2::CommandPtr SubIndexer::IndexerOff() {
