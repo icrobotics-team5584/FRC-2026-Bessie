@@ -53,7 +53,7 @@ void SubIndexer::SimulationPeriodic() {
 frc2::CommandPtr SubIndexer::Index() {
   return StartEnd(
     [this] {
-      _indexerMotor.Set(1);
+      _indexerMotor.Set(0.9);
     },
     [this] {
       _indexerMotor.Set(0);
