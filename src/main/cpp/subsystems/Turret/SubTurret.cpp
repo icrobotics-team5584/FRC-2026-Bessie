@@ -185,10 +185,16 @@ frc2::CommandPtr SubTurret::SetTurretTargetAngle(std::function<units::degree_t()
 
         units::volt_t rotationFeedforward = _robotRotVelFF.Calculate(nextVel);
 
+        units::degree_t turretAngle = GetTurretAngle();
+
         // If the error is larger than 60_deg we do not use any rotationFeedforward (angular velocity FF)
         // This is so that we dont counteract our wraparound with rotationFF (so we can wrap quicker)
         if(units::math::abs( GetTurretAngle() - angle() ) > 60_deg) {
             rotationFeedforward = 0_V;
+        }
+
+        if(turretAngle < 45_deg || turretAngle > 135_deg) {
+            rotationFeedforward += cableSpringkS;
         }
 
         Logger::Log("Turret/VelocityFeedForward/ffVolts", rotationFeedforward);

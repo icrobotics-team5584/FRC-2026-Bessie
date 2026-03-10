@@ -120,6 +120,8 @@ class SubTurret : public frc2::SubsystemBase {
   static constexpr auto kV = 6.0_V * (1_s / 1_tr); //3.4_V
   static constexpr auto kA = 0_V * ((1_s * 1_s) / 1_tr);
 
+  static constexpr units::volt_t cableSpringkS = 0.15_V;
+
   const double E1_TEETH = BotVars::Choose(17, 21);
   const double E2_TEETH = BotVars::Choose(15, 20);
   const double BIG_TEETH = 94;
