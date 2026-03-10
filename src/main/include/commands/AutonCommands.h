@@ -33,4 +33,6 @@ namespace cmd {
     frc2::CommandPtr ShootAndStay();
 
     frc2::CommandPtr AutoZeroGyroFromVision();
+    
+    frc2::CommandPtr AutonomousShoot(units::second_t shootTime);
 }

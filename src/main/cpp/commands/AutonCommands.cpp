@@ -267,7 +267,7 @@ namespace cmd {
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.60_m, 7.45_m, 180_deg}; }, 1.0, 15_cm, 10_deg) //back to alliance zone
             )),
 
-            cmd::ShootOnTheMove().WithTimeout(5_s),
+            cmd::AutonomousShoot(5_s),
 
             SubIntake::GetInstance().IntakeOn().AlongWith(
                 cmd::AimAtHub()
@@ -282,7 +282,7 @@ namespace cmd {
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.60_m, 7.45_m, 180_deg}; }, 1.0, 20_cm, 10_deg) //drive under trench
             )),
 
-            cmd::ShootOnTheMove().WithTimeout(4_s),
+            cmd::AutonomousShoot(4_s),
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.10_m, 7.45_m, 180_deg}; }, 1.0, 30_cm, 20_deg), //neutral side of trench
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_ONEPASS_IN_LEFT; }, 1.0, 20_cm, 5_deg)
         );
@@ -307,7 +307,7 @@ namespace cmd {
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.60_m, 0.59_m, 180_deg}; }, 1.0, 15_cm, 10_deg) //back to alliance zone
             )),
 
-            cmd::ShootOnTheMove().WithTimeout(5_s),
+            cmd::AutonomousShoot(5_s),
 
             SubIntake::GetInstance().IntakeOn().AlongWith(
                 cmd::AimAtHub()
@@ -322,7 +322,7 @@ namespace cmd {
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.60_m, 0.59_m, 180_deg}; }, 1.0, 20_cm, 5_deg) //drive under trench
             )),
 
-            cmd::ShootOnTheMove().WithTimeout(4_s),
+            cmd::AutonomousShoot(4_s),
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.10_m, 0.59_m, 180_deg}; }, 1.0, 30_cm, 20_deg), //neutral side of trench
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_ONEPASS_IN_RIGHT; }, 1.0, 20_cm, 10_deg)
         );
@@ -332,7 +332,13 @@ namespace cmd {
         return frc2::cmd::Sequence(
             AutoGyroZeroWithVision(),
             SubHood::GetInstance().ZeroHood(),
-            cmd::ShootOnTheMove().WithTimeout(5_s)
+            cmd::AutonomousShoot(10_s)
         );
+    }
+
+    frc2::CommandPtr AutonomousShoot(units::second_t shootTime) {
+      return cmd::ShootOnTheMove()
+        .AlongWith(frc2::cmd::Wait(1_s).AndThen(SubDeploy::GetInstance().AgitateHopper().AsProxy()))
+        .WithTimeout(shootTime);
     }
 }
