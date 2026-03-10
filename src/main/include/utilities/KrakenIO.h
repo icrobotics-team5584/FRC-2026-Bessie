@@ -52,6 +52,9 @@ class KrakenIO : public SwerveIO {
     const double DRIVE_V = 0.78528125;
     const double DRIVE_A = 0.079385;  // Units is V/1m/s^2 0.34324; left
 
+    const std::string TURN_MOTOR_LOG_LABEL;
+    const std::string DRIVE_MOTOR_LOG_LABEL;
+
   private:
   
     units::degree_t _desiredAngle;

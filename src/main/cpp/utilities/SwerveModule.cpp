@@ -12,9 +12,10 @@
 #include "utilities/KrakenIO.h"
 #include "utilities/BotVars.h"
 
-SwerveModule::SwerveModule(int canDriveMotorID, int canTurnMotorID, int canTurnEncoderID,
-                           units::turn_t cancoderMagOffset)
-    : _cancoder(canTurnEncoderID){
+SwerveModule::SwerveModule(
+  int canDriveMotorID, int canTurnMotorID, int canTurnEncoderID, units::turn_t cancoderMagOffset)
+  : _cancoder(canTurnEncoderID),
+    ENCODER_LOG_LABEL("swerve/turn encoder/" + std::to_string(canTurnEncoderID)) {
   using namespace ctre::phoenix6::signals;
   using namespace ctre::phoenix6::configs;
 
@@ -31,7 +32,7 @@ SwerveModule::SwerveModule(int canDriveMotorID, int canTurnMotorID, int canTurnE
   _cancoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue::CounterClockwise_Positive;
   _cancoderConfig.MagnetSensor.MagnetOffset = cancoderMagOffset;
   _cancoder.GetConfigurator().Apply(_cancoderConfig);
-  frc::SmartDashboard::PutNumber("swerve/cancoder "+std::to_string(canTurnEncoderID) + " mag offset", cancoderMagOffset.value());
+  frc::SmartDashboard::PutNumber(ENCODER_LOG_LABEL + "/mag offset", cancoderMagOffset.value());
 
   // Config Motors, dont change order of function calls. Or configs will not be applied before sensors are synced
   ConfigTurnMotor();
@@ -80,11 +81,10 @@ frc::SwerveModulePosition SwerveModule::GetPosition() {
 
 void SwerveModule::SendSensorsToDash() {
   _io->SendSensorsToDash();
-  std::string turnEncoderName = "swerve/turn encoder/" + std::to_string(_cancoder.GetDeviceID());
-  frc::SmartDashboard::PutNumber(turnEncoderName + "Abs position", _cancoder.GetAbsolutePosition().GetValue().value());
-  frc::SmartDashboard::PutNumber(turnEncoderName + "Supply Voltage", _cancoder.GetSupplyVoltage().GetValue().value());
-  frc::SmartDashboard::PutString(turnEncoderName + "Magnet Health", _cancoder.GetMagnetHealth().GetValue().ToString());
-  frc::SmartDashboard::PutNumber(turnEncoderName + "Velocity", _cancoder.GetVelocity().GetValue().value());
+  frc::SmartDashboard::PutNumber(ENCODER_LOG_LABEL + "Abs position", _cancoder.GetAbsolutePosition().GetValue().value());
+  frc::SmartDashboard::PutNumber(ENCODER_LOG_LABEL + "Supply Voltage", _cancoder.GetSupplyVoltage().GetValue().value());
+  frc::SmartDashboard::PutString(ENCODER_LOG_LABEL + "Magnet Health", _cancoder.GetMagnetHealth().GetValue().ToString());
+  frc::SmartDashboard::PutNumber(ENCODER_LOG_LABEL + "Velocity", _cancoder.GetVelocity().GetValue().value());
 }
 
 frc::Rotation2d SwerveModule::GetAngle() {

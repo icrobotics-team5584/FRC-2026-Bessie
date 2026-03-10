@@ -9,11 +9,11 @@
 
 const bool FOCstate = true;
 
-KrakenIO::KrakenIO(int turnCanID, int driveCanID, int encoderCanID,
-                   units::turn_t cancoderMagOffset) : _canTurnMotor(turnCanID),
-                                               _canDriveMotor(driveCanID)
-{
-}
+KrakenIO::KrakenIO(int turnCanID, int driveCanID, int encoderCanID, units::turn_t cancoderMagOffset)
+  : _canTurnMotor(turnCanID),
+    _canDriveMotor(driveCanID),
+    TURN_MOTOR_LOG_LABEL("swerve/turn motor/" + std::to_string(turnCanID)),
+    DRIVE_MOTOR_LOG_LABEL("swerve/drive motor/" + std::to_string(driveCanID)) {}
 
 void KrakenIO::ConfigTurnMotor() {
     _configTurnMotor.Feedback.SensorToMechanismRatio = TURNING_GEAR_RATIO;
@@ -44,11 +44,8 @@ void KrakenIO::SetAngle(units::turn_t angle) {
 }
 
 void KrakenIO::SendSensorsToDash() {
-    std::string driveMotorName = "swerve/drive motor/" + std::to_string(_canDriveMotor.GetDeviceID());
-    std::string turnMotorName = "swerve/turn motor/" + std::to_string(_canTurnMotor.GetDeviceID());
-
-    Logger::LogFalcon(driveMotorName, _canDriveMotor);
-    Logger::LogFalcon(turnMotorName, _canTurnMotor);
+    Logger::LogFalcon(DRIVE_MOTOR_LOG_LABEL, _canDriveMotor);
+    Logger::LogFalcon(TURN_MOTOR_LOG_LABEL, _canTurnMotor);
 }
 
 void KrakenIO::SetDesiredVelocity(units::meters_per_second_t velocity, units::newton_t forceFF) {
@@ -61,7 +58,7 @@ void KrakenIO::SetDesiredVelocity(units::meters_per_second_t velocity, units::ne
     torqueVoltageFF *= Logger::Tune("swerve/volatgeFF enabled", true);
     _canDriveMotor.SetControl(ctre::phoenix6::controls::VelocityVoltage{(TurnsPerSec)}.WithEnableFOC(true).WithFeedForward(torqueVoltageFF));
 
-    Logger::Log("swerve/drive " + std::to_string(_canDriveMotor.GetDeviceID()) + " torqueVoltage", torqueVoltageFF);
+    Logger::Log(DRIVE_MOTOR_LOG_LABEL + "/torqueVoltage", torqueVoltageFF);
     _desiredSpeed = velocity;
 }
 

@@ -49,6 +49,8 @@ class SwerveModule {
   frc::SwerveModuleState GetCANCoderState();
   units::radian_t GetDrivenRotations();
 
+  const std::string ENCODER_LOG_LABEL;
+
  private:
   std::unique_ptr<SwerveIO> _io;
 
