@@ -19,7 +19,6 @@ SubDeploy::SubDeploy() {
   _deployMotorConfig.closedLoop.MaxOutput(1);
   _deployMotorConfig.closedLoop.MinOutput(-1);
   _deployMotor.OverwriteConfig(_deployMotorConfig);
-  _agitateTimer.Start();
 
   Logger::Log("Deploy/DeployMotor", &_deployMotor);
 }
@@ -54,15 +53,18 @@ frc2::CommandPtr SubDeploy::MoveIntake(){
   }).OnlyIf([this]{return _hasZeroed;});
 }
 
-frc2::CommandPtr SubDeploy::AgitateHopper(){
-  return Run([this] {
-    if (_agitateTimer.HasElapsed(0.6_s)) {
-      _deployMotor.SetPositionTarget(AGITATE_ANGLE_HIGHER);
-      _agitateTimer.Restart();
-    } else if (_agitateTimer.HasElapsed(0.3_s)){
-      _deployMotor.SetPositionTarget(AGITATE_ANGLE_LOWER);
-    }
-  }).OnlyIf([this] { return _hasZeroed;});
+frc2::CommandPtr SubDeploy::AgitateHopper() {
+  return RunOnce([this] {
+    return _agitateConfig.SmartCurrentLimit(10);
+    _deployMotor.AdjustConfigNoPersist(_agitateConfig, true);
+  })
+    .AndThen(Run([this] { _deployMotor.SetPositionTarget(AGITATE_ANGLE); }).OnlyIf([this] {
+      return _hasZeroed;
+    }))
+    .FinallyDo([this] {
+      return _agitateConfig.SmartCurrentLimit(60);
+      _deployMotor.AdjustConfigNoPersist(_agitateConfig, true);
+    });
 }
 
 frc2::CommandPtr SubDeploy::Zero() {
@@ -130,7 +132,6 @@ void SubDeploy::Periodic() {
   Logger::Log("Deploy/IsZeroing", _currentlyZeroing);
   Logger::Log("Deploy/HasZeroed", _hasZeroed);
   Logger::Log("Deploy/ZeroingTimer", _zeroingTimer.Get());
-  Logger::Log("Deploy/AgitateTimer", _agitateTimer.Get());
   Logger::Log("Deploy/IntakeDeployed", _intakeDeployed);
   Logger::Log("Deploy/Loop Time", (frc::GetTime() - loopStart));
 }

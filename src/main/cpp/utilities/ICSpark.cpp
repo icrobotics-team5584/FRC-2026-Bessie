@@ -69,9 +69,9 @@ rev::REVLibError ICSpark::AdjustConfig(rev::spark::SparkBaseConfig& config) {
                    rev::PersistMode::kPersistParameters);
 };
 
-rev::REVLibError ICSpark::AdjustConfigNoPersist(rev::spark::SparkBaseConfig& config) {
+rev::REVLibError ICSpark::AdjustConfigNoPersist(rev::spark::SparkBaseConfig& config, bool async) {
   return Configure(config, rev::ResetMode::kNoResetSafeParameters,
-                   rev::PersistMode::kNoPersistParameters);
+                   rev::PersistMode::kNoPersistParameters, async);
 };
 
 rev::REVLibError ICSpark::OverwriteConfig(rev::spark::SparkBaseConfig& config) {
