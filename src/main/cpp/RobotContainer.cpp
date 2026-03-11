@@ -64,6 +64,7 @@ void RobotContainer::ConfigureBindings() {
       frc2::Command::InterruptionBehavior::kCancelIncoming));
   _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
   _driverController.A().WhileTrue(cmd::EjectFuel());
+  _driverController.Y().OnTrue(SubDrivebase::GetInstance().ZeroRotation([] {return 0_deg;}));
 
   /* Operator */
   _operatorController.X().OnTrue(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); }));
