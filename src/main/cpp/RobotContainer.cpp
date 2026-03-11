@@ -50,7 +50,8 @@ RobotContainer::RobotContainer() {
 void RobotContainer::ConfigureBindings() {
   //Triggers
   _driverController.LeftTrigger().WhileTrue(cmd::IntakeSequence());
-  _driverController.RightTrigger().WhileTrue(cmd::ShootOnTheMove().AlongWith(cmd::TeleopDrive(_driverController, 1.0)));
+  _driverController.RightTrigger().WhileTrue(
+    cmd::ShootOnTheMove().AlongWith(cmd::TeleopDrive(_driverController, 1.0).AsProxy()));
   _driverController.RightTrigger().OnFalse(SubFeeder::GetInstance().FeederOff());
 
   //Bumpers
@@ -58,7 +59,9 @@ void RobotContainer::ConfigureBindings() {
   _driverController.RightBumper().WhileTrue(SubDeploy::GetInstance().AgitateHopper());
 
   //Letters
-  _driverController.X().WhileTrue(SubDrivebase::GetInstance().LockWheelsInXShape());
+  _driverController.X().WhileTrue(
+    SubDrivebase::GetInstance().LockWheelsInXShape().WithInterruptBehavior(
+      frc2::Command::InterruptionBehavior::kCancelIncoming));
   _driverController.B().OnTrue(SubDrivebase::GetInstance().SyncSensor());
   _driverController.A().WhileTrue(cmd::EjectFuel());
 
