@@ -13,6 +13,10 @@ SubFeeder::SubFeeder() {
   _feederMotorConfig.SetIdleMode(rev::spark::SparkBaseConfig::IdleMode::kBrake);
   _feederMotor.OverwriteConfig(_feederMotorConfig);
   Logger::Log("Feeder/Feeder Motor", &_feederMotor);
+
+  _feederAlertConfig = std::make_shared<AlertController::AlertConfig>(
+    "Feeder Motor", 60_degC, 20_A);
+   AlertController::RegisterAlertConfig(_feederAlertConfig);
 }
 
 frc2::CommandPtr SubFeeder::Feed() {
@@ -32,9 +36,10 @@ void SubFeeder::Periodic() {
   auto loopStart = frc::GetTime();
   units::celsius_t feederTemperature = _feederMotor.GetTemperature();
   units::ampere_t feederCurrent = _feederMotor.GetStatorCurrent();
-  AlertController::UpdateTemperatureAlert(_feederAlertConfig, feederTemperature);
-  AlertController::UpdateCurrentAlert(_feederAlertConfig, feederCurrent);
 
+  AlertController::MotorTelemetryConfig telemetryConfig{feederTemperature, feederCurrent};
+  AlertController::UpdateAllAlerts(*_feederAlertConfig, telemetryConfig);
+  
   RobotVisualisation::GetInstance()._feederMechTopWheel.SetAngle(_feederMotor.GetPosition());
   RobotVisualisation::GetInstance()._feederMechBottomWheel.SetAngle(_feederMotor.GetPosition());
 

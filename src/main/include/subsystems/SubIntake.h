@@ -44,34 +44,8 @@ class SubIntake : public frc2::SubsystemBase {
   rev::spark::SparkFlexConfig _intakeMotorConfig;
   rev::spark::SparkFlexConfig _intakeFollowerMotorConfig;
 
-  frc::Alert _intakeHighTemperatureAlert{
-    "Intake Motor High Temperature!", frc::Alert::AlertType::kWarning};
-  frc::Alert _intakeCurrentAlert{"Intake Motor Overcurrent!", frc::Alert::AlertType::kWarning};
-
-  frc::Alert _intakeRecordedTemperatureAlert{
-    "Intake Motor max Temperature was reached !", frc::Alert::AlertType::kWarning};
-
-  frc::Alert _intakeRecordedCurrentAlert{
-    "Intake Motor max current was reached !", frc::Alert::AlertType::kWarning};
-
-  AlertController::MotorAlertConfig _intakeAlertConfig{_intakeHighTemperatureAlert,
-    _intakeCurrentAlert, _intakeRecordedCurrentAlert, _intakeRecordedTemperatureAlert, 60_degC,
-    20_A};
-
-  frc::Alert _intakeFollowerHighTemperatureAlert{
-    "Intake Follower Motor High Temperature!", frc::Alert::AlertType::kWarning};
-  frc::Alert _intakeFollowerCurrentAlert{
-    "Intake Follower Motor Overcurrent!", frc::Alert::AlertType::kWarning};
-
-  frc::Alert _intakeFollowerRecordedTemperatureAlert{
-    "Intake Follower Motor max Temperature was reached !", frc::Alert::AlertType::kWarning};
-
-  frc::Alert _intakeFollowerRecordedCurrentAlert{
-    "Intake Follower Motor max current was reached !", frc::Alert::AlertType::kWarning};
-
-  AlertController::MotorAlertConfig _intakeFollowerAlertConfig{_intakeFollowerHighTemperatureAlert,
-    _intakeFollowerCurrentAlert, _intakeFollowerRecordedTemperatureAlert,
-    _intakeFollowerRecordedCurrentAlert, 60_degC, 20_A};
+  std::shared_ptr<AlertController::AlertConfig> _intakeAlertConfig;
+  std::shared_ptr<AlertController::AlertConfig> _intakeFollowerAlertConfig;
 
   // Simulation components
   static constexpr double GEARING = 1.0;

@@ -32,6 +32,9 @@ SubHood::SubHood() {
   _hoodPitchTable.insert(5.1875_m, 0.098611_tr);
 
   _hoodMotor->ConfigMotor();
+
+  _hoodAlertConfig = std::make_shared<AlertController::AlertConfig>(
+    "Hood Motor", 60_degC, 20_A);
 }
 
 // This method will be called once per scheduler run
@@ -39,9 +42,6 @@ void SubHood::Periodic() {
   auto loopStart = frc::GetTime();
   units::celsius_t hoodTemperature = _hoodMotor->GetTemperature();
   units::ampere_t hoodCurrent = _hoodMotor->GetCurrent();
-
-  AlertController::UpdateTemperatureAlert(_hoodAlertConfig, hoodTemperature);
-  AlertController::UpdateCurrentAlert(_hoodAlertConfig, hoodCurrent);
 
   RobotVisualisation::GetInstance()._hoodMechCircle.SetAngle(_hoodMotor->GetPosition());
   if (_hasZeroed == false && _zeroing == false) {
@@ -53,6 +53,9 @@ void SubHood::Periodic() {
   Logger::Log("Hood/IsAtTarget", HoodIsAtTarget());
   
   _hoodMotor->Log("Hood/Motor");
+  
+  AlertController::MotorTelemetryConfig telemetryConfig{hoodTemperature, hoodCurrent};
+  AlertController::UpdateAllAlerts(*_hoodAlertConfig, telemetryConfig);
   
   Logger::Log("Hood/Loop Time", (frc::GetTime() - loopStart));
 }

@@ -13,6 +13,10 @@ SubIndexer::SubIndexer() {
   _indexerMotorConfig.SmartCurrentLimit(60);
   _indexerMotor.OverwriteConfig(_indexerMotorConfig);
   Logger::Log("Indexer/Indexer Motor", &_indexerMotor);
+
+  _indexerAlertConfig = std::make_shared<AlertController::AlertConfig>(
+    "Indexer Motor", 60_degC, 20_A);
+   AlertController::RegisterAlertConfig(_indexerAlertConfig);
 }
 
 // Spindexer motor
@@ -34,12 +38,11 @@ void SubIndexer::Periodic() {
   units::celsius_t IndexerTemp = _indexerMotor.GetTemperature();
   Logger::Log("Indexer/Indexer Motor Temperature", IndexerTemp);
 
-
-  AlertController::UpdateTemperatureAlert(_indexerAlertConfig, IndexerTemp);
-  AlertController::UpdateCurrentAlert(_indexerAlertConfig, IndexerCurrent);
+  AlertController::MotorTelemetryConfig telemetryConfig{IndexerTemp, IndexerCurrent};
+  AlertController::UpdateAllAlerts(*_indexerAlertConfig, telemetryConfig);
 
   RobotVisualisation::GetInstance()._indexerMechCircle.SetAngle(_indexerMotor.GetPosition());
-
+  
   Logger::Log("Indexer/Loop Time", (frc::GetTime() - loopStart));
 }
 

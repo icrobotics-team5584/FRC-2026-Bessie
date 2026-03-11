@@ -90,9 +90,6 @@ void SubDeploy::Periodic() {
 
   units::celsius_t deployTemperature = _deployMotor.GetTemperature();
 
-  AlertController::UpdateTemperatureAlert(DeployAlertConfig, deployTemperature);
-  AlertController::UpdateCurrentAlert(DeployAlertConfig, deployCurrent);
-
   RobotVisualisation::GetInstance()._deployLigament->SetAngle(_deployMotor.GetPosition());
 
   Logger::Log("Deploy/Loop Time", (frc::GetTime() - loopStart));

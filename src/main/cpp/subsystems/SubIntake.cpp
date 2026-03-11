@@ -22,6 +22,14 @@ SubIntake::SubIntake() {
   _intakeFollowerMotor.OverwriteConfig(_intakeFollowerMotorConfig);
 
   Logger::Log("Intake/Follower Intake Motor", &_intakeFollowerMotor);
+
+  _intakeAlertConfig = std::make_shared<AlertController::AlertConfig>(
+    "Intake Motor", 60_degC, 20_A);
+   AlertController::RegisterAlertConfig(_intakeAlertConfig);
+
+   _intakeFollowerAlertConfig = std::make_shared<AlertController::AlertConfig>(
+    "Intake Follower Motor", 60_degC, 20_A);
+   AlertController::RegisterAlertConfig(_intakeFollowerAlertConfig);
 }
 
 frc2::CommandPtr SubIntake::IntakeOn() {
@@ -42,10 +50,17 @@ void SubIntake::Periodic() {
   units::celsius_t intakeTemperature = _intakeMotor.GetTemperature();
 
   units::ampere_t intakeCurrent = _intakeMotor.GetStatorCurrent();
+  
+  units::celsius_t intakeFollowerTemperature = _intakeFollowerMotor.GetTemperature();
 
-  AlertController::UpdateTemperatureAlert(_intakeAlertConfig, intakeTemperature);
-  AlertController::UpdateCurrentAlert(_intakeAlertConfig, intakeCurrent);
+  units::ampere_t intakeFollowerCurrent = _intakeFollowerMotor.GetStatorCurrent();
 
+   AlertController::MotorTelemetryConfig intakeTelemetryConfig{intakeTemperature, intakeCurrent};
+   AlertController::UpdateAllAlerts(*_intakeAlertConfig, intakeTelemetryConfig);
+
+   AlertController::MotorTelemetryConfig intakeFollowerTelemetryConfig{intakeFollowerTemperature, intakeFollowerCurrent};
+   AlertController::UpdateAllAlerts(*_intakeFollowerAlertConfig, intakeFollowerTelemetryConfig);
+  
   RobotVisualisation::GetInstance()._intakeWheel.SetAngle(_intakeMotor.GetPosition());
 
   Logger::Log("Intake/Loop Time", (frc::GetTime() - loopStart));

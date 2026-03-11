@@ -42,19 +42,7 @@ class SubIndexer : public frc2::SubsystemBase {
   ICSparkFlex _indexerMotor{canid::INDEXER};
   rev::spark::SparkFlexConfig _indexerMotorConfig;
 
-  frc::Alert _indexerHighTemperatureAlert{
-    "Indexer Motor High Temperature!", frc::Alert::AlertType::kWarning};
-  frc::Alert _indexerCurrentAlert{"Indexer Motor Overcurrent!", frc::Alert::AlertType::kWarning};
-
-  frc::Alert _indexerRecordedTemperatureAlert{
-    "Indexer Motor max Temperature was reached !", frc::Alert::AlertType::kWarning};
-
-  frc::Alert _indexerRecordedCurrentAlert{
-    "Indexer Motor max current was reached !", frc::Alert::AlertType::kWarning};
-
-  AlertController::MotorAlertConfig _indexerAlertConfig{_indexerHighTemperatureAlert,
-    _indexerCurrentAlert, _indexerRecordedTemperatureAlert, _indexerRecordedCurrentAlert, 60_degC,
-    20_A};
+  std::shared_ptr<AlertController::AlertConfig> _indexerAlertConfig;
 
   // Simulation components
   static constexpr double GEARING = 1.0;
