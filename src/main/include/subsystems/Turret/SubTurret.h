@@ -113,12 +113,14 @@ class SubTurret : public frc2::SubsystemBase {
   bool _isLocked = false;
 
   double P = 10.0;
-  double I = 0.0;
+  double I = 0.05;
   double D = 2.0;
-
-  static constexpr units::volt_t kS = 0.15_V;
+  
+  static constexpr units::volt_t kS = 0.7_V; 
   static constexpr auto kV = 6.0_V * (1_s / 1_tr); //3.4_V
   static constexpr auto kA = 0_V * ((1_s * 1_s) / 1_tr);
+
+  static constexpr units::volt_t _cableSpringkS = 0.5_V;
 
   const double E1_TEETH = BotVars::Choose(17, 21);
   const double E2_TEETH = BotVars::Choose(15, 20);

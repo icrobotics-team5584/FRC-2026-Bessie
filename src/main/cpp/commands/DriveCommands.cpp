@@ -12,12 +12,12 @@
 namespace cmd {
 using namespace frc2::cmd;
 
-frc2::CommandPtr TeleopDrive(frc2::CommandXboxController& controller, double speedScaling) {
-  return SubDrivebase::GetInstance().Drive([&controller, speedScaling] {
+frc2::CommandPtr TeleopDrive(frc2::CommandXboxController& controller, double speedScaling, double rotationScaling) {
+  return SubDrivebase::GetInstance().Drive([&controller, speedScaling, rotationScaling] {
     auto speeds = SubDrivebase::GetInstance().CalcJoystickSpeeds(controller);
     speeds.vx *= speedScaling;
     speeds.vy *= speedScaling;
-    speeds.omega *= speedScaling;
+    speeds.omega *= rotationScaling;
     return frc::ChassisSpeeds{speeds.vx, speeds.vy, speeds.omega};
   }, true);
 }
