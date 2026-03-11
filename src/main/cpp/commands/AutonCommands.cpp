@@ -14,7 +14,7 @@
 
 namespace cmd {
 
-    frc2::CommandPtr AutoGyroZeroWithVision(){
+    frc2::CommandPtr AutoGyroZeroWithPoseEstimate(){
         return SubDrivebase::GetInstance().ZeroRotation([]
             {return PoseHandler::GetInstance().GetPose().Rotation().Degrees();});
     }
@@ -172,7 +172,7 @@ namespace cmd {
 
     frc2::CommandPtr NeutralTwoPass_LeftTrench() {
         return frc2::cmd::Sequence(
-            AutoGyroZeroWithVision(),
+            AutoGyroZeroWithPoseEstimate(),
             // STARTING POSITION: START_TRENCH_LEFT (X 3.58m, Y 7.47m, heading 270 degrees)
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.80_m, 7.45_m, 260_deg}; }, 1.0, 40_cm, 20_deg) //neutral side of trench
                 .AlongWith(SubHood::GetInstance().ZeroHood()),
@@ -210,7 +210,7 @@ namespace cmd {
 
     frc2::CommandPtr NeutralTwoPassToOutpost_RightTrench() {
         return frc2::cmd::Sequence(
-            AutoGyroZeroWithVision(),
+            AutoGyroZeroWithPoseEstimate(),
             // STARTING POSITION: START_TRENCH_RIGHT (X 3.58m, Y 0.57m, heading 90 degrees)
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.80_m, 0.59_m, 100_deg}; }, 1.0, 40_cm, 20_deg) //neutral side of trench
                 .AlongWith(SubHood::GetInstance().ZeroHood()),
@@ -250,7 +250,7 @@ namespace cmd {
 
     frc2::CommandPtr NeutralTwoPassToMid_LeftTrench() {
         return frc2::cmd::Sequence(
-            AutoGyroZeroWithVision(),
+            AutoGyroZeroWithPoseEstimate(),
             // STARTING POSITION: START_TRENCH_LEFT (X 3.58m, Y 7.47m, heading 270 degrees)
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.80_m, 7.45_m, 260_deg}; }, 1.0, 50_cm, 20_deg) //neutral side of trench
                 .AlongWith(SubHood::GetInstance().ZeroHood()),
@@ -267,7 +267,7 @@ namespace cmd {
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.60_m, 7.45_m, 180_deg}; }, 1.0, 15_cm, 10_deg) //back to alliance zone
             )),
 
-            cmd::ShootOnTheMove().WithTimeout(5_s),
+            cmd::AutonomousShoot(5_s),
 
             SubIntake::GetInstance().IntakeOn().AlongWith(
                 cmd::AimAtHub()
@@ -282,7 +282,7 @@ namespace cmd {
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.60_m, 7.45_m, 180_deg}; }, 1.0, 20_cm, 10_deg) //drive under trench
             )),
 
-            cmd::ShootOnTheMove().WithTimeout(4_s),
+            cmd::AutonomousShoot(4_s),
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.10_m, 7.45_m, 180_deg}; }, 1.0, 30_cm, 20_deg), //neutral side of trench
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_ONEPASS_IN_LEFT; }, 1.0, 20_cm, 5_deg)
         );
@@ -290,7 +290,7 @@ namespace cmd {
 
     frc2::CommandPtr NeutralTwoPassToMid_RightTrench() {
         return frc2::cmd::Sequence(
-            AutoGyroZeroWithVision(),
+            AutoGyroZeroWithPoseEstimate(),
             // STARTING POSITION: START_TRENCH_RIGHT (X 3.58m, Y 0.57m, heading 90 degrees)
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.80_m, 0.59_m, 100_deg}; }, 1.0, 50_cm, 20_deg) //neutral side of trench
                 .AlongWith(SubHood::GetInstance().ZeroHood()),
@@ -307,7 +307,7 @@ namespace cmd {
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.60_m, 0.59_m, 180_deg}; }, 1.0, 15_cm, 10_deg) //back to alliance zone
             )),
 
-            cmd::ShootOnTheMove().WithTimeout(5_s),
+            cmd::AutonomousShoot(5_s),
 
             SubIntake::GetInstance().IntakeOn().AlongWith(
                 cmd::AimAtHub()
@@ -322,7 +322,7 @@ namespace cmd {
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.60_m, 0.59_m, 180_deg}; }, 1.0, 20_cm, 5_deg) //drive under trench
             )),
 
-            cmd::ShootOnTheMove().WithTimeout(4_s),
+            cmd::AutonomousShoot(4_s),
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.10_m, 0.59_m, 180_deg}; }, 1.0, 30_cm, 20_deg), //neutral side of trench
             SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_ONEPASS_IN_RIGHT; }, 1.0, 20_cm, 10_deg)
         );
@@ -330,9 +330,16 @@ namespace cmd {
     
     frc2::CommandPtr ShootAndStay() {
         return frc2::cmd::Sequence(
-            AutoGyroZeroWithVision(),
+            AutoGyroZeroWithPoseEstimate(),
             SubHood::GetInstance().ZeroHood(),
-            cmd::ShootOnTheMove().WithTimeout(5_s)
+            cmd::AutonomousShoot(10_s)
         );
+    }
+
+    frc2::CommandPtr AutonomousShoot(units::second_t shootTime) {
+      return cmd::ShootOnTheMove()
+        .AlongWith(frc2::cmd::Wait(1_s).AndThen(SubDeploy::GetInstance().AgitateHopper()))
+        .WithTimeout(shootTime)
+        .AndThen(SubDeploy::GetInstance().DeployIntake());
     }
 }
