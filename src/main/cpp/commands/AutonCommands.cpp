@@ -346,7 +346,7 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
 
     frc2::CommandPtr AutonomousShoot(units::second_t shootTime) {
       return cmd::ShootOnTheMove()
-        .AlongWith(frc2::cmd::Wait(1_s).AndThen(SubDeploy::GetInstance().AgitateHopper()))
+        .AlongWith(frc2::cmd::Wait(2.5_s).AndThen(SubDeploy::GetInstance().AgitateHopper()))
         .WithTimeout(shootTime)
         .AndThen(SubDeploy::GetInstance().DeployIntake());
     }
