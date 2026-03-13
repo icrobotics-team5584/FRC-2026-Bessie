@@ -152,8 +152,8 @@ frc2::CommandPtr SubShooter::AdjustManualSpeedOffset(units::turns_per_second_t o
 }
 
 bool SubShooter::IsAtSpeed() {
-  return units::math::abs(_shooterMotor1.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 4.0_tps &&
-  units::math::abs(_shooterMotor2.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 4.0_tps;
+  return units::math::abs(_shooterMotor1.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 20_tps &&
+  units::math::abs(_shooterMotor2.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 20_tps;
 }
 
 frc2::CommandPtr SubShooter::SpinWithDistance(
