@@ -95,11 +95,11 @@ void SubDeploy::EnableSoftLimit(bool enabled) {
   if (!enabled) {
     _deployMotorConfig.softLimit.ForwardSoftLimitEnabled(false);
     _deployMotorConfig.softLimit.ReverseSoftLimitEnabled(false);
-    _deployMotor.AdjustConfig(_deployMotorConfig);
+    _deployMotor.AdjustConfigNoPersist(_deployMotorConfig);
   } else {
     _deployMotorConfig.softLimit.ForwardSoftLimitEnabled(true);
     _deployMotorConfig.softLimit.ReverseSoftLimitEnabled(true);
-    _deployMotor.AdjustConfig(_deployMotorConfig);
+    _deployMotor.AdjustConfigNoPersist(_deployMotorConfig);
   }
 }
 
