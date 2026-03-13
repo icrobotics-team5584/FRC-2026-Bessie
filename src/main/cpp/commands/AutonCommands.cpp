@@ -12,12 +12,20 @@
 #include "utilities/FieldConstants.h"
 #include "utilities/PoseHandler.h"
 
+#include <frc/DriverStation.h>
+
 namespace cmd {
 
-    frc2::CommandPtr AutoGyroZeroWithPoseEstimate(){
-        return SubDrivebase::GetInstance().ZeroRotation([]
-            {return PoseHandler::GetInstance().GetPose().Rotation().Degrees();});
+frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
+  return SubDrivebase::GetInstance().ZeroRotation([] {
+    if (frc::DriverStation::GetAlliance().value_or(frc::DriverStation::kBlue) ==
+        frc::DriverStation::kBlue) {
+      return PoseHandler::GetInstance().GetPose().Rotation().Degrees();
+    } else {
+      return 180_deg - PoseHandler::GetInstance().GetPose().Rotation().Degrees();
     }
+  });
+}
 
     /* TESTING AUTONS */
 
