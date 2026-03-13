@@ -306,7 +306,7 @@ frc::ChassisSpeeds SubDrivebase::GetChassisSpeeds(bool fieldRelative) {
   auto speeds = _kinematics.ToChassisSpeeds(
     _frontLeft.GetState(), _frontRight.GetState(), _backLeft.GetState(), _backRight.GetState());
   if (fieldRelative) {
-    speeds = frc::ChassisSpeeds::FromRobotRelativeSpeeds(speeds, GetGyroAngle(false).Degrees());
+    speeds = frc::ChassisSpeeds::FromRobotRelativeSpeeds(speeds, GetGyroAngle(true).Degrees());
   }
 
   return speeds;
