@@ -11,6 +11,7 @@
 
 #include "utilities/FieldConstants.h"
 #include "utilities/PoseHandler.h"
+#include "utilities/Logger.h"
 
 #include <frc/DriverStation.h>
 
@@ -20,9 +21,13 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
   return SubDrivebase::GetInstance().ZeroRotation([] {
     if (frc::DriverStation::GetAlliance().value_or(frc::DriverStation::kBlue) ==
         frc::DriverStation::kBlue) {
+            Logger::Log("AutoGyroZeroWithPoseEstimate/Blue", true);
+            Logger::Log("AutoGyroZeroWithPoseEstimate/GyroBlue", PoseHandler::GetInstance().GetPose().Rotation().Degrees());
       return PoseHandler::GetInstance().GetPose().Rotation().Degrees();
     } else {
-      return 180_deg - PoseHandler::GetInstance().GetPose().Rotation().Degrees();
+        Logger::Log("AutoGyroZeroWithPoseEstimate/Blue", false);
+        Logger::Log("AutoGyroZeroWithPoseEstimate/GyroRed", -(180_deg - PoseHandler::GetInstance().GetPose().Rotation().Degrees()));
+      return -(180_deg - PoseHandler::GetInstance().GetPose().Rotation().Degrees());
     }
   });
 }
