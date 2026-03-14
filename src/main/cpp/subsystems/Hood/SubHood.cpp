@@ -140,7 +140,7 @@ frc2::CommandPtr SubHood::AdjustManualAngleOffset(units::degree_t offset) {
 }
 
 bool SubHood::HoodIsAtTarget() {
-  return units::math::abs(_hoodMotor->GetPositionError()) < 0.5_deg;
+  return units::math::abs(_hoodMotor->GetPositionError()) < TOLARANCE;
 }
 
 frc2::CommandPtr SubHood::MoveHoodUp1Degree() {
