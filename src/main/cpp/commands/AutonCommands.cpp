@@ -280,7 +280,7 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.60_m, 7.45_m, 180_deg}; }, 1.0, 15_cm, 10_deg) //back to alliance zone
             )),
 
-            cmd::AutonomousShoot(5_s),
+            cmd::AutonomousShoot(7_s),
 
             SubIntake::GetInstance().IntakeOn().AlongWith(
                 cmd::AimAtHub()
@@ -320,7 +320,7 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.60_m, 0.59_m, 180_deg}; }, 1.0, 15_cm, 10_deg) //back to alliance zone
             )),
 
-            cmd::AutonomousShoot(5_s),
+            cmd::AutonomousShoot(7_s),
 
             SubIntake::GetInstance().IntakeOn().AlongWith(
                 cmd::AimAtHub()
