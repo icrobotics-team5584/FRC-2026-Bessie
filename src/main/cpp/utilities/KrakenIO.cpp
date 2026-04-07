@@ -6,6 +6,7 @@
 #include <ctre/phoenix6/signals/SpnEnums.hpp>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <utilities/Logger.h>
+#include <utilities/LoggerCTRE.h>
 
 const bool FOCstate = true;
 

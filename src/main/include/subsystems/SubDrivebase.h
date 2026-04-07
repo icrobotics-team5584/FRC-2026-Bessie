@@ -12,10 +12,11 @@
 #include "utilities/SwerveModule.h"
 #include "Constants.h"
 #include "DrivebaseConfig.h"
-#include <frc2/command/button/CommandXboxController.h>
 #include <numbers>
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/Commands.h>
+
+namespace frc2 { class CommandXboxController; }
 
 class SubDrivebase : public frc2::SubsystemBase {
  public:
@@ -86,12 +87,8 @@ class SubDrivebase : public frc2::SubsystemBase {
   // Testing
   frc2::CommandPtr CharacteriseWheels();
   
-  frc2::CommandPtr SysIdQuasistatic(frc2::sysid::Direction direction) {
-    return _sysIdRoutine.Quasistatic(direction);
-  }
-  frc2::CommandPtr SysIdDynamic(frc2::sysid::Direction direction) {
-    return _sysIdRoutine.Dynamic(direction);
-  }
+  frc2::CommandPtr SysIdQuasistatic(frc2::sysid::Direction direction);
+  frc2::CommandPtr SysIdDynamic(frc2::sysid::Direction direction);
 
  private:
   void Drive(units::meters_per_second_t xSpeed, units::meters_per_second_t ySpeed,

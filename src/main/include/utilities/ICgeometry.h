@@ -1,3 +1,5 @@
+#pragma once
+
 #include <frc/geometry/Pose2d.h>
 #include <frc/geometry/Translation3d.h>
 

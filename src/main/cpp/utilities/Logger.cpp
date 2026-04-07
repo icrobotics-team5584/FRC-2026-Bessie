@@ -1,4 +1,5 @@
 #include "utilities/Logger.h"
+#include "utilities/LoggerCTRE.h"
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <networktables/StructArrayTopic.h>
 #include <frc/kinematics/struct/SwerveModuleStateStruct.h>

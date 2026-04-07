@@ -57,6 +57,7 @@ model {
             }
 
             sources.cpp {
+                preCompiledHeader "pch.h"
                 source {
                     srcDir 'src/main/cpp'
                     include '**/*.cpp', '**/*.cc'

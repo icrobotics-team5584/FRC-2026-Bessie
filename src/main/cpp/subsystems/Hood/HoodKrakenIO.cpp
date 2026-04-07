@@ -3,6 +3,7 @@
 #include "subsystems/Hood/HoodMotorConfig.h"
 
 #include "utilities/Logger.h"
+#include "utilities/LoggerCTRE.h"
 
 #include <frc/simulation/RoboRioSim.h>
 

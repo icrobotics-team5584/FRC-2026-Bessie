@@ -1,3 +1,5 @@
+#pragma once
+
 #include "TurretEncoderIO.h"
 #include <frc/DutyCycleEncoder.h>
 

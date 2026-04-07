@@ -5,6 +5,7 @@
 #include "subsystems/SubShooter.h"
 
 #include "utilities/Logger.h"
+#include "utilities/LoggerCTRE.h"
 
 #include <ctre/phoenix6/configs/Configuration.hpp>
 #include <ctre/phoenix6/controls/Follower.hpp>

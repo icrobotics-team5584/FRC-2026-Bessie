@@ -1,3 +1,5 @@
+#pragma once
+
 #include "IOSwerve.h"
 #include "utilities/ICSparkMax.h"
 #include "Constants.h"

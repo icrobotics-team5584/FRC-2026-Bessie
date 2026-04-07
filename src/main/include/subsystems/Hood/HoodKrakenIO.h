@@ -1,3 +1,5 @@
+#pragma once
+
 #include <ctre/phoenix6/TalonFX.hpp>
 
 #include "HoodMotorIO.h"

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <frc2/command/Commands.h>
 #include <units/angle.h>
 #include <frc/geometry/Pose2d.h>

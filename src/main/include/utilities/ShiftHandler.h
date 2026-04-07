@@ -1,3 +1,5 @@
+#pragma once
+
 #include <frc/DriverStation.h>
 
 #include <units/time.h>

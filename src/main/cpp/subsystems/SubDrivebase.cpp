@@ -1,4 +1,5 @@
 #include <frc/RobotBase.h>
+#include <frc2/command/button/CommandXboxController.h>
 #include "subsystems/SubDrivebase.h"
 #include "utilities/PoseHandler.h"
 #include "utilities/Logger.h"
@@ -574,4 +575,12 @@ void SubDrivebase::SetPose(frc::Pose2d pose) {
   }
 
   PoseHandler::GetInstance().SetPose(pose, states);
+}
+
+frc2::CommandPtr SubDrivebase::SysIdQuasistatic(frc2::sysid::Direction direction) {
+  return _sysIdRoutine.Quasistatic(direction);
+}
+
+frc2::CommandPtr SubDrivebase::SysIdDynamic(frc2::sysid::Direction direction) {
+  return _sysIdRoutine.Dynamic(direction);
 }

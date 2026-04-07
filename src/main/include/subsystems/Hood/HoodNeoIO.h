@@ -1,3 +1,5 @@
+#pragma once
+
 #include "utilities/ICSparkMax.h"
 
 #include "HoodMotorIO.h"
