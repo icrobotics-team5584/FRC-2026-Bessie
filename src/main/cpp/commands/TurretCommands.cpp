@@ -92,12 +92,6 @@ frc::Pose2d CalcFutureTurretPose() {
   // Calculate distance to target from robot(convert to turret later)
   auto target = GetShotTarget();
   auto robot = PoseHandler::GetInstance().GetPose();
-  /* SCR clamping of PoseHandler's pose */
-  units::meter_t robotRadius = (0.87_m / 2);
-  robot = { 
-    std::clamp(robot.X(), 0_m + robotRadius, ICgeometry::FIELD_LENGTH - robotRadius), 
-    std::clamp(robot.Y(), 0_m + robotRadius, ICgeometry::FIELD_WIDTH - robotRadius),
-    robot.Rotation()};
   Logger::FieldDisplay::GetInstance().DisplayPose("SOTM/robotPose", robot);
   units::meter_t distance = target.Distance(robot.Translation());
 

@@ -66,11 +66,6 @@ SubShooter::SubShooter() {
   _flyWheelSpeedTableScoring.insert(5.6_m, 45_tps);
   _flyWheelSpeedTableScoring.insert(7.6_m, 58_tps);
 
-  // _flyWheelSpeedTableScoring.insert(4.026_m, 35_tps);
-  // _flyWheelSpeedTableScoring.insert(4.68_m, 35_tps);
-  // _flyWheelSpeedTableScoring.insert(5.6_m, 41.5_tps);
-  // _flyWheelSpeedTableScoring.insert(7.6_m, 53.5_tps);
-
   _flyWheelSpeedTablePassing.insert(5_m, 40_tps);
   _flyWheelSpeedTablePassing.insert(6_m, 45_tps);
   _flyWheelSpeedTablePassing.insert(7_m, 55_tps);
@@ -83,7 +78,7 @@ void SubShooter::Periodic() {
 
   Logger::LogFalcon("Shooter/Motor1", _shooterMotor1);
   Logger::LogFalcon("Shooter/Motor2", _shooterMotor2);
-  Logger::Log("Shooter/IsAtSpeed", IsAtSpeed());
+  Logger::Log("Shooter/IsReadyToShoot", IsReadyToShoot());
 
   units::angle::degree_t motor1Position = _shooterMotor1.GetPosition().GetValue();
   RobotVisualisation::GetInstance()._shooterMechTopRoller.SetAngle(motor1Position);
@@ -151,7 +146,7 @@ frc2::CommandPtr SubShooter::AdjustManualSpeedOffset(units::turns_per_second_t o
   });
 }
 
-bool SubShooter::IsAtSpeed() {
+bool SubShooter::IsReadyToShoot() {
   return units::math::abs(_shooterMotor1.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 20_tps &&
   units::math::abs(_shooterMotor2.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 20_tps;
 }

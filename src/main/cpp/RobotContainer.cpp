@@ -40,10 +40,10 @@ RobotContainer::RobotContainer() {
     AutonHelper::MakeCommandPtrAuto(cmd::NeutralTwoPassToMid_LeftTrench()));
   _autoManager.AddAuton("RightTrench",
     AutonHelper::MakeCommandPtrAuto(cmd::NeutralTwoPassToMid_RightTrench()));
-  _autoManager.AddAuton("(ANTI 4613) LeftTrench",
-    AutonHelper::MakeCommandPtrAuto(cmd::Anti4613_NeutralTwoPassToMid_LeftTrench()));
-  _autoManager.AddAuton("(ANTI 4613) RightTrench",
-    AutonHelper::MakeCommandPtrAuto(cmd::Anti4613_NeutralTwoPassToMid_RightTrench()));
+  _autoManager.AddAuton("(Short first pass) LeftTrench",
+    AutonHelper::MakeCommandPtrAuto(cmd::ShortFirstPass_NeutralTwoPassToMid_LeftTrench()));
+  _autoManager.AddAuton("(Short first pass) RightTrench",
+    AutonHelper::MakeCommandPtrAuto(cmd::ShortFirstPass_NeutralTwoPassToMid_RightTrench()));
 
   frc::SmartDashboard::PutData("CHOSEN AUTON", &_autoManager.GetAutonChooser());
 

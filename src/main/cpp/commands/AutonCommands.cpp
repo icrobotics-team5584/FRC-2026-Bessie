@@ -339,7 +339,7 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
         );
     }
 
-    frc2::CommandPtr Anti4613_NeutralTwoPassToMid_LeftTrench() {
+    frc2::CommandPtr ShortFirstPass_NeutralTwoPassToMid_LeftTrench() {
         return frc2::cmd::Sequence(
             AutoGyroZeroWithPoseEstimate(),
             // STARTING POSITION: START_TRENCH_LEFT (X 3.58m, Y 7.47m, heading 270 degrees)
@@ -381,7 +381,7 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
         );
     }
 
-    frc2::CommandPtr Anti4613_NeutralTwoPassToMid_RightTrench() {
+    frc2::CommandPtr ShortFirstPass_NeutralTwoPassToMid_RightTrench() {
         return frc2::cmd::Sequence(
             AutoGyroZeroWithPoseEstimate(),
             // STARTING POSITION: START_TRENCH_RIGHT (X 3.58m, Y 0.57m, heading 90 degrees)

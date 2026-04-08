@@ -82,7 +82,7 @@
             "height": 128.0,
             "type": "Boolean Box",
             "properties": {
-              "topic": "/SmartDashboard/Shooter/IsAtSpeed",
+              "topic": "/SmartDashboard/Shooter/IsReadyToShoot",
               "period": 0.06,
               "data_type": "boolean",
               "true_color": 4283215696,

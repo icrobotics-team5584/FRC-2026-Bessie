@@ -11,6 +11,7 @@
 #include <frc/MathUtil.h>
 #include "utilities/PoseHandler.h"
 #include "utilities/Logger.h"
+#include "utilities/ICgeometry.h"
 
 
 SubVision::SubVision() {
@@ -82,7 +83,11 @@ units::length::meter_t SubVision::GetAvgDistanceFromCamera(photon::EstimatedRobo
 }
 
 bool SubVision::IsEstimateUsable(photon::EstimatedRobotPose est) {
-  return ((GetAvgDistanceFromCamera(est) < 5_m) || (est.targetsUsed.size() > 1));
+  bool targetsUsable = (GetAvgDistanceFromCamera(est) < 5_m) || (est.targetsUsed.size() > 1);
+  auto pose = est.estimatedPose;
+  bool estimateOnField = (pose.X() > DrivebaseConfig::CENTRE_TO_BUMPER_EDGE && pose.X() < ICgeometry::FIELD_LENGTH - DrivebaseConfig::CENTRE_TO_BUMPER_EDGE &&
+                          pose.Y() > DrivebaseConfig::CENTRE_TO_BUMPER_EDGE && pose.Y() < ICgeometry::FIELD_WIDTH - DrivebaseConfig::CENTRE_TO_BUMPER_EDGE);
+  return (targetsUsable && estimateOnField);
 }
 
 std::optional<frc::Pose2d> SubVision::GetAprilTagPose(int id) {

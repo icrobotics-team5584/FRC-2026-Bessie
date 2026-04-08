@@ -48,7 +48,7 @@ void SubDrivebase::SimulationPeriodic() {
     _backRight.GetPosition()
   };
 
-  PoseHandler::GetInstance().UpdateSim(GetGyroAngle(), states, true, 
+  PoseHandler::GetInstance().AddSimOdometryMeasurement(GetGyroAngle(), states, true, 
     PoseHandler::GetInstance().GetPose().Rotation());
 }
 
@@ -122,9 +122,9 @@ void SubDrivebase::UpdateOdometry() {
 
   if (frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kBlue) ==
       frc::DriverStation::Alliance::kBlue) {
-    PoseHandler::GetInstance().Update(GetGyroAngle(), states);
+    PoseHandler::GetInstance().AddOdometryMeasurement(GetGyroAngle(), states);
   } else {
-    PoseHandler::GetInstance().Update(GetGyroAngle() - 180_deg, states);
+    PoseHandler::GetInstance().AddOdometryMeasurement(GetGyroAngle() - 180_deg, states);
   }
 }
 
