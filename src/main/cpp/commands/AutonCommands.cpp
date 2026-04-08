@@ -289,7 +289,7 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.90_m, 7.27_m, 270_deg}; }, 1.0, 50_cm, 25_deg), //second pass off-hub start
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.40_m, 3.97_m, 250_deg}; }, 1.0, 40_cm, 20_deg), //second pass off-hub end
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.40_m, 3.97_m, 110_deg}; }, 1.0, 40_cm, 20_deg), //turnaround
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.90_m, 7.27_m, 110_deg}; }, 1.0, 35_cm, 20_deg), //second pass off-hub start
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.90_m, 6.27_m, 110_deg}; }, 1.0, 35_cm, 20_deg), //second pass off-hub start
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.95_m, 7.45_m, 180_deg}; }, 1.0, 40_cm, 20_deg), //transition to trench
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.60_m, 7.45_m, 180_deg}; }, 1.0, 20_cm, 10_deg) //drive under trench
             )),
@@ -328,7 +328,7 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.90_m, 0.77_m, 90_deg}; }, 1.0, 50_cm, 25_deg), //second pass off-hub start
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.40_m, 4.07_m, 110_deg}; }, 1.0, 40_cm, 20_deg), //second pass off-hub end
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.40_m, 4.07_m, 250_deg}; }, 1.0, 40_cm, 20_deg), //turnaround
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.90_m, 0.77_m, 250_deg}; }, 1.0, 35_cm, 20_deg), //second pass off-hub start
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{6.90_m, 1.77_m, 250_deg}; }, 1.0, 35_cm, 20_deg), //second pass off-hub start
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.95_m, 0.59_m, 180_deg}; }, 1.0, 40_cm, 20_deg), //transition to trench
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.60_m, 0.59_m, 180_deg}; }, 1.0, 20_cm, 10_deg) //drive under trench
             )),
