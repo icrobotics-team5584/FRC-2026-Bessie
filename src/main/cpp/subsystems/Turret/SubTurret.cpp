@@ -307,7 +307,7 @@ units::degree_t SubTurret::getEncoder2Degrees() {
 }
 
 bool SubTurret::IsAtTarget() {
-    return units::math::abs(_turretMotor.GetPosError()) < TOLARANCE;
+    return units::math::abs(_turretMotor.GetPosError()) < TOLERANCE;
 }
 
 bool SubTurret::IsNotApproachingMax(std::function<units::millisecond_t()> time) {

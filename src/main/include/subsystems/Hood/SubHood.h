@@ -62,7 +62,7 @@ class SubHood : public frc2::SubsystemBase {
   static constexpr units::degree_t STARTING_ANGLE = 13_deg;
   static constexpr units::degree_t STOW_ANGLE = 12.5_deg;
   static constexpr units::centimeter_t ARM_LENGTH = 20_cm;
-  static constexpr units::degree_t TOLARANCE =  1.0_deg;
+  static constexpr units::degree_t TOLERANCE =  1.0_deg;
   static constexpr units::degree_t DEFAULT_HOOD_OFFSET = 0_deg;
 
   bool _zeroing = false;

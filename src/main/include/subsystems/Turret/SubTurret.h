@@ -129,7 +129,7 @@ class SubTurret : public frc2::SubsystemBase {
   const double ENCODER2_RATIO = E2_TEETH / BIG_TEETH;
   const double GEAR_RATIO = BotVars::Choose(64.46, (48.0 / 12.0) * (94.0 / 10.0));
 
-  static constexpr units::degree_t TOLARANCE = 10_deg;
+  static constexpr units::degree_t TOLERANCE = 10_deg;
 
   frc::TimeInterpolatableBuffer<units::degree_t> _turretPos{1_s};
 
