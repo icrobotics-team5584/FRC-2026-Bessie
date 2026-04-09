@@ -7,9 +7,10 @@
 //   3. Are used across many .cpp files
 // NEVER include project headers here.
 //
-// NOTE: Keep this file small enough for GCC's PCH on Windows.
-// SmartDashboard.h and other heavy headers cause "required memory
-// segment unavailable" errors with the cross-compiler on Windows.
+// NOTE: The roboRIO cross-compiler (arm-frc2026-linux-gnueabi-g++) has
+// limited address space for PCH files on Windows. WPILib headers like
+// CommandPtr.h, SmartDashboard.h, and geometry headers exceed this
+// limit. Only lightweight <units/*> headers are safe here.
 
 // Units (used everywhere — lightweight template headers)
 #include <units/angle.h>
@@ -24,11 +25,3 @@
 #include <units/angular_velocity.h>
 #include <units/angular_acceleration.h>
 #include <units/torque.h>
-
-// Geometry (used everywhere)
-#include <frc/geometry/Pose2d.h>
-#include <frc/geometry/Rotation2d.h>
-#include <frc/geometry/Translation2d.h>
-
-// WPILib command framework
-#include <frc2/command/CommandPtr.h>
