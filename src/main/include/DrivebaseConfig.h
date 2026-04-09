@@ -2,6 +2,9 @@
 
 #include <frc/controller/PIDController.h>
 #include <frc/geometry/Translation2d.h>
+#include <units/acceleration.h>
+#include <units/angular_acceleration.h>
+#include <units/angular_velocity.h>
 #include <units/velocity.h>
 
 namespace DrivebaseConfig {
