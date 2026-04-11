@@ -63,12 +63,10 @@ CheckOptions:
     value: "CamelCase"
   - key: readability-identifier-naming.EnumCase
     value: "CamelCase"
-  # We use ALL_CAPS for enum constants (e.g. INBUILT, ABSOLUTE, RELATIVE)
   - key: readability-identifier-naming.EnumConstantCase
     value: "UPPER_CASE"
   - key: readability-identifier-naming.FunctionCase
     value: "CamelCase"
-  # All class-level data members use _ prefix regardless of access level
   - key: readability-identifier-naming.MemberCase
     value: "camelBack"
   - key: readability-identifier-naming.MemberPrefix
