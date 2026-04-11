@@ -33,6 +33,10 @@ jobs:
           echo "$FILES" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
 
+      - name: Install clang-tidy
+        if: steps.changed-files.outputs.files != ''
+        run: apt-get update -qq && apt-get install -y clang-tidy
+
       - name: Generate compile_commands.json
         if: steps.changed-files.outputs.files != ''
         run: ./gradlew compileFrcUserProgramLinuxathenaDebugExecutableFrcUserProgramCppCompileCommands
