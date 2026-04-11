@@ -31,19 +31,8 @@ frc2::CommandPtr SubFeeder::FeederOn() {
 };
 
 frc2::CommandPtr SubFeeder::FeederOff() {
-  return RunOnce([this] { 
-    // bad code tests to check if clang tidy and format are working.
-    int _x = 5.0;
-    const int y = 10;
-    _x = y;
-    if (_x > 0) {
-      _feederMotor.Set( 0 ); 
-    } else {
-      _feederMotor.Set(-0);
-    }
-  });
+  return RunOnce([this] { _feederMotor.Set(0); });
 }
-
 
 // This method will be called once per scheduler run
 void SubFeeder::Periodic() {
