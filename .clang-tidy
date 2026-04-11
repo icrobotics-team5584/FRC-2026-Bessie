@@ -25,12 +25,10 @@ Checks: >
   modernize-make-shared,
   modernize-make-unique,
   modernize-replace-random-shuffle,
-  modernize-use-auto,
   modernize-use-bool-literals,
   modernize-use-emplace,
   modernize-use-equals-default,
   modernize-use-equals-delete,
-  modernize-use-nodiscard,
   modernize-use-nullptr,
   modernize-use-override,
   modernize-use-using,
@@ -65,23 +63,22 @@ CheckOptions:
     value: "CamelCase"
   - key: readability-identifier-naming.EnumCase
     value: "CamelCase"
+  # We use ALL_CAPS for enum constants (e.g. INBUILT, ABSOLUTE, RELATIVE)
   - key: readability-identifier-naming.EnumConstantCase
-    value: "CamelCase"
-  - key: readability-identifier-naming.EnumConstantPrefix
-    value: "k"
+    value: "UPPER_CASE"
   - key: readability-identifier-naming.FunctionCase
     value: "CamelCase"
+  # All class-level data members use _ prefix regardless of access level
   - key: readability-identifier-naming.MemberCase
     value: "camelBack"
-  - key: readability-identifier-naming.PrivateMemberPrefix
-    value: "_"
-  - key: readability-identifier-naming.ProtectedMemberPrefix
+  - key: readability-identifier-naming.MemberPrefix
     value: "_"
   - key: readability-identifier-naming.ParameterCase
     value: "camelBack"
+  # Allow single uppercase letters for conventional names (e.g. P, I, D, S, V, A)
+  - key: readability-identifier-naming.ParameterIgnoredRegexp
+    value: "^[A-Z]$"
   - key: readability-identifier-naming.LocalVariableCase
     value: "camelBack"
   - key: readability-identifier-naming.NamespaceCase
     value: "camelBack"
-  - key: modernize-use-auto.MinTypeNameLength
-    value: "10"
