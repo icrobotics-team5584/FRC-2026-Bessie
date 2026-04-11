@@ -72,16 +72,16 @@ CheckOptions:
   - key: readability-identifier-naming.FunctionCase
     value: "CamelCase"
   - key: readability-identifier-naming.MemberCase
-    value: "camelCase"
+    value: "camelBack"
   - key: readability-identifier-naming.PrivateMemberPrefix
     value: "_"
   - key: readability-identifier-naming.ProtectedMemberPrefix
     value: "_"
   - key: readability-identifier-naming.ParameterCase
-    value: "camelCase"
+    value: "camelBack"
   - key: readability-identifier-naming.LocalVariableCase
-    value: "camelCase"
+    value: "camelBack"
   - key: readability-identifier-naming.NamespaceCase
-    value: "camelCase"
+    value: "camelBack"
   - key: modernize-use-auto.MinTypeNameLength
     value: "10"
