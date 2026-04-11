@@ -41,17 +41,11 @@ jobs:
         if: steps.changed-files.outputs.files != ''
         run: |
           COMPILE_DB="build/TargetedCompileCommands/linuxathenadebug/compile_commands.json"
-          FAILED=0
-          while IFS= read -r FILE; do
-            [ -z "$FILE" ] && continue
-            echo "--- $FILE ---"
-            if ! clang-tidy \
-              -p "$COMPILE_DB" \
-              --header-filter="$GITHUB_WORKSPACE/src/main/include/.*" \
-              --warnings-as-errors='*' \
-              "$FILE" 2>&1; then
-              echo "::error file=$FILE::clang-tidy found issues in $FILE"
-              FAILED=1
-            fi
-          done <<< "${{ steps.changed-files.outputs.files }}"
-          exit $FAILED
+          echo "${{ steps.changed-files.outputs.files }}" \
+            | grep -v '^$' \
+            | xargs -P"$(nproc)" -I{} \
+              clang-tidy \
+                -p "$COMPILE_DB" \
+                --header-filter="$GITHUB_WORKSPACE/src/main/include/.*" \
+                --warnings-as-errors='*' \
+                {}
