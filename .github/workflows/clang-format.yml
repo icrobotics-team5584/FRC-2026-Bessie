@@ -1,6 +1,15 @@
+# clang-format checks that all C++ code is consistently formatted according to
+# the rules defined in the .clang-format file at the root of the repository.
+#
+# If this check fails on your PR, run the following command locally to fix it:
+#   clang-format --style=file -i <file/to/fix>
+#   or in VSCode run "Format Document" on the file.
+# Or to fix all changed files at once:
+#   git diff --name-only origin/main...HEAD | grep -E '\.(cpp|h)$' | xargs clang-format --style=file -i
 name: clang-format
 
 on:
+  # Only runs on pull requests targeting main.
   pull_request:
     branches: [main]
 
@@ -16,6 +25,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      # Find which C++ files were added or modified in this PR.
+      # We only check changed files so that pre-existing formatting issues
+      # in untouched code don't block unrelated PRs.
       - name: Get changed C++ files
         id: changed-files
         run: |
@@ -26,10 +38,16 @@ jobs:
           echo "$FILES" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
 
+      # Only install clang-format (and run the steps below) if there are
+      # actually C++ files to check. This makes the workflow a no-op for
+      # PRs that only touch docs, config, etc.
       - name: Install clang-format
         if: steps.changed-files.outputs.files != ''
         run: sudo apt-get update -qq && sudo apt-get install -y clang-format-17
 
+      # --dry-run makes clang-format report differences without writing any files.
+      # --Werror makes it exit with a non-zero code if any file would be changed,
+      # which causes this step (and the whole workflow) to fail.
       - name: Run clang-format check
         if: steps.changed-files.outputs.files != ''
         run: |
