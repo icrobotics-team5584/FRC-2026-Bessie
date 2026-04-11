@@ -41,6 +41,10 @@ jobs:
         if: steps.changed-files.outputs.files != ''
         run: ./gradlew compileFrcUserProgramLinuxathenaDebugExecutableFrcUserProgramCppCompileCommands
 
+      - name: List compile command directories (debug)
+        if: steps.changed-files.outputs.files != ''
+        run: find build/TargetedCompileCommands -maxdepth 2 | sort
+
       - name: Run clang-tidy
         if: steps.changed-files.outputs.files != ''
         run: |
