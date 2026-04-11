@@ -20,9 +20,6 @@
 #include <wpinet/WebServer.h>
 
 Robot::Robot() {
-  // remove me
-  int i = 3;
-
   // USB logging
   frc::DataLogManager::Start();
   frc::SmartDashboard::PutData(&frc2::CommandScheduler::GetInstance());
@@ -61,6 +58,7 @@ void Robot::DisabledExit() {}
 
 void Robot::AutonomousInit() {
   m_autonomousCommand = m_container.GetAutonomousCommand();
+
   if (m_autonomousCommand) {
     /* m_autonomousCommand is a shared_ptr<frc2::CommandPtr>. Compiler gets mad
      * at a single .get() but .Schedule has a override for a raw pointer to the
