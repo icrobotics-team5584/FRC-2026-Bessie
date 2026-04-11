@@ -1,0 +1,44 @@
+name: clang-format
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  clang-format:
+    name: Check clang-format
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get changed C++ files
+        id: changed-files
+        run: |
+          FILES=$(git diff --name-only --diff-filter=ACMR \
+            "${{ github.event.pull_request.base.sha }}" "${{ github.sha }}" \
+            | grep -E '^src/main/(cpp|include)/.*\.(cpp|h)$' || true)
+          echo "files<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$FILES" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+      - name: Install clang-format
+        if: steps.changed-files.outputs.files != ''
+        run: sudo apt-get update -qq && sudo apt-get install -y clang-format-17
+
+      - name: Run clang-format check
+        if: steps.changed-files.outputs.files != ''
+        run: |
+          FAILED=0
+          while IFS= read -r FILE; do
+            [ -z "$FILE" ] && continue
+            if ! clang-format-17 --dry-run --Werror "$FILE" 2>&1; then
+              echo "::error file=$FILE::Not formatted. Run: clang-format --style=file -i $FILE"
+              FAILED=1
+            fi
+          done <<< "${{ steps.changed-files.outputs.files }}"
+          exit $FAILED
