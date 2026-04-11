@@ -39,12 +39,12 @@ jobs:
 
       - name: Generate compile_commands.json
         if: steps.changed-files.outputs.files != ''
-        run: ./gradlew generateCompileCommands
+        run: ./gradlew compileFrcUserProgramLinuxathenaDebugExecutableFrcUserProgramCppCompileCommands
 
       - name: Run clang-tidy
         if: steps.changed-files.outputs.files != ''
         run: |
-          COMPILE_DB="build/TargetedCompileCommands/linuxathenadebug"
+          COMPILE_DB="build/BinaryCompileCommands/compileFrcUserProgramLinuxathenaDebugExecutableFrcUserProgramCppCompileCommands"
           echo "${{ steps.changed-files.outputs.files }}" \
             | grep -v '^$' \
             | xargs -P"$(nproc)" -I{} \
