@@ -44,7 +44,7 @@ jobs:
       - name: Run clang-tidy
         if: steps.changed-files.outputs.files != ''
         run: |
-          COMPILE_DB="build/TargetedCompileCommands/linuxathenadebug/compile_commands.json"
+          COMPILE_DB="build/TargetedCompileCommands/linuxathenadebug"
           echo "${{ steps.changed-files.outputs.files }}" \
             | grep -v '^$' \
             | xargs -P"$(nproc)" -I{} \
