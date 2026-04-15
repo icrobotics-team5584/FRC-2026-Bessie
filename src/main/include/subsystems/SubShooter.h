@@ -66,33 +66,8 @@ class SubShooter : public frc2::SubsystemBase {
   ctre::phoenix6::configs::TalonFXConfiguration _shooterMotorConfig;
   ctre::phoenix6::controls::VelocityVoltage _flywheelTargetVelocity{0_tps};
 
-  frc::Alert _shooter1highTemperatureAlert{
-    "Shooter Motor 1 High Temperature!", frc::Alert::AlertType::kWarning};
-  frc::Alert _shooter1CurrentAlert{"Shooter Motor 1 Overcurrent!", frc::Alert::AlertType::kWarning};
-
-  frc::Alert _shooter1RecordedTemperatureAlert{
-    "Shooter Motor 1 max Temperature was reached !", frc::Alert::AlertType::kWarning};
-
-  frc::Alert _shooter1RecordedCurrentAlert{
-    "Shooter Motor 1 max current was reached !", frc::Alert::AlertType::kWarning};
-
-  AlertController::MotorAlertConfig _shooter1AlertConfig{_shooter1highTemperatureAlert,
-    _shooter1CurrentAlert, _shooter1RecordedTemperatureAlert, _shooter1RecordedCurrentAlert,
-    60_degC, 20_A};
-
-  frc::Alert _shooter2highTemperatureAlert{
-    "Shooter Motor 2 High Temperature!", frc::Alert::AlertType::kWarning};
-  frc::Alert _shooter2CurrentAlert{"Shooter Motor 2 Overcurrent!", frc::Alert::AlertType::kWarning};
-
-  frc::Alert _shooter2RecordedTemperatureAlert{
-    "Shooter Motor 2 max Temperature was reached !", frc::Alert::AlertType::kWarning};
-
-  frc::Alert _shooter2RecordedCurrentAlert{
-    "Shooter Motor 2 max current was reached !", frc::Alert::AlertType::kWarning};
-
-  AlertController::MotorAlertConfig _shooter2AlertConfig{_shooter2highTemperatureAlert,
-    _shooter2CurrentAlert, _shooter2RecordedTemperatureAlert, _shooter2RecordedCurrentAlert,
-    60_degC, 20_A};
+  std::shared_ptr<AlertController::AlertConfig> _shooterMotor1AlertConfig;
+  std::shared_ptr<AlertController::AlertConfig> _shooterMotor2AlertConfig;
 
   wpi::interpolating_map<units::meter_t, units::turns_per_second_t> _flyWheelSpeedTableScoring;
   wpi::interpolating_map<units::meter_t, units::turns_per_second_t> _flyWheelSpeedTablePassing;

@@ -79,20 +79,9 @@ class SubTurret : public frc2::SubsystemBase {
   ICSparkFlex _turretMotor{canid::TURRET_MOTOR}; 
   rev::spark::SparkBaseConfig _turretMotorConfig;
 
-   frc::Alert _turretOutOfRangeAlert{"Turret out of allowed range!", frc::Alert::AlertType::kError};
+  std::shared_ptr<AlertController::AlertConfig> _turretAlertConfig;
 
-  frc::Alert _turrethighTemperatureAlert{
-    "Turret Motor High Temperature!", frc::Alert::AlertType::kWarning};
-  frc::Alert _turretCurrentAlert{"Turret Motor Overcurrent!", frc::Alert::AlertType::kWarning};
-
-  frc::Alert _turretRecordedTemperatureAlert{
-    "Turret Motor max Temperature was reached !", frc::Alert::AlertType::kWarning};
-
-  frc::Alert _turretRecordedCurrentAlert{
-    "Turret Motor max current was reached !", frc::Alert::AlertType::kWarning};
-  AlertController::MotorAlertConfig _turretAlertConfig{_turrethighTemperatureAlert,
-    _turretCurrentAlert, _turretRecordedTemperatureAlert, _turretRecordedCurrentAlert, 60_degC,
-    20_A};
+  frc::Alert _turretOutOfRangeAlert{"Turret out of allowed range!", frc::Alert::AlertType::kError};
 
   std::unique_ptr<TurretEncoderIO> _encoderIO;
 

@@ -40,20 +40,7 @@ class SubFeeder : public frc2::SubsystemBase {
   ICSparkFlex _feederMotor{canid::FEEDER};
   rev::spark::SparkFlexConfig _feederMotorConfig;
 
-  frc::Alert _feederHighTemperatureAlert{
-    "Feeder Motor High Temperature!", frc::Alert::AlertType::kWarning};
-
-  frc::Alert _feederCurrentAlert{"Feeder Motor Overcurrent!", frc::Alert::AlertType::kWarning};
-
-  frc::Alert _intakeRecordedTemperatureAlert{
-    "Feeder Motor max Temperature was reached !", frc::Alert::AlertType::kWarning};
-
-  frc::Alert _intakeRecordedCurrentAlert{
-    "Feeder Motor max current was reached !", frc::Alert::AlertType::kWarning};
-
-  AlertController::MotorAlertConfig _feederAlertConfig{_feederHighTemperatureAlert,
-    _intakeRecordedTemperatureAlert, _intakeRecordedCurrentAlert, _feederCurrentAlert, 60_degC,
-    20_A};
+  std::shared_ptr<AlertController::AlertConfig> _feederAlertConfig;
 
   static constexpr double P = 0.06;
   static constexpr double I = 0.0;

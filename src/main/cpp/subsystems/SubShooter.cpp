@@ -70,6 +70,14 @@ SubShooter::SubShooter() {
   _flyWheelSpeedTablePassing.insert(6_m, 45_tps);
   _flyWheelSpeedTablePassing.insert(7_m, 50_tps);
   _flyWheelSpeedTablePassing.insert(8_m, 55_tps);
+
+    _shooterMotor1AlertConfig = std::make_shared<AlertController::AlertConfig>(
+      "Shooter Motor 1", 60_degC, 20_A);
+    AlertController::RegisterAlertConfig(_shooterMotor1AlertConfig);
+  
+    _shooterMotor2AlertConfig = std::make_shared<AlertController::AlertConfig>(
+      "Shooter Motor 2", 60_degC, 20_A);
+    AlertController::RegisterAlertConfig(_shooterMotor2AlertConfig);
 }
 
 // This method will be called once per scheduler run
@@ -89,14 +97,14 @@ void SubShooter::Periodic() {
   units::celsius_t shooter1Temperature = _shooterMotor1.GetDeviceTemp().GetValue();
   units::ampere_t shooter1Current = _shooterMotor1.GetStatorCurrent().GetValue();
 
-  AlertController::UpdateTemperatureAlert(_shooter1AlertConfig, shooter1Temperature);
-  AlertController::UpdateCurrentAlert(_shooter1AlertConfig, shooter1Current);
-
   units::celsius_t shooter2Temperature = _shooterMotor2.GetDeviceTemp().GetValue();
   units::ampere_t shooter2Current = _shooterMotor2.GetStatorCurrent().GetValue();
 
-  AlertController::UpdateTemperatureAlert(_shooter2AlertConfig, shooter2Temperature);
-  AlertController::UpdateCurrentAlert(_shooter2AlertConfig, shooter2Current);
+  AlertController::MotorTelemetry telemetryConfig1{shooter1Temperature, shooter1Current};
+  AlertController::UpdateAllAlerts(*_shooterMotor1AlertConfig, telemetryConfig1);
+
+  AlertController::MotorTelemetry telemetryConfig2{shooter2Temperature, shooter2Current};
+  AlertController::UpdateAllAlerts(*_shooterMotor2AlertConfig, telemetryConfig2);
 
   Logger::Log("Shooter/Loop Time", (frc::GetTime() - loopStart));
 }

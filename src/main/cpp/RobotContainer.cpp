@@ -99,6 +99,8 @@ void RobotContainer::ConfigureBindings() {
 
   frc2::Trigger([]{return ShiftHandler::GetInstance().GetTimeLeft() < 3_s;}).OnTrue(Rumble(1, 0.5_s));
   SubDrivebase::GetInstance().CheckCoastButton().ToggleOnTrue(cmd::ToggleBrakeCoast());
+
+  frc::SmartDashboard::PutData("Force Remove Alerts", forceRemoveAlerts.get());
 }
 
 std::shared_ptr<frc2::CommandPtr> RobotContainer::GetAutonomousCommand() {
