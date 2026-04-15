@@ -50,7 +50,7 @@ void SubTurret::Periodic() {
     units::celsius_t turretTemperature = _turretMotor.GetTemperature();
     units::ampere_t turretCurrent = _turretMotor.GetStatorCurrent();
 
-    AlertController::MotorTelemetryConfig telemetryConfig{turretTemperature, turretCurrent};
+    AlertController::MotorTelemetry telemetryConfig{turretTemperature, turretCurrent};
     AlertController::UpdateAllAlerts(*_turretAlertConfig, telemetryConfig);
 
     if(_hasZeroed == false && _encoderIO->IsConnected()) {

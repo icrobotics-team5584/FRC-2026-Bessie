@@ -62,21 +62,21 @@ struct AlertConfig {
   }
 };
 
-struct MotorTelemetryConfig {
+struct MotorTelemetry {
   units::celsius_t motorTemperature;
   units::ampere_t motorCurrent;
 };
 void RegisterAlertConfig(std::weak_ptr<AlertConfig> config);
 
-void UpdateAllAlerts(AlertConfig& config, MotorTelemetryConfig& telemetryConfig);
+void UpdateAllAlerts(AlertConfig& config, MotorTelemetry& telemetryConfig);
 
-void UpdateTemperatureAlert(AlertConfig& config, MotorTelemetryConfig& telemetryConfig);
-void UpdateCurrentAlert(AlertConfig& config, MotorTelemetryConfig& telemetryConfig);
+void UpdateTemperatureAlert(AlertConfig& config, MotorTelemetry& telemetryConfig);
+void UpdateCurrentAlert(AlertConfig& config, MotorTelemetry& telemetryConfig);
 
-void recordLastMotorTemperature(AlertConfig& config, MotorTelemetryConfig& telemetryConfig);
-void recordLastMotorCurrent(AlertConfig& config, MotorTelemetryConfig& telemetryConfig);
+void recordLastMotorTemperature(AlertConfig& config, MotorTelemetry& telemetryConfig);
+void recordLastMotorCurrent(AlertConfig& config, MotorTelemetry& telemetryConfig);
 
-void OverideStaticAlerts(AlertConfig& config);
+void OverrideStaticAlerts(AlertConfig& config);
 
 frc2::CommandPtr ForceRemoveAllAlerts();
 

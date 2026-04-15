@@ -8,12 +8,12 @@ void RegisterAlertConfig(std::weak_ptr<AlertConfig> config) {
   configList.emplace_back(config);
 }
 
-void UpdateAllAlerts(AlertConfig& config, MotorTelemetryConfig& telemetryConfig) {
+void UpdateAllAlerts(AlertConfig& config, MotorTelemetry& telemetryConfig) {
   UpdateTemperatureAlert(config, telemetryConfig);
   UpdateCurrentAlert(config, telemetryConfig);
 }
 
-void UpdateTemperatureAlert(AlertConfig& config, MotorTelemetryConfig& telemetryConfig) {
+void UpdateTemperatureAlert(AlertConfig& config, MotorTelemetry& telemetryConfig) {
   if (telemetryConfig.motorTemperature > config.maxDegrees && !config.hasReachedHighTemperature) {
     config.responsiveHighTemperatureAlert.Set(true);
 
@@ -30,7 +30,7 @@ void UpdateTemperatureAlert(AlertConfig& config, MotorTelemetryConfig& telemetry
   }
 }
 
-void UpdateCurrentAlert(AlertConfig& config, MotorTelemetryConfig& telemetryConfig) {
+void UpdateCurrentAlert(AlertConfig& config, MotorTelemetry& telemetryConfig) {
   if (telemetryConfig.motorCurrent > config.maxCurrent && !config.hasReachedHighCurrent) {
     config.highCurrentTimer.Start();
     if (config.highCurrentTimer.Get() > 3_s) {
@@ -52,14 +52,14 @@ void UpdateCurrentAlert(AlertConfig& config, MotorTelemetryConfig& telemetryConf
   }
 }
 
-void recordLastMotorTemperature(AlertConfig& config, MotorTelemetryConfig& telemetryConfig) {
+void recordLastMotorTemperature(AlertConfig& config, MotorTelemetry& telemetryConfig) {
   config.lastRecordedHighTemperatureAlertInfo.SetText(
     config.motorString + " Last Recorded High Temperature: " +
     std::to_string((int)telemetryConfig.motorTemperature) + "_DegC");
 
   config.lastRecordedHighTemperatureAlertInfo.Set(true);
 }
-void recordLastMotorCurrent(AlertConfig& config, MotorTelemetryConfig& telemetryConfig) {
+void recordLastMotorCurrent(AlertConfig& config, MotorTelemetry& telemetryConfig) {
   config.lastRecordedHighTemperatureAlertInfo.SetText(
     config.motorString +
     " Last Recorded High Current: " + std::to_string((int)telemetryConfig.motorCurrent) + "_A");
