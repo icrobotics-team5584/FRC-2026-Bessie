@@ -38,7 +38,7 @@ void SubIndexer::Periodic() {
   units::celsius_t IndexerTemp = _indexerMotor.GetTemperature();
   Logger::Log("Indexer/Indexer Motor Temperature", IndexerTemp);
 
-  AlertController::MotorTelemetryConfig telemetryConfig{IndexerTemp, IndexerCurrent};
+  AlertController::MotorTelemetry telemetryConfig{IndexerTemp, IndexerCurrent};
   AlertController::UpdateAllAlerts(*_indexerAlertConfig, telemetryConfig);
 
   RobotVisualisation::GetInstance()._indexerMechCircle.SetAngle(_indexerMotor.GetPosition());

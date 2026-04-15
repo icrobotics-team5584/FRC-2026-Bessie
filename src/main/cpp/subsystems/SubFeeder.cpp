@@ -37,7 +37,7 @@ void SubFeeder::Periodic() {
   units::celsius_t feederTemperature = _feederMotor.GetTemperature();
   units::ampere_t feederCurrent = _feederMotor.GetStatorCurrent();
 
-  AlertController::MotorTelemetryConfig telemetryConfig{feederTemperature, feederCurrent};
+  AlertController::MotorTelemetry telemetryConfig{feederTemperature, feederCurrent};
   AlertController::UpdateAllAlerts(*_feederAlertConfig, telemetryConfig);
   
   RobotVisualisation::GetInstance()._feederMechTopWheel.SetAngle(_feederMotor.GetPosition());

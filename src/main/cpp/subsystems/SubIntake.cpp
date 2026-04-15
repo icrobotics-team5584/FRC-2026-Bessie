@@ -55,10 +55,10 @@ void SubIntake::Periodic() {
 
   units::ampere_t intakeFollowerCurrent = _intakeFollowerMotor.GetStatorCurrent();
 
-   AlertController::MotorTelemetryConfig intakeTelemetryConfig{intakeTemperature, intakeCurrent};
+   AlertController::MotorTelemetry intakeTelemetryConfig{intakeTemperature, intakeCurrent};
    AlertController::UpdateAllAlerts(*_intakeAlertConfig, intakeTelemetryConfig);
 
-   AlertController::MotorTelemetryConfig intakeFollowerTelemetryConfig{intakeFollowerTemperature, intakeFollowerCurrent};
+   AlertController::MotorTelemetry intakeFollowerTelemetryConfig{intakeFollowerTemperature, intakeFollowerCurrent};
    AlertController::UpdateAllAlerts(*_intakeFollowerAlertConfig, intakeFollowerTelemetryConfig);
   
   RobotVisualisation::GetInstance()._intakeWheel.SetAngle(_intakeMotor.GetPosition());

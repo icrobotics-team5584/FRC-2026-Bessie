@@ -106,10 +106,10 @@ void SubShooter::Periodic() {
   units::celsius_t shooter2Temperature = _shooterMotor2.GetDeviceTemp().GetValue();
   units::ampere_t shooter2Current = _shooterMotor2.GetStatorCurrent().GetValue();
 
-  AlertController::MotorTelemetryConfig telemetryConfig1{shooter1Temperature, shooter1Current};
+  AlertController::MotorTelemetry telemetryConfig1{shooter1Temperature, shooter1Current};
   AlertController::UpdateAllAlerts(*_shooterMotor1AlertConfig, telemetryConfig1);
 
-  AlertController::MotorTelemetryConfig telemetryConfig2{shooter2Temperature, shooter2Current};
+  AlertController::MotorTelemetry telemetryConfig2{shooter2Temperature, shooter2Current};
   AlertController::UpdateAllAlerts(*_shooterMotor2AlertConfig, telemetryConfig2);
 
   Logger::Log("Shooter/Loop Time", (frc::GetTime() - loopStart));

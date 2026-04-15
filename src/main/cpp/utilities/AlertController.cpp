@@ -19,7 +19,7 @@ void UpdateTemperatureAlert(AlertConfig& config, MotorTelemetry& telemetryConfig
 
     config.tempuratureReachedCount += 1;
 
-    OverideStaticAlerts(config);
+    OverrideStaticAlerts(config);
     recordLastMotorTemperature(config, telemetryConfig);
 
     config.staticHighTemperatureAlert.Set(true);
@@ -38,7 +38,7 @@ void UpdateCurrentAlert(AlertConfig& config, MotorTelemetry& telemetryConfig) {
 
       config.currentReachedCount += 1;
 
-      OverideStaticAlerts(config);
+      OverrideStaticAlerts(config);
       recordLastMotorCurrent(config, telemetryConfig);
 
       config.staticHighCurrentAlert.Set(true);
@@ -67,7 +67,7 @@ void recordLastMotorCurrent(AlertConfig& config, MotorTelemetry& telemetryConfig
   config.lastRecordedHighTemperatureAlertInfo.Set(true);
 }
 
-void OverideStaticAlerts(AlertConfig& config) {
+void OverrideStaticAlerts(AlertConfig& config) {
   config.staticHighTemperatureAlert.SetText(
     config.motorString +
     " MAX TEMPERATURE REACHED: " + std::to_string(config.tempuratureReachedCount) + " times");

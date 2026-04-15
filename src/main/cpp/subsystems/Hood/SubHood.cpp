@@ -54,7 +54,7 @@ void SubHood::Periodic() {
   
   _hoodMotor->Log("Hood/Motor");
   
-  AlertController::MotorTelemetryConfig telemetryConfig{hoodTemperature, hoodCurrent};
+  AlertController::MotorTelemetry telemetryConfig{hoodTemperature, hoodCurrent};
   AlertController::UpdateAllAlerts(*_hoodAlertConfig, telemetryConfig);
   
   Logger::Log("Hood/Loop Time", (frc::GetTime() - loopStart));

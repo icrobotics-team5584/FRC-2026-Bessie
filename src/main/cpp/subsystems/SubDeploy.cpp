@@ -86,10 +86,6 @@ void SubDeploy::SetBrakeMode(bool brakeMode){
 void SubDeploy::Periodic() {
   auto loopStart = frc::GetTime();
 
-  units::ampere_t deployCurrent = _deployMotor.GetStatorCurrent();
-
-  units::celsius_t deployTemperature = _deployMotor.GetTemperature();
-
   RobotVisualisation::GetInstance()._deployLigament->SetAngle(_deployMotor.GetPosition());
 
   Logger::Log("Deploy/Loop Time", (frc::GetTime() - loopStart));
