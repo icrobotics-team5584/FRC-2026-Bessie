@@ -280,8 +280,8 @@ void ICSpark::RefreshConfigCache() {
     _configAccessor.closedLoop.maxMotion.GetMaxAcceleration(_sparkPidController.GetSelectedSlot())};
 
   // Update motion profile constraints
-  _motionProfile = frc::TrapezoidProfile<units::turns>(
-    {_cacheMotionMaxVelocity, _cacheMotionMaxAcceleration});
+  _motionProfile =
+    frc::TrapezoidProfile<units::turns>({_cacheMotionMaxVelocity, _cacheMotionMaxAcceleration});
 }
 
 units::revolutions_per_minute_t ICSpark::GetVelocity() {
