@@ -25,7 +25,8 @@ void PoseHandler::SetPose(frc::Pose2d pose, wpi::array<frc::SwerveModulePosition
 
 void PoseHandler::AddOdometryMeasurement(frc::Rotation2d angle, wpi::array<frc::SwerveModulePosition, 4U> states) {
     _poseEstimator.Update(angle, states);
-    Logger::FieldDisplay::GetInstance().SetRobotPose(_poseEstimator.GetEstimatedPosition());
+    Logger::FieldDisplay::GetInstance().SetRobotPose(GetPose());
+     Logger::FieldDisplay::GetInstance().DisplayPose("Unclamped Robot Pose", _poseEstimator.GetEstimatedPosition());
 }
 
 void PoseHandler::AddSimOdometryMeasurement(frc::Rotation2d angle, wpi::array<frc::SwerveModulePosition, 4U> states, bool resetHeading, frc::Rotation2d heading) {
@@ -36,5 +37,5 @@ void PoseHandler::AddSimOdometryMeasurement(frc::Rotation2d angle, wpi::array<fr
 
 void PoseHandler::AddVisionMeasurement(frc::Pose2d pose, units::second_t timeStamp, wpi::array<double,3> dev) {
     _poseEstimator.AddVisionMeasurement(pose, timeStamp, dev);
-    Logger::FieldDisplay::GetInstance().SetRobotPose(_poseEstimator.GetEstimatedPosition());
+    Logger::FieldDisplay::GetInstance().SetRobotPose(GetPose());
 }
