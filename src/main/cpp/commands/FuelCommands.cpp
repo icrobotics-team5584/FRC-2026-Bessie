@@ -48,7 +48,7 @@ frc2::CommandPtr StationaryShootAt(frc::Translation2d target) {
     SubShooter::GetInstance().SpinWithDistance(distanceToTarget, []{return ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose()).isPassing;}),
     SubHood::GetInstance().SetHoodPositionTargetFromDist(distanceToTarget))
     .Until([] {
-      return SubShooter::GetInstance().IsAtSpeed() && SubTurret::GetInstance().IsAtTarget() &&
+      return SubShooter::GetInstance().IsReadyToShoot() && SubTurret::GetInstance().IsAtTarget() &&
              SubHood::GetInstance().HoodIsAtTarget();
     })
     .AndThen(frc2::cmd::Parallel(SubIntake::GetInstance().IntakeOn(),
@@ -82,7 +82,7 @@ bool IsReadyToShoot() {
   
   if(forcingShoot) { return true; }
 
-  return SubHood::GetInstance().HoodIsAtTarget() && SubShooter::GetInstance().IsAtSpeed() &&
+  return SubHood::GetInstance().HoodIsAtTarget() && SubShooter::GetInstance().IsReadyToShoot() &&
         SubTurret::GetInstance().IsAtTarget() &&
         ShotPlanner::CalculateShotTarget(currentPose).shouldShoot &&
         SubTurret::GetInstance().IsNotApproachingMax([] { return LATENCYOFFSET; });

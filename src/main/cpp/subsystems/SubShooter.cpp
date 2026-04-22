@@ -60,16 +60,16 @@ SubShooter::SubShooter() {
 
   _flyWheelSpeedTableScoring.insert(1.37_m, 27_tps);
   _flyWheelSpeedTableScoring.insert(2.2_m, 30_tps);
-  _flyWheelSpeedTableScoring.insert(3.145_m, 35_tps);
-  _flyWheelSpeedTableScoring.insert(4.026_m, 35_tps);
-  _flyWheelSpeedTableScoring.insert(4.68_m, 35_tps);
-  _flyWheelSpeedTableScoring.insert(5.6_m, 41.5_tps);
-  _flyWheelSpeedTableScoring.insert(7.6_m, 53.5_tps);
+  _flyWheelSpeedTableScoring.insert(3.145_m, 36_tps);
+  _flyWheelSpeedTableScoring.insert(4.026_m, 38.5_tps);
+  _flyWheelSpeedTableScoring.insert(4.68_m, 39.5_tps);
+  _flyWheelSpeedTableScoring.insert(5.6_m, 45_tps);
+  _flyWheelSpeedTableScoring.insert(7.6_m, 58_tps);
 
   _flyWheelSpeedTablePassing.insert(5_m, 40_tps);
   _flyWheelSpeedTablePassing.insert(6_m, 45_tps);
-  _flyWheelSpeedTablePassing.insert(7_m, 50_tps);
-  _flyWheelSpeedTablePassing.insert(8_m, 55_tps);
+  _flyWheelSpeedTablePassing.insert(7_m, 55_tps);
+  _flyWheelSpeedTablePassing.insert(8_m, 60_tps);
 }
 
 // This method will be called once per scheduler run
@@ -78,7 +78,7 @@ void SubShooter::Periodic() {
 
   Logger::LogFalcon("Shooter/Motor1", _shooterMotor1);
   Logger::LogFalcon("Shooter/Motor2", _shooterMotor2);
-  Logger::Log("Shooter/IsAtSpeed", IsAtSpeed());
+  Logger::Log("Shooter/IsReadyToShoot", IsReadyToShoot());
 
   units::angle::degree_t motor1Position = _shooterMotor1.GetPosition().GetValue();
   RobotVisualisation::GetInstance()._shooterMechTopRoller.SetAngle(motor1Position);
@@ -146,9 +146,9 @@ frc2::CommandPtr SubShooter::AdjustManualSpeedOffset(units::turns_per_second_t o
   });
 }
 
-bool SubShooter::IsAtSpeed() {
-  return units::math::abs(_shooterMotor1.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 4.0_tps &&
-  units::math::abs(_shooterMotor2.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 4.0_tps;
+bool SubShooter::IsReadyToShoot() {
+  return units::math::abs(_shooterMotor1.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 20_tps &&
+  units::math::abs(_shooterMotor2.GetVelocity().GetValue() - _flywheelTargetVelocity.Velocity) < 20_tps;
 }
 
 frc2::CommandPtr SubShooter::SpinWithDistance(
