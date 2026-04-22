@@ -48,7 +48,7 @@ void SubDrivebase::SimulationPeriodic() {
     _backRight.GetPosition()
   };
 
-  PoseHandler::GetInstance().UpdateSim(GetGyroAngle(), states, true, 
+  PoseHandler::GetInstance().AddSimOdometryMeasurement(GetGyroAngle(), states, true, 
     PoseHandler::GetInstance().GetPose().Rotation());
 }
 
@@ -122,9 +122,9 @@ void SubDrivebase::UpdateOdometry() {
 
   if (frc::DriverStation::GetAlliance().value_or(frc::DriverStation::Alliance::kBlue) ==
       frc::DriverStation::Alliance::kBlue) {
-    PoseHandler::GetInstance().Update(GetGyroAngle(), states);
+    PoseHandler::GetInstance().AddOdometryMeasurement(GetGyroAngle(), states);
   } else {
-    PoseHandler::GetInstance().Update(GetGyroAngle() - 180_deg, states);
+    PoseHandler::GetInstance().AddOdometryMeasurement(GetGyroAngle() - 180_deg, states);
   }
 }
 
@@ -149,11 +149,16 @@ void SubDrivebase::ResetGyroHeading(units::degree_t startingAngle) {
 }
 
 frc2::CommandPtr SubDrivebase::ZeroRotation(std::function<units::degree_t()> startingAngle) {
-  return RunOnce([this, startingAngle] { ResetGyroHeading(startingAngle()); 
-  frc::Pose2d oldPose = PoseHandler::GetInstance().GetPose();
-  frc::Pose2d newPose{oldPose.X(), oldPose.Y(), startingAngle()};
- 
-  PoseHandler::GetInstance().SetPose(newPose, GetSwerveStates());
+  return RunOnce([this, startingAngle] {
+    auto startingAngleVal = startingAngle();
+    Logger::Log("Drivebase/ZeroRotation/startingAngle", startingAngleVal);
+
+    ResetGyroHeading(startingAngleVal);
+    frc::Pose2d oldPose = PoseHandler::GetInstance().GetPose();
+
+    frc::Pose2d newPose{oldPose.X(), oldPose.Y(), startingAngleVal};
+
+    PoseHandler::GetInstance().SetPose(newPose, GetSwerveStates());
   });
 }
 
@@ -301,7 +306,7 @@ frc::ChassisSpeeds SubDrivebase::GetChassisSpeeds(bool fieldRelative) {
   auto speeds = _kinematics.ToChassisSpeeds(
     _frontLeft.GetState(), _frontRight.GetState(), _backLeft.GetState(), _backRight.GetState());
   if (fieldRelative) {
-    speeds = frc::ChassisSpeeds::FromRobotRelativeSpeeds(speeds, GetGyroAngle(false).Degrees());
+    speeds = frc::ChassisSpeeds::FromRobotRelativeSpeeds(speeds, GetGyroAngle(true).Degrees());
   }
 
   return speeds;

@@ -41,7 +41,7 @@ class SubShooter : public frc2::SubsystemBase {
 
   units::turns_per_second_t GetShooterOffset();
   
-  bool IsAtSpeed();
+  bool IsReadyToShoot();
 
   units::second_t GetTimeOfFLightWithDistance(units::meter_t distance);
 
