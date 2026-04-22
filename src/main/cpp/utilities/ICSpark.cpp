@@ -10,7 +10,6 @@
 #include <rev/ClosedLoopTypes.h>
 #include <units/voltage.h>
 #include <wpi/MathExtras.h>
-#include <wpi/sendable/SendableRegistry.h>
 
 ICSpark::ICSpark(rev::spark::SparkBase* spark, rev::spark::SparkRelativeEncoder& inbuiltEncoder,
   rev::spark::SparkBaseConfigAccessor& configAccessor)
@@ -18,10 +17,6 @@ ICSpark::ICSpark(rev::spark::SparkBase* spark, rev::spark::SparkRelativeEncoder&
     _configAccessor(configAccessor),
     _encoder(inbuiltEncoder),
     _simSpark(spark, &_vortexModel) {}
-
-ICSpark::~ICSpark() {
-  wpi::SendableRegistry::Remove(this);
-}
 
 void ICSpark::InitSendable(wpi::SendableBuilder& builder) {
   // clang-format off
