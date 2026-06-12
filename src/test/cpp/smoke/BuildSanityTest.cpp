@@ -3,10 +3,10 @@
 // directory is the project root (required before any test touches
 // SubVision, which loads the AprilTag layout from src/main/deploy).
 
-#include <filesystem>
-
 #include <frc/Timer.h>
 #include <frc/simulation/SimHooks.h>
+
+#include <filesystem>
 #include <units/time.h>
 
 #include "gtest/gtest.h"
