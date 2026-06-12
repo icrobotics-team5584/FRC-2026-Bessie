@@ -25,7 +25,11 @@ Robot::Robot() {
   frc::SmartDashboard::PutData(&frc2::CommandScheduler::GetInstance());
   frc::DriverStation::StartDataLog(frc::DataLogManager::GetLog());
 
+#ifndef RUNNING_FRC_TESTS
+  // Not started in the test binary: binding port 5800 would fail or collide
+  // when tests run headless or in parallel on CI.
   wpi::WebServer::GetInstance().Start(5800, frc::filesystem::GetDeployDirectory());
+#endif
 }
 
 void Robot::RobotPeriodic() {

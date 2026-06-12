@@ -89,23 +89,30 @@ model {
             wpi.cpp.deps.wpilib(it)
         }
     }
-    // testSuites {
-    //     frcUserProgramTest(GoogleTestTestSuiteSpec) {
-    //         testing $.components.frcUserProgram
+    testSuites {
+        frcUserProgramTest(GoogleTestTestSuiteSpec) {
+            testing $.components.frcUserProgram
 
-    //         sources.cpp {
-    //             source {
-    //                 srcDir 'src/test/cpp'
-    //                 include '**/*.cpp'
-    //             }
-    //         }
+            sources.cpp {
+                source {
+                    srcDir 'src/test/cpp'
+                    include '**/*.cpp'
+                }
+            }
 
-    //         // Enable run tasks for this component
-    //         wpi.cpp.enableExternalTasks(it)
+            // RUNNING_FRC_TESTS swaps out the robot main() for the gtest
+            // main() (see Robot.cpp) and disables hardware-only setup such
+            // as the WebServer so the test binary can run headless.
+            it.binaries.all {
+                cppCompiler.define 'RUNNING_FRC_TESTS'
+            }
 
-    //         wpi.cpp.vendor.cpp(it)
-    //         wpi.cpp.deps.wpilib(it)
-    //         wpi.cpp.deps.googleTest(it)
-    //     }
-    // }
+            // Enable run tasks for this component
+            wpi.cpp.enableExternalTasks(it)
+
+            wpi.cpp.vendor.cpp(it)
+            wpi.cpp.deps.wpilib(it)
+            wpi.cpp.deps.googleTest(it)
+        }
+    }
 }
