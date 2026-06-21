@@ -7,7 +7,7 @@
 
 namespace DrivebaseConfig {
   // Drive controls
-  constexpr units::meters_per_second_t MAX_VELOCITY = 4_mps;
+  constexpr units::meters_per_second_t MAX_VELOCITY = 6_mps;
   constexpr units::turns_per_second_t MAX_TELEOP_ANGULAR_VELOCITY = 290_deg_per_s;
 
   constexpr units::meters_per_second_t MAX_P2P_VELOCITY = 4_mps;
@@ -17,7 +17,7 @@ namespace DrivebaseConfig {
 
   constexpr double MAX_JOYSTICK_ACCEL = 5;
   constexpr double MAX_ANGULAR_JOYSTICK_ACCEL = 3;
-  constexpr double JOYSTICK_DEADBAND = 0.08;
+  constexpr double JOYSTICK_DEADBAND = 0.005;
   constexpr double TRANSLATION_SCALING = 2;  // Set to 1 for linear scaling
   constexpr double ROTATION_SCALING = 1;     // Set to 1 for linear scaling
 
