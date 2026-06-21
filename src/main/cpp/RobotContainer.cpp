@@ -55,8 +55,11 @@ RobotContainer::RobotContainer() {
 void RobotContainer::ConfigureBindings() {
   // Triggers
   _driverController.LeftTrigger().WhileTrue(cmd::IntakeSequence());
-  _driverController.RightTrigger().WhileTrue(
-    cmd::ShootOnTheMove().AlongWith(cmd::TeleopDrive(_driverController, 0.5, 1.0).AsProxy()));
+  _driverController.RightTrigger().WhileTrue(cmd::ShootOnTheMove().AlongWith(
+    frc2::cmd::Either(cmd::TeleopDrive(_driverController, 1.0, 1.0).AsProxy(),
+      cmd::TeleopDrive(_driverController, 0.5, 0.5).AsProxy(), [] {
+        return ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose()).isPassing;
+      })));
   _driverController.RightTrigger().OnFalse(SubFeeder::GetInstance().FeederOff());
 
   // Bumpers
