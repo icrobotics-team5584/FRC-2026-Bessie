@@ -14,6 +14,7 @@
 #include "utilities/ICgeometry.h"
 
 #include "commands/TurretCommands.h"
+#include "commands/DriveCommands.h"
 
 #include "utilities/PoseHandler.h"
 #include <frc/geometry/Transform2d.h>
@@ -100,6 +101,14 @@ frc2::CommandPtr AimOnTheMove() {
         [] { return CalcShootOnTheMoveDistance();}),
       []{return ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose()).isPassing;}))
     .AlongWith(AimAtFieldRelative([] { return CalcShootOnTheMoveAngle(); }));
+}
+
+frc2::CommandPtr ShootOnTheMoveTeleop(frc2::CommandXboxController& controller){
+  return AimOnTheMove().AlongWith(ShootWhenReady()).AlongWith(
+    frc2::cmd::Either(cmd::TeleopDrive(controller, 1.0, 1.0).AsProxy(),
+      cmd::TeleopDrive(controller, 0.4, 0.25).AsProxy(), [] {
+        return ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose()).isPassing;
+      }));
 }
 
 frc2::CommandPtr ShootOnTheMove(){
