@@ -20,11 +20,11 @@
 #include "commands/TurretCommands.h"
 #include "commands/VisionCommands.h"
 
+#include "utilities/FieldConstants.h"
 #include "utilities/Logger.h"
 #include "utilities/PoseHandler.h"
 #include "utilities/ShiftHandler.h"
 #include "utilities/ShotPlanner.h"
-#include "utilities/FieldConstants.h"
 
 #include <frc2/command/Commands.h>
 
@@ -35,11 +35,12 @@ RobotContainer::RobotContainer() {
   SubTurret::GetInstance().SetDefaultCommand(cmd::AimAtHub());
   SubDeploy::GetInstance().SetDefaultCommand(SubDeploy::GetInstance().MoveIntake());
 
-  _autoManager.AddDefaultAuton("ShootAndStay", AutonHelper::MakeCommandPtrAuto(cmd::ShootAndStay()));
-  _autoManager.AddAuton("LeftTrench",
-    AutonHelper::MakeCommandPtrAuto(cmd::NeutralTwoPassToMid_LeftTrench()));
-  _autoManager.AddAuton("RightTrench",
-    AutonHelper::MakeCommandPtrAuto(cmd::NeutralTwoPassToMid_RightTrench()));
+  _autoManager.AddDefaultAuton(
+    "ShootAndStay", AutonHelper::MakeCommandPtrAuto(cmd::ShootAndStay()));
+  _autoManager.AddAuton(
+    "LeftTrench", AutonHelper::MakeCommandPtrAuto(cmd::NeutralTwoPassToMid_LeftTrench()));
+  _autoManager.AddAuton(
+    "RightTrench", AutonHelper::MakeCommandPtrAuto(cmd::NeutralTwoPassToMid_RightTrench()));
   _autoManager.AddAuton("(Short first pass) LeftTrench",
     AutonHelper::MakeCommandPtrAuto(cmd::ShortFirstPass_NeutralTwoPassToMid_LeftTrench()));
   _autoManager.AddAuton("(Short first pass) RightTrench",
@@ -52,17 +53,16 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureBindings() {
-  //Triggers
+  // Triggers
   _driverController.LeftTrigger().WhileTrue(cmd::IntakeSequence());
-  _driverController.RightTrigger().WhileTrue(
-    cmd::ShootOnTheMove().AlongWith(cmd::TeleopDrive(_driverController, 1.0, 1.0).AsProxy()));
+  _driverController.RightTrigger().WhileTrue(cmd::ShootOnTheMoveTeleop(_driverController));
   _driverController.RightTrigger().OnFalse(SubFeeder::GetInstance().FeederOff());
 
-  //Bumpers
+  // Bumpers
   _driverController.LeftBumper().ToggleOnTrue(SubDeploy::GetInstance().ToggleDeployState());
   _driverController.RightBumper().WhileTrue(SubDeploy::GetInstance().AgitateHopper());
 
-  //Letters
+  // Letters
   _driverController.X().WhileTrue(
     SubDrivebase::GetInstance().LockWheelsInXShape().WithInterruptBehavior(
       frc2::Command::InterruptionBehavior::kCancelIncoming));
@@ -71,18 +71,23 @@ void RobotContainer::ConfigureBindings() {
   _driverController.Y().OnTrue(SubDrivebase::GetInstance().ZeroRotation([] { return 0_deg; }));
 
   /* Operator */
-  _operatorController.X().OnTrue(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); }));
-  _operatorController.X().OnFalse(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(false); }));
+  _operatorController.X().OnTrue(
+    frc2::cmd::RunOnce([] { ShiftHandler::GetInstance().SetOverrideActive(true); }));
+  _operatorController.X().OnFalse(
+    frc2::cmd::RunOnce([] { ShiftHandler::GetInstance().SetOverrideActive(false); }));
   _operatorController.Y().OnTrue(cmd::DisableAllOverrides());
   _operatorController.RightTrigger().WhileTrue(cmd::BackupShoot());
   _operatorController.LeftTrigger().WhileTrue(cmd::ShootOnTheMoveWithoutTurret(_driverController));
   _operatorController.Start().OnTrue(cmd::ForceShoot());
-  _operatorController.Back().OnTrue(frc2::cmd::RunOnce([]{ SubTurret::GetInstance().LockTurret(); }));
+  _operatorController.Back().OnTrue(
+    frc2::cmd::RunOnce([] { SubTurret::GetInstance().LockTurret(); }));
 
-  _operatorController.LeftBumper().OnTrue(frc2::cmd::RunOnce([]{return ShotPlanner::SetOverride(ShotPlanner::Override::SCORE);})
-  .AlongWith(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); })));
-  _operatorController.RightBumper().OnTrue(frc2::cmd::RunOnce([]{return ShotPlanner::SetOverride(ShotPlanner::Override::PASS);})
-  .AlongWith(frc2::cmd::RunOnce([]{ ShiftHandler::GetInstance().SetOverrideActive(true); })));
+  _operatorController.LeftBumper().OnTrue(frc2::cmd::RunOnce([] {
+    return ShotPlanner::SetOverride(ShotPlanner::Override::SCORE);
+  }).AlongWith(frc2::cmd::RunOnce([] { ShiftHandler::GetInstance().SetOverrideActive(true); })));
+  _operatorController.RightBumper().OnTrue(frc2::cmd::RunOnce([] {
+    return ShotPlanner::SetOverride(ShotPlanner::Override::PASS);
+  }).AlongWith(frc2::cmd::RunOnce([] { ShiftHandler::GetInstance().SetOverrideActive(true); })));
 
   // Operator POVS
   _operatorController.POVRight().OnTrue(SubShooter::GetInstance().AdjustManualSpeedOffset(1_tps));
@@ -96,12 +101,14 @@ void RobotContainer::ConfigureBindings() {
   _driverController.POVDown().WhileTrue(
     SubIndexer::GetInstance().IndexBackwards().AlongWith(SubFeeder::GetInstance().FeedBackwards()));
 
-  //Sticks
+  // Sticks
 
-  //Other
+  // Other
   _driverController.Back().OnTrue(SubDrivebase::GetInstance().SyncSensor());
 
-  frc2::Trigger([]{return ShiftHandler::GetInstance().GetTimeLeft() < 3_s;}).OnTrue(Rumble(1, 0.5_s));
+  frc2::Trigger([] {
+    return ShiftHandler::GetInstance().GetTimeLeft() < 3_s;
+  }).OnTrue(Rumble(1, 0.5_s));
   SubDrivebase::GetInstance().CheckCoastButton().ToggleOnTrue(cmd::ToggleBrakeCoast());
 }
 
