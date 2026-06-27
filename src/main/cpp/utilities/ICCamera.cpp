@@ -15,6 +15,8 @@ ICCamera::ICCamera(std::string name, frc::Transform3d botToCam, frc::AprilTagFie
  }
 
 void ICCamera::Update() {
+    Logger::Log("Vision/" + _camName + "/Is Connected", _cam.IsConnected());
+
     std::string targets = "";
     _latestResults = _cam.GetAllUnreadResults();
     Logger::Log("Vision/"+_camName+"/Results count", int(_latestResults.size()));
