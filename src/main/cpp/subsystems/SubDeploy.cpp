@@ -10,7 +10,7 @@
 #include <utilities/Logger.h>
 
 SubDeploy::SubDeploy() {
-  _deployMotorConfig.SmartCurrentLimit(60);
+  _deployMotorConfig.SmartCurrentLimit(50);
   _deployMotorConfig.softLimit.ForwardSoftLimit(RETRACTED_ANGLE.value());
   _deployMotorConfig.softLimit.ReverseSoftLimit(DEPLOYED_ANGLE.value());
   _deployMotorConfig.encoder.PositionConversionFactor(1.0 / DEPLOY_GEARING);
