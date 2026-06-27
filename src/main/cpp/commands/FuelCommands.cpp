@@ -106,7 +106,7 @@ frc2::CommandPtr AimOnTheMove() {
 frc2::CommandPtr ShootOnTheMoveTeleop(frc2::CommandXboxController& controller){
   return AimOnTheMove().AlongWith(ShootWhenReady()).AlongWith(
     frc2::cmd::Either(cmd::TeleopDrive(controller, 1.0, 1.0).AsProxy(),
-      cmd::TeleopDrive(controller, 0.4, 0.25).AsProxy(), [] {
+      cmd::TeleopDrive(controller, 0.4, 0.5).AsProxy(), [] {
         return ShotPlanner::CalculateShotTarget(PoseHandler::GetInstance().GetPose()).isPassing;
       }));
 }
