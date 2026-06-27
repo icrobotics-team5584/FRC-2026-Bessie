@@ -302,7 +302,10 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
 
     frc2::CommandPtr NeutralTwoPassToMid_RightTrench() {
         return frc2::cmd::Sequence(
-            AutoGyroZeroWithPoseEstimate(),
+            frc2::cmd::RunOnce([] {
+                SubDrivebase::GetInstance().SetPose(frc::Pose2d{4.18_m, 0.57_m, 90_deg});
+            }),
+            //AutoGyroZeroWithPoseEstimate(),
             // STARTING POSITION: START_TRENCH_RIGHT (X 3.58m, Y 0.57m, heading 90 degrees)
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.80_m, 0.59_m, 100_deg}; }, 1.0, 50_cm, 20_deg) //neutral side of trench
                 .AlongWith(SubHood::GetInstance().ZeroHood()),
