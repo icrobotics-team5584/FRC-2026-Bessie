@@ -3,12 +3,15 @@
 #include <frc/geometry/Translation2d.h>
 #include <frc/controller/ProfiledPIDController.h>
 #include <units/velocity.h>
+#include <units/angular_velocity.h>
+#include <units/acceleration.h>
+#include <units/angular_acceleration.h>
 #include "utilities/BotVars.h"
 
 namespace DrivebaseConfig {
   // Drive controls
   constexpr units::meters_per_second_t MAX_VELOCITY = 6_mps;
-  constexpr units::turns_per_second_t MAX_TELEOP_ANGULAR_VELOCITY = 720_deg_per_s;
+  constexpr units::turns_per_second_t MAX_TELEOP_ANGULAR_VELOCITY = 600_deg_per_s;
 
   constexpr units::meters_per_second_t MAX_P2P_VELOCITY = 4_mps;
   constexpr units::meters_per_second_squared_t MAX_P2P_ACCEL = 15_mps_sq;
