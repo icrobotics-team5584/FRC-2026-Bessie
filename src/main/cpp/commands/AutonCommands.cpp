@@ -267,7 +267,7 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
             //AutoGyroZeroWithPoseEstimate(),
 
             // STARTING POSITION: START_TRENCH_LEFT (X 3.58m, Y 7.47m, heading 270 degrees)
-            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.80_m, 7.45_m, 260_deg}; }, 1.0, 50_cm, 20_deg) //neutral side of trench
+            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.80_m, 7.45_m, 260_deg}; }, 1.3, 50_cm, 20_deg) //neutral side of trench
                 .AlongWith(SubHood::GetInstance().ZeroHood()),
  
             frc2::cmd::Parallel(
@@ -275,8 +275,8 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
                 cmd::AimAtHub(),
                 SubDeploy::GetInstance().Zero().AndThen(SubDeploy::GetInstance().DeployIntake())
             ).WithDeadline(frc2::cmd::Sequence(
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.50_m, 6.97_m, 235_deg}; }, 1.0, 50_cm, 20_deg), //first pass start
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.50_m, 4.04_m, 235_deg}; }, 0.7, 50_cm, 10_deg), //first pass end
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.50_m, 6.97_m, 235_deg}; }, 1.3, 50_cm, 20_deg), //first pass start
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.50_m, 4.04_m, 235_deg}; }, 0.9, 50_cm, 10_deg), //first pass end
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.15_m, 4.04_m, 235_deg}; }, 1.0, 30_cm, 30_deg), //cross centre line
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.60_m, 7.45_m, 180_deg}; }, 1.0, 50_cm, 20_deg), //transition
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.60_m, 7.45_m, 180_deg}; }, 1.0, 15_cm, 10_deg) //back to alliance zone
@@ -308,7 +308,7 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
             //AutoGyroZeroWithPoseEstimate(),
 
             // STARTING POSITION: START_TRENCH_RIGHT (X 3.58m, Y 0.57m, heading 90 degrees)
-            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.80_m, 0.59_m, 100_deg}; }, 1.0, 50_cm, 20_deg) //neutral side of trench
+            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.80_m, 0.59_m, 100_deg}; }, 1.3, 50_cm, 20_deg) //neutral side of trench
                 .AlongWith(SubHood::GetInstance().ZeroHood()),
  
             frc2::cmd::Parallel(
@@ -316,8 +316,8 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
                 cmd::AimAtHub(),
                 SubDeploy::GetInstance().Zero().AndThen(SubDeploy::GetInstance().DeployIntake())
             ).WithDeadline(frc2::cmd::Sequence(
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.50_m, 1.07_m, 125_deg}; }, 1.0, 50_cm, 20_deg), //first pass start
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.50_m, 4.0_m, 125_deg}; }, 0.7, 50_cm, 10_deg), //first pass end
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.50_m, 1.07_m, 125_deg}; }, 1.3, 50_cm, 20_deg), //first pass start
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.50_m, 4.0_m, 125_deg}; }, 0.9, 50_cm, 10_deg), //first pass end
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.15_m, 4.0_m, 125_deg}; }, 1.0, 30_cm, 30_deg), //cross centre line
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.60_m, 0.59_m, 180_deg}; }, 1.0, 50_cm, 20_deg), //transition
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.60_m, 0.59_m, 180_deg}; }, 1.0, 15_cm, 10_deg) //back to alliance zone
@@ -349,7 +349,7 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
             //AutoGyroZeroWithPoseEstimate(),
 
             // STARTING POSITION: START_TRENCH_LEFT (X 3.58m, Y 7.47m, heading 270 degrees)
-            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.80_m, 7.45_m, 260_deg}; }, 1.0, 50_cm, 20_deg) //neutral side of trench
+            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.80_m, 7.45_m, 260_deg}; }, 1.3, 50_cm, 20_deg) //neutral side of trench
                 .AlongWith(SubHood::GetInstance().ZeroHood()),
  
             frc2::cmd::Parallel(
@@ -357,8 +357,8 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
                 cmd::AimAtHub(),
                 SubDeploy::GetInstance().Zero().AndThen(SubDeploy::GetInstance().DeployIntake())
             ).WithDeadline(frc2::cmd::Sequence(
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.50_m, 6.97_m, 235_deg}; }, 1.0, 50_cm, 20_deg), //first pass start
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.15_m, 5.2_m, 235_deg}; }, 0.7, 30_cm, 30_deg), //first pass end
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.50_m, 6.97_m, 235_deg}; }, 1.3, 50_cm, 20_deg), //first pass start
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.15_m, 5.2_m, 235_deg}; }, 0.9, 30_cm, 30_deg), //first pass end
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.60_m, 7.45_m, 180_deg}; }, 1.0, 50_cm, 20_deg), //transition
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.60_m, 7.45_m, 180_deg}; }, 1.0, 15_cm, 10_deg) //back to alliance zone
             )),
@@ -391,9 +391,9 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
         return frc2::cmd::Sequence(
             SubDrivebase::GetInstance().CmdSetPose(frc::Pose2d{4.18_m, 0.57_m, 90_deg}),
             //AutoGyroZeroWithPoseEstimate(),
-            
+
             // STARTING POSITION: START_TRENCH_RIGHT (X 3.58m, Y 0.57m, heading 90 degrees)
-            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.80_m, 0.59_m, 100_deg}; }, 1.0, 50_cm, 20_deg) //neutral side of trench
+            SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.80_m, 0.59_m, 100_deg}; }, 1.3, 50_cm, 20_deg) //neutral side of trench
                 .AlongWith(SubHood::GetInstance().ZeroHood()),
  
             frc2::cmd::Parallel(
@@ -401,8 +401,8 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
                 cmd::AimAtHub(),
                 SubDeploy::GetInstance().Zero().AndThen(SubDeploy::GetInstance().DeployIntake())
             ).WithDeadline(frc2::cmd::Sequence(
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.50_m, 1.07_m, 125_deg}; }, 1.0, 50_cm, 20_deg), //first pass start
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.15_m, 2.84_m, 125_deg}; }, 0.7, 30_cm, 30_deg), //first pass end
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.50_m, 1.07_m, 125_deg}; }, 1.3, 50_cm, 20_deg), //first pass start
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.15_m, 2.84_m, 125_deg}; }, 0.9, 30_cm, 30_deg), //first pass end
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.60_m, 0.59_m, 180_deg}; }, 1.0, 50_cm, 20_deg), //transition
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.60_m, 0.59_m, 180_deg}; }, 1.0, 15_cm, 10_deg) //back to alliance zone
             )),
