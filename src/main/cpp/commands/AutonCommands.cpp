@@ -345,7 +345,9 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
 
     frc2::CommandPtr ShortFirstPass_NeutralTwoPassToMid_LeftTrench() {
         return frc2::cmd::Sequence(
-            AutoGyroZeroWithPoseEstimate(),
+            SubDrivebase::GetInstance().CmdSetPose(frc::Pose2d{4.18_m, 7.47_m, 270_deg}),
+            //AutoGyroZeroWithPoseEstimate(),
+
             // STARTING POSITION: START_TRENCH_LEFT (X 3.58m, Y 7.47m, heading 270 degrees)
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.80_m, 7.45_m, 260_deg}; }, 1.0, 50_cm, 20_deg) //neutral side of trench
                 .AlongWith(SubHood::GetInstance().ZeroHood()),
@@ -387,7 +389,9 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
 
     frc2::CommandPtr ShortFirstPass_NeutralTwoPassToMid_RightTrench() {
         return frc2::cmd::Sequence(
-            AutoGyroZeroWithPoseEstimate(),
+            SubDrivebase::GetInstance().CmdSetPose(frc::Pose2d{4.18_m, 0.57_m, 90_deg}),
+            //AutoGyroZeroWithPoseEstimate(),
+            
             // STARTING POSITION: START_TRENCH_RIGHT (X 3.58m, Y 0.57m, heading 90 degrees)
             SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{5.80_m, 0.59_m, 100_deg}; }, 1.0, 50_cm, 20_deg) //neutral side of trench
                 .AlongWith(SubHood::GetInstance().ZeroHood()),

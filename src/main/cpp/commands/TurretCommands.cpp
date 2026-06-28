@@ -120,10 +120,9 @@ frc::Pose2d CalcFutureTurretPose() {
   units::second_t TOF;
   frc::Pose2d futurePose;
 
-  for (int i = 0; i < 20; i++) {
+  for (int i = 0; i < 15; i++) {
     // Get future pose
     TOF = SubShooter::GetInstance().GetTimeOfFLightWithDistance(distance);
-    Logger::Log("SOTM/TimeOfFlight", TOF);
 
     // calculate offset due to velocity
     units::meter_t offsetX = robotVelX * TOF;
@@ -131,13 +130,6 @@ frc::Pose2d CalcFutureTurretPose() {
     units::degree_t robotRotation = robot.Rotation().Degrees();
     units::meter_t robotX = robot.X();
     units::meter_t robotY = robot.Y();
-
-    Logger::Log("SOTM/robotX", robotX);
-    Logger::Log("SOTM/robotY", robotY);
-    Logger::Log("SOTM/robotRotation", robotRotation);
-
-    Logger::Log("SOTM/offsetX", offsetX);
-    Logger::Log("SOTM/offsetY", offsetY);
 
     // calculate future pose by adding offsets to current robot position
     futurePose =
