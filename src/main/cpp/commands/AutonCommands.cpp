@@ -276,8 +276,8 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
                 SubDeploy::GetInstance().Zero().AndThen(SubDeploy::GetInstance().DeployIntake())
             ).WithDeadline(frc2::cmd::Sequence(
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.50_m, 6.97_m, 235_deg}; }, 1.3, 50_cm, 20_deg), //first pass start
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.50_m, 4.04_m, 235_deg}; }, 0.9, 50_cm, 10_deg), //first pass end
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.15_m, 4.04_m, 235_deg}; }, 1.0, 30_cm, 30_deg), //cross centre line
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.50_m, 4.54_m, 235_deg}; }, 0.5, 50_cm, 10_deg), //first pass end
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.15_m, 4.54_m, 235_deg}; }, 1.0, 30_cm, 30_deg), //cross centre line
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.60_m, 7.45_m, 180_deg}; }, 1.0, 50_cm, 20_deg), //transition
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.60_m, 7.45_m, 180_deg}; }, 1.0, 15_cm, 10_deg) //back to alliance zone
             )),
@@ -317,8 +317,8 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
                 SubDeploy::GetInstance().Zero().AndThen(SubDeploy::GetInstance().DeployIntake())
             ).WithDeadline(frc2::cmd::Sequence(
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.50_m, 1.07_m, 125_deg}; }, 1.3, 50_cm, 20_deg), //first pass start
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.50_m, 4.0_m, 125_deg}; }, 0.9, 50_cm, 10_deg), //first pass end
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.15_m, 4.0_m, 125_deg}; }, 1.0, 30_cm, 30_deg), //cross centre line
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.50_m, 3.5_m, 125_deg}; }, 0.5, 50_cm, 10_deg), //first pass end
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.15_m, 3.5_m, 125_deg}; }, 1.0, 30_cm, 30_deg), //cross centre line
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.60_m, 0.59_m, 180_deg}; }, 1.0, 50_cm, 20_deg), //transition
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.60_m, 0.59_m, 180_deg}; }, 1.0, 15_cm, 10_deg) //back to alliance zone
             )),
@@ -358,7 +358,7 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
                 SubDeploy::GetInstance().Zero().AndThen(SubDeploy::GetInstance().DeployIntake())
             ).WithDeadline(frc2::cmd::Sequence(
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.50_m, 6.97_m, 235_deg}; }, 1.3, 50_cm, 20_deg), //first pass start
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.15_m, 5.2_m, 235_deg}; }, 0.9, 30_cm, 30_deg), //first pass end
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.15_m, 5.2_m, 235_deg}; }, 0.5, 30_cm, 30_deg), //first pass end
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.60_m, 7.45_m, 180_deg}; }, 1.0, 50_cm, 20_deg), //transition
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.60_m, 7.45_m, 180_deg}; }, 1.0, 15_cm, 10_deg) //back to alliance zone
             )),
@@ -402,7 +402,7 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
                 SubDeploy::GetInstance().Zero().AndThen(SubDeploy::GetInstance().DeployIntake())
             ).WithDeadline(frc2::cmd::Sequence(
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.50_m, 1.07_m, 125_deg}; }, 1.3, 50_cm, 20_deg), //first pass start
-                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.15_m, 2.84_m, 125_deg}; }, 0.9, 30_cm, 30_deg), //first pass end
+                SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{8.15_m, 2.84_m, 125_deg}; }, 0.5, 30_cm, 30_deg), //first pass end
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{7.60_m, 0.59_m, 180_deg}; }, 1.0, 50_cm, 20_deg), //transition
                 SubDrivebase::GetInstance().DriveToPose([] { return frc::Pose2d{3.60_m, 0.59_m, 180_deg}; }, 1.0, 15_cm, 10_deg) //back to alliance zone
             )),
