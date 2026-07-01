@@ -32,7 +32,7 @@ namespace DrivebaseConfig {
 
   const units::turn_t FRONT_RIGHT_MAG_OFFSET = BotVars::Choose(-0.94384765625_tr - 0.25_tr, -0.446044921875_tr); //-0.94384765625_tr - 0.25_tr
   const units::turn_t FRONT_LEFT_MAG_OFFSET = BotVars::Choose(-0.37451171875_tr + 0.25_tr, -0.26611328125_tr); //-0.37451171875_tr + 0.25_tr
-  const units::turn_t BACK_RIGHT_MAG_OFFSET = BotVars::Choose(-0.8408203125_tr, -0.675048828125_tr); //-0.353515625_tr + 0.25_tr
+  const units::turn_t BACK_RIGHT_MAG_OFFSET = BotVars::Choose(-0.1064453125_tr, -0.675048828125_tr); //-0.353515625_tr + 0.25_tr
   const units::turn_t BACK_LEFT_MAG_OFFSET = BotVars::Choose(-0.464111328125_tr - 0.25_tr, -0.824951171875_tr); //-0.464111328125_tr - 0.25_tr
 
   // PID constants for translation and rotation controllers
