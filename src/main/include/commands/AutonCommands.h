@@ -32,7 +32,7 @@ frc2::CommandPtr AutoZeroGyroFromVision();
 
 frc2::CommandPtr AutonomousShoot(units::second_t shootTime);
 
-// Values from the AutonomousSide enum can be used in the `flipY` parameter to automatically flip autonomous paths across the width of the field. To do so, `targetPose` should be given as a RIGHT-SIDE pose (y-coordinate less than half of field width). `AutonomousSide::RIGHT` is equivalent to 0, or `false`, meaning the path will not be flipped. Conversely, `AutonomousSide::LEFT` is equivalent to 1, or `true`, meaning the path will be flipped across the field width.
+// Values from the AutonomousSide enum can be used in the `flipY` parameter to flip autonomous paths across the width of the field. To do so, `targetPose` should be given as a RIGHT-SIDE pose (y-coordinate less than half of field width). `AutonomousSide::RIGHT` is equivalent to 0, or `false`, meaning the path will not flip. `AutonomousSide::LEFT` is equivalent to 1, or `true`, meaning the path will flip to the left.
 frc2::CommandPtr AutonomousDriveTo(frc::Pose2d targetPose, bool flipY, double speedScaling = 1,
   units::meter_t posErrorTolerance = 2_cm, units::degree_t rotErrorTolerance = 2_deg);
 }  // namespace cmd
