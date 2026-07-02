@@ -37,4 +37,6 @@ namespace cmd {
     frc2::CommandPtr AutoZeroGyroFromVision();
     
     frc2::CommandPtr AutonomousShoot(units::second_t shootTime);
+    // Only pass RIGHT-SIDE, ALLIANCE-RELATIVE poses into AutonomousDriveToPose
+    frc2::CommandPtr AutonomousDriveToPose(frc::Pose2d targetPose, double speedScaling, units::meter_t posErrorTolerance, units::degree_t rotErrorTolerance);
 }

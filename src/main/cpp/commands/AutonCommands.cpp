@@ -12,6 +12,7 @@
 #include "utilities/FieldConstants.h"
 #include "utilities/PoseHandler.h"
 #include "utilities/Logger.h"
+#include "utilities/ICgeometry.h"
 
 #include <frc/DriverStation.h>
 
@@ -423,7 +424,6 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
         );
     }
 
-
     frc2::CommandPtr ShootAndStay() {
         return frc2::cmd::Sequence(
             AutoGyroZeroWithPoseEstimate(),
@@ -438,5 +438,12 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
         //.AlongWith(frc2::cmd::Wait(2.5_s).AndThen(SubDeploy::GetInstance().AgitateHopper()))
         .WithTimeout(shootTime);
         //.AndThen(SubDeploy::GetInstance().DeployIntake());
+    }
+
+    frc2::CommandPtr AutonomousDriveToPose(frc::Pose2d targetPose, double speedScaling, units::meter_t posErrorTolerance, units::degree_t rotErrorTolerance) {
+        return SubDrivebase::GetInstance().DriveToPose([targetPose] {
+            auto pose = ICgeometry::GetFieldRelativePose(targetPose);
+            return pose;
+        }, speedScaling, posErrorTolerance, rotErrorTolerance);
     }
 }
