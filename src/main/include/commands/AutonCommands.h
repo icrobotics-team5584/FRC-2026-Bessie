@@ -1,13 +1,6 @@
 #include <frc2/command/Commands.h>
 
 namespace cmd {
-    enum class AutonSide {
-        RIGHT,
-        LEFT
-    };
-
-    void SetAutonSide(AutonSide side);
-
     frc2::CommandPtr TESTDriveInASquare();
     frc2::CommandPtr TESTForward250cm();
     frc2::CommandPtr TESTForward250cmWhileTurning();
