@@ -42,9 +42,9 @@ RobotContainer::RobotContainer() {
   _autoManager.AddAuton(
     "Right trench", AutonHelper::MakeCommandPtrAuto(cmd::NeutralTwoPassToMid(AutonomousSide::RIGHT)));
   _autoManager.AddAuton("(Short first pass) Left trench",
-    AutonHelper::MakeCommandPtrAuto(cmd::ShortFirstPass_NeutralTwoPassToMid_LeftTrench()));
+    AutonHelper::MakeCommandPtrAuto(cmd::ShortFirstPass_NeutralTwoPassToMid(AutonomousSide::LEFT)));
   _autoManager.AddAuton("(Short first pass) Right trench",
-    AutonHelper::MakeCommandPtrAuto(cmd::ShortFirstPass_NeutralTwoPassToMid_RightTrench()));
+    AutonHelper::MakeCommandPtrAuto(cmd::ShortFirstPass_NeutralTwoPassToMid(AutonomousSide::RIGHT)));
 
   frc::SmartDashboard::PutData("CHOSEN AUTON", &_autoManager.GetAutonChooser());
 
