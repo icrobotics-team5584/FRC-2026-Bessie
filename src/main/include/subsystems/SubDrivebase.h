@@ -58,8 +58,7 @@ class SubDrivebase : public frc2::SubsystemBase {
   frc::ChassisSpeeds CalcJoystickSpeeds(frc2::CommandXboxController& controller);
 
   frc2::CommandPtr DriveToPose(std::function<frc::Pose2d()> pose, double speedScaling = 1,
-    units::meter_t posErrorTolerance = 2_cm, units::degree_t rotErrorTolerance = 2_deg,
-    bool flipForRedAlliance = true);
+    units::meter_t posErrorTolerance = 2_cm, units::degree_t rotErrorTolerance = 2_deg);
   void SetPose(frc::Pose2d pose);
   bool IsAtPose(frc::Pose2d pose, units::meter_t posErrorTolerance = 2_cm,
     units::degree_t rotErrorTolerance = 2_deg);
@@ -69,7 +68,7 @@ class SubDrivebase : public frc2::SubsystemBase {
   /* Commands */
 
   // Joystick Drive
-  frc2::CommandPtr JoystickDrive(frc2::CommandXboxController& controller, bool fieldOriented = true, double speedScale = 1);\
+  frc2::CommandPtr JoystickDrive(frc2::CommandXboxController& controller, bool fieldOriented = true, double speedScale = 1);
   frc2::CommandPtr LockWheelsInXShape();
 
   // Pose drive

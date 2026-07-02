@@ -406,7 +406,7 @@ bool SubDrivebase::IsAtPose(
 }
 
 frc2::CommandPtr SubDrivebase::DriveToPose(std::function<frc::Pose2d()> pose, double speedScaling,
-  units::meter_t posErrorTolerance, units::degree_t rotErrorTolerance, bool flipForRedAlliance) {
+  units::meter_t posErrorTolerance, units::degree_t rotErrorTolerance) {
   return Drive(
       [this, pose, speedScaling] {
         return CalcDriveToPoseSpeeds(pose()) * speedScaling;
