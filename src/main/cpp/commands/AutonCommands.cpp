@@ -78,66 +78,61 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
     }
 
     frc2::CommandPtr HoardTrench(AutonomousSide side) {
-        return frc2::cmd::Sequence(
-            // STARTING POSITION: START_TRENCH_RIGHT (X 3.58m, Y 0.57m, heading 0 degrees)
-            SubHood::GetInstance().ZeroHood(),
-            cmd::ShootOnTheMove().WithTimeout(2_s),
-
-            AutonomousDriveTo(fieldpos::NEUTRAL_ONEPASS_IN_RIGHT, side, 1.0, 20_cm),
- 
-            AutonomousDriveTo(frc::Pose2d{7.8_m, 6.0_m, 90_deg}, side, 0.5, 20_cm, 5_deg)
-                .AlongWith(cmd::ShootOnTheMove())
-        );
+      return frc2::cmd::Sequence(
+        // STARTING POSITION: START_TRENCH_RIGHT (X 3.58m, Y 0.57m, heading 0 degrees)
+        SubHood::GetInstance().ZeroHood(), cmd::ShootOnTheMove().WithTimeout(2_s),
+        AutonomousDriveTo(frc::Pose2d{7.80_m, 1.04_m, 90_deg}, side, 1.0, 20_cm),
+        AutonomousDriveTo(frc::Pose2d{7.8_m, 6.0_m, 90_deg}, side, 0.5, 20_cm, 5_deg)
+          .AlongWith(cmd::ShootOnTheMove()));
     }
 
     /* NEUTRAL ONE PASS AND OUTPOST AUTONS */
 
     frc2::CommandPtr NeutralOnePassAndOutpost_RightBump() {
-        return frc2::cmd::Sequence(
-            // STARTING POSITION: START_BUMP_RIGHT (X 3.58m, Y 2.27m, heading 0 degrees)
-            SubHood::GetInstance().ZeroHood(),
-            cmd::ShootOnTheMove().WithTimeout(2_s)
-        ).AndThen(frc2::cmd::Sequence(
-            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{3_mps, 0_mps, 0_tps}, frc::Translation2d{5.8_m, 2.27_m}), //drive over bump, reset position at the end of the bump
+      return frc2::cmd::Sequence(
+        // STARTING POSITION: START_BUMP_RIGHT (X 3.58m, Y 2.27m, heading 0 degrees)
+        SubHood::GetInstance().ZeroHood(), cmd::ShootOnTheMove().WithTimeout(2_s))
+        .AndThen(frc2::cmd::Sequence(
+          SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{3_mps, 0_mps, 0_tps},
+            frc::Translation2d{5.8_m, 2.27_m}),  // drive over bump, reset position
 
-            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_ONEPASS_IN_RIGHT; }, 1.0, 20_cm),
- 
-            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_ONEPASS_END_RIGHT; }, 0.5, 20_cm, 3_deg)
-                .DeadlineFor(SubIntake::GetInstance().IntakeOn()),
+          AutonomousDriveTo(frc::Pose2d{7.80_m, 1.04_m, 90_deg}, false, 1.0, 20_cm),
 
-            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::START_REENTRY_BUMP_RIGHT; }, 1.0, 20_cm, 5_deg)
-                .DeadlineFor(SubIntake::GetInstance().IntakeOn()), //return to bump (continue intaking)
-            
-            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{-3_mps, 0_mps, 0_tps}, frc::Translation2d{3.5_m, 2.64_m}) //drive back over bump, reset position at the end of the bump
-        ).DeadlineFor(
-            cmd::AimAtHub()
-        )).AndThen(
-            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::OUTPOST; }, 1.0)
-                .AlongWith(cmd::ShootOnTheMove())
-        );
+          AutonomousDriveTo(frc::Pose2d{7.80_m, 3.29_m, 90_deg}, false, 0.5, 20_cm, 3_deg)
+            .DeadlineFor(SubIntake::GetInstance().IntakeOn()),
+
+          AutonomousDriveTo(frc::Pose2d{5.85_m, 2.64_m, 180_deg}, false, 1.0, 20_cm, 5_deg)
+            .DeadlineFor(
+              SubIntake::GetInstance().IntakeOn()),  // return to bump (continue intaking)
+
+          SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{-3_mps, 0_mps, 0_tps},
+            frc::Translation2d{3.5_m, 2.64_m})  // drive back over bump, reset position
+          )
+            .DeadlineFor(cmd::AimAtHub()))
+        .AndThen(AutonomousDriveTo(frc::Pose2d{0.60_m, 0.67_m, 0_deg}, false, 1.0)
+            .AlongWith(cmd::ShootOnTheMove()));
     }
 
     frc2::CommandPtr NeutralOnePassAndOutpost_RightTrench() {
-        return frc2::cmd::Sequence(
-            // STARTING POSITION: START_TRENCH_RIGHT (X 3.58m, Y 0.57m, heading 0 degrees)
-            SubHood::GetInstance().ZeroHood(),
-            cmd::ShootOnTheMove().WithTimeout(2_s)
-        ).AndThen(frc2::cmd::Sequence(
-            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_ONEPASS_IN_RIGHT; }, 1.0, 20_cm),
- 
-            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::NEUTRAL_ONEPASS_END_RIGHT; }, 0.5, 20_cm, 3_deg)
-                .DeadlineFor(SubIntake::GetInstance().IntakeOn()),
+      return frc2::cmd::Sequence(
+        // STARTING POSITION: START_TRENCH_RIGHT (X 3.58m, Y 0.57m, heading 0 degrees)
+        SubHood::GetInstance().ZeroHood(), cmd::ShootOnTheMove().WithTimeout(2_s))
+        .AndThen(frc2::cmd::Sequence(
+          AutonomousDriveTo(frc::Pose2d{7.80_m, 1.04_m, 90_deg}, false, 1.0, 20_cm),
 
-            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::START_REENTRY_BUMP_RIGHT; }, 1.0, 20_cm, 5_deg)
-                .DeadlineFor(SubIntake::GetInstance().IntakeOn()), //return to bump (continue intaking)
-            
-            SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{-3_mps, 0_mps, 0_tps}, frc::Translation2d{3.5_m, 2.64_m}) //drive back over bump, reset position at the end of the bump
-        ).DeadlineFor(
-            cmd::AimAtHub()
-        )).AndThen(
-            SubDrivebase::GetInstance().DriveToPose([] { return fieldpos::OUTPOST; }, 1.0)
-                .AlongWith(cmd::ShootOnTheMove())
-        );
+          AutonomousDriveTo(frc::Pose2d{7.80_m, 3.29_m, 90_deg}, false, 0.5, 20_cm, 3_deg)
+            .DeadlineFor(SubIntake::GetInstance().IntakeOn()),
+
+          AutonomousDriveTo(frc::Pose2d{5.85_m, 2.64_m, 180_deg}, false, 1.0, 20_cm, 5_deg)
+            .DeadlineFor(
+              SubIntake::GetInstance().IntakeOn()),  // return to bump (continue intaking)
+
+          SubDrivebase::GetInstance().DriveOverBump(frc::ChassisSpeeds{-3_mps, 0_mps, 0_tps},
+            frc::Translation2d{3.5_m, 2.64_m})  // drive back over bump, reset position
+          )
+            .DeadlineFor(cmd::AimAtHub()))
+        .AndThen(AutonomousDriveTo(frc::Pose2d{0.60_m, 0.67_m, 0_deg}, false, 1.0)
+            .AlongWith(cmd::ShootOnTheMove()));
     }
 
     frc2::CommandPtr NeutralOnePassAndOutpost_RightTrench_NoBump() {
@@ -146,19 +141,19 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
             SubHood::GetInstance().ZeroHood(),
             cmd::ShootOnTheMove().WithTimeout(2_s)
         ).AndThen(frc2::cmd::Sequence(
-            AutonomousDriveTo(fieldpos::NEUTRAL_ONEPASS_IN_RIGHT, false, 1.0, 20_cm),
+            AutonomousDriveTo(frc::Pose2d{7.80_m, 1.04_m, 90_deg}, false, 1.0, 20_cm),
  
-            AutonomousDriveTo(fieldpos::NEUTRAL_ONEPASS_END_RIGHT, false, 0.5, 20_cm, 3_deg)
+            AutonomousDriveTo(frc::Pose2d{7.80_m, 3.29_m, 90_deg}, false, 0.5, 20_cm, 3_deg)
                 .DeadlineFor(SubIntake::GetInstance().IntakeOn()),
 
-            AutonomousDriveTo(fieldpos::START_REENTRY_TRENCH_RIGHT, false, 1.0, 20_cm, 5_deg)
+            AutonomousDriveTo(frc::Pose2d{5.70_m, 0.54_m, 270_deg}, false, 1.0, 20_cm, 5_deg)
                 .DeadlineFor(SubIntake::GetInstance().IntakeOn()), //return to trench (continue intaking)
 
-            AutonomousDriveTo(fieldpos::END_REENTRY_TRENCH_RIGHT, false, 1.0, 20_cm, 5_deg)
+            AutonomousDriveTo(frc::Pose2d{3.50_m, 0.79_m, 270_deg}, false, 1.0, 20_cm, 5_deg)
         ).DeadlineFor(
             cmd::AimAtHub()
         )).AndThen(
-            AutonomousDriveTo(fieldpos::OUTPOST, false, 1.0, 10_cm)
+            AutonomousDriveTo(frc::Pose2d{0.60_m, 0.67_m, 0_deg}, false, 1.0, 10_cm)
                 .AlongWith(cmd::ShootOnTheMove())
         );
     }
@@ -199,7 +194,7 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
             )),
 
             cmd::ShootOnTheMove().AlongWith(
-                AutonomousDriveTo(fieldpos::OUTPOST, false, 1.0, 10_cm)
+                AutonomousDriveTo(frc::Pose2d{0.60_m, 0.67_m, 0_deg}, false, 1.0, 10_cm)
             )
         );
     }
@@ -240,7 +235,7 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
 
             cmd::AutonomousShoot(4_s),
             AutonomousDriveTo(frc::Pose2d{6.10_m, 0.59_m, 180_deg}, side, 1.0, 30_cm, 20_deg), //neutral side of trench
-            AutonomousDriveTo(fieldpos::NEUTRAL_ONEPASS_IN_RIGHT, side, 1.0, 20_cm, 10_deg)
+            AutonomousDriveTo(frc::Pose2d{7.80_m, 1.04_m, 90_deg}, side, 1.0, 20_cm, 10_deg)
         );
     }
 
@@ -282,7 +277,7 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
                 cmd::AimAtHub()
             ).WithDeadline(frc2::cmd::Sequence(
                 AutonomousDriveTo(frc::Pose2d{6.10_m, 0.59_m, 180_deg}, side, 1.0, 50_cm, 20_deg), //neutral side of trench
-                AutonomousDriveTo(fieldpos::NEUTRAL_ONEPASS_IN_RIGHT, side, 1.0, 20_cm, 10_deg)
+                AutonomousDriveTo(frc::Pose2d{7.80_m, 1.04_m, 90_deg}, side, 1.0, 20_cm, 10_deg)
             ))
         );
     }
