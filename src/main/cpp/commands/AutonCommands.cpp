@@ -69,20 +69,7 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
                 .AlongWith(cmd::ShootOnTheMove())
         );
     }
-
-    frc2::CommandPtr Hoard_LeftTrench() {
-        return frc2::cmd::Sequence(
-            // STARTING POSITION: START_TRENCH_LEFT (X 3.58m, Y 7.47m, heading 0 degrees)
-            SubHood::GetInstance().ZeroHood(),
-            cmd::ShootOnTheMove().WithTimeout(2_s),
-
-            AutonomousDriveTo(fieldpos::NEUTRAL_ONEPASS_IN_LEFT, false, 1.0, 20_cm),
- 
-            AutonomousDriveTo(frc::Pose2d{7.8_m, 1.0_m, 270_deg}, false, 0.5, 20_cm, 5_deg)
-                .AlongWith(cmd::ShootOnTheMove())
-        );
-    }
-
+    
     frc2::CommandPtr Hoard_RightBump() {
         return frc2::cmd::Sequence(
             // STARTING POSITION: START_BUMP_RIGHT (X 3.58m, Y 2.27m, heading 0 degrees)
@@ -98,15 +85,15 @@ frc2::CommandPtr AutoGyroZeroWithPoseEstimate() {
         );
     }
 
-    frc2::CommandPtr Hoard_RightTrench() {
+    frc2::CommandPtr HoardTrench(AutonomousSide side) {
         return frc2::cmd::Sequence(
             // STARTING POSITION: START_TRENCH_RIGHT (X 3.58m, Y 0.57m, heading 0 degrees)
             SubHood::GetInstance().ZeroHood(),
             cmd::ShootOnTheMove().WithTimeout(2_s),
 
-            AutonomousDriveTo(fieldpos::NEUTRAL_ONEPASS_IN_RIGHT, false, 1.0, 20_cm),
+            AutonomousDriveTo(fieldpos::NEUTRAL_ONEPASS_IN_RIGHT, side, 1.0, 20_cm),
  
-            AutonomousDriveTo(frc::Pose2d{7.8_m, 6.0_m, 90_deg}, false, 0.5, 20_cm, 5_deg)
+            AutonomousDriveTo(frc::Pose2d{7.8_m, 6.0_m, 90_deg}, side, 0.5, 20_cm, 5_deg)
                 .AlongWith(cmd::ShootOnTheMove())
         );
     }

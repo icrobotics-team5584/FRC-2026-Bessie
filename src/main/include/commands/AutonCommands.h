@@ -14,9 +14,8 @@ frc2::CommandPtr TESTForward250cm();
 frc2::CommandPtr TESTForward250cmWhileTurning();
 
 frc2::CommandPtr Hoard_LeftBump();
-frc2::CommandPtr Hoard_LeftTrench();
 frc2::CommandPtr Hoard_RightBump();
-frc2::CommandPtr Hoard_RightTrench();
+frc2::CommandPtr HoardTrench(AutonomousSide side);
 
 frc2::CommandPtr NeutralOnePassAndOutpost_RightBump();
 frc2::CommandPtr NeutralOnePassAndOutpost_RightTrench();
