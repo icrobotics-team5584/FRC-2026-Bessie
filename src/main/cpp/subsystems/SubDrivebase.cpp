@@ -422,6 +422,12 @@ frc2::CommandPtr SubDrivebase::DriveToPose(std::function<frc::Pose2d()> pose, do
     });
 }
 
+frc2::CommandPtr SubDrivebase::CmdSetPose(frc::Pose2d pose, bool flipForRedAlliance) {
+  return RunOnce([this, pose, flipForRedAlliance] {
+    SetPose((flipForRedAlliance ? ICgeometry::GetFieldRelativePose(pose) : pose));
+  });
+}
+
 frc::ChassisSpeeds SubDrivebase::CalcJoystickSpeeds(frc2::CommandXboxController& controller) {
   std::string configPath = "Drivebase/Config/";
   auto deadband = Logger::Tune(configPath + "Joystick Deadband", DrivebaseConfig::JOYSTICK_DEADBAND);

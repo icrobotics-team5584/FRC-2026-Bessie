@@ -60,6 +60,8 @@ class SubDrivebase : public frc2::SubsystemBase {
   frc2::CommandPtr DriveToPose(std::function<frc::Pose2d()> pose, double speedScaling = 1,
     units::meter_t posErrorTolerance = 2_cm, units::degree_t rotErrorTolerance = 2_deg,
     bool flipForRedAlliance = true);
+  frc2::CommandPtr CmdSetPose(frc::Pose2d pose, bool flipForRedAlliance = true);
+
   void SetPose(frc::Pose2d pose);
   bool IsAtPose(frc::Pose2d pose, units::meter_t posErrorTolerance = 2_cm,
     units::degree_t rotErrorTolerance = 2_deg);

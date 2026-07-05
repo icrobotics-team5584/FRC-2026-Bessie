@@ -61,9 +61,10 @@ SubShooter::SubShooter() {
   _flyWheelSpeedTableScoring.insert(1.37_m, 27_tps);
   _flyWheelSpeedTableScoring.insert(2.2_m, 30_tps);
   _flyWheelSpeedTableScoring.insert(3.145_m, 36_tps);
-  _flyWheelSpeedTableScoring.insert(4.026_m, 38.5_tps);
+  _flyWheelSpeedTableScoring.insert(3.706_m, 38_tps);
+  _flyWheelSpeedTableScoring.insert(4.026_m,39_tps);
   _flyWheelSpeedTableScoring.insert(4.68_m, 39.5_tps);
-  _flyWheelSpeedTableScoring.insert(5.6_m, 45_tps);
+  _flyWheelSpeedTableScoring.insert(5.6_m, 44_tps);
   _flyWheelSpeedTableScoring.insert(7.6_m, 58_tps);
 
   _flyWheelSpeedTablePassing.insert(5_m, 40_tps);

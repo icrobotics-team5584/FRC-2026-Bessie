@@ -64,22 +64,6 @@ public:
   std::string _tagMapFilePath = frc::filesystem::GetDeployDirectory() + "/2026-rebuilt.json";
   frc::AprilTagFieldLayout _tagMap{_tagMapFilePath};
 
-  frc::Transform3d _leftBotToCam{{-295.779_mm,252.927_mm,320.249_mm},{0_deg,-30_deg, 90_deg}};
-
-  ICCamera _leftCam {
-    LEFT_CAM_NAME,
-    _leftBotToCam,
-    _tagMap
-  };
-
-  frc::Transform3d _rightBotToCam{{69.480_mm,-312.197_mm,311.090_mm},{0_deg,-25.61_deg,-90_deg}};
-
-  ICCamera _rightCam {
-    RIGHT_CAM_NAME,
-    _rightBotToCam,
-    _tagMap
-  };
-
   
   // x and y offset is taken from subturret.h turret offset
   frc::Transform3d _turretBotToCam {{0_m, 0_m, 335_mm + 112.768_mm}, {0_deg, -20_deg, 0_deg}}; // positive pitch is down
@@ -92,8 +76,6 @@ public:
   };
 
   std::vector<ICCamera*> _camList {
-    &_leftCam,
-    &_rightCam,
     &_turretCam
   };
 
