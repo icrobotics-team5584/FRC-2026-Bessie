@@ -34,17 +34,17 @@ RobotContainer::RobotContainer() {
   SubVision::GetInstance().SetDefaultCommand(cmd::AddVisionMeasurement());
   SubTurret::GetInstance().SetDefaultCommand(cmd::AimAtHub());
   SubDeploy::GetInstance().SetDefaultCommand(SubDeploy::GetInstance().MoveIntake());
-
+  
   _autoManager.AddDefaultAuton(
-    "ShootAndStay", AutonHelper::MakeCommandPtrAuto(cmd::ShootAndStay()));
+    "Shoot and stay", AutonHelper::MakeCommandPtrAuto(cmd::ShootAndStay()));
   _autoManager.AddAuton(
-    "LeftTrench", AutonHelper::MakeCommandPtrAuto(cmd::NeutralTwoPassToMid_LeftTrench()));
+    "Left trench", AutonHelper::MakeCommandPtrAuto(cmd::NeutralTwoPassToMid(AutonomousSide::LEFT)));
   _autoManager.AddAuton(
-    "RightTrench", AutonHelper::MakeCommandPtrAuto(cmd::NeutralTwoPassToMid_RightTrench()));
-  _autoManager.AddAuton("(Short first pass) LeftTrench",
-    AutonHelper::MakeCommandPtrAuto(cmd::ShortFirstPass_NeutralTwoPassToMid_LeftTrench()));
-  _autoManager.AddAuton("(Short first pass) RightTrench",
-    AutonHelper::MakeCommandPtrAuto(cmd::ShortFirstPass_NeutralTwoPassToMid_RightTrench()));
+    "Right trench", AutonHelper::MakeCommandPtrAuto(cmd::NeutralTwoPassToMid(AutonomousSide::RIGHT)));
+  _autoManager.AddAuton("(Short first pass) Left trench",
+    AutonHelper::MakeCommandPtrAuto(cmd::ShortFirstPass_NeutralTwoPassToMid(AutonomousSide::LEFT)));
+  _autoManager.AddAuton("(Short first pass) Right trench",
+    AutonHelper::MakeCommandPtrAuto(cmd::ShortFirstPass_NeutralTwoPassToMid(AutonomousSide::RIGHT)));
 
   frc::SmartDashboard::PutData("CHOSEN AUTON", &_autoManager.GetAutonChooser());
 

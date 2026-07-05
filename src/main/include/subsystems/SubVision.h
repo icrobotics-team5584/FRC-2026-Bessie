@@ -35,11 +35,6 @@ public:
 
   void SimulationPeriodic() override;
 
-  enum Side {
-    Left = 1,
-    Right = 2
-  };
-
   std::optional<frc::Pose2d> GetAprilTagPose(int id);
 
   std::map<std::string, std::optional<photon::EstimatedRobotPose>> GetPose();

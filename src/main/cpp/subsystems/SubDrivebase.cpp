@@ -406,19 +406,14 @@ bool SubDrivebase::IsAtPose(
 }
 
 frc2::CommandPtr SubDrivebase::DriveToPose(std::function<frc::Pose2d()> pose, double speedScaling,
-  units::meter_t posErrorTolerance, units::degree_t rotErrorTolerance, bool flipForRedAlliance) {
-  auto fieldRelativePose = [pose, flipForRedAlliance] {
-    return flipForRedAlliance ? ICgeometry::GetFieldRelativePose(pose()) : pose();
-  };
-  
+  units::meter_t posErrorTolerance, units::degree_t rotErrorTolerance) {
   return Drive(
-      [this, fieldRelativePose, speedScaling] {
-        auto pose = fieldRelativePose();
-        return CalcDriveToPoseSpeeds(pose) * speedScaling;
+      [this, pose, speedScaling] {
+        return CalcDriveToPoseSpeeds(pose()) * speedScaling;
       },
       true)
-    .Until([this, fieldRelativePose, posErrorTolerance, rotErrorTolerance] {
-      return IsAtPose(fieldRelativePose(), posErrorTolerance, rotErrorTolerance);
+    .Until([this, pose, posErrorTolerance, rotErrorTolerance] {
+      return IsAtPose(pose(), posErrorTolerance, rotErrorTolerance);
     });
 }
 
