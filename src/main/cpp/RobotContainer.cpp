@@ -38,13 +38,13 @@ RobotContainer::RobotContainer() {
   _autoManager.AddDefaultAuton(
     "Shoot and stay", AutonHelper::MakeCommandPtrAuto(cmd::ShootAndStay()));
   _autoManager.AddAuton(
-    "Left trench", AutonHelper::MakeCommandPtrAuto(cmd::NeutralTwoPassToMid(AutonomousSide::LEFT)));
+    "Left trench", AutonHelper::MakeCommandPtrAuto(cmd::NeutralTwoPassToMid_LeftTrench()));
   _autoManager.AddAuton(
-    "Right trench", AutonHelper::MakeCommandPtrAuto(cmd::NeutralTwoPassToMid(AutonomousSide::RIGHT)));
+    "Right trench", AutonHelper::MakeCommandPtrAuto(cmd::NeutralTwoPassToMid_RightTrench()));
   _autoManager.AddAuton("(Short first pass) Left trench",
-    AutonHelper::MakeCommandPtrAuto(cmd::ShortFirstPass_NeutralTwoPassToMid(AutonomousSide::LEFT)));
+    AutonHelper::MakeCommandPtrAuto(cmd::ShortFirstPass_NeutralTwoPassToMid_LeftTrench()));
   _autoManager.AddAuton("(Short first pass) Right trench",
-    AutonHelper::MakeCommandPtrAuto(cmd::ShortFirstPass_NeutralTwoPassToMid(AutonomousSide::RIGHT)));
+    AutonHelper::MakeCommandPtrAuto(cmd::ShortFirstPass_NeutralTwoPassToMid_RightTrench()));
 
   frc::SmartDashboard::PutData("CHOSEN AUTON", &_autoManager.GetAutonChooser());
 
