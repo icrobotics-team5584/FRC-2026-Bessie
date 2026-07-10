@@ -68,6 +68,8 @@ void SubDrivebase::LogDrivebaseStates() {
   Logger::Log("Drivebase/velocity/field relative vx", GetChassisSpeeds().vx);
   Logger::Log("Drivebase/velocity/field relative vy", GetChassisSpeeds().vy);
 
+  Logger::Log("Drivebase/Pigeon is connected", _gyro.IsConnected());
+
   Logger::Log("Drivebase/Internal Encoder Swerve States",wpi::array{
     _frontLeft.GetState(),
     _frontRight.GetState(),
