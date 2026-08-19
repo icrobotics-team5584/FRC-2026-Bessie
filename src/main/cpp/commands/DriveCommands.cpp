@@ -6,7 +6,8 @@
 #include "commands/FuelCommands.h"
 #include <frc2/command/Commands.h>
 #include "subsystems/SubDrivebase.h"
-#include "subsystems/SubVision.h"
+#include "subsystems/Vision/SubVision.h"
+#include "subsystems/Vision/SubObject.h"
 #include <frc/DriverStation.h>
 
 namespace cmd {
@@ -22,3 +23,5 @@ frc2::CommandPtr TeleopDrive(frc2::CommandXboxController& controller, double spe
   }, true);
 }
 }  // namespace cmd
+
+

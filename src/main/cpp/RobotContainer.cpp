@@ -11,7 +11,7 @@
 #include "subsystems/SubIndexer.h"
 #include "subsystems/SubIntake.h"
 #include "subsystems/SubShooter.h"
-#include "subsystems/SubVision.h"
+#include "subsystems/Vision/SubVision.h"
 #include "subsystems/Turret/SubTurret.h"
 
 #include "commands/AutonCommands.h"
