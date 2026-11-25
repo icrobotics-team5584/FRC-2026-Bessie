@@ -59,8 +59,8 @@ frc2::CommandPtr StationaryShootAt(frc::Translation2d target) {
 frc2::CommandPtr BackupShoot() {
   return SubShooter::GetInstance()
     .SetShooterTarget([] {
-      units::turns_per_second_t offset = SubShooter::GetInstance().GetShooterOffset();
-      return offset + 31_tps;
+      double offset = SubShooter::GetInstance().GetShooterOffset();
+      return offset * 31_tps;
     })
     .AlongWith(
       SubTurret::GetInstance().SetTurretTargetAngle([] { return 0_deg; }, [] { return 0_tps; }))

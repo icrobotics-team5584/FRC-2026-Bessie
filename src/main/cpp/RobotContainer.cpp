@@ -90,10 +90,10 @@ void RobotContainer::ConfigureBindings() {
   }).AlongWith(frc2::cmd::RunOnce([] { ShiftHandler::GetInstance().SetOverrideActive(true); })));
 
   // Operator POVS
-  _operatorController.POVRight().OnTrue(SubShooter::GetInstance().AdjustManualSpeedOffset(1_tps));
-  _operatorController.POVLeft().OnTrue(SubShooter::GetInstance().AdjustManualSpeedOffset(-1_tps));
-  _operatorController.POVUp().OnTrue(SubHood::GetInstance().AdjustManualAngleOffset(1_deg));
-  _operatorController.POVDown().OnTrue(SubHood::GetInstance().AdjustManualAngleOffset(-1_deg));
+  _operatorController.POVRight().OnTrue(SubShooter::GetInstance().AdjustManualSpeedOffset(0.05));
+  _operatorController.POVLeft().OnTrue(SubShooter::GetInstance().AdjustManualSpeedOffset(-0.05));
+  _operatorController.POVUp().OnTrue(SubHood::GetInstance().AdjustManualAngleOffset(0.5_deg));
+  _operatorController.POVDown().OnTrue(SubHood::GetInstance().AdjustManualAngleOffset(-0.5_deg));
 
   // Driver POVs
   _driverController.POVRight().WhileTrue(SubDeploy::GetInstance().Zero());

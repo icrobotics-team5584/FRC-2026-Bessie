@@ -37,9 +37,9 @@ class SubShooter : public frc2::SubsystemBase {
   frc2::CommandPtr StopShooter();
   frc2::CommandPtr SpinWithDistance(std::function<units::meter_t()> distance, std::function<bool()> isPassing);
   frc2::CommandPtr SpinShooterSlowly();
-  frc2::CommandPtr AdjustManualSpeedOffset(units::turns_per_second_t offset);
+  frc2::CommandPtr AdjustManualSpeedOffset(double offset);
 
-  units::turns_per_second_t GetShooterOffset();
+  double GetShooterOffset();
   
   bool IsReadyToShoot();
 
@@ -56,7 +56,7 @@ class SubShooter : public frc2::SubsystemBase {
   static constexpr units::kilogram_square_meter_t MOI = 0.05_kg_sq_m;
   static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::KrakenX60FOC();
   const double GEAR_RATIO = BotVars::Choose(1.63, 1.0);
-  static constexpr units::turns_per_second_t DEFAULT_SHOOTER_OFFSET = 0_tps;
+  static constexpr double DEFAULT_SHOOTER_OFFSET_RATIO = 1.0;
 
   double P = 0.4;
   double I = 0;

@@ -139,11 +139,11 @@ frc2::CommandPtr SubShooter::SpinShooterSlowly() {
     return Run([this] {_shooterMotor1.SetControl(_flywheelTargetVelocity.WithVelocity(10_tps));});
 }
 
-frc2::CommandPtr SubShooter::AdjustManualSpeedOffset(units::turns_per_second_t offset) {
+frc2::CommandPtr SubShooter::AdjustManualSpeedOffset(double offset) {
   // Using frc2 cmd so we dont require subsystem
   return frc2::cmd::RunOnce([this, offset] {
-    units::turns_per_second_t oldOffset = Logger::Tune("Shooter/Speed Manual Offset", DEFAULT_SHOOTER_OFFSET);
-    units::turns_per_second_t newOffset = oldOffset + offset;
+    double oldOffset = Logger::Tune("Shooter/Speed Manual Offset", DEFAULT_SHOOTER_OFFSET_RATIO);
+    double newOffset = oldOffset + offset;
     Logger::Log("Shooter/Speed Manual Offset", newOffset);
   });
 }
@@ -156,14 +156,13 @@ bool SubShooter::IsReadyToShoot() {
 frc2::CommandPtr SubShooter::SpinWithDistance(
   std::function<units::meter_t()> distance, std::function<bool()> isPassing) {
   return SetShooterTarget([this, distance, isPassing] { 
-    auto offset = Logger::Tune("Shooter/Speed Manual Offset", DEFAULT_SHOOTER_OFFSET);
-    return isPassing() ? EvaluateClampedShot(distance().value(), 0.0).exitVelMps * 1_tps
-                       : EvaluateClampedShot(distance().value(), 0.0).exitVelMps * 1_tps + offset;
+    auto offset = Logger::Tune("Shooter/Speed Manual Offset", DEFAULT_SHOOTER_OFFSET_RATIO);
+    return EvaluateClampedShot(distance().value(), 0.0).exitVelMps * 1_tps * offset;
   });
 }
 
-units::turns_per_second_t SubShooter::GetShooterOffset(){
-  return Logger::Tune("Shooter/Speed Manual Offset", DEFAULT_SHOOTER_OFFSET);
+double SubShooter::GetShooterOffset(){
+  return Logger::Tune("Shooter/Speed Manual Offset", DEFAULT_SHOOTER_OFFSET_RATIO);
 }
 
 units::second_t SubShooter::GetTimeOfFLightWithDistance(units::meter_t distance) {
