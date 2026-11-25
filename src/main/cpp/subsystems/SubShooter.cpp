@@ -12,6 +12,8 @@
 #include "frc/smartdashboard/SmartDashboard.h"
 #include "utilities/RobotVisualisation.h"
 
+#include "utilities/ShotPolynomialCalculator.h"
+
 SubShooter::SubShooter() {
   // Coast Mode
   _shooterMotorConfig.MotorOutput.NeutralMode = ctre::phoenix6::signals::NeutralModeValue::Coast;
@@ -155,8 +157,8 @@ frc2::CommandPtr SubShooter::SpinWithDistance(
   std::function<units::meter_t()> distance, std::function<bool()> isPassing) {
   return SetShooterTarget([this, distance, isPassing] { 
     auto offset = Logger::Tune("Shooter/Speed Manual Offset", DEFAULT_SHOOTER_OFFSET);
-    return isPassing() ? _flyWheelSpeedTablePassing[distance()]
-                       : _flyWheelSpeedTableScoring[distance()] + offset;
+    return isPassing() ? EvaluateClampedShot(distance().value(), 0.0).exitVelMps * 1_tps
+                       : EvaluateClampedShot(distance().value(), 0.0).exitVelMps * 1_tps + offset;
   });
 }
 
@@ -165,5 +167,5 @@ units::turns_per_second_t SubShooter::GetShooterOffset(){
 }
 
 units::second_t SubShooter::GetTimeOfFLightWithDistance(units::meter_t distance) {
-  return _timeOfFlightTable[distance];
+  return EvaluateClampedShot(distance.value(), 0.0).tofSec * 1_s;
 }

@@ -10,14 +10,13 @@ constexpr std::array<double, 10> kExitVelCoeffs = { 6.937302, -0.383669, 0.62961
 constexpr std::array<double, 10> kHoodAngCoeffs = { 11.655359, 28.346257, -24.512394, -5.623951, 9.869327, -3.353412, 0.334469, -0.867655, 0.407719, -0.013654 };
 constexpr std::array<double, 10> kTofCoeffs     = { -0.753937, 0.918343, -0.643033, -0.157121, 0.208000, -0.049273, 0.009685, -0.017969, 0.003673, 0.002548 };
 
-// Hard Hardware Limits (prevent impossible setpoints on the real robot)
 constexpr double kMinExitVelMps = 7.00;
 constexpr double kMaxExitVelMps = 22.00;
-constexpr double kMinHoodDeg    = 15.00;
-constexpr double kMaxHoodDeg    = 60.00;
-constexpr double kMinDistM      = 1.20;
-constexpr double kMaxDistM      = 7.00;
-constexpr double kMaxTurretDeg  = 180.0; // Tune to SubTurret soft limits
+constexpr double kMinHoodDeg    = 16.50;
+constexpr double kMaxHoodDeg    = 38.50;
+constexpr double kMinDistM      = 1.37;
+constexpr double kMaxDistM      = 7.60;
+constexpr double kMaxTurretDeg  = 180.0; 
 
 inline double EvalPoly3(const std::array<double, 10>& c, double d, double v) {
   return c[0] + c[1]*d + c[2]*v + c[3]*d*d + c[4]*d*v + c[5]*v*v

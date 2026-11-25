@@ -15,6 +15,8 @@
 
 #include "utilities/RobotVisualisation.h"
 
+#include "utilities/ShotPolynomialCalculator.h"
+
 SubHood::SubHood() {
   if (BotVars::GetRobot() == BotVars::PRACTICE) {
     _hoodMotor = std::make_unique<HoodNeoIO>(canid::HOOD_MOTOR);
@@ -126,7 +128,7 @@ frc2::CommandPtr SubHood::ManualHoodDown() {
 frc2::CommandPtr SubHood::SetHoodPositionTargetFromDist(
   std::function<units::meter_t()> distanceToTarget) {
   return SetHoodPositionTarget([this, distanceToTarget] {
-    return _hoodPitchTable[distanceToTarget()] + Logger::Tune("Hood/Angle Manual Offset", DEFAULT_HOOD_OFFSET);
+    return EvaluateClampedShot(distanceToTarget().value(), 0.0).hoodAngleDeg * 1_deg + Logger::Tune("Hood/Angle Manual Offset", DEFAULT_HOOD_OFFSET);
   });
 }
 
